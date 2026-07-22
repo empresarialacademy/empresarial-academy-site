@@ -7,14 +7,15 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   async rewrites() {
+    const hubDomain = process.env.HUB_DOMAIN || 'http://localhost:3000';
     return [
       {
         source: "/hub",
-        destination: `${process.env.HUB_DOMAIN}/hub`,
+        destination: `${hubDomain}/hub`,
       },
       {
         source: "/hub/:path*",
-        destination: `${process.env.HUB_DOMAIN}/hub/:path*`,
+        destination: `${hubDomain}/hub/:path*`,
       },
     ];
   },
