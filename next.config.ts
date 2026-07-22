@@ -1,5 +1,4 @@
 import type { NextConfig } from "next";
-import { withPayload } from "@payloadcms/next/withPayload";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -7,11 +6,22 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/hub",
+        destination: `${process.env.HUB_DOMAIN}/hub`,
+      },
+      {
+        source: "/hub/:path*",
+        destination: `${process.env.HUB_DOMAIN}/hub/:path*`,
+      },
+    ];
+  },
   async headers() {
     return [
       {
-        // Headers de segurança apenas no site público (o /admin do Payload tem o seu próprio tratamento).
-        source: "/((?!admin|api).*)",
+        source: "/((?!api).*)",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
@@ -26,4 +36,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withPayload(nextConfig);
+export default nextConfig;
