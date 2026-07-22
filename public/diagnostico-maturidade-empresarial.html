@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico de Maturidade Empresarial Gratuito | Empresarial Academy</title>
+<meta name="description" content="Avaliação gratuita: descubra em poucos minutos o nível de maturidade da sua empresa em Comercial, Operações, Indicadores e Liderança — com plano de ação personalizado.">
+<link rel="canonical" href="https://empresarialacademy.com/diagnostico-maturidade-empresarial.html">
+<link rel="icon" href="/icon.png">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Empresarial Academy">
+<meta property="og:title" content="Diagnóstico de Maturidade Empresarial Gratuito">
+<meta property="og:description" content="24 perguntas, resultado na hora: pontuação por pilar (Comercial, Operações, Indicadores, Liderança) e plano de melhoria com ações e prazos.">
+<meta property="og:url" content="https://empresarialacademy.com/diagnostico-maturidade-empresarial.html">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Diagnóstico de Maturidade Empresarial",
+  "url": "https://empresarialacademy.com/diagnostico-maturidade-empresarial.html",
+  "inLanguage": "pt-BR",
+  "description": "Avaliação gratuita e interativa da maturidade de gestão da empresa em 4 pilares: Comercial, Operações, Gestão de Indicadores e Liderança. 24 perguntas com resultado imediato e plano de melhoria.",
+  "isPartOf": { "@type": "WebSite", "name": "Empresarial Academy", "url": "https://empresarialacademy.com" },
+  "provider": { "@type": "Organization", "name": "Empresarial Academy", "url": "https://empresarialacademy.com" },
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" }
+}
+</script>
+<style>
+  :root{
+    --navy:#1D2B3C;
+    --gold:#C1A160;
+    --graphite:#15191F;
+    --gray:#6B7280;
+    --gray-light:#D9DCE1;
+    --offwhite:#F6F5F1;
+    --white:#FFFFFF;
+    --green:#2E7D5B;
+    --amber:#C7892B;
+    --red:#B23B3B;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--offwhite);
+    color:var(--graphite);
+    font-family:'Open Sans','Calibri',Arial,sans-serif;
+    line-height:1.5;
+  }
+  h1,h2,h3,h4{
+    font-family:'Montserrat','Calibri',Arial,sans-serif;
+    color:var(--navy);
+    margin:0 0 8px;
+  }
+  a{color:var(--navy);}
+  .cover{
+    background:var(--navy);
+    color:var(--white);
+    padding:48px 24px 56px;
+    text-align:center;
+    position:relative;
+  }
+  .cover::after{
+    content:"";
+    display:block;
+    width:120px;
+    height:4px;
+    background:var(--gold);
+    margin:20px auto 0;
+  }
+  .cover img{
+    height:64px;
+    margin-bottom:18px;
+  }
+  .back-link{
+    display:inline-block;
+    color:#cfd6e0;
+    font-size:13px;
+    text-decoration:none;
+    margin-bottom:18px;
+  }
+  .back-link:hover{color:var(--gold);}
+  .cover h1{
+    color:var(--white);
+    font-size:30px;
+    letter-spacing:.3px;
+  }
+  .cover p.subtitle{
+    color:var(--gold);
+    font-weight:600;
+    margin-top:6px;
+    font-size:15px;
+  }
+  .cover p.slogan{
+    color:#cfd6e0;
+    font-size:13px;
+    margin-top:14px;
+  }
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:32px 20px 80px;
+  }
+  .card{
+    background:var(--white);
+    border:1px solid var(--gray-light);
+    border-radius:10px;
+    padding:24px 26px;
+    margin-bottom:24px;
+  }
+  .intro p{margin:0 0 10px;color:var(--graphite);}
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:14px;
+    padding:14px;
+    background:var(--offwhite);
+    border-radius:8px;
+    border:1px solid var(--gray-light);
+  }
+  .legend-item{
+    font-size:12.5px;
+    color:var(--gray);
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .legend-item b{
+    color:var(--navy);
+    background:var(--white);
+    border:1px solid var(--gray-light);
+    border-radius:50%;
+    width:20px;height:20px;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:11px;
+  }
+  .pillar-header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:4px;
+  }
+  .pillar-dot{
+    width:10px;height:10px;border-radius:50%;
+    flex-shrink:0;
+  }
+  .pillar-header h2{font-size:18px;margin:0;}
+  .pillar-sub{color:var(--gray);font-size:13px;margin-bottom:18px;}
+  .question{
+    padding:16px 0;
+    border-top:1px solid var(--gray-light);
+  }
+  .question:first-of-type{border-top:none;}
+  .question p{
+    margin:0 0 10px;
+    font-size:14.5px;
+    font-weight:600;
+    color:var(--graphite);
+  }
+  .scale{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .scale label{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    border:1px solid var(--gray-light);
+    border-radius:20px;
+    padding:6px 14px;
+    font-size:13px;
+    cursor:pointer;
+    color:var(--gray);
+    transition:all .15s ease;
+  }
+  .scale input{accent-color:var(--navy);}
+  .scale label:hover{border-color:var(--navy);}
+  .scale input:checked + span{color:var(--navy);font-weight:700;}
+  .scale label.checked{
+    border-color:var(--gold);
+    background:#fbf7ee;
+  }
+  .btn-row{
+    text-align:center;
+    margin:30px 0 10px;
+  }
+  button{
+    font-family:'Montserrat',Arial,sans-serif;
+    background:var(--navy);
+    color:var(--white);
+    border:none;
+    padding:14px 36px;
+    font-size:15px;
+    font-weight:600;
+    border-radius:6px;
+    cursor:pointer;
+    letter-spacing:.3px;
+  }
+  button:hover{background:#142031;}
+  button.secondary{
+    background:var(--white);
+    color:var(--navy);
+    border:1px solid var(--navy);
+    margin-left:10px;
+  }
+  button:disabled{opacity:.6;cursor:not-allowed;}
+  .hint{
+    text-align:center;
+    color:var(--red);
+    font-size:13px;
+    margin-top:8px;
+    display:none;
+  }
+  #leadGate{display:none;}
+  #leadGate .field{margin-bottom:14px;}
+  #leadGate label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    color:var(--navy);
+    margin-bottom:5px;
+  }
+  #leadGate input[type=text], #leadGate input[type=email], #leadGate input[type=tel]{
+    width:100%;
+    border:1px solid var(--gray-light);
+    border-radius:6px;
+    padding:10px 12px;
+    font-size:14px;
+    font-family:inherit;
+  }
+  #leadGate input:focus{outline:2px solid var(--gold);border-color:var(--gold);}
+  #leadGate .consent{
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+    font-size:12.5px;
+    color:var(--gray);
+    margin-top:4px;
+  }
+  #leadGate .error{color:var(--red);font-size:12.5px;margin-top:4px;display:none;}
+  #leadGate .visually-hidden{position:absolute;left:-9999px;}
+  #results{display:none;}
+  .results-cover{
+    background:var(--navy);
+    border-radius:10px;
+    padding:32px 28px;
+    color:var(--white);
+    text-align:center;
+    margin-bottom:24px;
+  }
+  .results-cover h2{color:var(--white);font-size:22px;}
+  .score-circle{
+    margin:18px auto 8px;
+    width:160px;height:160px;
+    position:relative;
+  }
+  .score-circle .num{
+    position:absolute;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+  }
+  .score-circle .num span{
+    display:block;
+    font-family:'Montserrat',Arial,sans-serif;
+    font-size:34px;
+    font-weight:700;
+    color:var(--white);
+  }
+  .score-circle .num small{
+    color:var(--gold);
+    font-size:12px;
+    font-weight:600;
+  }
+  .level-tag{
+    display:inline-block;
+    margin-top:6px;
+    background:var(--gold);
+    color:var(--navy);
+    padding:5px 16px;
+    border-radius:20px;
+    font-weight:700;
+    font-size:13px;
+  }
+  .charts-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    margin-bottom:24px;
+  }
+  @media(max-width:700px){.charts-grid{grid-template-columns:1fr;}}
+  .chart-card h3{font-size:15px;margin-bottom:14px;}
+  .bars{display:flex;flex-direction:column;gap:14px;}
+  .bar-row .bar-label{
+    display:flex;justify-content:space-between;
+    font-size:13px;font-weight:600;color:var(--graphite);
+    margin-bottom:5px;
+  }
+  .bar-track{
+    height:14px;
+    background:var(--offwhite);
+    border-radius:8px;
+    overflow:hidden;
+    border:1px solid var(--gray-light);
+  }
+  .bar-fill{
+    height:100%;
+    border-radius:8px 0 0 8px;
+    transition:width .6s ease;
+  }
+  .rec-card{
+    border-left:4px solid var(--gold);
+    background:var(--white);
+    border:1px solid var(--gray-light);
+    border-radius:8px;
+    padding:18px 20px;
+    margin-bottom:16px;
+  }
+  .rec-card h3{
+    font-size:15.5px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:2px;
+  }
+  .status-pill{
+    font-size:11px;
+    font-weight:700;
+    padding:3px 10px;
+    border-radius:12px;
+    color:var(--white);
+    margin-left:auto;
+  }
+  .rec-meta{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-top:12px;
+    font-size:13px;
+  }
+  @media(max-width:600px){.rec-meta{grid-template-columns:1fr;}}
+  .rec-meta div{
+    background:var(--offwhite);
+    border-radius:6px;
+    padding:8px 10px;
+  }
+  .rec-meta b{
+    display:block;
+    color:var(--navy);
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.3px;
+    margin-bottom:3px;
+  }
+  .rec-finding{
+    font-size:13.5px;
+    color:var(--gray);
+    margin:6px 0 0;
+  }
+  .cta-final{
+    background:var(--navy);
+    border-radius:10px;
+    padding:30px 26px;
+    text-align:center;
+    color:var(--white);
+  }
+  .cta-final h2{color:var(--white);font-size:20px;}
+  .cta-final p{color:#cfd6e0;font-size:14px;max-width:480px;margin:8px auto 18px;}
+  .cta-final .actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+  .cta-final a.btn-whatsapp{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--gold);color:var(--navy);
+    font-family:'Montserrat',Arial,sans-serif;font-weight:700;
+    padding:13px 28px;border-radius:6px;text-decoration:none;font-size:14.5px;
+  }
+  .cta-final a.btn-whatsapp:hover{background:#d7c089;}
+  .cta-final a.btn-site{
+    display:inline-flex;align-items:center;
+    color:#cfd6e0;font-size:13.5px;text-decoration:underline;
+    padding:13px 8px;
+  }
+  footer{
+    text-align:center;
+    padding:30px 20px;
+    background:var(--navy);
+    color:#cfd6e0;
+    font-size:12.5px;
+  }
+  footer b{color:var(--gold);}
+  .print-row{text-align:center;margin-top:10px;}
+  @media print{
+    .btn-row, .print-row, button, .cta-final, .back-link{display:none !important;}
+    .cover{background:var(--navy) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <a href="/" class="back-link">← Voltar para o site da Empresarial Academy</a>
+  <br>
+  <img src="/logo-empresarial-academy.png" alt="Empresarial Academy">
+  <h1>Diagnóstico de Maturidade Empresarial</h1>
+  <p class="subtitle">Comercial · Operações · Gestão de Indicadores · Liderança</p>
+  <p class="slogan">Conhecimento que Impulsiona</p>
+</div>
+
+<div class="wrap">
+
+  <div class="card intro">
+    <h2>Como funciona</h2>
+    <p>Este diagnóstico avalia o nível de estruturação da sua empresa em 4 pilares críticos para o crescimento sustentável. São 24 perguntas, 6 por pilar. Responda com base na realidade atual da empresa — não na situação ideal.</p>
+    <p>Ao final, você recebe a pontuação por pilar, o nível de maturidade geral e um plano de melhoria com ações, indicadores e prazos sugeridos.</p>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <form id="diagForm"></form>
+
+  <div class="btn-row">
+    <button type="button" id="btnCalc">Gerar Diagnóstico</button>
+  </div>
+  <p class="hint" id="hint">Responda todas as perguntas para gerar o diagnóstico.</p>
+
+  <div class="card" id="leadGate">
+    <h2>Quase lá! Para onde enviamos o seu resultado?</h2>
+    <p class="pillar-sub" style="margin-bottom:18px">Preencha seus dados para ver a pontuação completa e o plano de ação — sem custo e sem compromisso.</p>
+    <form id="leadForm" novalidate>
+      <div aria-hidden="true" class="visually-hidden">
+        <input type="text" name="website" id="leadWebsite" tabindex="-1" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="leadNome">Seu nome *</label>
+        <input type="text" id="leadNome" name="nome" required>
+        <p class="error" id="errNome">Informe seu nome.</p>
+      </div>
+      <div class="field">
+        <label for="leadEmpresa">Empresa</label>
+        <input type="text" id="leadEmpresa" name="empresa">
+      </div>
+      <div class="field">
+        <label for="leadEmail">Seu melhor e-mail *</label>
+        <input type="email" id="leadEmail" name="email" required>
+        <p class="error" id="errEmail">Informe um e-mail válido.</p>
+      </div>
+      <div class="field">
+        <label for="leadWhatsapp">WhatsApp</label>
+        <input type="tel" id="leadWhatsapp" name="whatsapp" placeholder="(11) 90000-0000">
+      </div>
+      <label class="consent">
+        <input type="checkbox" id="leadConsent" name="consentimento" required style="margin-top:2px">
+        <span>Aceito receber meu diagnóstico e contatos da Empresarial Academy, conforme a <a href="/privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.</span>
+      </label>
+      <p class="error" id="errConsent">É necessário aceitar para continuar.</p>
+      <div class="btn-row">
+        <button type="submit" id="btnLeadSubmit">Ver meu diagnóstico completo →</button>
+      </div>
+      <p class="error" id="errSubmit" style="text-align:center">Não foi possível enviar agora. Tente novamente.</p>
+    </form>
+  </div>
+
+  <div id="results">
+
+    <div class="results-cover">
+      <h2>Resultado do Diagnóstico</h2>
+      <div class="score-circle">
+        <svg width="160" height="160" viewBox="0 0 160 160">
+          <circle cx="80" cy="80" r="68" fill="none" stroke="#2c3d52" stroke-width="14"/>
+          <circle id="scoreArc" cx="80" cy="80" r="68" fill="none" stroke="#C1A160" stroke-width="14"
+            stroke-dasharray="427" stroke-dashoffset="427" stroke-linecap="round" transform="rotate(-90 80 80)"/>
+        </svg>
+        <div class="num"><span id="scoreNum">0%</span><small>MATURIDADE GERAL</small></div>
+      </div>
+      <div><span class="level-tag" id="levelTag">—</span></div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="card chart-card">
+        <h3>Maturidade por Pilar — Radar</h3>
+        <svg id="radarChart" width="100%" height="280" viewBox="0 0 320 280"></svg>
+      </div>
+      <div class="card chart-card">
+        <h3>Maturidade por Pilar — Comparativo</h3>
+        <div class="bars" id="barsChart"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Plano de Melhoria por Pilar</h2>
+      <p class="pillar-sub">Cada achado abaixo se conecta a uma ação prática, um indicador de acompanhamento, um responsável sugerido e um prazo de implementação.</p>
+      <div id="recommendations"></div>
+    </div>
+
+    <div class="cta-final">
+      <h2>Quer ajuda para sair do papel?</h2>
+      <p>Leve esse diagnóstico para uma conversa estratégica com Thiago Marchi e descubra o caminho mais rápido para evoluir os pontos identificados.</p>
+      <div class="actions">
+        <a class="btn-whatsapp" id="ctaWhatsapp" href="#" target="_blank" rel="noopener">Falar no WhatsApp</a>
+        <a class="btn-site" href="/contato">ou preencher o formulário de contato</a>
+      </div>
+    </div>
+
+    <div class="print-row">
+      <button type="button" onclick="window.print()">Imprimir / Salvar como PDF</button>
+      <button type="button" class="secondary" id="btnRestart">Refazer Diagnóstico</button>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  Empresarial Academy — <b>Conhecimento que Impulsiona</b><br>
+  Diagnóstico de Maturidade Empresarial · <a href="/" style="color:#cfd6e0">empresarialacademy.com</a>
+</footer>
+
+<script>
+const SCALE = [
+  {v:1, label:"Não existe"},
+  {v:2, label:"Informal / inconsistente"},
+  {v:3, label:"Parcialmente estruturado"},
+  {v:4, label:"Estruturado e em uso"},
+  {v:5, label:"Otimizado e monitorado"}
+];
+
+const PILLARS = [
+  {
+    id:"comercial",
+    name:"Comercial",
+    color:"#C1A160",
+    questions:[
+      "Existe um processo de vendas formalizado e documentado, com etapas claras do funil?",
+      "A empresa possui metas de vendas claras, desdobradas por período e por vendedor?",
+      "Há um CRM ou ferramenta estruturada para gestão de leads e oportunidades?",
+      "O time comercial segue um script ou playbook de abordagem e negociação?",
+      "Existe acompanhamento da taxa de conversão em cada etapa do funil de vendas?",
+      "A empresa possui um plano de marketing e geração de demanda estruturado?"
+    ]
+  },
+  {
+    id:"operacoes",
+    name:"Operações",
+    color:"#1D2B3C",
+    questions:[
+      "Os processos operacionais estão mapeados e documentados (fluxogramas, SOPs)?",
+      "Há padronização na execução das atividades-chave, garantindo qualidade consistente?",
+      "Existe controle de capacidade operacional e gestão da demanda?",
+      "A empresa utiliza sistemas/ferramentas de gestão de processos (ERP ou similar)?",
+      "Existem rotinas estruturadas de melhoria contínua (PDCA, Kaizen, revisões periódicas)?",
+      "Prazos e níveis de serviço (SLAs) são monitorados e cumpridos de forma consistente?"
+    ]
+  },
+  {
+    id:"indicadores",
+    name:"Gestão de Indicadores",
+    color:"#2E7D5B",
+    questions:[
+      "A empresa possui um painel de indicadores (KPIs) definido e atualizado regularmente?",
+      "Os indicadores estão conectados aos objetivos estratégicos do negócio?",
+      "Há reuniões periódicas de acompanhamento de resultados com base em dados?",
+      "As decisões de gestão são tomadas com base em dados, não apenas em percepção?",
+      "Existem metas claras (atual → meta) definidas para os principais indicadores?",
+      "Os dados utilizados são confiáveis, atualizados e de fácil acesso para quem decide?"
+    ]
+  },
+  {
+    id:"lideranca",
+    name:"Liderança",
+    color:"#6B7280",
+    questions:[
+      "Existe um organograma claro, com papéis e responsabilidades bem definidos?",
+      "Os líderes recebem treinamento e desenvolvimento de gestão de forma contínua?",
+      "Há um processo estruturado de delegação e desenvolvimento de pessoas?",
+      "A empresa realiza avaliação de desempenho e feedback estruturado com a equipe?",
+      "Existe plano de sucessão ou desenvolvimento de novas lideranças internas?",
+      "As lideranças comunicam visão, metas e prioridades de forma clara para o time?"
+    ]
+  }
+];
+
+function levelInfo(pct){
+  if(pct<=20) return {name:"Inicial", color:"#B23B3B"};
+  if(pct<=40) return {name:"Em Desenvolvimento", color:"#C7892B"};
+  if(pct<=60) return {name:"Estruturado", color:"#C1A160"};
+  if(pct<=80) return {name:"Avançado", color:"#2E7D5B"};
+  return {name:"Referência", color:"#2E7D5B"};
+}
+
+const RECS = {
+  comercial:{
+    "Inicial":{
+      finding:"O processo comercial depende do esforço individual de cada vendedor, sem padrão, metas claras ou controle de funil.",
+      action:"Desenhe um processo de vendas com etapas definidas (prospecção, qualificação, proposta, fechamento) e implante metas individuais mensais.",
+      kpi:"Taxa de conversão geral do funil (atual → meta de +10 p.p. em 90 dias)",
+      owner:"Diretor(a) Comercial / Sócio responsável",
+      deadline:"30 dias"
+    },
+    "Em Desenvolvimento":{
+      finding:"Existem metas e alguma rotina comercial, mas sem ferramenta de CRM ou script padronizado de abordagem.",
+      action:"Implante um CRM simples para registrar leads e oportunidades, e crie um playbook de abordagem e objeções.",
+      kpi:"% de oportunidades registradas em CRM (meta: 100%)",
+      owner:"Coordenador(a) Comercial",
+      deadline:"45 dias"
+    },
+    "Estruturado":{
+      finding:"O time já usa CRM e segue um processo, mas o acompanhamento de conversão por etapa ainda é manual ou esporádico.",
+      action:"Implante relatório semanal de conversão por etapa do funil e revise o playbook com base nos gargalos identificados.",
+      kpi:"Taxa de conversão por etapa do funil (revisão quinzenal)",
+      owner:"Coordenador(a) Comercial",
+      deadline:"60 dias"
+    },
+    "Avançado":{
+      finding:"O processo comercial é estruturado e monitorado, com oportunidade de evoluir a geração de demanda e o marketing integrado.",
+      action:"Estruture um plano de marketing e geração de leads alinhado às metas comerciais, com previsibilidade de pipeline.",
+      kpi:"Custo de aquisição por cliente (CAC) e volume de leads qualificados/mês",
+      owner:"Diretor(a) Comercial / Marketing",
+      deadline:"90 dias"
+    },
+    "Referência":{
+      finding:"O pilar comercial é referência: processo, metas, CRM e marketing operam de forma integrada e previsível.",
+      action:"Foque em previsibilidade de receita (forecast) e expansão de novos canais ou mercados.",
+      kpi:"Acurácia do forecast de vendas (meta: desvio < 10%)",
+      owner:"Diretor(a) Comercial",
+      deadline:"Contínuo"
+    }
+  },
+  operacoes:{
+    "Inicial":{
+      finding:"Os processos operacionais não estão documentados e a execução varia de pessoa para pessoa.",
+      action:"Mapeie os processos-chave em fluxogramas simples (SOPs) e defina o padrão mínimo de execução.",
+      kpi:"% de processos críticos documentados (meta: 100% em 60 dias)",
+      owner:"Gerente de Operações",
+      deadline:"30 dias"
+    },
+    "Em Desenvolvimento":{
+      finding:"Há alguma padronização, mas falta controle de capacidade e ferramentas de gestão de processos.",
+      action:"Implante um sistema de gestão (ERP ou planilha estruturada) para controlar capacidade, demanda e prazos.",
+      kpi:"% de pedidos/entregas dentro do prazo (SLA)",
+      owner:"Gerente de Operações",
+      deadline:"45 dias"
+    },
+    "Estruturado":{
+      finding:"Processos e sistema de gestão existem, mas a melhoria contínua ainda não é uma rotina formal.",
+      action:"Implante reuniões periódicas de revisão de processo (PDCA) com plano de ação para os principais gargalos.",
+      kpi:"Número de melhorias implementadas por trimestre",
+      owner:"Gerente de Operações",
+      deadline:"60 dias"
+    },
+    "Avançado":{
+      finding:"A operação é monitorada e cumpre SLAs, com espaço para aprofundar a cultura de melhoria contínua.",
+      action:"Forme um comitê de melhoria contínua e estabeleça metas progressivas de eficiência operacional.",
+      kpi:"Índice de eficiência operacional (custo/unidade produzida ou entregue)",
+      owner:"Diretor(a) de Operações",
+      deadline:"90 dias"
+    },
+    "Referência":{
+      finding:"A operação é padronizada, monitorada e melhora continuamente — referência de eficiência.",
+      action:"Direcione esforços para escalabilidade: replicar o padrão operacional em novas unidades, equipes ou produtos.",
+      kpi:"Capacidade operacional disponível vs. utilizada",
+      owner:"Diretor(a) de Operações",
+      deadline:"Contínuo"
+    }
+  },
+  indicadores:{
+    "Inicial":{
+      finding:"A gestão é baseada em percepção, sem indicadores definidos ou rotina de acompanhamento de dados.",
+      action:"Defina de 5 a 8 KPIs essenciais para o negócio (financeiro, comercial, operacional) e estruture um painel simples.",
+      kpi:"Número de KPIs essenciais definidos e ativos (meta: mínimo 5)",
+      owner:"Sócio(a) / Diretor(a) Geral",
+      deadline:"30 dias"
+    },
+    "Em Desenvolvimento":{
+      finding:"Existem alguns indicadores, mas sem conexão clara com os objetivos estratégicos nem metas definidas.",
+      action:"Conecte cada KPI a um objetivo estratégico e defina metas no formato atual → meta para cada um.",
+      kpi:"% de KPIs com meta formal definida (meta: 100%)",
+      owner:"Diretor(a) Geral",
+      deadline:"45 dias"
+    },
+    "Estruturado":{
+      finding:"O painel de indicadores existe e tem metas, mas as reuniões de acompanhamento ainda não são uma rotina consistente.",
+      action:"Implante reunião quinzenal ou mensal de acompanhamento de resultados (Reunião de Gestão de Indicadores).",
+      kpi:"% de presença e cumprimento da agenda de reuniões de indicadores",
+      owner:"Diretor(a) Geral",
+      deadline:"60 dias"
+    },
+    "Avançado":{
+      finding:"Os indicadores guiam a tomada de decisão, com espaço para aumentar a confiabilidade e a velocidade de acesso aos dados.",
+      action:"Automatize a coleta e atualização dos dados (dashboard em tempo real) para reduzir retrabalho manual.",
+      kpi:"Tempo médio de atualização do painel de indicadores",
+      owner:"Diretor(a) Geral / TI",
+      deadline:"90 dias"
+    },
+    "Referência":{
+      finding:"A gestão por indicadores é madura: dados confiáveis, metas claras e decisões orientadas por dados.",
+      action:"Avance para indicadores preditivos e benchmarking externo de mercado.",
+      kpi:"% de metas estratégicas atingidas no período",
+      owner:"Diretor(a) Geral",
+      deadline:"Contínuo"
+    }
+  },
+  lideranca:{
+    "Inicial":{
+      finding:"Papéis e responsabilidades não estão claros, e a liderança ainda não tem desenvolvimento estruturado.",
+      action:"Construa um organograma claro com papéis e responsabilidades, e inicie um plano básico de capacitação de líderes.",
+      kpi:"% de cargos de liderança com papel e responsabilidade documentados",
+      owner:"Sócio(a) / Diretor(a) Geral",
+      deadline:"30 dias"
+    },
+    "Em Desenvolvimento":{
+      finding:"A estrutura de papéis existe, mas falta processo formal de delegação e desenvolvimento de pessoas.",
+      action:"Implante um processo de delegação com acompanhamento (1:1s periódicos) e plano individual de desenvolvimento.",
+      kpi:"% de líderes com plano de desenvolvimento ativo",
+      owner:"RH / Diretor(a) Geral",
+      deadline:"45 dias"
+    },
+    "Estruturado":{
+      finding:"Há rotina de delegação e desenvolvimento, mas a avaliação de desempenho ainda não é formal e periódica.",
+      action:"Implante ciclo de avaliação de desempenho e feedback estruturado (ao menos semestral).",
+      kpi:"% de colaboradores avaliados no ciclo (meta: 100%)",
+      owner:"RH",
+      deadline:"60 dias"
+    },
+    "Avançado":{
+      finding:"A liderança é avaliada e desenvolvida continuamente, com oportunidade de estruturar a sucessão.",
+      action:"Mapeie posições críticas e defina um plano de sucessão para as principais lideranças da empresa.",
+      kpi:"% de posições críticas com sucessor mapeado",
+      owner:"Diretor(a) Geral / RH",
+      deadline:"90 dias"
+    },
+    "Referência":{
+      finding:"A liderança é madura, comunica visão com clareza e desenvolve continuamente novos líderes.",
+      action:"Invista em formação de liderança de próximo nível e cultura de autonomia com responsabilidade.",
+      kpi:"Índice de engajamento/clima organizacional",
+      owner:"Diretor(a) Geral",
+      deadline:"Contínuo"
+    }
+  }
+};
+
+// ---------- Build legend ----------
+const legendEl = document.getElementById('legend');
+SCALE.forEach(s=>{
+  const div = document.createElement('div');
+  div.className = 'legend-item';
+  div.innerHTML = `<b>${s.v}</b> ${s.label}`;
+  legendEl.appendChild(div);
+});
+
+// ---------- Build form ----------
+const form = document.getElementById('diagForm');
+PILLARS.forEach(pillar=>{
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="pillar-header">
+      <span class="pillar-dot" style="background:${pillar.color}"></span>
+      <h2>${pillar.name}</h2>
+    </div>
+    <p class="pillar-sub">6 perguntas · escala de 1 (não existe) a 5 (otimizado e monitorado)</p>
+  `;
+  pillar.questions.forEach((q,i)=>{
+    const qDiv = document.createElement('div');
+    qDiv.className = 'question';
+    const name = `${pillar.id}_${i}`;
+    let scaleHtml = '<div class="scale">';
+    SCALE.forEach(s=>{
+      scaleHtml += `<label data-name="${name}" data-val="${s.v}">
+        <input type="radio" name="${name}" value="${s.v}" required>
+        <span>${s.v} — ${s.label}</span>
+      </label>`;
+    });
+    scaleHtml += '</div>';
+    qDiv.innerHTML = `<p>${i+1}. ${q}</p>${scaleHtml}`;
+    card.appendChild(qDiv);
+  });
+  form.appendChild(card);
+});
+
+form.addEventListener('change', e=>{
+  if(e.target.type==='radio'){
+    const name = e.target.name;
+    document.querySelectorAll(`label[data-name="${name}"]`).forEach(l=>l.classList.remove('checked'));
+    e.target.closest('label').classList.add('checked');
+  }
+});
+
+// ---------- Calculate (gate de captura antes do resultado) ----------
+let pendingPillarScores = null;
+let pendingOverallPct = null;
+
+document.getElementById('btnCalc').addEventListener('click', ()=>{
+  const formData = new FormData(form);
+  let allAnswered = true;
+  const pillarScores = {};
+
+  PILLARS.forEach(pillar=>{
+    let sum = 0, count = 0;
+    pillar.questions.forEach((q,i)=>{
+      const val = formData.get(`${pillar.id}_${i}`);
+      if(!val){ allAnswered = false; }
+      else { sum += parseInt(val,10); count++; }
+    });
+    const avg = count ? sum/count : 0;
+    const pct = Math.round(((avg-1)/4)*100);
+    pillarScores[pillar.id] = {pct: Math.max(pct,0), name: pillar.name, color: pillar.color};
+  });
+
+  const hint = document.getElementById('hint');
+  if(!allAnswered){
+    hint.style.display = 'block';
+    return;
+  }
+  hint.style.display = 'none';
+
+  const overallPct = Math.round(
+    Object.values(pillarScores).reduce((a,b)=>a+b.pct,0) / PILLARS.length
+  );
+
+  pendingPillarScores = pillarScores;
+  pendingOverallPct = overallPct;
+
+  document.getElementById('btnCalc').closest('.btn-row').style.display = 'none';
+  const gate = document.getElementById('leadGate');
+  gate.style.display = 'block';
+  gate.scrollIntoView({behavior:'smooth'});
+});
+
+// ---------- Lead capture submit ----------
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+document.getElementById('leadForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  if(!pendingPillarScores) return;
+
+  const nome = document.getElementById('leadNome').value.trim();
+  const email = document.getElementById('leadEmail').value.trim();
+  const empresa = document.getElementById('leadEmpresa').value.trim();
+  const whatsapp = document.getElementById('leadWhatsapp').value.trim();
+  const consentimento = document.getElementById('leadConsent').checked;
+  const website = document.getElementById('leadWebsite').value.trim();
+
+  let ok = true;
+  document.getElementById('errNome').style.display = nome.length < 2 ? 'block' : 'none';
+  if(nome.length < 2) ok = false;
+  document.getElementById('errEmail').style.display = !EMAIL_RE.test(email) ? 'block' : 'none';
+  if(!EMAIL_RE.test(email)) ok = false;
+  document.getElementById('errConsent').style.display = !consentimento ? 'block' : 'none';
+  if(!consentimento) ok = false;
+  if(!ok) return;
+
+  const lvl = levelInfo(pendingOverallPct);
+  const extra = { "Maturidade Geral": pendingOverallPct + '% (' + lvl.name + ')' };
+  PILLARS.forEach(p=>{
+    const s = pendingPillarScores[p.id];
+    extra[p.name] = s.pct + '% (' + levelInfo(s.pct).name + ')';
+  });
+
+  const btn = document.getElementById('btnLeadSubmit');
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+  document.getElementById('errSubmit').style.display = 'none';
+
+  try {
+    await fetch('/api/newsletter', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        nome, empresa, email, whatsapp, consentimento,
+        origem: 'Diagnóstico de Maturidade Empresarial',
+        website,
+        extra
+      })
+    });
+  } catch (err) {
+    // Mesmo se o e-mail falhar, não bloqueia o lead de ver o próprio resultado.
+    console.error('Falha ao enviar lead:', err);
+  }
+
+  const waMsg = encodeURIComponent(
+    `Olá! Fiz o Diagnóstico de Maturidade Empresarial (resultado: ${pendingOverallPct}% — ${lvl.name}) e gostaria de conversar sobre os próximos passos.`
+  );
+  document.getElementById('ctaWhatsapp').href = `https://wa.me/5511933400264?text=${waMsg}`;
+
+  document.getElementById('leadGate').style.display = 'none';
+  renderResults(pendingPillarScores, pendingOverallPct);
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({behavior:'smooth'});
+});
+
+function renderResults(pillarScores, overallPct){
+  // Score circle
+  const circumference = 2 * Math.PI * 68;
+  const offset = circumference - (overallPct/100)*circumference;
+  document.getElementById('scoreArc').setAttribute('stroke-dasharray', circumference);
+  document.getElementById('scoreArc').setAttribute('stroke-dashoffset', offset);
+  document.getElementById('scoreNum').textContent = overallPct + '%';
+  const lvl = levelInfo(overallPct);
+  const tag = document.getElementById('levelTag');
+  tag.textContent = lvl.name;
+  tag.style.background = lvl.color;
+  tag.style.color = '#fff';
+
+  // Bars
+  const barsEl = document.getElementById('barsChart');
+  barsEl.innerHTML = '';
+  PILLARS.forEach(p=>{
+    const s = pillarScores[p.id];
+    const l = levelInfo(s.pct);
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = `
+      <div class="bar-label"><span>${s.name}</span><span>${s.pct}%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${s.pct}%;background:${l.color}"></div></div>
+    `;
+    barsEl.appendChild(row);
+  });
+
+  // Radar chart
+  drawRadar(pillarScores);
+
+  // Recommendations
+  const recEl = document.getElementById('recommendations');
+  recEl.innerHTML = '';
+  PILLARS.forEach(p=>{
+    const s = pillarScores[p.id];
+    const l = levelInfo(s.pct);
+    const rec = RECS[p.id][l.name];
+    const card = document.createElement('div');
+    card.className = 'rec-card';
+    card.style.borderLeftColor = l.color;
+    card.innerHTML = `
+      <h3>${p.name} <span class="status-pill" style="background:${l.color}">${l.name} · ${s.pct}%</span></h3>
+      <p class="rec-finding"><b>Achado:</b> ${rec.finding}</p>
+      <p class="rec-finding"><b>Ação recomendada:</b> ${rec.action}</p>
+      <div class="rec-meta">
+        <div><b>Indicador sugerido</b>${rec.kpi}</div>
+        <div><b>Responsável</b>${rec.owner}</div>
+        <div><b>Prazo sugerido</b>${rec.deadline}</div>
+        <div><b>Nível atual</b>${l.name} (${s.pct}%)</div>
+      </div>
+    `;
+    recEl.appendChild(card);
+  });
+}
+
+function drawRadar(pillarScores){
+  const svg = document.getElementById('radarChart');
+  svg.innerHTML = '';
+  const cx = 160, cy = 130, R = 95;
+  const n = PILLARS.length;
+  const angleStep = (Math.PI*2)/n;
+  const levels = [20,40,60,80,100];
+
+  function point(i, r){
+    const angle = -Math.PI/2 + i*angleStep;
+    return [cx + r*Math.cos(angle), cy + r*Math.sin(angle)];
+  }
+
+  // grid rings
+  levels.forEach(lvl=>{
+    const r = (lvl/100)*R;
+    let pts = [];
+    for(let i=0;i<n;i++){ pts.push(point(i,r).join(',')); }
+    const poly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    poly.setAttribute('points', pts.join(' '));
+    poly.setAttribute('fill','none');
+    poly.setAttribute('stroke','#D9DCE1');
+    poly.setAttribute('stroke-width','1');
+    svg.appendChild(poly);
+  });
+
+  // axes + labels
+  PILLARS.forEach((p,i)=>{
+    const [x,y] = point(i,R);
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',cx); line.setAttribute('y1',cy);
+    line.setAttribute('x2',x); line.setAttribute('y2',y);
+    line.setAttribute('stroke','#D9DCE1');
+    svg.appendChild(line);
+
+    const [lx,ly] = point(i, R+22);
+    const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute('x', lx); text.setAttribute('y', ly);
+    text.setAttribute('text-anchor','middle');
+    text.setAttribute('font-size','10.5');
+    text.setAttribute('font-family','Open Sans, Arial, sans-serif');
+    text.setAttribute('fill','#1D2B3C');
+    text.setAttribute('font-weight','600');
+    text.textContent = p.name;
+    svg.appendChild(text);
+  });
+
+  // data polygon
+  let dataPts = [];
+  PILLARS.forEach((p,i)=>{
+    const pct = pillarScores[p.id].pct;
+    const r = (pct/100)*R;
+    dataPts.push(point(i,r));
+  });
+  const dataPoly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  dataPoly.setAttribute('points', dataPts.map(pt=>pt.join(',')).join(' '));
+  dataPoly.setAttribute('fill', 'rgba(193,161,96,0.35)');
+  dataPoly.setAttribute('stroke', '#C1A160');
+  dataPoly.setAttribute('stroke-width','2');
+  svg.appendChild(dataPoly);
+
+  dataPts.forEach(pt=>{
+    const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circle.setAttribute('cx', pt[0]); circle.setAttribute('cy', pt[1]);
+    circle.setAttribute('r', 3.5);
+    circle.setAttribute('fill', '#1D2B3C');
+    svg.appendChild(circle);
+  });
+}
+
+document.getElementById('btnRestart').addEventListener('click', ()=>{
+  form.reset();
+  document.querySelectorAll('.scale label').forEach(l=>l.classList.remove('checked'));
+  document.getElementById('leadForm').reset();
+  pendingPillarScores = null;
+  pendingOverallPct = null;
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('leadGate').style.display = 'none';
+  document.getElementById('btnCalc').closest('.btn-row').style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+</script>
+</body>
+</html>

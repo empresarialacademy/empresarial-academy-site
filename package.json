@@ -1,0 +1,37 @@
+{
+  "name": "empresarial-academy-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Site institucional premium da Empresarial Academy — Next.js, mobile-first e SEO avançado.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "next": "~15.4.11",
+    "nodemailer": "^9.0.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "resend": "^6.16.0",
+    "sharp": "^0.35.2"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/node": "^22.10.0",
+    "@types/nodemailer": "^8.0.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.18.0",
+    "eslint-config-next": "~15.4.11",
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.9",
+    "tailwindcss": "^4.0.0",
+    "tsx": "^4.22.4",
+    "typescript": "^5.7.3"
+  }
+}
