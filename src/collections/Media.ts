@@ -3,6 +3,10 @@ import type { CollectionConfig } from "payload";
 export const Media: CollectionConfig = {
   slug: "media",
   labels: { singular: "Mídia", plural: "Mídia" },
+  // Fora do menu: as imagens são enviadas junto do artigo/material (campo de
+  // upload inline), não como uma coleção avulsa (decisão do Thiago, 2026-07-23).
+  // A coleção continua existindo como destino dos uploads e das relações.
+  admin: { hidden: true },
   access: { read: () => true },
   upload: {
     staticDir: "public/uploads",

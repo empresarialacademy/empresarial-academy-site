@@ -638,7 +638,7 @@ export interface AdCompetitor {
   createdAt: string;
 }
 /**
- * Sistemas listados na "Central EA" (tela após o login). Deixe "URL" em branco para um card "em breve".
+ * Portfólio de sistemas da EA (cartão de visita). Deixe "URL" em branco para um card "em breve".
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "system-links".

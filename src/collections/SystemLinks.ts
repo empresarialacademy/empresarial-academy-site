@@ -16,7 +16,15 @@ export const SystemLinks: CollectionConfig = {
     defaultColumns: ["name", "url", "order"],
     group: "Marketing",
     description:
-      'Sistemas listados na "Central EA" (tela após o login). Deixe "URL" em branco para um card "em breve".',
+      'Portfólio de sistemas da EA (cartão de visita). Deixe "URL" em branco para um card "em breve".',
+    components: {
+      views: {
+        // Galeria de cartões (portfólio) no lugar da tabela padrão.
+        list: {
+          Component: "@/components/admin/systemlinks/SystemLinksListView#SystemLinksListView",
+        },
+      },
+    },
   },
   access: {
     read: ({ req }) => Boolean(req.user),
