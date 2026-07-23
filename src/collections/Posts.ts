@@ -1,6 +1,8 @@
 import type { CollectionConfig } from "payload";
 import { formatSlug } from "@/lib/slug";
 import { sendNewPostAlert } from "@/lib/content-alerts";
+import { eaEditor } from "@/lib/editor";
+import { buildPreviewUrl } from "@/lib/preview";
 
 export const Posts: CollectionConfig = {
   slug: "posts",
@@ -9,6 +11,10 @@ export const Posts: CollectionConfig = {
     useAsTitle: "title",
     defaultColumns: ["title", "category", "status", "publishedAt"],
     group: "Blog",
+    // Botão "Visualizar": abre o artigo no layout REAL do blog (mesmo em
+    // rascunho), via rota /preview autenticada por segredo.
+    preview: (doc) =>
+      doc?.slug ? buildPreviewUrl("posts", String(doc.slug)) : null,
   },
   access: {
     // Público lê apenas artigos publicados; usuários autenticados veem tudo.
@@ -50,7 +56,7 @@ export const Posts: CollectionConfig = {
       relationTo: "media",
       label: "Imagem destacada",
     },
-    { name: "content", type: "richText", label: "Conteúdo" },
+    { name: "content", type: "richText", label: "Conteúdo", editor: eaEditor },
     {
       name: "category",
       type: "relationship",

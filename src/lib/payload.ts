@@ -23,20 +23,29 @@ export async function getPublishedPosts(limit = 12, page = 1) {
   });
 }
 
-/** Busca um artigo publicado pelo slug. */
-export async function getPostBySlug(slug: string) {
+/**
+ * Busca um artigo pelo slug. Em modo preview (`draft: true`, acionado pela
+ * rota /preview autenticada por segredo) ignora o filtro de publicado e usa
+ * `overrideAccess` para trazer o rascunho — assim o botão "Visualizar" do EA
+ * HUB mostra o conteúdo salvo no layout real, mesmo antes de publicar.
+ */
+export async function getPostBySlug(slug: string, opts?: { draft?: boolean }) {
   const payload = await getPayloadClient();
+  const where: Where = opts?.draft
+    ? { slug: { equals: slug } }
+    : {
+        and: [
+          { slug: { equals: slug } },
+          { status: { equals: "published" } },
+          { publishedAt: { less_than_equal: new Date().toISOString() } },
+        ],
+      };
   const { docs } = await payload.find({
     collection: "posts",
-    where: {
-      and: [
-        { slug: { equals: slug } },
-        { status: { equals: "published" } },
-        { publishedAt: { less_than_equal: new Date().toISOString() } },
-      ],
-    },
+    where,
     depth: 2,
     limit: 1,
+    overrideAccess: Boolean(opts?.draft),
   });
   return docs[0] ?? null;
 }

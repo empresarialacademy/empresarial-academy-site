@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import { draftMode } from "next/headers";
 import type { SerializedEditorState } from "@payloadcms/richtext-lexical/lexical";
+import { EaRichText } from "@/components/EaRichText";
 import { PageHero } from "@/components/layout/PageHero";
 import { getPostBySlug } from "@/lib/payload";
 import { siteConfig } from "@/lib/site-config";
@@ -15,7 +16,8 @@ type Params = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  const { isEnabled: isDraft } = await draftMode();
+  const post = await getPostBySlug(slug, { draft: isDraft });
   if (!post) return { title: "Artigo não encontrado" };
 
   const seo = post.seo ?? {};
@@ -37,7 +39,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function PostPage({ params }: Params) {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  const { isEnabled: isDraft } = await draftMode();
+  const post = await getPostBySlug(slug, { draft: isDraft });
   if (!post) notFound();
 
   const cover = typeof post.coverImage === "object" ? post.coverImage : null;
@@ -91,11 +94,15 @@ export default async function PostPage({ params }: Params) {
           </div>
         )}
 
+        {isDraft && (
+          <div className="mt-6 rounded-lg border border-gold-ink/40 bg-surface px-4 py-2 text-sm text-navy">
+            Pré-visualização (rascunho) — assim ficará no site ao publicar.
+          </div>
+        )}
+
         <div className="prose-ea mt-10">
           {post.content && (
-            <RichText
-              data={post.content as unknown as SerializedEditorState}
-            />
+            <EaRichText data={post.content as unknown as SerializedEditorState} />
           )}
         </div>
 
