@@ -23,7 +23,7 @@ const aiBots = [
 ];
 
 export default function robots(): MetadataRoute.Robots {
-  const common = { allow: "/", disallow: ["/hub", "/api"] };
+  const common = { allow: "/", disallow: ["/admin", "/api"] };
   return {
     rules: [
       { userAgent: "*", ...common },

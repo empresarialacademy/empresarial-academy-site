@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { attributeLeadToAds } from "@/lib/ads-attribution";
 
 /**
  * Leads captados pelo site (newsletter, pop-up, download de materiais,
@@ -14,6 +15,8 @@ export const Leads: CollectionConfig = {
     group: "Captação",
   },
   access: {
+    // Somente usuários do admin podem ler/gerenciar; criação é feita
+    // exclusivamente pelo servidor (Local API), nunca pela REST pública.
     read: ({ req }) => Boolean(req.user),
     create: () => false,
     update: ({ req }) => Boolean(req.user),
@@ -43,6 +46,7 @@ export const Leads: CollectionConfig = {
       label: "Consentimento LGPD",
       admin: { position: "sidebar" },
     },
+    // ——— Nutrição pós-diagnóstico (sequência automática de e-mails) ———
     {
       name: "nurtureStage",
       type: "number",
@@ -71,6 +75,7 @@ export const Leads: CollectionConfig = {
       label: "Nutrição — último envio",
       admin: { position: "sidebar" },
     },
+    // ——— Campanhas manuais (newsletter/mailmarketing) ———
     {
       name: "marketingOptOut",
       type: "checkbox",
@@ -82,5 +87,92 @@ export const Leads: CollectionConfig = {
           "Descadastro do link 'Sair da lista' das campanhas manuais. Independente da nutrição pós-diagnóstico (nurtureOptOut).",
       },
     },
+    // ——— Atribuição de campanha (Google Ads) ———
+    {
+      type: "collapsible",
+      label: "Atribuição de campanha (Ads)",
+      admin: { position: "sidebar" },
+      fields: [
+        {
+          name: "adCampaign",
+          type: "relationship",
+          relationTo: "ad-campaigns",
+          label: "Campanha",
+          admin: {
+            description: "Preenchido automaticamente por gclid/utm_campaign — pode ser corrigido à mão.",
+          },
+        },
+        { name: "adGroup", type: "relationship", relationTo: "ad-groups", label: "Grupo de anúncios" },
+        { name: "adKeyword", type: "relationship", relationTo: "ad-keywords", label: "Palavra-chave" },
+        {
+          name: "adGclid",
+          type: "text",
+          label: "gclid (bruto)",
+          admin: { readOnly: true },
+        },
+      ],
+    },
+    // ——— Resultado comercial (CRM manual — RD Station CRM) ———
+    {
+      type: "collapsible",
+      label: "Resultado comercial (CRM)",
+      admin: { position: "sidebar" },
+      fields: [
+        {
+          name: "dealStatus",
+          type: "select",
+          label: "Status do negócio",
+          defaultValue: "em_andamento",
+          options: [
+            { label: "Em andamento", value: "em_andamento" },
+            { label: "Ganho", value: "ganho" },
+            { label: "Perdido", value: "perdido" },
+          ],
+        },
+        {
+          name: "dealPackage",
+          type: "select",
+          label: "Pacote",
+          defaultValue: "nenhum",
+          options: [
+            { label: "Nenhum", value: "nenhum" },
+            { label: "Essencial (recorrente)", value: "essencial" },
+            { label: "Implementação (projeto)", value: "implementacao" },
+            { label: "Outro", value: "outro" },
+          ],
+        },
+        {
+          name: "dealValue",
+          type: "number",
+          label: "Valor fechado (R$, opcional)",
+          admin: { description: "Sobrepõe o valor padrão do pacote quando preenchido." },
+        },
+        {
+          name: "dealMonths",
+          type: "number",
+          label: "Meses de contrato (Essencial)",
+          defaultValue: 3,
+        },
+        { name: "dealClosedAt", type: "date", label: "Fechado em" },
+        { name: "dealNotes", type: "textarea", label: "Notas comerciais" },
+      ],
+    },
   ],
+  hooks: {
+    beforeChange: [
+      async ({ data, operation, req }) => {
+        if (operation !== "create") return data;
+        try {
+          const attribution = await attributeLeadToAds(data.details, req.payload);
+          if (attribution.adCampaign) data.adCampaign = attribution.adCampaign;
+          if (attribution.adGroup) data.adGroup = attribution.adGroup;
+          if (attribution.adKeyword) data.adKeyword = attribution.adKeyword;
+          if (attribution.adGclid) data.adGclid = attribution.adGclid;
+        } catch (e) {
+          req.payload.logger.error(`[leads] falha na atribuição de Ads: ${e}`);
+        }
+        return data;
+      },
+    ],
+  },
 };

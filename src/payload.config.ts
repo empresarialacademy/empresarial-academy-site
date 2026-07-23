@@ -17,6 +17,15 @@ import { MaterialFiles } from "@/collections/MaterialFiles";
 import { Testimonials } from "@/collections/Testimonials";
 import { Leads } from "@/collections/Leads";
 import { resendEmailAdapter } from "@/lib/payload-email-adapter";
+import { EmailLogs } from "@/collections/EmailLogs";
+import { EmailSegments } from "@/collections/EmailSegments";
+import { EmailCampaigns } from "@/collections/EmailCampaigns";
+import { AdCampaigns } from "@/collections/AdCampaigns";
+import { AdGroups } from "@/collections/AdGroups";
+import { AdKeywords } from "@/collections/AdKeywords";
+import { AdMetricsDaily } from "@/collections/AdMetricsDaily";
+import { SystemLinks } from "@/collections/SystemLinks";
+import { AdsSettings } from "@/globals/AdsSettings";
 import { siteConfig } from "@/lib/site-config";
 
 const filename = fileURLToPath(import.meta.url);
@@ -29,7 +38,8 @@ const db = databaseUri.startsWith("postgres")
   ? postgresAdapter({ pool: { connectionString: databaseUri }, push: true })
   : sqliteAdapter({ client: { url: databaseUri } });
 
-// Storage S3/R2 para uploads em produção.
+// Storage S3/R2 para uploads em produção (serverless tem filesystem efêmero).
+// Ativa apenas quando as variáveis estiverem definidas; em dev continua no disco.
 const plugins: Plugin[] = [];
 if (process.env.S3_BUCKET && process.env.S3_ACCESS_KEY_ID) {
   plugins.push(
@@ -58,7 +68,34 @@ export default buildConfig({
     user: Users.slug,
     importMap: { baseDir: path.resolve(dirname) },
     meta: {
-      titleSuffix: "— Empresarial Academy Admin",
+      titleSuffix: "— EA Marketing Manager",
+    },
+    components: {
+      afterNavLinks: [
+        "@/components/admin/central/CentralEaNavLink#CentralEaNavLink",
+        "@/components/admin/marketing/EaMarketingManagerNavLink#EaMarketingManagerNavLink",
+      ],
+      graphics: {
+        Logo: "@/components/admin/brand/EaLogo#EaLogo",
+        Icon: "@/components/admin/brand/EaIcon#EaIcon",
+      },
+      views: {
+        centralEa: {
+          Component: "@/components/admin/central/CentralEaView#CentralEaView",
+          path: "/central-ea",
+          meta: { title: "Central EA" },
+        },
+        marketingManager: {
+          Component: "@/components/admin/marketing/EaMarketingManagerView#EaMarketingManagerView",
+          path: "/marketing-manager",
+          meta: { title: "EA Marketing Manager" },
+        },
+        adsPerformance: {
+          Component: "@/components/admin/ads/AdsPerformanceView#AdsPerformanceView",
+          path: "/ads-performance",
+          meta: { title: "Desempenho de Ads" },
+        },
+      },
     },
   },
   collections: [
@@ -69,8 +106,19 @@ export default buildConfig({
     MaterialFiles,
     Testimonials,
     Leads,
+    EmailSegments,
+    EmailCampaigns,
+    EmailLogs,
+    AdCampaigns,
+    AdGroups,
+    AdKeywords,
+    AdMetricsDaily,
+    SystemLinks,
     Media,
     Users,
+  ],
+  globals: [
+    AdsSettings,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",

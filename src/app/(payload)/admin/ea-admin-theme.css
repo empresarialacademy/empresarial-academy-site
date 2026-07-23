@@ -1,0 +1,18 @@
+/**
+ * Tema Empresarial Academy para o /admin (login incluso). O CSS do Payload
+ * inteiro vive dentro de `@layer payload-default` — camadas CSS sem @layer
+ * sempre vencem camadas com @layer, independente de especificidade/ordem,
+ * então este bloco (propositalmente SEM @layer) sobrescreve o Payload em
+ * qualquer tema (claro/escuro) com uma única regra, sem precisar duplicar
+ * seletores de dark mode.
+ *
+ * Só troco `--theme-elevation-800/600` (cor dos botões primários e outros
+ * destaques "de ênfase" do Payload) para o navy da marca — não toco nas
+ * demais variáveis de elevação (usadas em fundos/bordas/texto secundário em
+ * todo o admin) nem nas cores semânticas (success/warning/error), pra não
+ * arriscar contraste/legibilidade em telas que não foram revisadas uma a uma.
+ */
+:root {
+  --theme-elevation-800: #1d2b3c;
+  --theme-elevation-600: #2a3d54;
+}
