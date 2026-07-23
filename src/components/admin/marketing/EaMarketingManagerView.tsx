@@ -1,6 +1,7 @@
 import type { AdminViewServerProps } from "payload";
 import Link from "next/link";
 import Image from "next/image";
+import { EaHubBackLink } from "@/components/admin/brand/EaHubBackLink";
 
 const NAVY = "#1D2B3C";
 const GOLD = "#C1A160";
@@ -107,6 +108,8 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
       </header>
 
       <div style={{ padding: "1.5rem 2rem", display: "grid", gap: "1.75rem" }}>
+        <EaHubBackLink />
+
         <Section title="Anúncios">
           <CardGrid cards={[adsCard]} highlight />
         </Section>

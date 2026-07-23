@@ -75,6 +75,13 @@ export default buildConfig({
     importMap: { baseDir: path.resolve(dirname) },
     meta: {
       titleSuffix: "— EA HUB",
+      // Favicon da aba do navegador no EA HUB = logo oficial da Empresarial
+      // Academy (substitui o ícone padrão do Payload).
+      icons: [
+        { rel: "icon", type: "image/png", url: "/logo-empresarial-academy.png" },
+        { rel: "shortcut icon", type: "image/png", url: "/logo-empresarial-academy.png" },
+        { rel: "apple-touch-icon", type: "image/png", url: "/logo-empresarial-academy.png" },
+      ],
     },
     components: {
       afterNavLinks: [

@@ -13,6 +13,7 @@ import { AdsCampaignDetail } from "./AdsCampaignDetail";
 import { AdsForecastPanel } from "./AdsForecastPanel";
 import { AdsCompetitorsPanel } from "./AdsCompetitorsPanel";
 import { SyncAdsButton } from "./AdsClientActions";
+import { EaHubBackLink } from "@/components/admin/brand/EaHubBackLink";
 
 type CampaignDoc = {
   id: string | number;
@@ -105,6 +106,7 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
   if (campaigns.length === 0) {
     return (
       <div style={{ padding: 24 }}>
+        <EaHubBackLink />
         <h1>EA ADS Manager</h1>
         {oauthSuccess && (
           <div style={{ padding: 12, backgroundColor: "#e6f4ea", color: "#137333", marginBottom: 16, borderRadius: 4 }}>
@@ -238,6 +240,7 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
 
   return (
     <div style={{ padding: "var(--base, 24px)", maxWidth: 1100 }}>
+      <EaHubBackLink />
       <h1>EA ADS Manager</h1>
 
       {oauthSuccess && (

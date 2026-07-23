@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     if (frontmatter.category) {
       const catRes = await payload.find({
         collection: "categories",
-        where: { title: { equals: frontmatter.category } },
+        where: { name: { equals: frontmatter.category } },
         limit: 1,
       });
       if (catRes.docs.length > 0) frontmatter.categoryId = catRes.docs[0].id;

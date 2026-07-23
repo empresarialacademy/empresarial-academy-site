@@ -390,6 +390,30 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-23 (b) (EA HUB — correções de usabilidade, bug de import .md, favicon)
+Correções pontuais sobre o EA HUB (não deployado ainda — aguardando sync do Neno/deploy).
+
+- **Bug corrigido — import de `.md` em Artigos:** `/api/parse-markdown` buscava a
+  categoria com `where: { title: ... }`, mas a coleção `categories` usa o campo
+  `name` (`useAsTitle:"name"`, sem campo `title`) → o Payload rejeitava com
+  `The following path cannot be queried: title`. Trocado para `name`. O mapeamento
+  no `ImportMarkdownButton` (`categoryId`→`category`, `authorId`→`author`) já estava
+  correto; `users.name` é queryável (sem risco do mesmo erro). O `.md` de exemplo
+  (Antigravity/…/Tema_01_Representantes_Comerciais) importa com `category:"Vendas"`.
+- **Favicon do EA HUB:** `admin.meta.icons` no `payload.config.ts` aponta a aba do
+  navegador do `/eahub` para `/logo-empresarial-academy.png` (antes usava o ícone
+  padrão do Payload). O site público já usava o logo (`src/app/icon.png`).
+- **Usabilidade — botão "Voltar ao EA HUB":** as views custom em tela cheia
+  (`marketing-manager`, `ads-performance`) NÃO renderizam a nav lateral do Payload —
+  sem caminho de volta a não ser o botão do navegador. Novo componente
+  `src/components/admin/brand/EaHubBackLink.tsx` adicionado no topo das duas views
+  (ADS: nos dois caminhos de render).
+- **Análise de redundância entregue (decisão do Thiago pendente):** `EaHubDashboard`
+  (home `/eahub`) e `EaMarketingManagerView` (`/eahub/marketing-manager`) são dois
+  hubs de cards sobrepostos (~80%) apontando para as MESMAS coleções. Recomendação:
+  unificar (a home passa a ser o Marketing Manager, "entrada única" pela definição do
+  Thiago) OU diferenciar claramente. NÃO alterado nesta sessão — aguarda decisão.
+
 ### Sessão 2026-07-23 (EA HUB — rebrand do admin, editor de conteúdo, preview, leads, portfólio)
 Entregue em 6 lotes, cada um commitado (git ativo desde a restauração). **No ar em
 produção** (`empresarialacademy.com/eahub`), schema do Neon sincronizado antes do
