@@ -81,6 +81,7 @@ export interface Config {
     'ad-groups': AdGroup;
     'ad-keywords': AdKeyword;
     'ad-metrics-daily': AdMetricsDaily;
+    'ad-competitors': AdCompetitor;
     'system-links': SystemLink;
     media: Media;
     users: User;
@@ -105,6 +106,7 @@ export interface Config {
     'ad-groups': AdGroupsSelect<false> | AdGroupsSelect<true>;
     'ad-keywords': AdKeywordsSelect<false> | AdKeywordsSelect<true>;
     'ad-metrics-daily': AdMetricsDailySelect<false> | AdMetricsDailySelect<true>;
+    'ad-competitors': AdCompetitorsSelect<false> | AdCompetitorsSelect<true>;
     'system-links': SystemLinksSelect<false> | SystemLinksSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -117,8 +119,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'ads-settings': AdsSetting;
+  };
+  globalsSelect: {
+    'ads-settings': AdsSettingsSelect<false> | AdsSettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -435,6 +441,14 @@ export interface AdCampaign {
   cpcCeiling?: number | null;
   startDate?: string | null;
   notes?: string | null;
+  forecastClicks?: number | null;
+  forecastImpressions?: number | null;
+  forecastCost?: number | null;
+  forecastCtr?: number | null;
+  forecastAvgCpc?: number | null;
+  forecastDailyBudget?: number | null;
+  forecastCapturedAt?: string | null;
+  forecastNotes?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -472,6 +486,12 @@ export interface AdKeyword {
   rollupCost?: number | null;
   rollupConversions?: number | null;
   rollupUpdatedAt?: string | null;
+  plannerVolume?: string | null;
+  plannerCompetition?: ('sem_dados' | 'baixa' | 'media' | 'alta') | null;
+  plannerTopBidLow?: number | null;
+  plannerTopBidHigh?: number | null;
+  plannerYoY?: string | null;
+  plannerCapturedAt?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -570,6 +590,29 @@ export interface AdMetricsDaily {
   cost?: number | null;
   conversions?: number | null;
   source?: ('manual' | 'api') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Quem o Google mostra (anúncios e orgânico) nas buscas pelas palavras-chave da campanha.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ad-competitors".
+ */
+export interface AdCompetitor {
+  id: number;
+  name: string;
+  domain?: string | null;
+  /**
+   * O termo buscado no Google em que este concorrente apareceu.
+   */
+  keywordText: string;
+  type?: ('patrocinado' | 'organico' | 'local') | null;
+  adTitle?: string | null;
+  adSnippet?: string | null;
+  appearances?: number | null;
+  seenAt?: string | null;
+  notes?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -673,6 +716,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'ad-metrics-daily';
         value: number | AdMetricsDaily;
+      } | null)
+    | ({
+        relationTo: 'ad-competitors';
+        value: number | AdCompetitor;
       } | null)
     | ({
         relationTo: 'system-links';
@@ -932,6 +979,14 @@ export interface AdCampaignsSelect<T extends boolean = true> {
   cpcCeiling?: T;
   startDate?: T;
   notes?: T;
+  forecastClicks?: T;
+  forecastImpressions?: T;
+  forecastCost?: T;
+  forecastCtr?: T;
+  forecastAvgCpc?: T;
+  forecastDailyBudget?: T;
+  forecastCapturedAt?: T;
+  forecastNotes?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -967,6 +1022,12 @@ export interface AdKeywordsSelect<T extends boolean = true> {
   rollupCost?: T;
   rollupConversions?: T;
   rollupUpdatedAt?: T;
+  plannerVolume?: T;
+  plannerCompetition?: T;
+  plannerTopBidLow?: T;
+  plannerTopBidHigh?: T;
+  plannerYoY?: T;
+  plannerCapturedAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -982,6 +1043,23 @@ export interface AdMetricsDailySelect<T extends boolean = true> {
   cost?: T;
   conversions?: T;
   source?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ad-competitors_select".
+ */
+export interface AdCompetitorsSelect<T extends boolean = true> {
+  name?: T;
+  domain?: T;
+  keywordText?: T;
+  type?: T;
+  adTitle?: T;
+  adSnippet?: T;
+  appearances?: T;
+  seenAt?: T;
+  notes?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1111,6 +1189,31 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ads-settings".
+ */
+export interface AdsSetting {
+  id: number;
+  /**
+   * Gerado automaticamente ao conectar com o Google no painel. Não edite manualmente a não ser que saiba o que está fazendo.
+   */
+  refreshToken?: string | null;
+  lastSync?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ads-settings_select".
+ */
+export interface AdsSettingsSelect<T extends boolean = true> {
+  refreshToken?: T;
+  lastSync?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

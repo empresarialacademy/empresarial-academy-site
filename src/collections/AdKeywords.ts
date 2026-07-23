@@ -70,5 +70,41 @@ export const AdKeywords: CollectionConfig = {
       label: "Métricas (acumulado)",
       fields: rollupFields,
     },
+    // ——— Dados do Planejador de Palavras-chave (Google) ———
+    // Volume/lances/concorrência ANTES de a campanha existir — base do
+    // forecast pré-investimento. Alimentado pelo seed-ads-recon ou à mão.
+    {
+      type: "collapsible",
+      label: "Planejador do Google (pré-investimento)",
+      fields: [
+        {
+          type: "row",
+          fields: [
+            { name: "plannerVolume", type: "text", label: "Pesquisas/mês (faixa)" },
+            {
+              name: "plannerCompetition",
+              type: "select",
+              label: "Concorrência",
+              defaultValue: "sem_dados",
+              options: [
+                { label: "Sem dados (volume ~zero)", value: "sem_dados" },
+                { label: "Baixa", value: "baixa" },
+                { label: "Média", value: "media" },
+                { label: "Alta", value: "alta" },
+              ],
+            },
+          ],
+        },
+        {
+          type: "row",
+          fields: [
+            { name: "plannerTopBidLow", type: "number", label: "Lance topo — mín (R$)" },
+            { name: "plannerTopBidHigh", type: "number", label: "Lance topo — máx (R$)" },
+            { name: "plannerYoY", type: "text", label: "Variação YoY" },
+          ],
+        },
+        { name: "plannerCapturedAt", type: "date", label: "Capturado em" },
+      ],
+    },
   ],
 };

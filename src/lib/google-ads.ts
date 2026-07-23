@@ -13,7 +13,6 @@ export function isGoogleAdsConfigured(): boolean {
 
 export async function getGoogleAdsClient() {
   const payload = await getPayload({ config: configPromise });
-  // @ts-expect-error - ads-settings not yet in generated types
   const settings = await payload.findGlobal({ slug: 'ads-settings' }) as unknown as { refreshToken?: string };
   
   if (!settings?.refreshToken) {

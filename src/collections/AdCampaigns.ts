@@ -73,5 +73,36 @@ export const AdCampaigns: CollectionConfig = {
     },
     { name: "startDate", type: "date", label: "Início", admin: { position: "sidebar" } },
     { name: "notes", type: "textarea", label: "Notas" },
+    // ——— Previsão oficial do Google (Planejador de Palavras-chave) ———
+    // Snapshot da simulação pré-investimento; alimentada pelo seed-ads-recon
+    // (ou manualmente, copiando da aba "Previsão" do Planejador).
+    {
+      type: "collapsible",
+      label: "Previsão do Google (pré-investimento)",
+      fields: [
+        {
+          type: "row",
+          fields: [
+            { name: "forecastClicks", type: "number", label: "Cliques/mês previstos" },
+            { name: "forecastImpressions", type: "number", label: "Impressões/mês" },
+            { name: "forecastCost", type: "number", label: "Custo/mês (R$)" },
+          ],
+        },
+        {
+          type: "row",
+          fields: [
+            { name: "forecastCtr", type: "number", label: "CTR previsto (%)" },
+            { name: "forecastAvgCpc", type: "number", label: "CPC médio previsto (R$)" },
+            { name: "forecastDailyBudget", type: "number", label: "Orçamento/dia da simulação (R$)" },
+          ],
+        },
+        { name: "forecastCapturedAt", type: "date", label: "Capturada em" },
+        {
+          name: "forecastNotes",
+          type: "textarea",
+          label: "Notas da previsão (geografia, plano salvo etc.)",
+        },
+      ],
+    },
   ],
 };

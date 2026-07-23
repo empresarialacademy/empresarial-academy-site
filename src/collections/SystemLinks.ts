@@ -14,7 +14,7 @@ export const SystemLinks: CollectionConfig = {
   admin: {
     useAsTitle: "name",
     defaultColumns: ["name", "url", "order"],
-    group: "Central EA",
+    group: "Marketing",
     description:
       'Sistemas listados na "Central EA" (tela após o login). Deixe "URL" em branco para um card "em breve".',
   },

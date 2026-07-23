@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getPayloadClient } from "@/lib/payload";
 import { DIAGNOSTIC_ORIGIN } from "@/lib/diagnostic-email";
 import { sendNurtureEmail, type NurtureInput } from "@/lib/nurture-emails";
+import { sendPendingContentAlerts } from "@/lib/content-alerts";
 
 /**
  * Cron diário da sequência de nutrição pós-diagnóstico (vercel.json → crons).
@@ -122,11 +123,16 @@ export async function GET(request: Request) {
     });
   }
 
+  // Alertas de conteúdo AGENDADO cuja data chegou (posts/materiais) — o hook
+  // afterChange só cobre publicação imediata; agendados são enviados aqui.
+  const contentAlerts = dry ? [] : await sendPendingContentAlerts();
+
   return NextResponse.json({
     ok: true,
     dry,
     candidates: docs.length,
     processed: results.length,
     results,
+    contentAlerts,
   });
 }

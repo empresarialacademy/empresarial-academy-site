@@ -241,3 +241,122 @@ export function computeKeywordFlags(keyword: KeywordFlagInput, cpcCeiling: numbe
   }
   return flags;
 }
+
+// ═══════════════ Forecast pré-investimento (simulação) ═══════════════
+
+/**
+ * Premissas dos cenários — ajustar aqui conforme dados reais chegarem.
+ * A base (cliques/custo) vem da PREVISÃO OFICIAL do Google (Planejador de
+ * Palavras-chave, campos forecast* da campanha); as taxas abaixo são as
+ * únicas suposições nossas.
+ */
+export const FORECAST_ASSUMPTIONS = {
+  /** Fração dos cliques que vira lead (conclui o lead-gate do Diagnóstico). */
+  LEAD_CONVERSION: { conservador: 0.04, base: 0.07, otimista: 0.12 },
+  /** Fração dos leads que fecha contrato (Chamada de Diagnóstico → Proposta). */
+  CLOSE_RATE: { conservador: 0.05, base: 0.1, otimista: 0.2 },
+  /** Receita por cliente fechado: Pacote Essencial, ciclo mínimo (R$6.900 × 3). */
+  REVENUE_PER_CLIENT: 6900 * 3,
+} as const;
+
+export type ForecastScenarioKey = "conservador" | "base" | "otimista";
+
+export type ForecastScenario = {
+  key: ForecastScenarioKey;
+  label: string;
+  leadsPerMonth: number;
+  cac: number | null;
+  clientsPerMonth: number;
+  revenuePerMonth: number;
+  roiMultiple: number | null;
+};
+
+export type GoogleForecast = {
+  clicks: number;
+  impressions: number;
+  cost: number;
+  ctrPct: number;
+  avgCpc: number;
+  dailyBudget: number;
+  capturedAt?: string | null;
+  notes?: string | null;
+};
+
+const SCENARIO_LABELS: Record<ForecastScenarioKey, string> = {
+  conservador: "Conservador",
+  base: "Base",
+  otimista: "Otimista",
+};
+
+/** Projeta leads/CAC/clientes/receita a partir da previsão oficial do Google. */
+export function computeForecastScenarios(forecast: GoogleForecast): ForecastScenario[] {
+  const A = FORECAST_ASSUMPTIONS;
+  return (Object.keys(SCENARIO_LABELS) as ForecastScenarioKey[]).map((key) => {
+    const leads = forecast.clicks * A.LEAD_CONVERSION[key];
+    const clients = leads * A.CLOSE_RATE[key];
+    const revenue = clients * A.REVENUE_PER_CLIENT;
+    return {
+      key,
+      label: SCENARIO_LABELS[key],
+      leadsPerMonth: leads,
+      cac: leads > 0 ? forecast.cost / leads : null,
+      clientsPerMonth: clients,
+      revenuePerMonth: revenue,
+      roiMultiple: forecast.cost > 0 ? revenue / forecast.cost : null,
+    };
+  });
+}
+
+/**
+ * Taxa de fechamento (lead → cliente) necessária para a campanha se pagar,
+ * dado o nº de leads do cenário. Ex.: 0.08 = 8% dos leads precisam fechar.
+ */
+export function breakEvenCloseRate(forecast: GoogleForecast, leadsPerMonth: number): number | null {
+  if (leadsPerMonth <= 0) return null;
+  const clientsNeeded = forecast.cost / FORECAST_ASSUMPTIONS.REVENUE_PER_CLIENT;
+  return clientsNeeded / leadsPerMonth;
+}
+
+// ═══════════════ Concorrentes observados no Google ═══════════════
+
+export type CompetitorRow = {
+  name: string;
+  domain?: string | null;
+  keywordText: string;
+  type: "patrocinado" | "organico" | "local";
+  adSnippet?: string | null;
+  appearances?: number | null;
+};
+
+export type CompetitorSummary = {
+  totalAdvertisers: number;
+  /** Concorrentes vistos em 2+ buscas — presença dominante nos anúncios. */
+  dominant: string[];
+  /** Quantos anunciantes usam "diagnóstico gratuito" (a mesma oferta da EA). */
+  freeDiagnosisCount: number;
+  keywordsCovered: number;
+};
+
+export function computeCompetitorSummary(rows: CompetitorRow[]): CompetitorSummary {
+  const sponsored = rows.filter((r) => r.type === "patrocinado");
+  const byName = new Map<string, Set<string>>();
+  for (const r of sponsored) {
+    if (!byName.has(r.name)) byName.set(r.name, new Set());
+    byName.get(r.name)!.add(r.keywordText);
+  }
+  const dominant = [...byName.entries()]
+    .filter(([, kws]) => kws.size >= 2)
+    .map(([name]) => name)
+    .sort();
+  const freeDiagnosisCount = [...byName.keys()].filter((name) =>
+    sponsored.some(
+      (r) => r.name === name && /diagn[oó]stico gr[aá]t/i.test(r.adSnippet ?? ""),
+    ),
+  ).length;
+  return {
+    totalAdvertisers: byName.size,
+    dominant,
+    freeDiagnosisCount,
+    keywordsCovered: new Set(rows.map((r) => r.keywordText)).size,
+  };
+}

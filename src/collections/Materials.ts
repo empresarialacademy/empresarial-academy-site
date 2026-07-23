@@ -152,7 +152,11 @@ export const Materials: CollectionConfig = {
           doc.status === "published" &&
           previousDoc?.status !== "published" &&
           !doc.subscriberAlertSent;
-        if (!justPublished) return doc;
+        // Material AGENDADO (data futura): o cron diário envia quando a
+        // data chegar (sendPendingContentAlerts) — mesmo motivo dos Posts.
+        const isScheduledForFuture =
+          doc.publishedAt && new Date(doc.publishedAt).getTime() > Date.now();
+        if (!justPublished || isScheduledForFuture) return doc;
         try {
           await sendNewMaterialAlert({
             title: doc.title,

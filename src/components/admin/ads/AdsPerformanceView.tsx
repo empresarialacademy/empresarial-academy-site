@@ -3,12 +3,15 @@ import {
   computeCampaignScorecard,
   type AttributedDeal,
   type CampaignScorecard,
+  type CompetitorRow,
   type DailyMetric,
   type DealPackage,
   type DealStatus,
 } from "@/lib/ads-insights";
 import { AdsMatrix } from "./AdsMatrix";
 import { AdsCampaignDetail } from "./AdsCampaignDetail";
+import { AdsForecastPanel } from "./AdsForecastPanel";
+import { AdsCompetitorsPanel } from "./AdsCompetitorsPanel";
 import { SyncAdsButton } from "./AdsClientActions";
 
 type CampaignDoc = {
@@ -18,6 +21,14 @@ type CampaignDoc = {
   dailyBudgetTarget: number;
   monthlyBudgetTarget: number;
   cpcCeiling: number;
+  forecastClicks?: number | null;
+  forecastImpressions?: number | null;
+  forecastCost?: number | null;
+  forecastCtr?: number | null;
+  forecastAvgCpc?: number | null;
+  forecastDailyBudget?: number | null;
+  forecastCapturedAt?: string | null;
+  forecastNotes?: string | null;
 };
 
 type DailyMetricDoc = {
@@ -51,6 +62,7 @@ type KeywordDoc = {
   rollupClicks: number;
   rollupCost: number;
   rollupConversions: number;
+  plannerCompetition?: string | null;
 };
 
 type LeadDealDoc = {
@@ -86,15 +98,14 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
   });
   const campaigns = campaignDocs as unknown as CampaignDoc[];
 
-  // @ts-expect-error - ads-settings not yet in generated types
-  const adsSettings = await payload.findGlobal({ slug: "ads-settings" }) as unknown as { refreshToken?: string };
+  const adsSettings = (await payload.findGlobal({ slug: "ads-settings" })) as unknown as { refreshToken?: string };
   const isConnected = Boolean(adsSettings?.refreshToken);
   const oauthSuccess = searchParams?.oauth === "success";
 
   if (campaigns.length === 0) {
     return (
       <div style={{ padding: 24 }}>
-        <h1>Desempenho de Ads</h1>
+        <h1>EA ADS Manager</h1>
         {oauthSuccess && (
           <div style={{ padding: 12, backgroundColor: "#e6f4ea", color: "#137333", marginBottom: 16, borderRadius: 4 }}>
             Google Ads conectado com sucesso!
@@ -148,14 +159,23 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
   const leads = leadDocs as unknown as LeadDealDoc[];
 
   const groupIds = adGroups.map((g) => g.id);
-  const { docs: keywordDocs } = await payload.find({
-    collection: "ad-keywords",
-    where: { adGroup: { in: groupIds.length > 0 ? groupIds : [-1] } },
-    limit: 500,
-    depth: 0,
-    sort: "text",
-  });
+  const [{ docs: keywordDocs }, { docs: competitorDocs }] = await Promise.all([
+    payload.find({
+      collection: "ad-keywords",
+      where: { adGroup: { in: groupIds.length > 0 ? groupIds : [-1] } },
+      limit: 500,
+      depth: 0,
+      sort: "text",
+    }),
+    payload.find({
+      collection: "ad-competitors",
+      limit: 200,
+      depth: 0,
+      sort: "name",
+    }),
+  ]);
   const keywords = keywordDocs as unknown as KeywordDoc[];
+  const competitors = competitorDocs as unknown as CompetitorRow[];
 
   // Agrupa por campanha para calcular o placar de cada uma.
   const scorecards: CampaignScorecard[] = campaigns.map((campaign) => {
@@ -208,9 +228,17 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
     keywordsByGroup.get(key)!.push(k);
   }
 
+  // Forecast pré-investimento da campanha selecionada (se capturado).
+  const hasForecast = (selected.forecastClicks ?? 0) > 0 && (selected.forecastCost ?? 0) > 0;
+  const selectedGroupIds = new Set(selectedGroups.map((g) => String(g.id)));
+  const selectedKeywords = keywords.filter((k) => selectedGroupIds.has(String(k.adGroup)));
+  const keywordsWithoutVolume = selectedKeywords.filter(
+    (k) => (k.plannerCompetition ?? "sem_dados") === "sem_dados",
+  ).length;
+
   return (
     <div style={{ padding: "var(--base, 24px)", maxWidth: 1100 }}>
-      <h1>Desempenho de Ads</h1>
+      <h1>EA ADS Manager</h1>
 
       {oauthSuccess && (
         <div style={{ padding: 12, backgroundColor: "#e6f4ea", color: "#137333", marginBottom: 16, borderRadius: 4 }}>
@@ -236,6 +264,23 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
 
       <AdsMatrix scorecards={scorecards} dailyBudgets={dailyBudgets} selectedId={String(selected.id)} />
 
+      {hasForecast ? (
+        <AdsForecastPanel
+          forecast={{
+            clicks: selected.forecastClicks!,
+            impressions: selected.forecastImpressions ?? 0,
+            cost: selected.forecastCost!,
+            ctrPct: selected.forecastCtr ?? 0,
+            avgCpc: selected.forecastAvgCpc ?? 0,
+            dailyBudget: selected.forecastDailyBudget ?? 0,
+            capturedAt: selected.forecastCapturedAt,
+            notes: selected.forecastNotes,
+          }}
+          keywordsWithoutVolume={keywordsWithoutVolume}
+          keywordsTotal={selectedKeywords.length}
+        />
+      ) : null}
+
       <AdsCampaignDetail
         campaign={selected}
         scorecard={selectedScorecard}
@@ -243,6 +288,8 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
         adGroups={selectedGroups}
         keywordsByGroup={keywordsByGroup}
       />
+
+      <AdsCompetitorsPanel rows={competitors} />
     </div>
   );
 }

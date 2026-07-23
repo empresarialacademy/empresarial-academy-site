@@ -38,7 +38,6 @@ export async function GET(req: Request) {
     // Salva o Refresh Token no banco de dados do Payload (Global AdsSettings)
     const payload = await getPayloadClient();
     await payload.updateGlobal({
-      // @ts-expect-error - ads-settings not yet in generated types
       slug: 'ads-settings',
       data: {
         refreshToken: data.refresh_token,

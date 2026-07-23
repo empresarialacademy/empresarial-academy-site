@@ -1,4 +1,4 @@
-import type { Payload } from "payload";
+import type { Payload, Where } from "payload";
 import { getPayloadClient } from "@/lib/payload";
 import { sendMail } from "@/lib/email";
 import { logEmailSend } from "@/lib/email-log";
@@ -171,4 +171,63 @@ export async function sendNewMaterialAlert(material: {
       material.description || "Novo material gratuito disponível na Central de Materiais.",
     path: `/materiais/${material.slug}`,
   });
+}
+
+/**
+ * Envia os alertas PENDENTES de conteúdo agendado: Posts/Materials com
+ * status "published", data de publicação já alcançada e `subscriberAlertSent`
+ * ainda falso. Complementa os hooks `afterChange` das coleções (que só
+ * disparam para publicação imediata — agendados caem aqui). Chamado pelo
+ * cron diário de nutrição (/api/cron/nutricao). Nunca lança.
+ */
+export async function sendPendingContentAlerts(): Promise<
+  Array<{ collection: string; id: string | number; title: string; ok: boolean }>
+> {
+  const results: Array<{ collection: string; id: string | number; title: string; ok: boolean }> = [];
+  try {
+    const payload = await getPayloadClient();
+    const nowIso = new Date().toISOString();
+    const where: Where = {
+      and: [
+        { status: { equals: "published" } },
+        { publishedAt: { less_than_equal: nowIso } },
+        { subscriberAlertSent: { not_equals: true } },
+      ],
+    };
+
+    const { docs: posts } = await payload.find({ collection: "posts", where, limit: 20, depth: 0 });
+    for (const post of posts) {
+      try {
+        await sendNewPostAlert({ title: post.title, excerpt: post.excerpt ?? "", slug: post.slug ?? "" });
+        await payload.update({ collection: "posts", id: post.id, data: { subscriberAlertSent: true } });
+        results.push({ collection: "posts", id: post.id, title: post.title, ok: true });
+      } catch (e) {
+        payload.logger.error(`[content-alerts] falha no alerta pendente do post ${post.id}: ${e}`);
+        results.push({ collection: "posts", id: post.id, title: post.title, ok: false });
+      }
+    }
+
+    const { docs: materials } = await payload.find({ collection: "materials", where, limit: 20, depth: 0 });
+    for (const material of materials) {
+      try {
+        await sendNewMaterialAlert({
+          title: material.title,
+          description: material.description ?? "",
+          slug: material.slug ?? "",
+        });
+        await payload.update({
+          collection: "materials",
+          id: material.id,
+          data: { subscriberAlertSent: true },
+        });
+        results.push({ collection: "materials", id: material.id, title: material.title, ok: true });
+      } catch (e) {
+        payload.logger.error(`[content-alerts] falha no alerta pendente do material ${material.id}: ${e}`);
+        results.push({ collection: "materials", id: material.id, title: material.title, ok: false });
+      }
+    }
+  } catch (e) {
+    console.error("[content-alerts] sendPendingContentAlerts falhou:", e);
+  }
+  return results;
 }

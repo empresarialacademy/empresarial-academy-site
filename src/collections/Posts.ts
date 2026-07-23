@@ -132,7 +132,12 @@ export const Posts: CollectionConfig = {
           doc.status === "published" &&
           previousDoc?.status !== "published" &&
           !doc.subscriberAlertSent;
-        if (!justPublished) return doc;
+        // Post AGENDADO (data futura): não avisar agora — o cron diário
+        // (sendPendingContentAlerts) envia quando a data chegar, para o
+        // assinante não receber link de artigo ainda invisível.
+        const isScheduledForFuture =
+          doc.publishedAt && new Date(doc.publishedAt).getTime() > Date.now();
+        if (!justPublished || isScheduledForFuture) return doc;
         try {
           await sendNewPostAlert({ title: doc.title, excerpt: doc.excerpt, slug: doc.slug });
           await req.payload.update({

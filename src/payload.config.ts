@@ -24,6 +24,7 @@ import { AdCampaigns } from "@/collections/AdCampaigns";
 import { AdGroups } from "@/collections/AdGroups";
 import { AdKeywords } from "@/collections/AdKeywords";
 import { AdMetricsDaily } from "@/collections/AdMetricsDaily";
+import { AdCompetitors } from "@/collections/AdCompetitors";
 import { SystemLinks } from "@/collections/SystemLinks";
 import { AdsSettings } from "@/globals/AdsSettings";
 import { siteConfig } from "@/lib/site-config";
@@ -72,7 +73,6 @@ export default buildConfig({
     },
     components: {
       afterNavLinks: [
-        "@/components/admin/central/CentralEaNavLink#CentralEaNavLink",
         "@/components/admin/marketing/EaMarketingManagerNavLink#EaMarketingManagerNavLink",
       ],
       graphics: {
@@ -80,20 +80,22 @@ export default buildConfig({
         Icon: "@/components/admin/brand/EaIcon#EaIcon",
       },
       views: {
-        centralEa: {
-          Component: "@/components/admin/central/CentralEaView#CentralEaView",
-          path: "/central-ea",
-          meta: { title: "Central EA" },
-        },
+        // "Central EA" foi absorvida pelo hub (definição do Thiago, 23/07):
+        // o EA Marketing Manager é a entrada única; a rota antiga redireciona.
         marketingManager: {
           Component: "@/components/admin/marketing/EaMarketingManagerView#EaMarketingManagerView",
           path: "/marketing-manager",
           meta: { title: "EA Marketing Manager" },
         },
+        centralEaRedirect: {
+          Component: "@/components/admin/central/CentralEaRedirect#CentralEaRedirect",
+          path: "/central-ea",
+          meta: { title: "EA Marketing Manager" },
+        },
         adsPerformance: {
           Component: "@/components/admin/ads/AdsPerformanceView#AdsPerformanceView",
           path: "/ads-performance",
-          meta: { title: "Desempenho de Ads" },
+          meta: { title: "EA ADS Manager" },
         },
       },
     },
@@ -113,6 +115,7 @@ export default buildConfig({
     AdGroups,
     AdKeywords,
     AdMetricsDaily,
+    AdCompetitors,
     SystemLinks,
     Media,
     Users,
