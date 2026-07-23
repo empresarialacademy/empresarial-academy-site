@@ -6,5 +6,5 @@ import { redirect } from "next/navigation";
  * favoritos/links antigos para /admin/central-ea.
  */
 export function CentralEaRedirect() {
-  redirect("/admin/marketing-manager");
+  redirect("/eahub/marketing-manager");
 }

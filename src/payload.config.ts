@@ -65,11 +65,16 @@ if (process.env.S3_BUCKET && process.env.S3_ACCESS_KEY_ID) {
 export default buildConfig({
   serverURL: databaseUri.startsWith("postgres") ? siteConfig.url : undefined,
   email: resendEmailAdapter,
+  routes: {
+    // Painel renomeado para "EA HUB" e servido em /eahub (a pasta
+    // src/app/(payload)/eahub casa com esta rota; ver resolveImportMapFilePath).
+    admin: "/eahub",
+  },
   admin: {
     user: Users.slug,
     importMap: { baseDir: path.resolve(dirname) },
     meta: {
-      titleSuffix: "— EA Marketing Manager",
+      titleSuffix: "— EA HUB",
     },
     components: {
       afterNavLinks: [
@@ -80,6 +85,10 @@ export default buildConfig({
         Icon: "@/components/admin/brand/EaIcon#EaIcon",
       },
       views: {
+        // Home do /eahub: dashboard branded (substitui a tela padrão do Payload).
+        dashboard: {
+          Component: "@/components/admin/hub/EaHubDashboard#EaHubDashboard",
+        },
         // "Central EA" foi absorvida pelo hub (definição do Thiago, 23/07):
         // o EA Marketing Manager é a entrada única; a rota antiga redireciona.
         marketingManager: {

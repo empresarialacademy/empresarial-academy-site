@@ -10,7 +10,7 @@ export function EaMarketingManagerNavLink() {
   return (
     <div style={{ padding: "0 var(--base, 20px) calc(var(--base, 20px) / 2)" }}>
       <Link
-        href="/admin/marketing-manager"
+        href="/eahub/marketing-manager"
         className="nav__link"
         style={{ display: "flex", alignItems: "center", gap: 6 }}
       >

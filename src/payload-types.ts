@@ -626,7 +626,7 @@ export interface SystemLink {
   id: number;
   name: string;
   /**
-   * Endereço completo (https://...) ou rota interna (/admin/...). Em branco = card “em breve”.
+   * Endereço completo (https://...) ou rota interna (/eahub/...). Em branco = card “em breve”.
    */
   url?: string | null;
   description?: string | null;

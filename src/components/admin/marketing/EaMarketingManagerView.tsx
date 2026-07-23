@@ -48,29 +48,29 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
 
   // O hub não lista a si mesmo.
   const systemLinks = (systemLinksRes.docs as unknown as SystemLinkDoc[]).filter(
-    (l) => !(l.url ?? "").includes("/admin/marketing-manager"),
+    (l) => !(l.url ?? "").includes("/eahub/marketing-manager"),
   );
 
   const adsCard: Card = {
     title: "EA ADS Manager",
     description:
       "Desempenho das campanhas do Google Ads, forecast pré-investimento, CAC, ROI, concorrentes e sugestões automáticas.",
-    href: "/admin/ads-performance",
+    href: "/eahub/ads-performance",
     stat: `${adCampaigns.totalDocs} campanha(s)`,
   };
 
   const contentCards: Card[] = [
-    { title: "Artigos do blog", description: "Criar, editar e agendar publicações.", href: "/admin/collections/posts", stat: `${posts.totalDocs} artigo(s)` },
-    { title: "Materiais ricos", description: "E-books e materiais para captação de leads.", href: "/admin/collections/materials", stat: `${materials.totalDocs} material(is)` },
-    { title: "Mídia", description: "Imagens e arquivos usados no site.", href: "/admin/collections/media" },
-    { title: "Depoimentos", description: "Prova social exibida no site e na LP.", href: "/admin/collections/testimonials" },
+    { title: "Artigos do blog", description: "Criar, editar e agendar publicações.", href: "/eahub/collections/posts", stat: `${posts.totalDocs} artigo(s)` },
+    { title: "Materiais ricos", description: "E-books e materiais para captação de leads.", href: "/eahub/collections/materials", stat: `${materials.totalDocs} material(is)` },
+    { title: "Mídia", description: "Imagens e arquivos usados no site.", href: "/eahub/collections/media" },
+    { title: "Depoimentos", description: "Prova social exibida no site e na LP.", href: "/eahub/collections/testimonials" },
   ];
 
   const emailCards: Card[] = [
-    { title: "Campanhas de e-mail", description: "Disparos manuais para um segmento de leads.", href: "/admin/collections/email-campaigns", stat: `${emailCampaigns.totalDocs} campanha(s)` },
-    { title: "Segmentos", description: "Critérios de seleção de leads (origem, pilar, score).", href: "/admin/collections/email-segments", stat: `${emailSegments.totalDocs} segmento(s)` },
-    { title: "Envios", description: "Histórico de e-mails enviados (nutrição, alertas, campanhas).", href: "/admin/collections/email-logs" },
-    { title: "Leads", description: "Base de contatos — origem, consentimento, atribuição de campanha e resultado comercial.", href: "/admin/collections/leads", stat: `${leads.totalDocs} lead(s)` },
+    { title: "Campanhas de e-mail", description: "Disparos manuais para um segmento de leads.", href: "/eahub/collections/email-campaigns", stat: `${emailCampaigns.totalDocs} campanha(s)` },
+    { title: "Segmentos", description: "Critérios de seleção de leads (origem, pilar, score).", href: "/eahub/collections/email-segments", stat: `${emailSegments.totalDocs} segmento(s)` },
+    { title: "Envios", description: "Histórico de e-mails enviados (nutrição, alertas, campanhas).", href: "/eahub/collections/email-logs" },
+    { title: "Leads", description: "Base de contatos — origem, consentimento, atribuição de campanha e resultado comercial.", href: "/eahub/collections/leads", stat: `${leads.totalDocs} lead(s)` },
   ];
 
   const systemCards: Card[] = systemLinks.map((l) => {
@@ -121,7 +121,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
 
         <Section
           title="Sistemas EA"
-          action={{ label: "Gerenciar links", href: "/admin/collections/system-links" }}
+          action={{ label: "Gerenciar links", href: "/eahub/collections/system-links" }}
         >
           <CardGrid cards={systemCards} />
         </Section>

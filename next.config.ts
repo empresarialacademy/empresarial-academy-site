@@ -8,20 +8,24 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   async redirects() {
-    // URLs do site antigo (construtor da Hostinger, tudo sob /pages/) ainda indexadas no Google.
     return [
+      // URLs do site antigo (construtor da Hostinger, tudo sob /pages/) ainda indexadas no Google.
       { source: "/pages/sobre", destination: "/institucional", permanent: true },
       { source: "/pages/contato", destination: "/contato", permanent: true },
       { source: "/pages/blog", destination: "/blog", permanent: true },
       { source: "/pages/servicos", destination: "/servicos", permanent: true },
       { source: "/pages/:path*", destination: "/", permanent: true },
+      // O admin foi renomeado para "EA HUB" e movido de /admin para /eahub.
+      // Mantém favoritos/links antigos funcionando.
+      { source: "/admin", destination: "/eahub", permanent: false },
+      { source: "/admin/:path*", destination: "/eahub/:path*", permanent: false },
     ];
   },
   async headers() {
     return [
       {
-        // Headers de segurança apenas no site público (o /admin do Payload tem o seu próprio tratamento).
-        source: "/((?!admin|api).*)",
+        // Headers de segurança apenas no site público (o /eahub do Payload tem o seu próprio tratamento).
+        source: "/((?!eahub|admin|api).*)",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },

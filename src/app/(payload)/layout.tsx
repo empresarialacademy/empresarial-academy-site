@@ -1,10 +1,10 @@
 import type { ServerFunctionClient } from "payload";
 import config from "@payload-config";
 import "@payloadcms/next/css";
-import "./admin/ea-admin-theme.css";
+import "./eahub/ea-hub-theme.css";
 import { RootLayout, handleServerFunctions } from "@payloadcms/next/layouts";
 import React from "react";
-import { importMap } from "./admin/importMap.js";
+import { importMap } from "./eahub/importMap.js";
 
 type Args = {
   children: React.ReactNode;

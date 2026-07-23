@@ -30,7 +30,7 @@ export const SystemLinks: CollectionConfig = {
       name: "url",
       type: "text",
       label: "URL",
-      admin: { description: "Endereço completo (https://...) ou rota interna (/admin/...). Em branco = card “em breve”." },
+      admin: { description: "Endereço completo (https://...) ou rota interna (/eahub/...). Em branco = card “em breve”." },
     },
     { name: "description", type: "text", label: "Descrição curta" },
     {

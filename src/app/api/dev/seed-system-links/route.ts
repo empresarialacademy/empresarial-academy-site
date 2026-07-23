@@ -12,11 +12,16 @@ import { getPayloadClient } from "@/lib/payload";
  * apenas em NODE_ENV=production (o runtime da Vercel).
  */
 
+/** Links internos (rota do próprio EA HUB): a URL DEVE ser mantida em dia
+ * mesmo em linhas já existentes — quando o admin mudou de /admin para /eahub,
+ * estas precisaram ser reescritas no banco. */
+const INTERNAL_NAMES = new Set(["EA Marketing Manager", "EA ADS"]);
+
 const INITIAL_LINKS = [
   { name: "Site Empresarial Academy", url: "https://empresarialacademy.com", description: "Site institucional no ar.", order: 10 },
   { name: "LP Consultoria PME", url: "https://empresarialacademy.com/consultoria-pme", description: "Landing page de aquisição (destino do Google Ads).", order: 20 },
-  { name: "EA Marketing Manager", url: "/admin/marketing-manager", description: "Hub das ferramentas de marketing (Ads, e-mail, leads).", order: 30 },
-  { name: "EA ADS", url: "/admin/ads-performance", description: "Desempenho de campanhas do Google Ads, CAC e ROI.", order: 40 },
+  { name: "EA Marketing Manager", url: "/eahub/marketing-manager", description: "Hub das ferramentas de marketing (Ads, e-mail, leads).", order: 30 },
+  { name: "EA ADS", url: "/eahub/ads-performance", description: "Desempenho de campanhas do Google Ads, CAC e ROI.", order: 40 },
   { name: "EA Impulsiona", url: "https://ea-impulsiona.web.app", description: "Plataforma EA Impulsiona.", order: 50 },
   { name: "EA Recovery", url: "https://recovery.empresarialacademy.com/", description: "CRM de Cobrança (Souza Ramos).", order: 60 },
   { name: "EA Recovery — Admin", url: "https://recovery.empresarialacademy.com/admin", description: "Painel administrativo do EA Recovery.", order: 70 },
@@ -40,7 +45,17 @@ export async function GET() {
       depth: 0,
     });
     if (existing.docs[0]) {
-      results.push({ name: link.name, action: "already-exists" });
+      // Links internos: reescreve a URL se mudou (ex.: /admin → /eahub).
+      if (INTERNAL_NAMES.has(link.name) && existing.docs[0].url !== link.url) {
+        await payload.update({
+          collection: "system-links",
+          id: existing.docs[0].id,
+          data: { url: link.url },
+        });
+        results.push({ name: link.name, action: "url-atualizada" });
+      } else {
+        results.push({ name: link.name, action: "already-exists" });
+      }
       continue;
     }
     await payload.create({ collection: "system-links", data: link });
