@@ -11,14 +11,14 @@ export const Leads: CollectionConfig = {
   labels: { singular: "Lead", plural: "Leads" },
   admin: {
     useAsTitle: "email",
-    defaultColumns: ["name", "email", "source", "createdAt"],
+    defaultColumns: ["name", "whatsapp", "email", "source", "wantsNewsletter", "wantsPromotions", "createdAt"],
     group: "Captação",
   },
   access: {
-    // Somente usuários do admin podem ler/gerenciar; criação é feita
-    // exclusivamente pelo servidor (Local API), nunca pela REST pública.
+    // Leitura/gestão só para usuários do admin. A captação pelo site cria via
+    // Local API (servidor); o Thiago também pode adicionar/remover leads à mão.
     read: ({ req }) => Boolean(req.user),
-    create: () => false,
+    create: ({ req }) => Boolean(req.user),
     update: ({ req }) => Boolean(req.user),
     delete: ({ req }) => Boolean(req.user),
   },
@@ -26,8 +26,39 @@ export const Leads: CollectionConfig = {
     { name: "name", type: "text", required: true, label: "Nome" },
     { name: "email", type: "email", required: true, label: "E-mail" },
     { name: "company", type: "text", label: "Empresa" },
-    { name: "whatsapp", type: "text", label: "WhatsApp" },
+    {
+      name: "whatsapp",
+      type: "text",
+      label: "WhatsApp",
+      admin: {
+        description: "Número com DDD. Na lista vira link para conversar no WhatsApp.",
+        components: {
+          Cell: "@/components/admin/leads/WhatsAppCell#WhatsAppCell",
+        },
+      },
+    },
     { name: "instagram", type: "text", label: "Instagram" },
+    // ——— Preferências de contato (flags) ———
+    {
+      name: "wantsNewsletter",
+      type: "checkbox",
+      label: "Quer newsletter",
+      defaultValue: false,
+      admin: { description: "Aceita receber a newsletter/novos conteúdos." },
+    },
+    {
+      name: "wantsPromotions",
+      type: "checkbox",
+      label: "Quer promoções",
+      defaultValue: false,
+      admin: { description: "Aceita receber ofertas e campanhas promocionais." },
+    },
+    {
+      name: "notes",
+      type: "textarea",
+      label: "Observações",
+      admin: { description: "Anotações internas sobre o lead (contexto, histórico, próximos passos)." },
+    },
     {
       name: "source",
       type: "text",

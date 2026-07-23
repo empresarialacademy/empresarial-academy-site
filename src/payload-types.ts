@@ -398,8 +398,23 @@ export interface Lead {
   name: string;
   email: string;
   company?: string | null;
+  /**
+   * Número com DDD. Na lista vira link para conversar no WhatsApp.
+   */
   whatsapp?: string | null;
   instagram?: string | null;
+  /**
+   * Aceita receber a newsletter/novos conteúdos.
+   */
+  wantsNewsletter?: boolean | null;
+  /**
+   * Aceita receber ofertas e campanhas promocionais.
+   */
+  wantsPromotions?: boolean | null;
+  /**
+   * Anotações internas sobre o lead (contexto, histórico, próximos passos).
+   */
+  notes?: string | null;
   source: string;
   details?:
     | {
@@ -917,6 +932,9 @@ export interface LeadsSelect<T extends boolean = true> {
   company?: T;
   whatsapp?: T;
   instagram?: T;
+  wantsNewsletter?: T;
+  wantsPromotions?: T;
+  notes?: T;
   source?: T;
   details?: T;
   consent?: T;
