@@ -390,6 +390,64 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-23 (INCIDENTE RESOLVIDO — admin restaurado do deploy falho + git init)
+- **Descoberta:** o `/admin` estava **fora do ar em produção desde 21/07 ~21:24**
+  (404) e o repositório tinha perdido 8 coleções (Email*, Ad*, SystemLinks),
+  o global `AdsSettings`, todas as views custom, as rotas `/api/ads/*` e o
+  grupo de rotas `(payload)` inteiro. O cron `ads-sync` seguia agendado na
+  Vercel apontando para rota inexistente (falhava todo dia). O site público
+  nunca saiu do ar (home/LP 200, captação OK).
+- **Causa raiz (diagnóstico definitivo):** em 21/07, um `{` faltando no grupo
+  "seo" de `Posts.ts` (linha ~97, adicionado na sessão de importação do blog)
+  quebrou 5 builds seguidos na Vercel (21:06–21:22). A sessão da época
+  **diagnosticou errado** e amputou o admin/coleções para "destravar" o build;
+  o `{` foi corrigido às 21:23 e o build passou às 21:24 — **sem o admin, que
+  nunca era o problema**. No processo, o admin também tinha sido movido de
+  `/admin` para `/hub`.
+- **Recuperação:** o deploy FALHO `dpl_5jjKNHjjFW3BVVscu2TBkXNyL8rX` (21/07
+  21:22) ainda guardava o código-fonte completo na Vercel — baixado via API
+  (209 arquivos, zero falhas) e mesclado de volta: só 3 arquivos comuns
+  divergiam (`Leads.ts` e `payload.config.ts` → versão do snapshot;
+  `Posts.ts` → versão atual, que tem o `{` corrigido). Rota do admin voltou
+  de `/hub` para **`/admin`** (decisão do Thiago), com correções em
+  `layout.tsx`, `robots.ts` e `api/ads/callback`.
+- **Evoluções de 21/07 recuperadas junto (feitas por outra sessão, além do
+  que existia):** fluxo **OAuth do Google Ads** (`/api/ads/oauth` +
+  `/api/ads/callback` + global `ads-settings` guardando o refresh token —
+  botão "Conectar Google Ads" no painel), **sincronização manual**
+  (`/api/ads/sync-all`), **Forecast com IA** (`/api/ads/forecast`, Gemini
+  `gemini-2.5-flash` via `GEMINI_API_KEY`), `google-ads-api` agora é
+  dependência instalada (import estático), e `AdsClientActions.tsx` no
+  painel. Env vars do Google Ads/Gemini já estão na Vercel (produção).
+- **Segurança:** `scripts/push-env.js`/`.ps1` continham **segredos em texto
+  puro** (OAuth client secret, developer token, chave Gemini) — apagados
+  (já cumpriram o papel; os valores vivem na Vercel). `check-token.ts`
+  (quebrado) apagado.
+- **Git iniciado no repositório** (nunca teve): commit "Baseline" com o
+  estado quebrado pré-restauração + commit da restauração. **Toda sessão
+  futura deve commitar ao final** — é a proteção contra perda silenciosa
+  como esta.
+- **Verificado local:** typecheck/lint/build verdes; `/admin` renderiza
+  (login com tema EA, título "EA Marketing Manager"); seeds rodados
+  (9 system-links + mock de Ads); Central EA, EA Marketing Manager e
+  Desempenho de Ads todos funcionais com os botões novos (Conectar Google
+  Ads / Sincronizar / Forecast IA).
+- **Deploy de produção AGUARDANDO OK do Thiago** — é o que devolve o
+  `/admin` ao ar. Schema do Neon já foi sincronizado em 21/07 (antes da
+  amputação), então o deploy deve bastar; conferir `/admin/login` e o
+  cron `ads-sync` após publicar.
+- **Contexto da sessão (para a próxima):** a conta real do Google Ads
+  existe (ID 308-507-1783, marchi.thiago@gmail.com, zero campanhas).
+  Coletei no Planejador de Palavras-chave (plano salvo `planId=1427489442`):
+  previsão oficial Brasil = **141 cliques/mês, 8,6 mil impressões, R$ 620/mês,
+  CTR 1,6%, CPC médio R$ 4,41** (46% SP); só 3 das 13 palavras da Frente E
+  têm volume no Brasil; concorrentes reais nos anúncios: Weedu e Rox (2 de
+  3 buscas), Harpia, Aya Gestão, Bora Desenvolver, IBM — todos com
+  "diagnóstico gratuito" como oferta. Próximos passos combinados: EA
+  Marketing Manager como hub definitivo (links + conteúdo + e-mail), EA ADS
+  Manager apartado com módulo de forecast pré-investimento (dados acima) e
+  módulo de concorrentes.
+
 ### Sessão 2026-07-20 ("Central EA" — hub de todos os sistemas, gerenciável pelo Thiago)
 - **Pedido do Thiago:** uma tela após o login com os links de TODOS os
   sistemas dele (site, LP, EA ADS, EA Impulsiona, EA Recovery, portal de
