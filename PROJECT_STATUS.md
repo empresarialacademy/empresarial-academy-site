@@ -390,7 +390,61 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
-### Sessão 2026-07-23 (INCIDENTE RESOLVIDO — admin restaurado do deploy falho + git init)
+### Sessão 2026-07-23 (EA HUB — rebrand do admin, editor de conteúdo, preview, leads, portfólio)
+Entregue em 6 lotes, cada um commitado (git ativo desde a restauração). **No ar em
+produção** (`empresarialacademy.com/eahub`), schema do Neon sincronizado antes do
+deploy, site público intacto.
+
+- **Lote 1 — EA HUB:** admin renomeado para **"EA HUB"** e movido de `/admin` para
+  **`/eahub`** (`routes.admin: "/eahub"` + pasta `src/app/(payload)/admin` renomeada
+  para `eahub`; o tema virou `ea-hub-theme.css`). Redirect `/admin/*`→`/eahub/*` no
+  `next.config.ts` (favoritos antigos) + `headers` ajustados. **Dashboard branded**
+  (`admin.components.views.dashboard` = `EaHubDashboard`) substitui a home padrão feia
+  por uma central com a marca e seções (Marketing/Conteúdo/Captação). Links internos
+  `/admin/*`→`/eahub/*` (EA Recovery externo preservado); `seed-system-links` faz
+  **upsert** das URLs internas (EA ADS, EA Marketing Manager) — rodado contra o Neon.
+- **Lote 2 — editor + import + preview (Posts):** `src/lib/editor.ts` =
+  `lexicalEditor` com **FixedToolbarFeature** (barra fixa) + **TextStateFeature**
+  (paleta EA de cor/tamanho; fonte única em `src/lib/text-state-palette.ts`, key
+  `color`/`size`). Cor/tamanho livres NÃO existem no Payload 3.85 — TextState (paleta
+  finita) é o mecanismo suportado. **Render no site:** `EaRichText` (converter custom
+  que aplica a paleta a partir de `node.$`, o `NODE_STATE_KEY`; o converter padrão a
+  ignora). **Preview de rascunho no layout real:** rota `/preview` (draftMode) +
+  `getPostBySlug(slug,{draft})` com `overrideAccess` + `admin.preview`
+  (`buildPreviewUrl`, `src/lib/preview.ts`) + banner. `PREVIEW_SECRET` setado na
+  Vercel (sem ele, dev fica livre). Optei por **NÃO** usar drafts nativos do Payload
+  (evita 2º status conflitando com o campo `status` existente). `parse-markdown`
+  promovido para `/api/parse-markdown` (com auth); `ImportMarkdownButton` repaginado.
+- **Lote 3 — Materiais:** campo `content` richText (mesmo editor) renderizado na
+  página + importável do `.md`; `admin.preview`; `getMaterialBySlug` aceita draft;
+  `MaterialFiles.mimeTypes` ampliado (ODF, RTF, JSON, markdown…) para "qualquer tipo".
+- **Lote 4 — nav limpa:** **Media `admin.hidden: true`** (fora do menu; segue como
+  destino de upload inline em Posts/Materials/Testimonials — NUNCA remover, é
+  load-bearing + s3Storage). **SystemLinks com list view custom** (galeria de
+  cartões / "portfólio", `admin.components.views.list`) com Adicionar (form nativo),
+  Editar e **Remover inline** (`DeleteLinkButton`).
+- **Lote 5 — Leads:** `create` liberado para o admin (Thiago adiciona/remove à mão);
+  coluna **WhatsApp vira link `wa.me`** (`WhatsAppCell`, normaliza +55); flags
+  `wantsNewsletter`/`wantsPromotions` (colunas) + campo `notes` (observações);
+  `defaultColumns` reorganizadas.
+- **Lote 6 — relatório de marketing (agência):** Artifact visual privado
+  "Diagnóstico & Plano de Marketing — EA" (marca EA, dados reais: forecast 141
+  cliques/R$620/CPC R$4,41; só 3/13 palavras com volume; Weedu/Rox dominam e **todos
+  ofertam "diagnóstico gratuito"** → paridade, não diferencial; recomenda liderar por
+  método Gestão 360 + prova social, não por preço/prazo; plano priorizado + metas 90d).
+  URL do artifact fica no chat da sessão (privado por padrão).
+
+- **Gotchas reconfirmados:** (a) ao adicionar arquivo novo importado por módulo já
+  compilado, o `next dev` pode manter erro fantasma de "module not found" — o log do
+  SERVIDOR é a fonte de verdade (o console do navegador mantém buffer antigo); resolve
+  com restart/limpar `.next`. (b) o **build de produção conecta no Neon** e falha se o
+  schema novo não estiver lá — sincronizar o Neon (rodar `next dev` apontando pro Neon,
+  fora de `NODE_ENV=production`) SEMPRE antes do `npm run build`/deploy. Colunas novas
+  desta sessão já sincronizadas: `materials.content`, `leads.wantsNewsletter/
+  wantsPromotions/notes`. (c) `/api/dev/gen-artifacts` (rota dev permanente) regenera
+  types+importMap; rodar com as `S3_*` inline no comando.
+
+
 - **Descoberta:** o `/admin` estava **fora do ar em produção desde 21/07 ~21:24**
   (404) e o repositório tinha perdido 8 coleções (Email*, Ad*, SystemLinks),
   o global `AdsSettings`, todas as views custom, as rotas `/api/ads/*` e o
