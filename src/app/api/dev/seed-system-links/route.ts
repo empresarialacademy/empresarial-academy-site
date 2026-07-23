@@ -20,7 +20,7 @@ const INTERNAL_NAMES = new Set(["EA Marketing Manager", "EA ADS"]);
 const INITIAL_LINKS = [
   { name: "Site Empresarial Academy", url: "https://empresarialacademy.com", description: "Site institucional no ar.", order: 10 },
   { name: "LP Consultoria PME", url: "https://empresarialacademy.com/consultoria-pme", description: "Landing page de aquisição (destino do Google Ads).", order: 20 },
-  { name: "EA Marketing Manager", url: "/eahub/marketing-manager", description: "Hub das ferramentas de marketing (Ads, e-mail, leads).", order: 30 },
+  { name: "EA Marketing Manager", url: "/eahub", description: "Hub das ferramentas de marketing (Ads, e-mail, leads) — é a home do EA HUB.", order: 30 },
   { name: "EA ADS", url: "/eahub/ads-performance", description: "Desempenho de campanhas do Google Ads, CAC e ROI.", order: 40 },
   { name: "EA Impulsiona", url: "https://ea-impulsiona.web.app", description: "Plataforma EA Impulsiona.", order: 50 },
   { name: "EA Recovery", url: "https://recovery.empresarialacademy.com/", description: "CRM de Cobrança (Souza Ramos).", order: 60 },

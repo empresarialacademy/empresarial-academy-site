@@ -408,11 +408,20 @@ Correções pontuais sobre o EA HUB (não deployado ainda — aguardando sync do
   sem caminho de volta a não ser o botão do navegador. Novo componente
   `src/components/admin/brand/EaHubBackLink.tsx` adicionado no topo das duas views
   (ADS: nos dois caminhos de render).
-- **Análise de redundância entregue (decisão do Thiago pendente):** `EaHubDashboard`
-  (home `/eahub`) e `EaMarketingManagerView` (`/eahub/marketing-manager`) são dois
-  hubs de cards sobrepostos (~80%) apontando para as MESMAS coleções. Recomendação:
-  unificar (a home passa a ser o Marketing Manager, "entrada única" pela definição do
-  Thiago) OU diferenciar claramente. NÃO alterado nesta sessão — aguarda decisão.
+- **Hubs unificados (decisão do Thiago: manter o mais completo, sem perda de info):**
+  havia DOIS hubs de cards sobrepostos (~80%) — `EaHubDashboard` (home `/eahub`) e
+  `EaMarketingManagerView` (`/marketing-manager`). O Marketing Manager era estritamente
+  mais completo (e-mail, mídia, sistemas dinâmicos da coleção). Unificação:
+  - `admin.components.views.dashboard` agora aponta para **EaMarketingManagerView** →
+    a home do EA HUB É o EA Marketing Manager (renderiza COM a nav lateral por ser view
+    `dashboard`). A saudação "Olá, {nome}" do dashboard antigo foi preservada no header.
+  - **`EaHubDashboard.tsx` removido** (pasta `components/admin/hub` apagada); as 2 linhas
+    dele foram removidas à mão do `importMap.js` (edição cirúrgica — NÃO rodei o gerador,
+    evitando o risco conhecido de perder a entrada S3).
+  - Rotas antigas `/marketing-manager` e `/central-ea` agora **redirecionam para `/eahub`**
+    (`CentralEaRedirect` reusado; preserva favoritos). Nav link (`afterNavLinks`) e o
+    `seed-system-links` repontados para `/eahub`; o filtro do hub exclui a home de si mesmo.
+  - `EaHubBackLink` permanece só no **EA ADS Manager** (view custom em tela cheia, sem nav).
 
 ### Sessão 2026-07-23 (EA HUB — rebrand do admin, editor de conteúdo, preview, leads, portfólio)
 Entregue em 6 lotes, cada um commitado (git ativo desde a restauração). **No ar em

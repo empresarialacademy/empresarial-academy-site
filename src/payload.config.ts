@@ -92,21 +92,23 @@ export default buildConfig({
         Icon: "@/components/admin/brand/EaIcon#EaIcon",
       },
       views: {
-        // Home do /eahub: dashboard branded (substitui a tela padrão do Payload).
+        // Home do /eahub = EA Marketing Manager (a "entrada única" — definição do
+        // Thiago). Como view `dashboard`, renderiza COM a nav lateral do Payload.
+        // Unificado em 2026-07-23(b): antes havia um EaHubDashboard separado que
+        // duplicava ~80% deste hub; removido, o Marketing Manager (mais completo:
+        // e-mail, mídia, sistemas dinâmicos) virou a home.
         dashboard: {
-          Component: "@/components/admin/hub/EaHubDashboard#EaHubDashboard",
-        },
-        // "Central EA" foi absorvida pelo hub (definição do Thiago, 23/07):
-        // o EA Marketing Manager é a entrada única; a rota antiga redireciona.
-        marketingManager: {
           Component: "@/components/admin/marketing/EaMarketingManagerView#EaMarketingManagerView",
+        },
+        // Rotas antigas do hub redirecionam para a home /eahub (preserva
+        // favoritos para /marketing-manager e /central-ea).
+        marketingManager: {
+          Component: "@/components/admin/central/CentralEaRedirect#CentralEaRedirect",
           path: "/marketing-manager",
-          meta: { title: "EA Marketing Manager" },
         },
         centralEaRedirect: {
           Component: "@/components/admin/central/CentralEaRedirect#CentralEaRedirect",
           path: "/central-ea",
-          meta: { title: "EA Marketing Manager" },
         },
         adsPerformance: {
           Component: "@/components/admin/ads/AdsPerformanceView#AdsPerformanceView",

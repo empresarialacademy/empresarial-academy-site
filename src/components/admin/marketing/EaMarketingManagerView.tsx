@@ -1,7 +1,6 @@
 import type { AdminViewServerProps } from "payload";
 import Link from "next/link";
 import Image from "next/image";
-import { EaHubBackLink } from "@/components/admin/brand/EaHubBackLink";
 
 const NAVY = "#1D2B3C";
 const GOLD = "#C1A160";
@@ -36,6 +35,10 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     return <div style={{ padding: 24 }}>Acesso restrito ao admin.</div>;
   }
 
+  const firstName = (user as { name?: string; email?: string }).name?.split(" ")[0]
+    ?? (user as { email?: string }).email
+    ?? "";
+
   const [adCampaigns, emailCampaigns, emailSegments, leads, posts, materials, systemLinksRes] =
     await Promise.all([
       payload.count({ collection: "ad-campaigns" }),
@@ -47,10 +50,11 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
       payload.find({ collection: "system-links", limit: 100, depth: 0, sort: "order" }),
     ]);
 
-  // O hub não lista a si mesmo.
-  const systemLinks = (systemLinksRes.docs as unknown as SystemLinkDoc[]).filter(
-    (l) => !(l.url ?? "").includes("/eahub/marketing-manager"),
-  );
+  // O hub não lista a si mesmo (home /eahub nem a rota antiga /marketing-manager).
+  const systemLinks = (systemLinksRes.docs as unknown as SystemLinkDoc[]).filter((l) => {
+    const url = (l.url ?? "").trim().replace(/\/+$/, "");
+    return url !== "/eahub" && !url.includes("/eahub/marketing-manager");
+  });
 
   const adsCard: Card = {
     title: "EA ADS Manager",
@@ -102,14 +106,12 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
         <div>
           <h1 style={{ margin: 0, color: "#fff" }}>EA Marketing Manager</h1>
           <p style={{ margin: "0.25rem 0 0", color: GOLD }}>
-            Hub de sistemas da Empresarial Academy — conteúdo, e-mail marketing, Ads e todos os sistemas num só lugar.
+            {firstName ? `Olá, ${firstName}. ` : ""}Hub de sistemas da Empresarial Academy — conteúdo, e-mail marketing, Ads e todos os sistemas num só lugar.
           </p>
         </div>
       </header>
 
       <div style={{ padding: "1.5rem 2rem", display: "grid", gap: "1.75rem" }}>
-        <EaHubBackLink />
-
         <Section title="Anúncios">
           <CardGrid cards={[adsCard]} highlight />
         </Section>
