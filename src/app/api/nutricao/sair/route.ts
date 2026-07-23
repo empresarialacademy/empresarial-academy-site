@@ -1,0 +1,57 @@
+import { getPayloadClient } from "@/lib/payload";
+import { optOutToken } from "@/lib/nurture-emails";
+
+/**
+ * Descadastro da sequência de nutrição (link "Sair da lista" dos e-mails).
+ * Marca `nurtureOptOut` no lead. Token = HMAC(id+e-mail) — não expõe dados.
+ */
+
+const page = (title: string, msg: string) => `<!doctype html><html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title></head>
+<body style="margin:0;background:#f6f5f1;font-family:Arial,Helvetica,sans-serif;color:#15191f">
+<div style="max-width:480px;margin:80px auto;padding:0 20px;text-align:center">
+  <div style="background:#fff;border:1px solid #d9dce1;border-radius:14px;padding:36px 28px">
+    <div style="color:#C1A160;font-weight:700;letter-spacing:.5px;font-size:13px">EMPRESARIAL ACADEMY</div>
+    <h1 style="font-size:20px;margin:14px 0 10px;color:#1D2B3C">${title}</h1>
+    <p style="font-size:15px;line-height:1.6;color:#5b626e;margin:0">${msg}</p>
+    <p style="margin:22px 0 0"><a href="https://empresarialacademy.com" style="color:#8a6a1f;font-weight:600">Voltar ao site</a></p>
+  </div>
+</div></body></html>`;
+
+const html = (body: string, status = 200) =>
+  new Response(body, {
+    status,
+    headers: { "content-type": "text/html; charset=utf-8" },
+  });
+
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const id = url.searchParams.get("l") || "";
+  const token = url.searchParams.get("t") || "";
+  if (!id || !token) {
+    return html(page("Link inválido", "Este link de descadastro está incompleto."), 400);
+  }
+
+  try {
+    const payload = await getPayloadClient();
+    const lead = await payload.findByID({ collection: "leads", id, depth: 0 });
+    if (!lead || optOutToken(lead.id, lead.email || "") !== token) {
+      return html(page("Link inválido", "Não foi possível validar este link de descadastro."), 400);
+    }
+    if (!lead.nurtureOptOut) {
+      await payload.update({
+        collection: "leads",
+        id: lead.id,
+        data: { nurtureOptOut: true },
+      });
+    }
+    return html(
+      page(
+        "Descadastro confirmado",
+        "Você não receberá mais os e-mails de acompanhamento do diagnóstico. Quando quiser retomar a conversa, é só nos chamar.",
+      ),
+    );
+  } catch {
+    return html(page("Link inválido", "Não foi possível validar este link de descadastro."), 400);
+  }
+}

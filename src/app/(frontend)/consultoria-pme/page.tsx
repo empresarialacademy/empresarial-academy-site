@@ -1,0 +1,546 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { ConversionCTA } from "@/components/ConversionCTA";
+import { VideoTestimonial } from "@/components/VideoTestimonial";
+import { Icon } from "@/components/ui/Icon";
+import { Faq } from "@/components/ui/Faq";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { NewsletterForm } from "@/components/forms/NewsletterForm";
+import { depoimentosVideo, fundador } from "@/lib/content";
+import { siteConfig } from "@/lib/site-config";
+
+export const metadata: Metadata = {
+  title: "Consultoria para PMEs | Organize a gestão e cresça com método",
+  description:
+    "Consultoria prática para donos de pequenas e médias empresas: organize processos, monte indicadores e volte a crescer com método. Comece pelo diagnóstico gratuito.",
+  alternates: { canonical: "/consultoria-pme" },
+};
+
+/** Destino do anúncio do Google Ads. Ver `Projeto IA/Frente C - Landing Page`. */
+const DIAGNOSTICO_URL = "/diagnostico-maturidade-empresarial.html";
+
+/** Saída secundária: WhatsApp pré-preenchido (Kit de Atendimento — Camada 0). */
+const WHATSAPP_LEAD = `https://wa.me/${siteConfig.contact.phoneRaw}?text=${encodeURIComponent(
+  "Olá! Vim pelo site e quero falar sobre a consultoria para a minha empresa.",
+)}`;
+
+const paraQuem = [
+  "Sua empresa fatura entre R$ 500 mil e R$ 5 milhões por ano e cresceu mais rápido que a organização interna.",
+  "A operação trava quando você não está — tudo passa por você.",
+  "Você decide no feeling, sem indicadores claros para acompanhar o negócio.",
+  "As vendas oscilam demais, sem um processo comercial que se sustente.",
+  "Falta tempo para pensar a estratégia porque o dia a dia consome tudo.",
+  "Você já pensou em contratar um braço direito ou estruturar uma diretoria, mas não sabe por onde começar.",
+];
+
+const pilares = [
+  {
+    icon: "chart",
+    area: "Comercial",
+    sintoma:
+      "Vendas sem processo: cada mês é uma surpresa, o resultado não se repete.",
+  },
+  {
+    icon: "tools",
+    area: "Operações",
+    sintoma:
+      "Processos na cabeça das pessoas, não no papel — retrabalho e dependência.",
+  },
+  {
+    icon: "trending-up",
+    area: "Indicadores",
+    sintoma:
+      "Decisões no escuro, sem número que mostre para onde o negócio vai.",
+  },
+  {
+    icon: "users",
+    area: "Liderança",
+    sintoma: "Time que não assume, porque tudo ainda depende do dono.",
+  },
+];
+
+const implicacoes = [
+  "Você não tira uma semana de férias sem a empresa sentir.",
+  "Decisões urgentes ficam represadas esperando sua disponibilidade.",
+  "Fica difícil contratar gente sênior — ninguém entra num time sem processo.",
+  "Se um dia quiser vender a empresa ou sair da operação, o valor dela está preso no seu tempo, não no negócio.",
+];
+
+/** Depoimentos em vídeo (Frente B), distribuídos em pontos diferentes da
+ * página. Conteúdo compartilhado em `lib/content.ts` (`depoimentosVideo`) —
+ * as mesmas legendas são reaproveitadas nas seções "O impacto do nosso
+ * método" da Home, Institucional e Serviços. */
+const depoimentoFabio = depoimentosVideo.fabio;
+const depoimentoDaniella = depoimentosVideo.daniella;
+const depoimentoErik = depoimentosVideo.erik;
+
+const metodoBullets = [
+  "Diagnóstico dos pontos que mais travam o crescimento hoje.",
+  "Plano de ação priorizado, com responsáveis e prazos.",
+  "Indicadores (KPIs) para você acompanhar o negócio com clareza.",
+  "Acompanhamento próximo, ajustando a rota mês a mês.",
+];
+
+const passos = [
+  {
+    n: "01",
+    titulo: "Faça o diagnóstico gratuito",
+    desc: "24 perguntas rápidas. Você recebe na hora uma pontuação por área e um feedback gratuito com plano de ação inicial para impulsionar o seu negócio.",
+  },
+  {
+    n: "02",
+    titulo: "Converse com o Thiago",
+    desc: "Uma conversa de diagnóstico estratégico (30 a 40 min), sem custo, para entender seu momento e o caminho mais rápido.",
+  },
+  {
+    n: "03",
+    titulo: "Receba um plano sob medida",
+    desc: "A proposta de consultoria certa para a sua empresa, com escopo, indicadores e acompanhamento.",
+  },
+];
+
+const faqItems = [
+  {
+    q: "Quanto custa a consultoria?",
+    a: "O investimento depende do formato certo para o seu momento, e a gente define isso na conversa de diagnóstico, olhando a realidade da sua empresa. O diagnóstico inicial é gratuito.",
+  },
+  {
+    q: "Preciso ter a empresa organizada para começar?",
+    a: "Não. É justamente para organizar que a consultoria existe. O diagnóstico mostra o ponto de partida.",
+  },
+  {
+    q: "É presencial ou online?",
+    a: "As duas formas. Definimos conforme a necessidade do seu negócio: presencial na Grande São Paulo e online para todo o Brasil.",
+  },
+  {
+    q: "Quanto tempo até ver resultado?",
+    a: "O plano prioriza ações de impacto rápido já nas primeiras semanas, dentro de um ciclo estruturado de acompanhamento.",
+  },
+  {
+    q: "O diagnóstico gratuito tem pegadinha?",
+    a: "Não. Você responde, recebe o resultado e um feedback gratuito na hora, com plano de ação inicial, e decide se quer conversar. Sem compromisso.",
+  },
+  {
+    q: "O que acontece se eu não fizer nada agora?",
+    a: "Nada — a decisão é sua. Mas empresa que cresce sem estrutura tende a travar no mesmo padrão: o dono continua sendo o gargalo, e resolver não fica mais fácil com o tempo. O diagnóstico é grátis; decidir agir depois da leitura é com você.",
+  },
+  {
+    q: "Como sei se o problema é falta de método, e não falta de sorte ou mercado ruim?",
+    a: "Na prática, quase sempre dá para diferenciar: se a operação trava sempre que você se ausenta, se o resultado vem de um jeito diferente todo mês, e se a equipe espera você decidir tudo — isso é estrutura, não mercado. O diagnóstico ajuda a enxergar isso com clareza, antes de qualquer decisão.",
+  },
+  {
+    q: "Já tentei consultoria antes e não funcionou. Por que seria diferente agora?",
+    a: "Consultoria genérica costuma entregar teoria sem aplicação prática. Aqui o método nasce da vivência real — mais de 20 anos em liderança, 15 como empresário — e o acompanhamento é próximo, mês a mês, não um relatório único. A diferença está na execução, não só no diagnóstico.",
+  },
+  {
+    q: "Preciso decidir tudo já na primeira conversa?",
+    a: "Não. A Chamada de Diagnóstico Estratégico serve para entender o seu momento e mostrar o caminho possível. A decisão de seguir com a consultoria é sua, sem pressão.",
+  },
+  {
+    q: "Minhas informações ficam seguras?",
+    a: "Sim. Os dados da sua empresa são tratados com confidencialidade, conforme a nossa Política de Privacidade, e usados só para construir o seu diagnóstico e a eventual proposta.",
+  },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqItems.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
+};
+
+export default function Page() {
+  return (
+    <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+
+      {/* 1. Herói — mesma altura/proporção do PageHero usado no resto do site */}
+      <section className="relative isolate flex min-h-[400px] flex-col justify-center overflow-hidden bg-navy text-white md:min-h-[500px]">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_70%_0%,#2e4358_0%,transparent_70%)]"
+        />
+        <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-6 py-8 md:grid-cols-2 md:gap-12 md:py-10">
+          <div className="text-center md:text-left">
+            <p className="font-[var(--font-heading)] text-sm font-semibold uppercase tracking-wide text-gold">
+              Consultoria e mentoria para PMEs · Método Gestão 360
+            </p>
+            <h1 className="mx-auto mt-4 max-w-xl text-3xl font-bold leading-tight md:mx-0 md:text-4xl">
+              A sua empresa depende de você para tudo? Está na hora de organizar
+              a gestão.
+            </h1>
+            <p className="mx-auto mt-4 max-w-xl text-white/80 md:mx-0">
+              Consultoria prática para donos de pequenas e médias empresas que
+              querem sair da correria do dia a dia, colocar indicadores no
+              lugar e crescer com método — não no improviso.
+            </p>
+            <div className="mt-6 flex justify-center md:justify-start">
+              <ConversionCTA href={DIAGNOSTICO_URL} size="lg">
+                Quero meu diagnóstico gratuito agora
+              </ConversionCTA>
+            </div>
+            <p className="mt-3 text-xs text-white/50">
+              Abre em uma nova aba — esta página continua aberta.
+            </p>
+            <p className="mt-3 text-sm text-white/60">
+              Mais de 20 anos em liderança · 15 anos como empresário ·
+              Metodologia própria Gestão 360
+            </p>
+          </div>
+          <div>
+            <div className="relative aspect-[3/2] w-full overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/15">
+              <video
+                src="/videos/consultoria-pme-hero.mp4"
+                poster="/images/thiago-consultoria-hero.jpg"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                aria-label={`${fundador.nome}, ${fundador.cargo}`}
+                className="absolute inset-0 h-full w-full bg-navy object-contain"
+              />
+            </div>
+            <p className="mt-2 text-center text-xs text-white/50 md:text-left">
+              Trecho de um vídeo aula do método Gestão 360.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Para quem é */}
+      <section className="mx-auto max-w-6xl px-6 py-20">
+        <SectionHeading title="Feito para o dono que quer profissionalizar a empresa" />
+        <ul className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {paraQuem.map((item) => (
+            <li
+              key={item}
+              className="flex gap-3 rounded-xl border border-line bg-white p-5 text-navy"
+            >
+              <span className="mt-0.5 text-gold-ink" aria-hidden>
+                ✔
+              </span>
+              <span className="text-sm">{item}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* 3. O problema (+ implicação) */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <SectionHeading
+            title="Quando a empresa cresce sem estrutura, o dono vira o gargalo"
+            align="center"
+          />
+          <ul className="mt-12 grid gap-6 sm:grid-cols-2">
+            {pilares.map((p) => (
+              <li
+                key={p.area}
+                className="rounded-xl border border-line bg-surface p-7"
+              >
+                <Icon name={p.icon} className="h-9 w-9 text-gold-ink" />
+                <h3 className="mt-4 text-lg font-semibold text-navy">{p.area}</h3>
+                <p className="mt-2 text-sm text-gray">{p.sintoma}</p>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mx-auto mt-12 max-w-2xl rounded-2xl border border-line bg-surface p-7">
+            <p className="font-semibold text-navy">
+              Isso tem um custo real. Enquanto a gestão depende só de você:
+            </p>
+            <ul className="mt-4 space-y-3">
+              {implicacoes.map((item) => (
+                <li key={item} className="flex gap-3 text-sm text-gray">
+                  <span className="mt-0.5 text-gold-ink" aria-hidden>
+                    —
+                  </span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <p className="mx-auto mt-10 max-w-2xl text-center text-lg font-semibold text-navy">
+            O problema quase nunca é falta de esforço. É falta de método.
+          </p>
+        </div>
+      </section>
+
+      {/* Prova social #1 */}
+      <section className="bg-surface">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <SectionHeading
+            title="Esse tipo de travamento não é só seu"
+            subtitle="Veja como foi para quem já passou por isso:"
+            align="center"
+          />
+          <div className="mx-auto mt-10 grid max-w-4xl items-center gap-8 md:grid-cols-[320px_1fr]">
+            <div className="mx-auto w-full max-w-sm md:mx-0">
+              <VideoTestimonial
+                video={depoimentoFabio.video}
+                poster={depoimentoFabio.poster}
+                name={depoimentoFabio.name}
+                role={depoimentoFabio.role}
+                caption={false}
+              />
+            </div>
+            <div className="text-center md:text-left">
+              <p className="text-sm font-semibold text-gold-ink">
+                {depoimentoFabio.name} · {depoimentoFabio.role}
+              </p>
+              <h3 className="mt-2 text-lg font-semibold text-navy">
+                {depoimentoFabio.chamada}
+              </h3>
+              <p className="mt-3 text-sm text-gray">{depoimentoFabio.texto}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. A virada — método Gestão 360 (+ need-payoff) */}
+      <section className="bg-navy text-white">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <SectionHeading
+            title="Gestão 360: método para crescer, gestão para permanecer"
+            invert
+          />
+          <p className="mt-6 max-w-3xl text-lg text-gold-light">
+            Imagine o oposto: você decide com número na mesa, não no feeling.
+            Sua equipe resolve o dia a dia sem te acionar toda hora. Sua agenda
+            tem espaço para pensar o próximo passo do negócio — não só apagar
+            incêndio.
+          </p>
+          <p className="mt-6 max-w-3xl text-white/80">
+            O Gestão 360 é a nossa metodologia proprietária. Integra as seis
+            frentes que sustentam uma empresa sólida — estratégia, vendas,
+            marketing, liderança, processos e finanças — em um modelo prático,
+            feito para sair do papel.
+          </p>
+          <p className="mt-8 text-white/80">
+            Na consultoria, o Gestão 360 é aplicado dentro da sua empresa, com:
+          </p>
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+            {metodoBullets.map((b) => (
+              <li key={b} className="flex gap-3 text-white/80">
+                <span className="text-gold" aria-hidden>
+                  ✓
+                </span>
+                <span className="text-sm">{b}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Prova social #2 */}
+      <section className="bg-surface">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <SectionHeading title="O método na prática" align="center" />
+          <div className="mx-auto mt-10 grid max-w-4xl items-center gap-8 md:grid-cols-[320px_1fr]">
+            <div className="mx-auto w-full max-w-sm md:mx-0">
+              <VideoTestimonial
+                video={depoimentoDaniella.video}
+                poster={depoimentoDaniella.poster}
+                name={depoimentoDaniella.name}
+                role={depoimentoDaniella.role}
+                caption={false}
+              />
+            </div>
+            <div className="text-center md:text-left">
+              <p className="text-sm font-semibold text-gold-ink">
+                {depoimentoDaniella.name} · {depoimentoDaniella.role}
+              </p>
+              <h3 className="mt-2 text-lg font-semibold text-navy">
+                {depoimentoDaniella.chamada}
+              </h3>
+              <p className="mt-3 text-sm text-gray">{depoimentoDaniella.texto}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Como funciona */}
+      <section className="mx-auto max-w-6xl px-6 py-20">
+        <SectionHeading title="Um caminho simples para começar" align="center" />
+        <ol className="relative mt-16 grid gap-10 md:grid-cols-3 md:gap-6">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-[16.667%] right-[16.667%] top-8 hidden h-0.5 -translate-y-1/2 bg-gold/40 md:block"
+          />
+          {passos.map((p, i) => (
+            <li key={p.n} className="relative">
+              <div className="flex flex-col items-center text-center">
+                <span className="relative z-10 flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-navy font-[var(--font-heading)] text-2xl font-bold text-gold-ink shadow-lg ring-4 ring-surface">
+                  {p.n}
+                </span>
+                <div className="mt-5 rounded-2xl border border-line bg-white p-6">
+                  <h3 className="text-lg font-semibold text-navy">
+                    {p.titulo}
+                  </h3>
+                  <p className="mt-2 text-sm text-gray">{p.desc}</p>
+                </div>
+              </div>
+              {i < passos.length - 1 && (
+                <span
+                  aria-hidden
+                  className="mx-auto -mb-2 mt-4 flex h-8 w-8 items-center justify-center text-gold-ink md:hidden"
+                >
+                  <Icon name="arrow-down" className="h-6 w-6" />
+                </span>
+              )}
+            </li>
+          ))}
+        </ol>
+        <div className="mt-12 text-center">
+          <ConversionCTA href={DIAGNOSTICO_URL} size="lg">
+            Descobrir onde minha empresa está travando
+          </ConversionCTA>
+        </div>
+      </section>
+
+      {/* 6. Quem conduz */}
+      <section className="bg-white">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-20 lg:grid-cols-[0.8fr_1fr]">
+          <Image
+            src="/images/thiago-marchi.jpg"
+            alt={`${fundador.nome}, ${fundador.cargo}`}
+            width={520}
+            height={347}
+            className="rounded-2xl shadow-2xl"
+          />
+          <div>
+            <SectionHeading title="Quem vai trabalhar ao seu lado" />
+            <p className="mt-6 text-gray">
+              A Empresarial Academy foi fundada por{" "}
+              <strong className="text-navy">{fundador.nome}</strong>, com mais de
+              20 anos em liderança estratégica e 15 como empresário. A autoridade
+              aqui vem da prática: de quem já esteve na operação, estruturou
+              times comerciais, montou indicadores e construiu gestão que
+              funciona no dia a dia — não da teoria distante da realidade da
+              empresa.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Prova social #3 */}
+      <section className="bg-surface">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <SectionHeading title="Resultado de quem decidiu agir" align="center" />
+          <div className="mx-auto mt-10 grid max-w-4xl items-center gap-8 md:grid-cols-[320px_1fr]">
+            <div className="mx-auto w-full max-w-sm md:mx-0">
+              <VideoTestimonial
+                video={depoimentoErik.video}
+                poster={depoimentoErik.poster}
+                name={depoimentoErik.name}
+                role={depoimentoErik.role}
+                caption={false}
+              />
+            </div>
+            <div className="text-center md:text-left">
+              <p className="text-sm font-semibold text-gold-ink">
+                {depoimentoErik.name} · {depoimentoErik.role}
+              </p>
+              <h3 className="mt-2 text-lg font-semibold text-navy">
+                {depoimentoErik.chamada}
+              </h3>
+              <p className="mt-3 text-sm text-gray">{depoimentoErik.texto}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. CTA final */}
+      <section className="bg-surface">
+        <div className="mx-auto max-w-3xl px-6 py-20 text-center">
+          <SectionHeading
+            title="Descubra em minutos onde a sua empresa está"
+            align="center"
+          />
+          <p className="mx-auto mt-4 max-w-2xl text-gray">
+            Faça o diagnóstico gratuito de maturidade e receba uma leitura
+            clara das quatro áreas do seu negócio, com um feedback gratuito e
+            um plano de ação inicial para impulsionar o seu crescimento — sem
+            custo e sem compromisso.
+          </p>
+          <p className="mx-auto mt-3 max-w-2xl text-sm text-gray">
+            O acompanhamento é próximo e o número de empresas atendidas por vez
+            é limitado, para manter a qualidade — quanto antes você fizer o
+            diagnóstico, antes garante o seu lugar na agenda.
+          </p>
+          <div className="mt-9 flex justify-center">
+            <ConversionCTA href={DIAGNOSTICO_URL} size="lg">
+              Começar agora — é grátis
+            </ConversionCTA>
+          </div>
+          <p className="mt-3 text-xs text-gray">
+            Abre em uma nova aba — esta página continua aberta.
+          </p>
+          <p className="mt-5 text-sm text-gray">
+            Já sabe que precisa de ajuda?{" "}
+            <a
+              href={WHATSAPP_LEAD}
+              target="_blank"
+              rel="noopener"
+              className="font-semibold text-gold-ink underline underline-offset-2 hover:text-navy"
+            >
+              Fale direto no WhatsApp
+            </a>
+            .
+          </p>
+        </div>
+      </section>
+
+      {/* 8. FAQ */}
+      <section className="mx-auto max-w-6xl px-6 py-20">
+        <SectionHeading
+          title="Perguntas frequentes"
+          align="center"
+        />
+        <div className="mt-12">
+          <Faq items={faqItems} />
+        </div>
+      </section>
+
+      {/* 9. Ainda não é o momento — conteúdo gratuito (newsletter + blog) */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <div className="rounded-2xl border border-line bg-surface px-6 py-10 sm:px-10">
+            <div className="mx-auto grid max-w-4xl items-center gap-8 lg:grid-cols-[1fr_1fr]">
+              <div>
+                <p className="font-[var(--font-heading)] text-sm font-semibold uppercase tracking-wide text-gold-ink">
+                  Ainda não é o momento de conversar?
+                </p>
+                <h2 className="mt-2 text-xl font-bold text-navy">
+                  Comece pelo conteúdo gratuito
+                </h2>
+                <p className="mt-3 text-sm text-gray">
+                  Enquanto decide, acompanhe artigos práticos de gestão, vendas e
+                  liderança no blog, ou assine a newsletter e receba novidades
+                  direto no seu e-mail.
+                </p>
+                <Link
+                  href="/blog"
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-gold-ink underline underline-offset-2 hover:text-navy"
+                >
+                  <Icon name="book" className="h-4 w-4" />
+                  Conhecer o blog
+                </Link>
+              </div>
+              <NewsletterForm origem="Newsletter — LP consultoria-pme" compact />
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}

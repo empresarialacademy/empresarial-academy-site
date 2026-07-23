@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Design System — Empresarial Academy
+   Tokens canônicos da marca expostos como utilitários Tailwind.
+   ============================================================ */
+@theme {
+  /* Cores da marca */
+  --color-navy: #1d2b3c;
+  --color-navy-light: #2e4358;
+  --color-gold: #c1a160;
+  --color-gold-light: #d7c089;
+  /* Dourado escurecido para texto pequeno sobre fundo claro (contraste AA). */
+  --color-gold-ink: #8a6a1f;
+
+  /* Neutros e apoio */
+  --color-ink: #15191f;
+  /* Cinza um pouco mais escuro para passar contraste AA sobre o fundo off-white. */
+  --color-gray: #5b626e;
+  --color-line: #d9dce1;
+  --color-surface: #f6f5f1;
+
+  /* Estados (dashboards / KPIs) */
+  --color-success: #2e7d5b;
+  --color-warning: #c7892b;
+  --color-danger: #b23b3b;
+
+  /* Tipografia (mapeada para next/font) */
+  --font-heading: var(--font-montserrat), system-ui, sans-serif;
+  --font-body: var(--font-open-sans), system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  text-wrap: balance;
+}
+
+/* Acessibilidade: foco visível e respeito a reduce-motion */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   Tipografia de conteúdo (artigos do blog — RichText)
+   ============================================================ */
+.prose-ea {
+  color: var(--color-ink);
+  line-height: 1.7;
+}
+.prose-ea > * + * {
+  margin-top: 1.25rem;
+}
+.prose-ea h2 {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin-top: 2.5rem;
+}
+.prose-ea h3 {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-navy);
+  margin-top: 2rem;
+}
+.prose-ea a {
+  color: var(--color-navy);
+  text-decoration: underline;
+  text-decoration-color: var(--color-gold);
+  text-underline-offset: 2px;
+}
+.prose-ea ul,
+.prose-ea ol {
+  padding-left: 1.5rem;
+}
+.prose-ea ul {
+  list-style: disc;
+}
+.prose-ea ol {
+  list-style: decimal;
+}
+.prose-ea li + li {
+  margin-top: 0.5rem;
+}
+.prose-ea blockquote {
+  border-left: 3px solid var(--color-gold);
+  padding-left: 1rem;
+  font-style: italic;
+  color: var(--color-gray);
+}
+.prose-ea img {
+  border-radius: 0.75rem;
+}
+.prose-ea strong {
+  color: var(--color-navy);
+}
