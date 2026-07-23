@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/layout/PageHero";
 import { MaterialsExplorer } from "@/components/materials/MaterialsExplorer";
-import { getMaterialCategories, getPublishedMaterials } from "@/lib/payload";
 
 export const metadata: Metadata = {
   title: "Materiais Gratuitos",
@@ -10,13 +9,24 @@ export const metadata: Metadata = {
   alternates: { canonical: "/materiais" },
 };
 
-export const revalidate = 60;
+export const revalidate = 60; // Next.js cache revalidation
 
 export default async function MateriaisPage() {
-  const [{ docs: materials }, categories] = await Promise.all([
-    getPublishedMaterials(60),
-    getMaterialCategories(),
-  ]);
+  let materials = [];
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/materials/public`, {
+      next: { revalidate: 60 }
+    });
+    if (res.ok) {
+      materials = await res.json();
+    }
+  } catch (error) {
+    console.error("Erro ao buscar materiais do EA HUB:", error);
+  }
+
+  // Generate unique categories from the string field
+  const categoryNames = Array.from(new Set(materials.map((m: any) => m.category).filter(Boolean)));
+  const categories = categoryNames.map((name, index) => ({ id: String(index), name }));
 
   return (
     <main>
@@ -40,7 +50,7 @@ export default async function MateriaisPage() {
             </p>
           </div>
         ) : (
-          <MaterialsExplorer materials={materials} categories={categories} />
+          <MaterialsExplorer materials={materials} categories={categories as any} />
         )}
       </section>
     </main>

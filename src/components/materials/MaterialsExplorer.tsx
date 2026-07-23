@@ -1,15 +1,26 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Material, MaterialCategory } from "@/payload-types";
 import { MaterialCard } from "@/components/materials/MaterialCard";
+
+export interface EAHubMaterial {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  category: string | null;
+  cover_image: string | null;
+  download_count: number;
+  require_lead: boolean;
+  file_extension: string | null;
+}
 
 export function MaterialsExplorer({
   materials,
   categories,
 }: {
-  materials: Material[];
-  categories: MaterialCategory[];
+  materials: EAHubMaterial[];
+  categories: { id: string; name: string }[];
 }) {
   const [query, setQuery] = useState("");
   const [activeCat, setActiveCat] = useState<string>("all");

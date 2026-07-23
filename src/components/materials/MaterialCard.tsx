@@ -1,18 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Material } from "@/payload-types";
-import { kindLabel } from "@/lib/materials";
 import { DownloadButton } from "@/components/materials/DownloadButton";
+import type { EAHubMaterial } from "@/components/materials/MaterialsExplorer";
 
-export function MaterialCard({ material }: { material: Material }) {
-  const cover = typeof material.coverImage === "object" ? material.coverImage : null;
-  const category =
-    typeof material.category === "object" && material.category
-      ? material.category
-      : null;
+export function MaterialCard({ material }: { material: EAHubMaterial }) {
+  const coverUrl = material.cover_image ? `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}${material.cover_image}` : null;
+  const category = material.category;
+  const kind = material.file_extension ? material.file_extension.toUpperCase() : "DOC";
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-sm transition-shadow hover:shadow-lg">
+    <article className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-sm transition-shadow hover:shadow-lg h-full">
       <Link
         href={`/materiais/${material.slug}`}
         className="block"
@@ -20,10 +17,10 @@ export function MaterialCard({ material }: { material: Material }) {
         tabIndex={-1}
       >
         <div className="relative aspect-[16/10] overflow-hidden bg-navy">
-          {cover?.url ? (
+          {coverUrl ? (
             <Image
-              src={cover.url}
-              alt=""
+              src={coverUrl}
+              alt={material.title}
               fill
               sizes="(max-width: 768px) 100vw, 33vw"
               className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -34,14 +31,14 @@ export function MaterialCard({ material }: { material: Material }) {
             </div>
           )}
           <span className="absolute left-3 top-3 rounded-full bg-gold px-3 py-1 text-xs font-semibold text-navy">
-            {kindLabel(material.kind)}
+            {kind}
           </span>
         </div>
       </Link>
       <div className="flex flex-1 flex-col p-6">
         {category && (
           <span className="text-xs font-medium uppercase tracking-wide text-gray">
-            {category.name}
+            {category}
           </span>
         )}
         <h3 className="mt-1 text-lg font-semibold text-navy">
@@ -52,10 +49,10 @@ export function MaterialCard({ material }: { material: Material }) {
         {material.description && (
           <p className="mt-2 flex-1 text-sm text-gray">{material.description}</p>
         )}
-        <div className="mt-5 flex items-center justify-between gap-3">
+        <div className="mt-5 flex items-center justify-between gap-3 mt-auto pt-4">
           <DownloadButton slug={material.slug ?? ""} title={material.title} />
           <span className="text-xs text-gray">
-            {material.downloads ?? 0} downloads
+            {material.download_count ?? 0} downloads
           </span>
         </div>
       </div>
