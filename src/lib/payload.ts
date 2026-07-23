@@ -92,20 +92,24 @@ export async function getTestimonials(onlyFeatured = false, limit = 50) {
   return payload.find({ collection: "testimonials", where, depth: 1, limit });
 }
 
-/** Busca um material publicado pelo slug. */
-export async function getMaterialBySlug(slug: string) {
+/** Busca um material pelo slug. Em modo preview traz o rascunho (ver getPostBySlug). */
+export async function getMaterialBySlug(slug: string, opts?: { draft?: boolean }) {
   const payload = await getPayloadClient();
+  const where: Where = opts?.draft
+    ? { slug: { equals: slug } }
+    : {
+        and: [
+          { slug: { equals: slug } },
+          { status: { equals: "published" } },
+          { publishedAt: { less_than_equal: new Date().toISOString() } },
+        ],
+      };
   const { docs } = await payload.find({
     collection: "materials",
-    where: {
-      and: [
-        { slug: { equals: slug } },
-        { status: { equals: "published" } },
-        { publishedAt: { less_than_equal: new Date().toISOString() } },
-      ],
-    },
+    where,
     depth: 2,
     limit: 1,
+    overrideAccess: Boolean(opts?.draft),
   });
   return docs[0] ?? null;
 }

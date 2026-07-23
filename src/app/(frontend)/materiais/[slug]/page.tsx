@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { draftMode } from "next/headers";
+import type { SerializedEditorState } from "@payloadcms/richtext-lexical/lexical";
+import { EaRichText } from "@/components/EaRichText";
 import { PageHero } from "@/components/layout/PageHero";
 import { MaterialCard } from "@/components/materials/MaterialCard";
 import { DownloadButton } from "@/components/materials/DownloadButton";
@@ -18,7 +21,8 @@ type Params = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
-  const material = await getMaterialBySlug(slug);
+  const { isEnabled: isDraft } = await draftMode();
+  const material = await getMaterialBySlug(slug, { draft: isDraft });
   if (!material) return { title: "Material não encontrado" };
   const seo = material.seo ?? {};
   return {
@@ -30,7 +34,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function MaterialPage({ params }: Params) {
   const { slug } = await params;
-  const material = await getMaterialBySlug(slug);
+  const { isEnabled: isDraft } = await draftMode();
+  const material = await getMaterialBySlug(slug, { draft: isDraft });
   if (!material) notFound();
 
   const cover = typeof material.coverImage === "object" ? material.coverImage : null;
@@ -61,6 +66,11 @@ export default async function MaterialPage({ params }: Params) {
       />
 
       <section className="mx-auto max-w-6xl px-6 py-16">
+        {isDraft && (
+          <div className="mb-8 rounded-lg border border-gold-ink/40 bg-surface px-4 py-2 text-sm text-navy">
+            Pré-visualização (rascunho) — assim ficará no site ao publicar.
+          </div>
+        )}
         <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr]">
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-navy">
             {cover?.url ? (
@@ -123,6 +133,12 @@ export default async function MaterialPage({ params }: Params) {
             </div>
           </div>
         </div>
+
+        {material.content ? (
+          <div className="prose-ea mx-auto mt-14 max-w-3xl">
+            <EaRichText data={material.content as unknown as SerializedEditorState} />
+          </div>
+        ) : null}
 
         {related.length > 0 && (
           <div className="mt-20">

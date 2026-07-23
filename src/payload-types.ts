@@ -297,10 +297,31 @@ export interface Material {
   title: string;
   slug?: string | null;
   /**
-   * Resumo exibido na listagem e na página do material.
+   * Resumo curto exibido na listagem e no topo da página do material.
    */
   description?: string | null;
+  /**
+   * Texto rico exibido na página do material (abaixo do resumo). Importável do .md.
+   */
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   coverImage?: (number | null) | Media;
+  /**
+   * Arquivo que o visitante baixa no site (PDF, Excel, Word, PPT, .md, ZIP…).
+   */
   file: number | MaterialFile;
   kind?: ('ebook' | 'planilha' | 'template' | 'checklist' | 'guia' | 'apresentacao' | 'video') | null;
   category?: (number | null) | MaterialCategory;
@@ -824,6 +845,7 @@ export interface MaterialsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   description?: T;
+  content?: T;
   coverImage?: T;
   file?: T;
   kind?: T;

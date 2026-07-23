@@ -1,6 +1,8 @@
 import type { CollectionConfig } from "payload";
 import { formatSlug } from "@/lib/slug";
 import { sendNewMaterialAlert } from "@/lib/content-alerts";
+import { eaEditor } from "@/lib/editor";
+import { buildPreviewUrl } from "@/lib/preview";
 
 export const Materials: CollectionConfig = {
   slug: "materials",
@@ -9,6 +11,8 @@ export const Materials: CollectionConfig = {
     useAsTitle: "title",
     defaultColumns: ["title", "category", "downloads", "status"],
     group: "Materiais",
+    preview: (doc) =>
+      doc?.slug ? buildPreviewUrl("materials", String(doc.slug)) : null,
   },
   access: {
     read: ({ req }) => {
@@ -39,8 +43,15 @@ export const Materials: CollectionConfig = {
     {
       name: "description",
       type: "textarea",
-      label: "Descrição",
-      admin: { description: "Resumo exibido na listagem e na página do material." },
+      label: "Descrição (resumo)",
+      admin: { description: "Resumo curto exibido na listagem e no topo da página do material." },
+    },
+    {
+      name: "content",
+      type: "richText",
+      label: "Conteúdo (texto completo, opcional)",
+      editor: eaEditor,
+      admin: { description: "Texto rico exibido na página do material (abaixo do resumo). Importável do .md." },
     },
     {
       name: "coverImage",
@@ -54,6 +65,7 @@ export const Materials: CollectionConfig = {
       relationTo: "material-files",
       required: true,
       label: "Arquivo para download",
+      admin: { description: "Arquivo que o visitante baixa no site (PDF, Excel, Word, PPT, .md, ZIP…)." },
     },
     {
       name: "kind",

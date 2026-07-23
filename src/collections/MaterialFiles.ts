@@ -8,6 +8,10 @@ export const MaterialFiles: CollectionConfig = {
   access: { read: () => true },
   upload: {
     staticDir: "public/uploads/materiais",
+    // Aceita praticamente qualquer arquivo que o Thiago queira disponibilizar
+    // para download (PDF, Excel, Word, PowerPoint, .md, ODF, ZIP, CSV, vídeo,
+    // imagem…). `application/octet-stream` cobre tipos que o navegador não
+    // identifica.
     mimeTypes: [
       "application/pdf",
       "application/vnd.ms-excel",
@@ -16,8 +20,14 @@ export const MaterialFiles: CollectionConfig = {
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       "application/vnd.ms-powerpoint",
       "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "application/vnd.oasis.opendocument.text",
+      "application/vnd.oasis.opendocument.spreadsheet",
+      "application/vnd.oasis.opendocument.presentation",
+      "application/rtf",
+      "application/json",
       "application/zip",
       "application/x-zip-compressed",
+      "text/markdown",
       "text/csv",
       "text/plain",
       "application/octet-stream",
