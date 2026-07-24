@@ -390,6 +390,16 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (u) (import .md em Materiais: categoria nunca resolvia + kind/version)
+6º bug encontrado na rotina de import (após os 5 já corrigidos em a/j/k/l): a busca
+de categoria no `/api/parse-markdown` era **hardcoded na coleção `categories`**
+(a de Posts) — em Materiais (`material-categories`, coleção diferente) a categoria
+do `.md` NUNCA resolvia, silenciosamente. Fix: `ImportMarkdownButton` manda
+`collectionSlug` (via `useDocumentInfo()`) no FormData; a rota escolhe a coleção
+de categoria certa. Também adicionado suporte a `frontmatter.kind` (tipo de
+material: ebook/planilha/template/checklist/guia/apresentacao/video — precisa
+bater exatamente com os `value` das opções) e `frontmatter.version`. Deployado.
+
 ### Sessão 2026-07-24 (t) (redesenho do hero do artigo/material + curtir/não curtir)
 Pedido do Thiago: eliminar a duplicidade de imagem (banner genérico + capa do artigo
 apareciam as duas), padronizar hero (imagem no lugar do banner + título + subtítulo),

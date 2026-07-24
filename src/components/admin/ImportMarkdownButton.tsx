@@ -1,16 +1,19 @@
 'use client';
 import React, { useRef, useState } from 'react';
-import { useForm } from '@payloadcms/ui';
+import { useForm, useDocumentInfo } from '@payloadcms/ui';
 
 type Feedback = { kind: 'ok' | 'err'; msg: string } | null;
 
 /**
  * Importa um arquivo .md (com YAML frontmatter) e preenche os campos do
  * Artigo/Material via /api/parse-markdown. Campos inexistentes na coleção
- * atual são ignorados pelo Payload (o mesmo botão serve Posts e Materials).
+ * atual são ignorados pelo Payload (o mesmo botão serve Posts e Materials) —
+ * manda `collectionSlug` pra rota saber em qual coleção de categoria buscar
+ * (Posts e Materials usam coleções de categoria diferentes).
  */
 export const ImportMarkdownButton = () => {
   const { dispatchFields } = useForm();
+  const { collectionSlug } = useDocumentInfo();
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -24,6 +27,7 @@ export const ImportMarkdownButton = () => {
       setFeedback(null);
       const formData = new FormData();
       formData.append('file', file);
+      if (collectionSlug) formData.append('collection', collectionSlug);
 
       const response = await fetch('/api/parse-markdown', { method: 'POST', body: formData });
       if (!response.ok) {
@@ -81,6 +85,10 @@ export const ImportMarkdownButton = () => {
         }
         if (frontmatter.categoryId) set('category', frontmatter.categoryId);
         if (frontmatter.authorId) set('author', frontmatter.authorId);
+        // Exclusivos de Materiais — ignorados pelo Payload se o campo não
+        // existir na coleção atual (ex.: ao importar num Artigo).
+        if (frontmatter.kind) set('kind', frontmatter.kind);
+        if (frontmatter.version) set('version', frontmatter.version);
       }
 
       if (lexical) {

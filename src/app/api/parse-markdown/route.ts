@@ -29,6 +29,13 @@ export async function POST(req: Request) {
     if (!file) {
       return NextResponse.json({ error: "Nenhum arquivo enviado." }, { status: 400 });
     }
+    // Posts e Materials têm coleções de categoria DIFERENTES (`categories` vs
+    // `material-categories`) — sem saber de qual coleção o botão foi acionado,
+    // a busca de categoria sempre caía na de Posts, então nunca resolvia em
+    // Materials. O botão manda o slug da coleção atual (useDocumentInfo).
+    const targetCollection = formData.get("collection") as string | null;
+    const categoryCollection =
+      targetCollection === "materials" ? "material-categories" : "categories";
 
     const text = await file.text();
     const { data: frontmatter, content } = matter(text);
@@ -36,7 +43,7 @@ export async function POST(req: Request) {
     // Resolve relacionamentos por nome/título.
     if (frontmatter.category) {
       const catRes = await payload.find({
-        collection: "categories",
+        collection: categoryCollection,
         where: { name: { equals: frontmatter.category } },
         limit: 1,
       });
