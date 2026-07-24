@@ -7,7 +7,8 @@ export function isGoogleAdsConfigured(): boolean {
     process.env.GOOGLE_ADS_CLIENT_ID &&
       process.env.GOOGLE_ADS_CLIENT_SECRET &&
       process.env.GOOGLE_DEVELOPER_TOKEN &&
-      process.env.GOOGLE_CUSTOMER_ID,
+      process.env.GOOGLE_CUSTOMER_ID &&
+      process.env.GOOGLE_LOGIN_CUSTOMER_ID,
   );
 }
 
@@ -26,10 +27,12 @@ export async function getGoogleAdsClient() {
   });
 
   const customer = client.Customer({
+    // Conta-cliente onde as campanhas rodam de fato (770-135-7894), vinculada
+    // à MCC "EA MKT HUB" (confirmado por e-mail do Google em 24/07 — a MCC não
+    // roda campanha nela mesma, é só a conta administradora).
     customer_id: process.env.GOOGLE_CUSTOMER_ID || '',
-    // Conta MCC (EA MKT HUB) — as campanhas rodam na própria MCC, então
-    // login_customer_id == customer_id.
-    login_customer_id: process.env.GOOGLE_CUSTOMER_ID || '',
+    // Conta MCC — autentica em nome da conta-cliente acima.
+    login_customer_id: process.env.GOOGLE_LOGIN_CUSTOMER_ID || process.env.GOOGLE_CUSTOMER_ID || '',
     refresh_token: settings.refreshToken,
   });
 

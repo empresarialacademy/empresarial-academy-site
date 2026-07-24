@@ -390,6 +390,22 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (b) (Google Ads — conta-cliente 770-135-7894 confirmada, login_customer_id separado)
+E-mail oficial do Google confirmou: a conta **770-135-7894** (que apareceu no
+assistente de criação de campanha na sessão anterior) ficou **vinculada de verdade**
+à MCC **779-237-1166** ("EA MKT HUB"). Resolve a incerteza da sessão (g) de 23/07
+("não confirmado se a conta persistiu"). Padrão MCC: campanhas rodam na
+conta-cliente, a MCC só autentica.
+- **Código (`src/lib/google-ads.ts`):** `getGoogleAdsClient()` agora separa
+  `customer_id` (conta-cliente, onde rodam as campanhas) de `login_customer_id`
+  (MCC, autentica em nome da conta-cliente) — antes usava o mesmo valor pros dois
+  (config antiga, baseada numa suposição do Thiago que o e-mail do Google corrigiu).
+  `isGoogleAdsConfigured()` agora exige `GOOGLE_LOGIN_CUSTOMER_ID` também.
+- **Env vars (Vercel produção + `.env.local`):** `GOOGLE_CUSTOMER_ID` mudou de
+  `7792371166` → **`7701357894`** (conta-cliente 770-135-7894, sem traços);
+  `GOOGLE_LOGIN_CUSTOMER_ID` novo = `7792371166` (a MCC).
+- **Ainda não deployado** — próxima sessão faz o deploy junto com o resto pendente.
+
 ### Sessão 2026-07-24 (a) (bugfix tags .md, editor de e-mail, opt-in leads, Portal/Playbook Souza Ramos publicados)
 Ainda não deployado nesta entrada (ver próxima sessão para o deploy).
 
