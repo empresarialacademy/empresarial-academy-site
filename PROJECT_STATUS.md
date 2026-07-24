@@ -390,6 +390,24 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (c) (Tela de Permissão OAuth publicada + risco do main confirmado)
+- **Tela de Permissão OAuth (`ea-impulsiona`) publicada** ("Testando" → "Em
+  produção") — elimina a expiração de 7 dias do refresh token do Google Ads.
+  **Pendente:** reconectar 1x no EA ADS Manager ("Conectar Google Ads") para
+  substituir o token antigo (gerado em modo Testando, ainda com prazo de 7 dias)
+  por um novo, permanente.
+- **Risco do `main`↔GitHub CONFIRMADO ativo (não resolvido, aguardando decisão do
+  Thiago):** verificado via API da Vercel — `link.type:"github"`,
+  `productionBranch:"main"`. O `main` do GitHub tem só 4 commits (histórico da
+  versão paralela "EA-HUB migration, Prisma" de outra IA), enquanto o `master`
+  local (fonte real do site) tem 19 e não tem remote configurado. Ou seja: **um
+  push qualquer no `main` do GitHub auto-deploya a versão paralela por cima do
+  site real.** Opção recomendada (não destrutiva): desconectar a integração Git
+  do projeto na Vercel (`vercel git disconnect` ou pelo painel) — deploys
+  continuam pelo CLI como já é feito. Alternativa mais trabalhosa: force-push do
+  `master` real por cima do `main` (reescreve histórico remoto). Thiago ainda não
+  decidiu — pergunta foi dispensada, retomar quando ele quiser.
+
 ### Sessão 2026-07-24 (b) (Google Ads — conta-cliente 770-135-7894 confirmada, login_customer_id separado)
 E-mail oficial do Google confirmou: a conta **770-135-7894** (que apareceu no
 assistente de criação de campanha na sessão anterior) ficou **vinculada de verdade**
