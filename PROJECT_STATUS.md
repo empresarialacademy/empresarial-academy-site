@@ -390,6 +390,35 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (f) (limpeza/infra: Vercel desconectada do GitHub, secret rotacionado, backup pendente)
+Autorizado pelo Thiago: risco do `main`, backup na nuvem, limpeza OneDrive.
+- **Vercel DESCONECTADA do GitHub** (`DELETE /v9/projects/.../link` via API, confirmado
+  `link: null`). Elimina de vez o risco de auto-deploy da versão paralela que estava no
+  `main`. Deploys seguem só via CLI (`vercel --prod`), como já vinha sendo feito.
+- **Achado durante o backup:** ao tentar `git push` do `master` local pro GitHub (pra
+  fazer o backup na nuvem), o GitHub **bloqueou por secret-scanning** — um commit antigo
+  (`fe05f13`, arquivos `scripts/push-env.js/.ps1` já apagados depois) tinha o
+  **`GOOGLE_ADS_CLIENT_SECRET` ATIVO em texto puro** (não o antigo `12_u` — o `7hdZ` que
+  estava em uso até agora). Não vazou no GitHub (bloqueado antes), mas estava exposto no
+  histórico local. **Resolvido: secret rotacionado** — novo valor termina em `...LIFNJdFw-`,
+  atualizado na Vercel produção e `.env.local`, deployado, site validado (200). Prático:
+  o refresh token já salvo continua funcionando (rotação de secret não invalida refresh
+  token existente, só muda o que o servidor usa pra autenticar as próximas chamadas).
+  **Pendente:** excluir o secret antigo (`...7hdZ`) no Google Cloud (agora morto/exposto,
+  sem motivo pra manter) — Thiago tentou "Adicionar secret" antes e o botão estava
+  desabilitado porque já existiam 2 secrets (limite do Google); só liberou depois de
+  excluir o `...12_u` mais antigo. Conferir se esse (`...12_u`) foi mesmo excluído.
+  **Backup real na nuvem ainda NÃO concluído** — o push ainda não foi refeito após a
+  rotação (precisa decidir: branch novo sem o commit problemático, ou squash).
+- **Bug do import `.md` (tags) reaberto:** o Thiago reportou o MESMO erro "Cannot read
+  properties of undefined (reading 'map')" de novo, mesmo após o fix da sessão (a)
+  (ADD_ROW). Log de diagnóstico temporário adicionado em `ImportMarkdownButton.tsx`
+  (`console.error` no catch) e deployado — **aguardando o Thiago reproduzir e mandar o
+  print do console do navegador** para achar a causa raiz real (o fix anterior pode não
+  cobrir todos os casos, ou pode ser um bug diferente no mesmo padrão).
+- **Limpeza do OneDrive:** ainda não iniciada de fato — Thiago mencionou querer salvar
+  algo em `Projeto IA/ea-hub` no meio da sessão, contexto não confirmado ainda.
+
 ### Sessão 2026-07-24 (e) (Ads — erro real da sincronização confirma causa esperada)
 Com o fix da sessão (d) deployado, Thiago testou "Sincronizar" de novo e a mensagem
 real apareceu: **"The customer account can't be accessed because it is not yet
