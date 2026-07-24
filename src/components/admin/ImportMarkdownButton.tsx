@@ -39,25 +39,42 @@ export const ImportMarkdownButton = () => {
       if (frontmatter) {
         if (frontmatter.title) set('title', frontmatter.title);
         if (frontmatter.slug) set('slug', frontmatter.slug);
+        // Meta title: usa um `meta_title` explícito do frontmatter se houver,
+        // senão cai para o título do artigo (padrão comum de SEO).
+        const metaTitle = frontmatter.meta_title || frontmatter.title;
+        if (metaTitle) set('seo.metaTitle', metaTitle);
         if (frontmatter.meta_description) {
           set('excerpt', frontmatter.meta_description);
           set('description', frontmatter.meta_description);
           set('seo.metaDescription', frontmatter.meta_description);
         }
-        if (frontmatter.keywords) set('seo.metaKeywords', frontmatter.keywords);
         if (frontmatter.status) set('status', frontmatter.status);
         if (frontmatter.tags) {
           // Campos `array` do Payload não aceitam um UPDATE direto com o array
           // pronto — o form precisa da metadata interna `rows`, criada linha a
           // linha via ADD_ROW (sem isso, o ArrayField quebra com "Cannot read
           // properties of undefined (reading 'map')" ao tentar renderizar).
+          // ADD_ROW sozinho, porém, marca cada linha como `isLoading: true`
+          // (mostra um esqueleto de carregamento em vez do campo real) e nada
+          // nunca desmarca isso — por isso as tags pareciam não aparecer.
+          // REPLACE_ROW, logo em seguida, substitui a linha por uma limpa
+          // (sem isLoading), mostrando o campo de verdade.
           const arr: string[] = Array.isArray(frontmatter.tags)
             ? frontmatter.tags
             : String(frontmatter.tags).split(',').map((t: string) => t.trim());
-          arr.forEach((t) => {
+          arr.forEach((t, i) => {
             dispatchFields({
               type: 'ADD_ROW',
               path: 'tags',
+              rowIndex: i,
+              subFieldState: { tag: { value: t, initialValue: t, valid: true } },
+            });
+          });
+          arr.forEach((t, i) => {
+            dispatchFields({
+              type: 'REPLACE_ROW',
+              path: 'tags',
+              rowIndex: i,
               subFieldState: { tag: { value: t, initialValue: t, valid: true } },
             });
           });

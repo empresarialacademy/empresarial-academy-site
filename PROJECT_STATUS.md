@@ -390,6 +390,26 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (l) (import .md — Meta Title nunca era mapeado + tags travadas em "carregando")
+Thiago testou de novo após (k): conteúdo ok, mas "SEO Meta title" e tags continuavam
+vazios. Dois bugs distintos, nenhum ligado ao arquivo:
+- **Meta Title:** o campo real é `seo.metaTitle` (existe em Posts E Materials), mas o
+  botão **nunca mandava esse campo** — só `seo.metaDescription`. Também achado: o botão
+  tentava preencher `seo.metaKeywords`, campo que **não existe em nenhuma das duas
+  coleções** (código morto, removido). Fix: `seo.metaTitle` = `frontmatter.meta_title`
+  (se o `.md` tiver) ou `frontmatter.title` como fallback (não há `meta_title` nos `.md`
+  atuais do Thiago, então hoje sempre usa o título do artigo — padrão comum de SEO).
+- **Tags "sumindo":** o `ADD_ROW` (fix da sessão a) funcionava, mas cada linha nasce com
+  `isLoading: true` na metadata (`fieldReducer.js`) — e **nada no reducer nunca desmarca
+  isso**. Com `isLoading: true`, o `ArrayRow.js` renderiza um `<ShimmerEffect />`
+  (esqueleto de carregamento) no lugar do campo de verdade, indefinidamente. Fix: depois
+  de todos os `ADD_ROW`, disparar `REPLACE_ROW` (mesmo `rowIndex`, mesmo
+  `subFieldState`) para cada linha — substitui a metadata por uma limpa, sem
+  `isLoading`, revelando o campo real.
+- **Quarto e quinto bugs distintos** encontrados nesta mesma rotina de import (depois de:
+  categoria por campo errado (sessão original), tags precisando de ADD_ROW (a), config
+  do conversor não-sanitizada (j), content sem initialValue (k)). **Deployado.**
+
 ### Sessão 2026-07-24 (k) (import .md — 3º bug: campo "content" não abastecia visualmente)
 Thiago testou após o fix (j): sem erro, título/slug/SEO/tags preencheram, mas o
 **conteúdo do editor ficou vazio**. Não é o arquivo — é o mesmo padrão de bug de novo,
