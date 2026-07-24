@@ -390,6 +390,17 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-23 (d) (DEPLOY das sessões b+c — no ar e validado)
+**Deployado via Vercel CLI** (`vercel --prod`, build 2m, sem tocar no `main` do GitHub).
+Deployment `dpl_Hs5BPyPYBry4HnyPsYQxVXCGD9T9`, aliased para `empresarialacademy.com`.
+Validação HTTP em produção: site público (home/LP/serviços) **200** sem regressão;
+`/eahub` **200**; `/admin`→307→`/eahub`; **`/api/ads/oauth`→307→Google com o
+`redirect_uri=https://empresarialacademy.com/api/ads/callback` correto** (confirma que
+`NEXT_PUBLIC_SITE_URL` e as `GOOGLE_ADS_*` carregaram — não caiu em localhost). No ar:
+unificação do hub, fix do import `.md`, favicon EA, botão Voltar no ADS, msg de conexão.
+**Pendências do Ads seguem sendo você-only:** redirect URI no Google Cloud, developer
+token Basic access, `GEMINI_API_KEY` (`AIza…`), criar 1 campanha.
+
 ### Sessão 2026-07-23 (c) (Google Ads — config real de produção; estado corrigido)
 **Descoberta que corrige registro antigo:** as env vars do Google Ads/Gemini NÃO
 estavam na Vercel de produção deste site (só 14 vars: S3, DB, Resend...). Provavelmente
