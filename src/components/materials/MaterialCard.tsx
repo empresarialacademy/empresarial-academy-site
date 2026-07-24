@@ -4,6 +4,7 @@ import type { Material } from "@/payload-types";
 import { kindLabel } from "@/lib/materials";
 import { DownloadButton } from "@/components/materials/DownloadButton";
 import { BrandCover } from "@/components/ui/BrandCover";
+import { LikeDislike } from "@/components/blog/LikeDislike";
 
 export function MaterialCard({ material }: { material: Material }) {
   const cover = typeof material.coverImage === "object" ? material.coverImage : null;
@@ -59,6 +60,15 @@ export function MaterialCard({ material }: { material: Material }) {
           <span className="text-xs text-gray">
             {material.downloads ?? 0} downloads
           </span>
+        </div>
+        <div className="mt-3">
+          <LikeDislike
+            collection="materials"
+            slug={material.slug ?? ""}
+            initialLikes={material.likes ?? 0}
+            initialDislikes={material.dislikes ?? 0}
+            compact
+          />
         </div>
       </div>
     </article>

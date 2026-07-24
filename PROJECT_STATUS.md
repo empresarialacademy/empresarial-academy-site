@@ -390,6 +390,31 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (t) (redesenho do hero do artigo/material + curtir/não curtir)
+Pedido do Thiago: eliminar a duplicidade de imagem (banner genérico + capa do artigo
+apareciam as duas), padronizar hero (imagem no lugar do banner + título + subtítulo),
+e adicionar 👍/👎 no fim do conteúdo e em cada card das listagens — em Artigos e
+Materiais.
+- **Hero unificado:** o `PageHero` já suportava `subtitle` lado a lado com a imagem
+  (layout "aprovado pelo cliente", só não estava sendo usado) — não precisou de
+  componente novo. Blog: passa `subtitle={post.excerpt}` pro `PageHero` existente e
+  **removida a capa duplicada** que era renderizada de novo no corpo do artigo.
+  Materiais: adicionado `subtitle={material.description}` ao `PageHero`, mas **NÃO**
+  migrado pro mesmo layout do blog — a página de material tem uma estrutura mais rica
+  (grid com botão de download, compartilhar, materiais relacionados) que não fazia
+  sentido descartar; ficou só a melhoria de subtítulo + curtir/não curtir.
+- **Curtir/não curtir:** campos `likes`/`dislikes` (number, sidebar, readOnly) em
+  Posts e Materials. Nova rota `POST /api/reactions` (recebe `{collection, slug, from,
+  to}`, aplica o delta nos contadores — sem autenticação, ação pública). Componente
+  `LikeDislike.tsx` (client): 1 voto por navegador via localStorage
+  (`ea-reaction:<collection>:<slug>`), permite trocar/desfazer o voto (decisão do
+  Thiago), update otimista com rollback se a API falhar. Modo `compact` pros cards da
+  listagem (`PostCard`, `MaterialCard`), modo normal no fim do artigo/material.
+- **Schema sincronizado no Neon + `payload-types.ts` regenerado** (novos campos
+  `likes`/`dislikes`) via `next dev` apontado pro Neon + `/api/dev/gen-artifacts`
+  (S3_* inline, S3ClientUploadHandler confirmado intacto).
+- **Deployado.**
+
 ### Sessão 2026-07-24 (s) (imagem: 2ª peça que faltava — domínio ausente do remotePatterns)
 Fix da sessão (r) (HEAD handler) funcionou de verdade — `HEAD` confirmado 200 depois de
 2 tentativas (a 1ª só reencaminhava o `Request` original com `method: "HEAD"`, o

@@ -6,6 +6,7 @@ import { draftMode } from "next/headers";
 import type { SerializedEditorState } from "@payloadcms/richtext-lexical/lexical";
 import { EaRichText } from "@/components/EaRichText";
 import { PageHero } from "@/components/layout/PageHero";
+import { LikeDislike } from "@/components/blog/LikeDislike";
 import { MaterialCard } from "@/components/materials/MaterialCard";
 import { DownloadButton } from "@/components/materials/DownloadButton";
 import {
@@ -59,6 +60,7 @@ export default async function MaterialPage({ params }: Params) {
     <main>
       <PageHero
         title={material.title}
+        subtitle={material.description ?? undefined}
         crumbs={[
           { label: "Materiais", href: "/materiais" },
           { label: material.title },
@@ -160,7 +162,17 @@ export default async function MaterialPage({ params }: Params) {
           </div>
         )}
 
-        <div className="mt-16">
+        <div className="mt-16 border-t border-line pt-8 text-center">
+          <p className="mb-3 text-sm text-gray">Esse material te ajudou?</p>
+          <LikeDislike
+            collection="materials"
+            slug={material.slug ?? ""}
+            initialLikes={material.likes ?? 0}
+            initialDislikes={material.dislikes ?? 0}
+          />
+        </div>
+
+        <div className="mt-8">
           <Link
             href="/materiais"
             className="text-sm font-semibold text-gold-ink hover:underline"

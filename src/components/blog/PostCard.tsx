@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Post } from "@/payload-types";
 import { formatDatePtBR } from "@/lib/format";
 import { BrandCover } from "@/components/ui/BrandCover";
+import { LikeDislike } from "@/components/blog/LikeDislike";
 
 export function PostCard({ post }: { post: Post }) {
   const cover = typeof post.coverImage === "object" ? post.coverImage : null;
@@ -50,12 +51,21 @@ export function PostCard({ post }: { post: Post }) {
         {post.excerpt && (
           <p className="mt-2 flex-1 text-sm text-gray">{post.excerpt}</p>
         )}
-        <Link
-          href={`/blog/${post.slug}`}
-          className="mt-4 inline-block text-sm font-semibold text-gold-ink hover:underline"
-        >
-          Ler artigo →
-        </Link>
+        <div className="mt-4 flex items-center justify-between gap-2">
+          <Link
+            href={`/blog/${post.slug}`}
+            className="text-sm font-semibold text-gold-ink hover:underline"
+          >
+            Ler artigo →
+          </Link>
+          <LikeDislike
+            collection="posts"
+            slug={post.slug ?? ""}
+            initialLikes={post.likes ?? 0}
+            initialDislikes={post.dislikes ?? 0}
+            compact
+          />
+        </div>
       </div>
     </article>
   );

@@ -153,6 +153,20 @@ export const Materials: CollectionConfig = {
           "Marcado automaticamente quando o e-mail de novo conteúdo é disparado aos assinantes da newsletter, ao publicar.",
       },
     },
+    {
+      name: "likes",
+      type: "number",
+      label: "Curtidas",
+      defaultValue: 0,
+      admin: { position: "sidebar", readOnly: true },
+    },
+    {
+      name: "dislikes",
+      type: "number",
+      label: "Não curtidas",
+      defaultValue: 0,
+      admin: { position: "sidebar", readOnly: true },
+    },
   ],
   hooks: {
     beforeChange: [

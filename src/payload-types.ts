@@ -202,6 +202,8 @@ export interface Post {
    * Marcado automaticamente quando o e-mail de novo conteúdo é disparado aos assinantes da newsletter, ao publicar.
    */
   subscriberAlertSent?: boolean | null;
+  likes?: number | null;
+  dislikes?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -341,6 +343,8 @@ export interface Material {
    * Marcado automaticamente quando o e-mail de novo conteúdo é disparado aos assinantes da newsletter, ao publicar.
    */
   subscriberAlertSent?: boolean | null;
+  likes?: number | null;
+  dislikes?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -838,6 +842,8 @@ export interface PostsSelect<T extends boolean = true> {
         metaDescription?: T;
       };
   subscriberAlertSent?: T;
+  likes?: T;
+  dislikes?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -877,6 +883,8 @@ export interface MaterialsSelect<T extends boolean = true> {
         metaDescription?: T;
       };
   subscriberAlertSent?: T;
+  likes?: T;
+  dislikes?: T;
   updatedAt?: T;
   createdAt?: T;
 }

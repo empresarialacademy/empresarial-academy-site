@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { draftMode } from "next/headers";
 import type { SerializedEditorState } from "@payloadcms/richtext-lexical/lexical";
 import { EaRichText } from "@/components/EaRichText";
 import { PageHero } from "@/components/layout/PageHero";
+import { LikeDislike } from "@/components/blog/LikeDislike";
 import { getPostBySlug } from "@/lib/payload";
 import { siteConfig } from "@/lib/site-config";
 import { formatDatePtBR } from "@/lib/format";
@@ -64,8 +64,10 @@ export default async function PostPage({ params }: Params) {
     <main>
       <PageHero
         title={post.title}
+        subtitle={post.excerpt ?? undefined}
         crumbs={[{ label: "Blog", href: "/blog" }, { label: post.title }]}
         image={cover?.url ?? "/images/banner-blog.jpg"}
+        imageAlt={cover?.alt ?? post.title}
       />
 
       <article className="mx-auto max-w-3xl px-6 py-16">
@@ -80,19 +82,6 @@ export default async function PostPage({ params }: Params) {
           </time>
           {author?.name && <span>· por {author.name}</span>}
         </div>
-
-        {cover?.url && (
-          <div className="relative mt-6 aspect-[16/9] overflow-hidden rounded-2xl">
-            <Image
-              src={cover.url}
-              alt={cover.alt ?? post.title}
-              fill
-              priority
-              sizes="(max-width: 768px) 100vw, 768px"
-              className="object-cover"
-            />
-          </div>
-        )}
 
         {isDraft && (
           <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gold-ink/40 bg-surface px-4 py-2 text-sm text-navy">
@@ -112,7 +101,17 @@ export default async function PostPage({ params }: Params) {
           )}
         </div>
 
-        <div className="mt-12 border-t border-line pt-8">
+        <div className="mt-12 border-t border-line pt-8 text-center">
+          <p className="mb-3 text-sm text-gray">Esse conteúdo te ajudou?</p>
+          <LikeDislike
+            collection="posts"
+            slug={post.slug ?? ""}
+            initialLikes={post.likes ?? 0}
+            initialDislikes={post.dislikes ?? 0}
+          />
+        </div>
+
+        <div className="mt-8 border-t border-line pt-8">
           <Link
             href="/blog"
             className="text-sm font-semibold text-gold-ink hover:underline"
