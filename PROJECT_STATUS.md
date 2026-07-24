@@ -390,6 +390,20 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-23 (g) (criação da campanha adiada — decisão do Thiago)
+Ao tentar criar a 1ª campanha em ads.google.com, o assistente da MCC 779-237-1166
+levou para uma **conta-cliente separada (770-135-7894)** e só ofereceu **Smart
+Campaign** (metas "Leads de chamadas"/"Engajamentos na loja" — não bate com o funil
+real, que é Pesquisa + Leads pelo site para a LP `/consultoria-pme`). Sem opção de
+"modo especialista" nessa tela. Thiago saiu do assistente sem concluir — **decisão:
+adiar a criação da campanha para depois da aprovação do Basic Access**, feita com
+calma (usar keywords/concorrentes/posicionamento já levantados na sessão de 23/07 —
+ver relatório "Diagnóstico & Plano de Marketing"), não às pressas num wizard errado.
+**Não confirmado se a conta 770-135-7894 persistiu** (criação abandonada no meio) —
+por isso `GOOGLE_CUSTOMER_ID`/`login_customer_id` NÃO foram alterados no código;
+ficam em `7792371166` até confirmar, na hora de criar a campanha de verdade, qual
+conta-cliente vai rodá-la (aí sim ajustar login_customer_id=MCC / customer_id=cliente).
+
 ### Sessão 2026-07-23 (f) (Basic Access solicitado)
 Thiago enviou o formulário oficial de Basic Access do Google Ads API (Central de Ajuda
 do Google, não a Central de API do próprio Ads) — protocolo **4-9720000040725**, e-mail
