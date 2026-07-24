@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import matter from "gray-matter";
 import { getPayloadClient } from "@/lib/payload";
-import { convertMarkdownToLexical, defaultEditorConfig } from "@payloadcms/richtext-lexical";
+import { convertMarkdownToLexical, defaultEditorConfig, sanitizeServerEditorConfig } from "@payloadcms/richtext-lexical";
 
 /**
  * Importador de conteúdo `.md` para o EA HUB. Recebe um arquivo Markdown com
@@ -51,9 +51,17 @@ export async function POST(req: Request) {
       if (authorRes.docs.length > 0) frontmatter.authorId = authorRes.docs[0].id;
     }
 
+    // `convertMarkdownToLexical` exige a config SANITIZADA (com `features.nodes`
+    // resolvido). Passar `defaultEditorConfig` cru quebra com "Cannot read
+    // properties of undefined (reading 'map')" em getEnabledNodesFromServerNodes
+    // (features.nodes === undefined). `sanitizeServerEditorConfig` resolve as
+    // features usando o config completo do Payload.
+    const sanitizedEditorConfig = await sanitizeServerEditorConfig(
+      defaultEditorConfig,
+      payload.config,
+    );
     const lexicalState = convertMarkdownToLexical({
-      // @ts-expect-error - Payload 3.85 typings pedem SanitizedServerEditorConfig; defaultEditorConfig é ServerEditorConfig e funciona.
-      editorConfig: defaultEditorConfig,
+      editorConfig: sanitizedEditorConfig,
       markdown: content,
     });
 

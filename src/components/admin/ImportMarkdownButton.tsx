@@ -70,7 +70,6 @@ export const ImportMarkdownButton = () => {
 
       setFeedback({ kind: 'ok', msg: 'Conteúdo importado. Revise, adicione a capa e visualize antes de publicar.' });
     } catch (error) {
-      console.error('[ImportMarkdownButton] falha ao importar .md:', error);
       setFeedback({ kind: 'err', msg: (error as Error).message });
     } finally {
       setLoading(false);

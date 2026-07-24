@@ -390,6 +390,27 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (j) (CAUSA RAIZ do bug do import .md achada e corrigida)
+O bug do import `.md` (que ressurgiu na sessão f/g) NÃO era o campo `tags` (client) — era
+**erro 500 no servidor**, dentro de `/api/parse-markdown`. Diagnóstico definitivo:
+- **Log do navegador** mostrou `/api/parse-markdown` respondendo **500** (o `console.error`
+  do botão só repassava a msg do servidor). **Logs da Vercel** deram o stack minificado
+  apontando o conversor Markdown→Lexical. **Reproduzido local** com script isolado → stack
+  limpo: `TypeError: Cannot read properties of undefined (reading 'map')` em
+  `getEnabledNodesFromServerNodes` (`node_modules/@payloadcms/richtext-lexical/.../nodes/
+  index.js:222`) porque `editorConfig.features.nodes` era `undefined`.
+- **Causa raiz:** a rota passava `defaultEditorConfig` **cru** para `convertMarkdownToLexical`.
+  Essa função exige a config **SANITIZADA** (com as features resolvidas). O código antigo
+  já tinha um `@ts-expect-error` mascarando exatamente essa incompatibilidade — o TS
+  avisou, foi silenciado, e quebrou em runtime.
+- **Fix:** `sanitizeServerEditorConfig(defaultEditorConfig, payload.config)` antes de
+  converter (função exportada pela própria lib). Validado numa rota dev temporária
+  (`/api/dev/test-md-convert`, já removida): o mesmo `.md` de Representantes Comerciais
+  converteu OK → **26 blocos** na raiz. Log de diagnóstico do `ImportMarkdownButton`
+  removido. O fix da sessão (a) (ADD_ROW pras tags) segue válido e necessário — eram DOIS
+  bugs distintos no mesmo fluxo; este era o que ainda derrubava tudo com 500.
+- **Deployado e no ar.**
+
 ### Sessão 2026-07-24 (i) (repo EA-MKT-HUB apagado — limpeza de infraestrutura 100% concluída)
 Thiago apagou o repo GitHub `EA-MKT-HUB` (confirmado via `gh repo view` → 404/não existe).
 **Fecha por completo o bloco de limpeza/infra autorizado nesta sessão** (f)-(i): Vercel
