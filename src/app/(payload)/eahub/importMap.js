@@ -24,6 +24,7 @@ import { BlockquoteFeatureClient as BlockquoteFeatureClient_e70f5e05f09f93e00b99
 import { UploadFeatureClient as UploadFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { InlineToolbarFeatureClient as InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { PublishButton as PublishButton_8557896026453f2a5ab4cb43fbd7feb6 } from '@/components/admin/publish/PublishButton'
 import { WhatsAppCell as WhatsAppCell_63fb46a0689b188d11067be38662e17c } from '@/components/admin/leads/WhatsAppCell'
 import { SystemLinksListView as SystemLinksListView_f3f53db7cac8408af5dd23679bdb80b5 } from '@/components/admin/systemlinks/SystemLinksListView'
 import { EaIcon as EaIcon_43d6ce6ddc2749468126c12f93037716 } from '@/components/admin/brand/EaIcon'
@@ -63,6 +64,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#UploadFeatureClient": UploadFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#HorizontalRuleFeatureClient": HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#InlineToolbarFeatureClient": InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@/components/admin/publish/PublishButton#PublishButton": PublishButton_8557896026453f2a5ab4cb43fbd7feb6,
   "@/components/admin/leads/WhatsAppCell#WhatsAppCell": WhatsAppCell_63fb46a0689b188d11067be38662e17c,
   "@/components/admin/systemlinks/SystemLinksListView#SystemLinksListView": SystemLinksListView_f3f53db7cac8408af5dd23679bdb80b5,
   "@/components/admin/brand/EaIcon#EaIcon": EaIcon_43d6ce6ddc2749468126c12f93037716,

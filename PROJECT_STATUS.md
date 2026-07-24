@@ -390,7 +390,32 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
-### Sessão 2026-07-24 (l) (import .md — Meta Title nunca era mapeado + tags travadas em "carregando")
+### Sessão 2026-07-24 (m) (botão "Publicar" novo + fix CRÍTICO: publicar travava em "Submitting...")
+Dois pedidos/achados nesta leva:
+- **Botão "Publicar"** ao lado do "Salvar" nativo, em Posts e Materials
+  (`src/components/admin/publish/PublishButton.tsx`, registrado via
+  `admin.components.edit.PublishButton` nas duas coleções). O Payload só mostra o
+  `PublishButton` nativo quando a coleção usa `versions.drafts` — que o projeto decidiu
+  NÃO usar (evita 2º status conflitando com o campo `status` manual). Este é um
+  substituto simples: 1 clique manda `submit({ overrides: { status: 'published' } })` —
+  não precisa mandar `publishedAt`, o `beforeChange` já existente preenche sozinho
+  quando ausente (preserva data manual, se houver).
+- **BUG CRÍTICO achado ao testar publicar de verdade:** "Submitting..." ficava pendurado
+  e não publicava. Causa: o hook `afterChange` de Posts/Materials **await**ava
+  `sendNewPostAlert`/`sendNewMaterialAlert` — que envia e-mail **um por um,
+  sequencialmente, pra CADA assinante da newsletter** — antes de responder ao
+  navegador. Com qualquer volume de assinantes, isso prende o Salvar/Publicar por muito
+  tempo (podendo até estourar timeout da função na Vercel). **Fix:** o envio de e-mail
+  agora roda em background (`void (async () => {...})()`, sem await no hook) — a
+  resposta do save/publish volta imediata, o e-mail sai depois, sem bloquear o usuário.
+  Aplicado em Posts.ts E Materials.ts (mesmo padrão nos dois).
+- **`importMap.js` regenerado** via `/api/dev/gen-artifacts` (rota dev permanente do
+  projeto — visitar páginas comuns do admin NÃO foi suficiente pra registrar o novo
+  `PublishButton`; só essa rota funcionou). Rodado com as `S3_*` inline (gotcha
+  conhecido) — `S3ClientUploadHandler` confirmado intacto, diff final só +2 linhas.
+- **Deployado.**
+
+
 Thiago testou de novo após (k): conteúdo ok, mas "SEO Meta title" e tags continuavam
 vazios. Dois bugs distintos, nenhum ligado ao arquivo:
 - **Meta Title:** o campo real é `seo.metaTitle` (existe em Posts E Materials), mas o

@@ -13,6 +13,11 @@ export const Materials: CollectionConfig = {
     group: "Materiais",
     preview: (doc) =>
       doc?.slug ? buildPreviewUrl("materials", String(doc.slug)) : null,
+    components: {
+      edit: {
+        PublishButton: "@/components/admin/publish/PublishButton#PublishButton",
+      },
+    },
   },
   access: {
     read: ({ req }) => {
@@ -159,7 +164,7 @@ export const Materials: CollectionConfig = {
       },
     ],
     afterChange: [
-      async ({ doc, previousDoc, req }) => {
+      ({ doc, previousDoc, req }) => {
         const justPublished =
           doc.status === "published" &&
           previousDoc?.status !== "published" &&
@@ -169,20 +174,24 @@ export const Materials: CollectionConfig = {
         const isScheduledForFuture =
           doc.publishedAt && new Date(doc.publishedAt).getTime() > Date.now();
         if (!justPublished || isScheduledForFuture) return doc;
-        try {
-          await sendNewMaterialAlert({
-            title: doc.title,
-            description: doc.description,
-            slug: doc.slug,
-          });
-          await req.payload.update({
-            collection: "materials",
-            id: doc.id,
-            data: { subscriberAlertSent: true },
-          });
-        } catch (e) {
-          req.payload.logger.error(`[materials] falha ao enviar alerta de novo material: ${e}`);
-        }
+        // Dispara em background — NÃO bloqueia a resposta do Salvar/Publicar
+        // (ver mesmo comentário em Posts.ts).
+        void (async () => {
+          try {
+            await sendNewMaterialAlert({
+              title: doc.title,
+              description: doc.description,
+              slug: doc.slug,
+            });
+            await req.payload.update({
+              collection: "materials",
+              id: doc.id,
+              data: { subscriberAlertSent: true },
+            });
+          } catch (e) {
+            req.payload.logger.error(`[materials] falha ao enviar alerta de novo material: ${e}`);
+          }
+        })();
         return doc;
       },
     ],

@@ -15,6 +15,11 @@ export const Posts: CollectionConfig = {
     // rascunho), via rota /preview autenticada por segredo.
     preview: (doc) =>
       doc?.slug ? buildPreviewUrl("posts", String(doc.slug)) : null,
+    components: {
+      edit: {
+        PublishButton: "@/components/admin/publish/PublishButton#PublishButton",
+      },
+    },
   },
   access: {
     // Público lê apenas artigos publicados; usuários autenticados veem tudo.
@@ -133,7 +138,7 @@ export const Posts: CollectionConfig = {
       },
     ],
     afterChange: [
-      async ({ doc, previousDoc, req }) => {
+      ({ doc, previousDoc, req }) => {
         const justPublished =
           doc.status === "published" &&
           previousDoc?.status !== "published" &&
@@ -144,16 +149,21 @@ export const Posts: CollectionConfig = {
         const isScheduledForFuture =
           doc.publishedAt && new Date(doc.publishedAt).getTime() > Date.now();
         if (!justPublished || isScheduledForFuture) return doc;
-        try {
-          await sendNewPostAlert({ title: doc.title, excerpt: doc.excerpt, slug: doc.slug });
-          await req.payload.update({
-            collection: "posts",
-            id: doc.id,
-            data: { subscriberAlertSent: true },
-          });
-        } catch (e) {
-          req.payload.logger.error(`[posts] falha ao enviar alerta de novo artigo: ${e}`);
-        }
+        // Dispara em background — NÃO bloqueia a resposta do Salvar/Publicar.
+        // Awaitar aqui prende o "Submitting..." até enviar e-mail pra CADA
+        // assinante da newsletter, um por um (podem ser dezenas/centenas).
+        void (async () => {
+          try {
+            await sendNewPostAlert({ title: doc.title, excerpt: doc.excerpt, slug: doc.slug });
+            await req.payload.update({
+              collection: "posts",
+              id: doc.id,
+              data: { subscriberAlertSent: true },
+            });
+          } catch (e) {
+            req.payload.logger.error(`[posts] falha ao enviar alerta de novo artigo: ${e}`);
+          }
+        })();
         return doc;
       },
     ],
