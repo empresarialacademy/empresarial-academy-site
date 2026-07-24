@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { sanitizeUploadFilename } from "@/lib/slug";
 
 export const Media: CollectionConfig = {
   slug: "media",
@@ -8,6 +9,15 @@ export const Media: CollectionConfig = {
   // A coleção continua existindo como destino dos uploads e das relações.
   admin: { hidden: true },
   access: { read: () => true },
+  hooks: {
+    beforeOperation: [
+      ({ req, operation }) => {
+        if ((operation === "create" || operation === "update") && req.file) {
+          req.file.name = sanitizeUploadFilename(req.file.name);
+        }
+      },
+    ],
+  },
   upload: {
     staticDir: "public/uploads",
     mimeTypes: ["image/*"],

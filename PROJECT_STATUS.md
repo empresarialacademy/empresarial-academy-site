@@ -390,6 +390,35 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (p) (CAUSA RAIZ real da imagem: nome de arquivo com espaço quebra o otimizador da Vercel)
+Investigação com print + rede real (browser tool) achou a causa verdadeira — **diferente
+da hipótese da sessão (n)** (remotePatterns não era o problema; a URL da imagem nem usa
+o domínio do R2 direto, usa a rota própria do Payload `/api/media/file/<nome>`, mesma
+origem do site).
+- **Causa real:** o arquivo enviado chamava `Screenshot 2026-07-22 015704.png` (nome
+  padrão de print do Windows, **com espaços**). A URL final
+  `/_next/image?url=.../Screenshot%25202026-07-22...` tinha o espaço **codificado
+  DUAS vezes** (`%2520` = `%20` codificado de novo) — o otimizador de imagem da própria
+  Vercel rejeita isso com `400 INVALID_IMAGE_OPTIMIZE_REQUEST` (header
+  `X-Vercel-Error`). Confirmado: `curl` direto na URL do arquivo retorna 200 normal: só
+  o pipeline de otimização de imagem quebra com espaço no nome.
+- **Por que o Payload deixa passar:** o `getSafeFileName`/`sanitize-filename` internos
+  do Payload só removem caracteres ILEGAIS em disco (`/`, `:`, `*`, etc.) — espaço é
+  válido em disco, então passa direto, sem nunca virar hífen.
+- **Fix:** `sanitizeUploadFilename()` novo em `src/lib/slug.ts` (preserva extensão,
+  usa o `slugify()` já existente na base do nome) + hook `beforeOperation` em
+  `Media.ts` e `MaterialFiles.ts` que reescreve `req.file.name` ANTES do upload ir pro
+  R2. Vale para os DOIS uploads (capa de imagem e arquivo de material/download).
+- **⚠️ Não retroativo:** o arquivo já enviado (`Screenshot 2026-07-22 015704.png`)
+  continua com o nome ruim no R2 — **Thiago precisa reenviar a capa** depois do
+  deploy (não mexi direto no storage/DB de produção, mais seguro deixar o próprio
+  fluxo de upload gerar o nome limpo).
+- **Achado à parte (não corrigido, só sinalizado):** dois posts duplicados no
+  `/blog` ("Vale a pena contratar representantes comerciais...") — provável de
+  reimportações durante os testes desta sessão. Avisado ao Thiago, não apaguei
+  nada sem confirmação dele.
+- **Deployado.**
+
 ### Sessão 2026-07-24 (o) (preview: faltava rota para SAIR do modo rascunho)
 Thiago reportou artigo já publicado mostrando "Pré-visualização (rascunho)" no topo,
 mais formatação e imagem "sumidas" comparado ao esperado. Investigação: como o projeto

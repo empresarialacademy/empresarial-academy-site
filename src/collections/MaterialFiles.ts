@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { sanitizeUploadFilename } from "@/lib/slug";
 
 /** Coleção de upload dedicada aos arquivos dos materiais (documentos, planilhas, vídeos, etc.). */
 export const MaterialFiles: CollectionConfig = {
@@ -6,6 +7,15 @@ export const MaterialFiles: CollectionConfig = {
   labels: { singular: "Arquivo", plural: "Arquivos" },
   admin: { group: "Materiais", useAsTitle: "filename" },
   access: { read: () => true },
+  hooks: {
+    beforeOperation: [
+      ({ req, operation }) => {
+        if ((operation === "create" || operation === "update") && req.file) {
+          req.file.name = sanitizeUploadFilename(req.file.name);
+        }
+      },
+    ],
+  },
   upload: {
     staticDir: "public/uploads/materiais",
     // Aceita praticamente qualquer arquivo que o Thiago queira disponibilizar

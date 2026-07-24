@@ -13,6 +13,23 @@ export function slugify(text: string): string {
 }
 
 /**
+ * Sanitiza o nome de um arquivo de upload (preserva a extensão) — troca
+ * espaços/acentos/caracteres especiais por hífen. Necessário porque nomes com
+ * espaço (ex.: "Screenshot 2026-07-22 015704.png", padrão do Windows) geram
+ * URL com espaço, que o otimizador de imagem da Vercel rejeita com
+ * `INVALID_IMAGE_OPTIMIZE_REQUEST` (dupla-codificação do espaço no
+ * `_next/image?url=`). O `sanitize-filename` interno do Payload só remove
+ * caracteres ilegais em disco — espaço é válido em disco, então passa direto.
+ */
+export function sanitizeUploadFilename(filename: string): string {
+  const dot = filename.lastIndexOf(".");
+  const base = dot > 0 ? filename.slice(0, dot) : filename;
+  const ext = dot > 0 ? filename.slice(dot + 1).toLowerCase() : "";
+  const safeBase = slugify(base) || "arquivo";
+  return ext ? `${safeBase}.${ext}` : safeBase;
+}
+
+/**
  * Hook de campo que gera o slug a partir de um campo de origem (ex.: "title")
  * quando o slug estiver vazio; se preenchido, apenas normaliza.
  */
