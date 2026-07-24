@@ -19,60 +19,63 @@ type Result = {
   excerpt?: string | null;
 };
 
+/** Remove acentos e caixa para comparação — "gestao" deve achar "Gestão". */
+function normalize(text: string): string {
+  return text
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase();
+}
+
 async function search(q: string): Promise<Result[]> {
   if (!q || q.trim().length < 2) return [];
   const payload = await getPayloadClient();
-  const term = q.trim();
+  const term = normalize(q.trim());
 
+  // `like` no Postgres/SQLite não ignora acento (sem extensão unaccent) — busca
+  // sem filtro no banco (coleções pequenas) e filtra em memória normalizando.
   const [posts, materials] = await Promise.all([
     payload.find({
       collection: "posts",
-      where: {
-        and: [
-          { status: { equals: "published" } },
-          {
-            or: [
-              { title: { like: term } },
-              { excerpt: { like: term } },
-            ],
-          },
-        ],
-      },
-      limit: 20,
+      where: { status: { equals: "published" } },
+      limit: 200,
       depth: 0,
     }),
     payload.find({
       collection: "materials",
-      where: {
-        and: [
-          { status: { equals: "published" } },
-          {
-            or: [
-              { title: { like: term } },
-              { description: { like: term } },
-            ],
-          },
-        ],
-      },
-      limit: 20,
+      where: { status: { equals: "published" } },
+      limit: 200,
       depth: 0,
     }),
   ]);
 
-  return [
-    ...posts.docs.map((p) => ({
+  const postResults = posts.docs
+    .filter(
+      (p) =>
+        normalize(p.title).includes(term) ||
+        (p.excerpt && normalize(p.excerpt).includes(term)),
+    )
+    .map((p) => ({
       type: "Artigo" as const,
       title: p.title,
       href: `/blog/${p.slug}`,
       excerpt: p.excerpt,
-    })),
-    ...materials.docs.map((m) => ({
+    }));
+
+  const materialResults = materials.docs
+    .filter(
+      (m) =>
+        normalize(m.title).includes(term) ||
+        (m.description && normalize(m.description).includes(term)),
+    )
+    .map((m) => ({
       type: "Material" as const,
       title: m.title,
       href: `/materiais/${m.slug}`,
       excerpt: m.description,
-    })),
-  ];
+    }));
+
+  return [...postResults, ...materialResults];
 }
 
 export default async function BuscaPage({

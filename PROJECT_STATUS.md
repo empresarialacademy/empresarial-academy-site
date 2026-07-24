@@ -390,6 +390,34 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (y) (3 pendências apontadas pelo Thiago: busca sem acento, posts travados, reviews do Google)
+Thiago listou 3 itens pendentes no início da sessão:
+1. **Avaliações do Google bloqueadas** por verificação do Google Business Profile —
+   **fora do código**, depende do cliente completar a verificação no Google (depois
+   segue o plano já mapeado no §13: Featurable → `lib/reviews.ts` + AggregateRating).
+   Nada a fazer aqui até a verificação ser concluída.
+2. **Busca (`/busca`) não normalizava acento** ("gestao" não achava "Gestão"):
+   causa é o operador `like` do Payload (Postgres/SQLite) ser sensível a acento sem
+   a extensão `unaccent` do Postgres. **Fix:** `src/app/(frontend)/busca/page.tsx`
+   agora busca todos os posts/materials publicados (coleções pequenas, `limit: 200`)
+   e filtra em memória com uma função `normalize()` (`NFD` + remove diacríticos +
+   lowercase), comparando título/excerpt-descrição já normalizados dos dois lados.
+3. **4 posts antigos (ids 1–4) sem capa/tags travados até para edição normal**
+   (achado na sessão (w) — o bug de curtir/não curtir era só um sintoma; qualquer
+   `payload.update()` no admin falha porque a validação "obrigatório ao publicar"
+   rodava em toda edição de um post já publicado, não só na transição). **Fix real:**
+   `src/lib/publish-validation.ts` — `isPublishing()` agora recebe `originalDoc` e só
+   exige os campos quando `data.status === "published" && originalDoc.status !==
+   "published"` (transição de Rascunho→Publicado), não mais em todo save subsequente
+   de um post que já estava publicado. Os 4 posts antigos voltam a ser editáveis
+   normalmente pelo admin (título, tags, o que for) sem precisar preencher capa/tags
+   primeiro — continuam sem capa/tags até alguém preencher (decisão de conteúdo, não
+   de código), mas isso não bloqueia mais nenhuma edição.
+- **Validado:** `npx tsc --noEmit` e `npx next lint` limpos. Não testado via browser
+  (sem sessão admin autenticada disponível neste ambiente) — Thiago deve confirmar
+  editando um dos 4 posts antigos e testando a busca com/sem acento.
+- **Não deployado.**
+
 ### Sessão 2026-07-24 (x) (fila: skill "EA Content Engine" — análise de aptidão, ainda não implementada)
 - **Pedido do Thiago:** avaliar se a spec de skill "EA Content Engine" (produção de
   artigos + materiais ricos para blog/redes) está apta para começar a produzir

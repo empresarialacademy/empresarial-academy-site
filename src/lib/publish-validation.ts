@@ -5,18 +5,24 @@
  * "Publicado" sem os campos essenciais preenchidos (pedido do Thiago,
  * 2026-07-24). Cada `validate` roda tanto no navegador (bloqueia o botão
  * Publicar com erro inline) quanto no servidor (última barreira).
+ *
+ * A checagem só dispara na TRANSIÇÃO para "published" (originalDoc.status
+ * !== "published"), não em toda edição subsequente de um post já publicado —
+ * senão os 4 posts antigos (ids 1–4, anteriores a esta regra) ficam travados
+ * para sempre por não terem capa/tags (achado na sessão 2026-07-24 (w), bug
+ * de curtir/não curtir).
  */
 
-type ValidateArgs = { data?: { status?: string } };
+type ValidateArgs = { data?: { status?: string }; originalDoc?: { status?: string } };
 
-function isPublishing(data?: { status?: string }): boolean {
-  return data?.status === "published";
+function isPublishing(data?: { status?: string }, originalDoc?: { status?: string }): boolean {
+  return data?.status === "published" && originalDoc?.status !== "published";
 }
 
 /** Texto, relacionamento (ID) ou upload (ID) — obrigatório só ao publicar. */
 export function requiredToPublish(label: string) {
-  return (value: unknown, { data }: ValidateArgs) => {
-    if (!isPublishing(data)) return true;
+  return (value: unknown, { data, originalDoc }: ValidateArgs) => {
+    if (!isPublishing(data, originalDoc)) return true;
     if (value === null || value === undefined || value === "") {
       return `${label} é obrigatório para publicar.`;
     }
@@ -26,8 +32,8 @@ export function requiredToPublish(label: string) {
 
 /** Campo `array` (ex.: tags) — precisa de ao menos 1 linha ao publicar. */
 export function requiredToPublishArray(label: string) {
-  return (value: unknown, { data }: ValidateArgs) => {
-    if (!isPublishing(data)) return true;
+  return (value: unknown, { data, originalDoc }: ValidateArgs) => {
+    if (!isPublishing(data, originalDoc)) return true;
     if (!Array.isArray(value) || value.length === 0) {
       return `${label} é obrigatório para publicar.`;
     }
@@ -37,8 +43,8 @@ export function requiredToPublishArray(label: string) {
 
 /** Campo `richText` (Lexical) — considera vazio sem nenhum nó na raiz. */
 export function requiredToPublishRichText(label: string) {
-  return (value: unknown, { data }: ValidateArgs) => {
-    if (!isPublishing(data)) return true;
+  return (value: unknown, { data, originalDoc }: ValidateArgs) => {
+    if (!isPublishing(data, originalDoc)) return true;
     const root = (value as { root?: { children?: unknown[] } } | null | undefined)?.root;
     if (!root || !root.children || root.children.length === 0) {
       return `${label} é obrigatório para publicar.`;
