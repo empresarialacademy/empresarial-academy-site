@@ -390,6 +390,61 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (a) (bugfix tags .md, editor de e-mail, opt-in leads, Portal/Playbook Souza Ramos publicados)
+Ainda não deployado nesta entrada (ver próxima sessão para o deploy).
+
+- **Bug corrigido — import `.md` quebrava em "Cannot read properties of undefined
+  (reading 'map')" ao processar `tags`:** campos `array` do Payload não aceitam um
+  `dispatchFields({type:'UPDATE', value: [...]})` direto — falta a metadata interna
+  `rows` que o `ArrayField` usa para renderizar, e sem ela o componente quebra.
+  Corrigido em `ImportMarkdownButton.tsx` usando `dispatchFields({type:'ADD_ROW',
+  path:'tags', subFieldState:{tag:{value, initialValue, valid:true}}})` por tag.
+- **Editor de Campanhas de e-mail:** `EmailCampaigns.body` usava o editor padrão do
+  Payload (sem a barra fixa/paleta EA que Posts e Materiais têm) — agora usa
+  `eaEditor` (`src/lib/editor.ts`). O HTML enviado por e-mail (`email-marketing.ts`,
+  `sendCampaignNow`) também ignorava a paleta de cor/tamanho (TextStateFeature) —
+  adicionado `eaEmailTextConverter`, equivalente ao `EaRichText.tsx` do site mas
+  gerando string HTML (não JSX) para o `convertLexicalToHTMLAsync`.
+- **Opt-in newsletter/promoções nos formulários públicos:** os 3 formulários de
+  captação (Newsletter, Contato, Download) só tinham consentimento LGPD genérico —
+  os campos `wantsNewsletter`/`wantsPromotions` do admin (Leads) existiam mas
+  ficavam sempre `false` (nenhum lead real os setava). Decisão do Thiago: o checkbox
+  único de consentimento agora marca AMBOS (`saveLead()` em `src/lib/leads.ts`
+  seta `wantsNewsletter = wantsPromotions = consent`); texto do checkbox atualizado
+  nos 3 formulários para mencionar "promoções" explicitamente (consentimento
+  específico/informado, LGPD).
+- **Portal de Pós-Vendas e Playbook de Vendas publicados** (cliente Souza Ramos,
+  mesmo cliente do EA Recovery — eram itens de `system-links` com URL vazia,
+  "hoje local"): copiados de `Antigravity/Pós vendas/Portal Pós-Vendas (Funcional)/`
+  e `Antigravity/playbook_souza_ramos.html` para `public/pos-vendas-souza-ramos/`
+  (6 HTML + logo; entrada renomeada `Portal de Formação pós vendas.html`→`index.html`,
+  os outros nomes já eram seguros e são referenciados via `<iframe>` dentro do
+  portal — não precisou reescrever links) e `public/playbook-souza-ramos/index.html`.
+  **Protegidos por senha** (decisão do Thiago — é conteúdo comercial/treinamento
+  interno do cliente, não marketing público): `src/middleware.ts` novo, HTTP Basic
+  Auth via `SOUZA_RAMOS_BASIC_USER`/`SOUZA_RAMOS_BASIC_PASS` (matcher nas duas
+  rotas; sem credencial no ambiente, não bloqueia — evita lockout). Credenciais
+  setadas na Vercel produção E no `.env.local` (usuário `souzaramos`, senha gerada
+  aleatória — está no `.env.local`, repassar ao Thiago/cliente fora desta memória).
+  `seed-system-links`: URLs do Portal/Playbook atualizadas para os paths reais e
+  os dois nomes adicionados a `INTERNAL_NAMES` (upsert de URL em runs futuros);
+  **rodado contra o Neon já nesta sessão** (confirmado via log de diagnóstico
+  temporário — DB já reflete as URLs corretas).
+  - `Mapa_Competencias_Consultor.html` tem um modo de edição que faz POST em
+    `/__save` (salva no disco via `save_server.py`, ferramenta só de autoria local)
+    — em produção esse POST vai falhar (404), mas de forma graciosa (try/catch,
+    só mostra erro na UI, não quebra a página). Comportamento esperado/aceito.
+  - `playbook_souza_ramos.html` tem uma função opcional de sync ao vivo com Google
+    Sheets (`syncGoogleSheetsData`) — não depende de nenhum arquivo local, só roda
+    se um link de planilha for configurado dentro do próprio arquivo.
+- **Gotcha reconfirmado nesta sessão:** rodar `next dev` para sincronizar o Neon
+  SEM as `S3_*` env vars inline correu o risco de apagar a entrada
+  `S3ClientUploadHandler` do `importMap.js` (gotcha já documentado) — desta vez
+  **não causou dano real** (verificado com `git diff` ao final: arquivo idêntico ao
+  commitado), mas o primeiro run foi feito sem as `S3_*`; runs seguintes já
+  incluíram. Reforça: **sempre** exportar as `S3_*` inline ao rodar `next dev`
+  para qualquer finalidade, não só para regenerar tipos/importMap.
+
 ### Sessão 2026-07-23 (g) (criação da campanha adiada — decisão do Thiago)
 Ao tentar criar a 1ª campanha em ads.google.com, o assistente da MCC 779-237-1166
 levou para uma **conta-cliente separada (770-135-7894)** e só ofereceu **Smart

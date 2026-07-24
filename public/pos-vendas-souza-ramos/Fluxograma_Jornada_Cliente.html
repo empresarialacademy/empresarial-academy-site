@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <link rel="icon" type="image/png" href="logo-empresarial-academy.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jornada do Cliente — Souza Ramos Advogados</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --bg: #0F1822;
+    --surface: #16212E;
+    --surface2: #1D2B3C;
+    --border: #2A3A4D;
+    --text: #F4F6F8;
+    --muted: #8A97A8;
+    --gold: #C1A160;
+    --gold-l: #D7C089;
+    --blue: #4a7cdc;
+    --blue-l: #6b9af0;
+    --green: #3aad6e;
+    --green-l: #52c986;
+    --orange: #d97b3a;
+    --orange-l: #f0964f;
+    --purple: #8b5cf6;
+    --purple-l: #a78bfa;
+    --teal: #2aa8b8;
+    --teal-l: #45c5d6;
+    --red: #dc4a4a;
+    --red-l: #f08080;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Open Sans',sans-serif; color:var(--text); overflow-x:auto; }
+
+  /* HEADER */
+  header {
+    background:linear-gradient(135deg,#12151f,#1a1d2e);
+    border-bottom:1px solid var(--border);
+    padding:22px 40px;
+    display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:100;
+  }
+  .hd-left { display:flex; align-items:center; gap:14px; }
+  .hd-badge {
+    width:44px; height:44px; border-radius:10px;
+    background:linear-gradient(135deg,var(--gold),var(--gold-l));
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:18px; color:#0F1822;
+  }
+  .hd-title { font-size:16px; font-weight:700; }
+  .hd-sub { font-size:11px; color:var(--muted); margin-top:2px; }
+  .btn {
+    padding:7px 16px; border-radius:7px; font-size:12px; font-weight:500;
+    cursor:pointer; border:none; font-family:inherit; transition:all .2s;
+  }
+  .btn-outline { background:transparent; border:1px solid var(--border); color:var(--muted); }
+  .btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+  .btn-gold { background:linear-gradient(135deg,var(--gold),var(--gold-l)); color:#0F1822; font-weight:600; }
+  .btn-gold:hover { opacity:.9; transform:translateY(-1px); }
+  .toolbar { display:flex; gap:8px; }
+
+  /* LEGEND */
+  .legend {
+    padding:10px 40px; background:var(--surface); border-bottom:1px solid var(--border);
+    display:flex; gap:18px; flex-wrap:wrap; align-items:center;
+  }
+  .leg { display:flex; align-items:center; gap:7px; font-size:11px; color:var(--muted); }
+  .leg-dot { width:11px; height:11px; border-radius:3px; flex-shrink:0; }
+
+  /* PHASE SECTIONS */
+  .phase {
+    padding:32px 40px;
+    border-bottom:1px solid var(--border);
+  }
+  .phase:last-child { border-bottom:none; }
+  .ph-header { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+  .ph-num {
+    width:30px; height:30px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:800; flex-shrink:0;
+  }
+  .ph-name { font-size:15px; font-weight:700; }
+  .ph-resp { font-size:11px; color:var(--muted); margin-top:2px; }
+
+  /* FLOW ROW */
+  .flow { display:flex; align-items:center; flex-wrap:nowrap; gap:0; overflow-x:auto; padding-bottom:4px; }
+
+  /* NODE */
+  .node {
+    flex-shrink:0; position:relative; cursor:pointer;
+    transition:transform .2s;
+  }
+  .node:hover { transform:translateY(-2px); }
+  .node-card {
+    border-radius:11px; padding:13px 16px;
+    min-width:155px; max-width:185px;
+    border:1.5px solid transparent;
+    transition:all .2s; position:relative; overflow:hidden;
+  }
+  .node-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  }
+  /* Color variants */
+  .nc-gold  .node-card { background:rgba(193,161,96,.11); border-color:rgba(193,161,96,.35); }
+  .nc-gold  .node-card::before { background:linear-gradient(90deg,var(--gold),var(--gold-l)); }
+  .nc-gold  .n-lbl { color:var(--gold-l); }
+
+  .nc-blue  .node-card { background:rgba(74,124,220,.11); border-color:rgba(74,124,220,.35); }
+  .nc-blue  .node-card::before { background:linear-gradient(90deg,var(--blue),var(--blue-l)); }
+  .nc-blue  .n-lbl { color:var(--blue-l); }
+
+  .nc-green .node-card { background:rgba(58,173,110,.11); border-color:rgba(58,173,110,.35); }
+  .nc-green .node-card::before { background:linear-gradient(90deg,var(--green),var(--green-l)); }
+  .nc-green .n-lbl { color:var(--green-l); }
+
+  .nc-orange .node-card { background:rgba(217,123,58,.11); border-color:rgba(217,123,58,.35); }
+  .nc-orange .node-card::before { background:linear-gradient(90deg,var(--orange),var(--orange-l)); }
+  .nc-orange .n-lbl { color:var(--orange-l); }
+
+  .nc-purple .node-card { background:rgba(139,92,246,.11); border-color:rgba(139,92,246,.35); }
+  .nc-purple .node-card::before { background:linear-gradient(90deg,var(--purple),var(--purple-l)); }
+  .nc-purple .n-lbl { color:var(--purple-l); }
+
+  .nc-teal  .node-card { background:rgba(42,168,184,.11); border-color:rgba(42,168,184,.35); }
+  .nc-teal  .node-card::before { background:linear-gradient(90deg,var(--teal),var(--teal-l)); }
+  .nc-teal  .n-lbl { color:var(--teal-l); }
+
+  .nc-bot   .node-card { background:rgba(139,92,246,.18); border-color:rgba(139,92,246,.5); }
+  .nc-bot   .node-card::before { background:linear-gradient(90deg,#6c3be8,var(--purple-l)); }
+  .nc-bot   .n-lbl { color:var(--purple-l); }
+
+  .n-icon { font-size:19px; margin-bottom:7px; display:block; }
+  .n-lbl { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; margin-bottom:5px; }
+  .n-title { font-size:12px; font-weight:600; color:var(--text); line-height:1.3; margin-bottom:3px; }
+  .n-sub { font-size:10px; color:var(--muted); line-height:1.4; }
+
+  .step-num {
+    position:absolute; top:-7px; left:-7px;
+    width:20px; height:20px; border-radius:50%;
+    background:var(--surface2); border:1.5px solid var(--border);
+    font-size:9px; font-weight:700; color:var(--muted);
+    display:flex; align-items:center; justify-content:center; z-index:10;
+  }
+  .badge {
+    display:inline-flex; align-items:center; gap:3px;
+    padding:2px 7px; border-radius:20px;
+    font-size:9px; font-weight:600; margin-top:5px;
+  }
+  .bg-gold  { background:rgba(193,161,96,.2); color:var(--gold-l); border:1px solid rgba(193,161,96,.3); }
+  .bg-green { background:rgba(58,173,110,.2); color:var(--green-l); border:1px solid rgba(58,173,110,.3); }
+  .bg-red   { background:rgba(220,74,74,.2);  color:var(--red-l);   border:1px solid rgba(220,74,74,.3);  }
+  .bg-blue  { background:rgba(74,124,220,.2); color:var(--blue-l);  border:1px solid rgba(74,124,220,.3); }
+  .bg-purple{ background:rgba(139,92,246,.2); color:var(--purple-l);border:1px solid rgba(139,92,246,.3); }
+  .bg-teal  { background:rgba(42,168,184,.2); color:var(--teal-l);  border:1px solid rgba(42,168,184,.3); }
+  .bg-orange{ background:rgba(217,123,58,.2); color:var(--orange-l);border:1px solid rgba(217,123,58,.3); }
+
+  /* ARROW */
+  .arr { width:42px; flex-shrink:0; position:relative; height:2px; align-self:center; }
+  .arr::before { content:''; position:absolute; top:0; left:0; right:8px; height:2px; background:var(--border); }
+  .arr::after  { content:''; position:absolute; right:0; top:-4px; border:5px solid transparent; border-left:7px solid var(--muted); }
+  .arr .albl { position:absolute; top:-14px; left:50%; transform:translateX(-50%); font-size:9px; color:var(--muted); white-space:nowrap; background:var(--bg); padding:0 3px; }
+  .arr-down { width:2px; height:32px; flex-shrink:0; align-self:center; position:relative; }
+
+  /* DIAMOND */
+  .diamond-wrap { display:flex; align-items:center; justify-content:center; width:110px; height:90px; flex-shrink:0; }
+  .diamond {
+    width:82px; height:82px; background:rgba(139,92,246,.12);
+    border:1.5px solid rgba(139,92,246,.4); transform:rotate(45deg);
+    border-radius:8px; cursor:pointer; transition:all .2s;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .diamond:hover { transform:rotate(45deg) scale(1.06); }
+  .diamond-inner { transform:rotate(-45deg); text-align:center; padding:6px; }
+  .diamond-text { font-size:10px; font-weight:600; color:var(--purple-l); line-height:1.3; }
+
+  /* BRANCH */
+  .branch-wrap { display:flex; flex-direction:column; gap:55px; }
+  .branch-row  { display:flex; align-items:center; }
+  .blbl { font-size:9px; font-weight:700; padding:2px 7px; border-radius:4px; width:42px; text-align:center; flex-shrink:0; }
+  .blbl-yes { background:rgba(58,173,110,.2); color:var(--green-l); }
+  .blbl-no  { background:rgba(220,74,74,.2);  color:var(--red-l);   }
+
+  /* SLA BANNER */
+  .sla-row { display:flex; gap:14px; flex-wrap:wrap; margin-top:18px; }
+  .sla {
+    background:rgba(193,161,96,.07); border:1px solid rgba(193,161,96,.25);
+    border-radius:9px; padding:11px 16px; display:flex; align-items:center; gap:10px;
+  }
+  .sla-icon { font-size:20px; }
+  .sla h4 { font-size:12px; font-weight:600; color:var(--gold-l); }
+  .sla p  { font-size:10px; color:var(--muted); margin-top:2px; }
+
+  /* INFO RULES */
+  .rules { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin-top:18px; }
+  .rules h5 { font-size:11px; font-weight:700; color:var(--gold-l); text-transform:uppercase; letter-spacing:.07em; margin-bottom:10px; }
+  .rule-item { display:flex; align-items:flex-start; gap:8px; margin-bottom:7px; font-size:11px; color:var(--text); }
+  .rule-item:last-child { margin-bottom:0; }
+  .rule-em { font-size:14px; flex-shrink:0; margin-top:1px; }
+
+  /* VERTICAL SEPARATOR */
+  .v-sep { display:flex; justify-content:center; padding:6px 0; }
+  .v-sep-line { display:flex; flex-direction:column; align-items:center; }
+  .v-sep-line .vl { width:2px; height:24px; background:var(--border); }
+  .v-sep-line .vt { border:5px solid transparent; border-top:7px solid var(--muted); }
+
+  /* CLIENT CLASSIFICATION */
+  .cls-grid { display:flex; gap:12px; margin-top:16px; flex-wrap:wrap; }
+  .cls-card {
+    border-radius:9px; padding:12px 16px; flex:1; min-width:160px;
+    border:1px solid var(--border);
+  }
+  .cls-card h6 { font-size:12px; font-weight:700; margin-bottom:4px; }
+  .cls-card p  { font-size:10px; color:var(--muted); line-height:1.4; }
+  .cls-ouro   { background:rgba(193,161,96,.1); border-color:rgba(193,161,96,.4); }
+  .cls-prata  { background:rgba(160,174,192,.1); border-color:rgba(160,174,192,.4); }
+  .cls-bronze { background:rgba(184,115,51,.1);  border-color:rgba(184,115,51,.4);  }
+  .cls-ouro   h6 { color:var(--gold-l); }
+  .cls-prata  h6 { color:#a0aec0; }
+  .cls-bronze h6 { color:#d4956a; }
+
+  /* MODAL */
+  .modal-ov { position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:500; display:none; align-items:center; justify-content:center; }
+  .modal-ov.open { display:flex; }
+  .modal { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:28px; max-width:480px; width:90%; position:relative; }
+  .modal h3 { font-size:16px; font-weight:700; margin-bottom:6px; }
+  .modal-close { position:absolute; top:14px; right:14px; background:none; border:none; color:var(--muted); font-size:18px; cursor:pointer; width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:7px; }
+  .modal-close:hover { background:var(--surface2); color:var(--text); }
+  .flbl { font-size:10px; font-weight:600; color:var(--muted); text-transform:uppercase; margin-bottom:5px; }
+  .fgrp { margin-bottom:14px; }
+  .finput { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:7px; padding:9px 12px; font-family:inherit; font-size:12px; color:var(--text); outline:none; }
+  .finput:focus { border-color:var(--gold); }
+  textarea.finput { min-height:70px; resize:vertical; }
+  .mactions { display:flex; gap:9px; justify-content:flex-end; margin-top:16px; }
+
+
+  /* FIX: Convergence node alignment */
+  .flow > .node:last-child .node-card {
+    min-width: 155px;
+    max-width: 185px;
+  }
+
+  /* FIX: Branch rows alignment - equalize both paths */
+  .branch-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    justify-content: center;
+  }
+
+  .branch-row {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Ensure consistent node sizing inside branches */
+  .branch-row .node .node-card {
+    min-width: 155px;
+    max-width: 185px;
+  }
+
+  @media print { header { position:relative; } .toolbar { display:none; } .modal-ov { display:none!important; } }
+
+  /* === Empresarial Academy — polimento de marca === */
+  .hd-title, .n-title, h1, h2, h3 { font-family: 'Montserrat','Open Sans',sans-serif; }
+  body { border-top: 3px solid var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="hd-left">
+    <div class="hd-badge">EA</div>
+    <div>
+      <div class="hd-title">Jornada do Cliente — Pós-Venda</div>
+      <div class="hd-sub">Souza Ramos Advogados · Fluxo Operacional Completo · v2.0</div>
+    </div>
+  </div>
+  <div class="toolbar">
+    <button class="btn btn-outline" onclick="window.print()">🖨️ Imprimir</button>
+    <button class="btn btn-gold" onclick="document.getElementById('editModal').classList.add('open')">✏️ Editar Etapa</button>
+  </div>
+</header>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>BotConversa</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--gold)"></div>Comercial</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div>Financeiro (Eric)</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--orange)"></div>Daniela — Start</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--teal)"></div>Advogado</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--green)"></div>Pós-Vendas (Consultora)</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--purple)" style="opacity:.5"></div>Decisão</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- FASE 1 — ENTRADA                        -->
+<!-- ═══════════════════════════════════════ -->
+<div class="phase" id="fase1">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(139,92,246,.2);color:var(--purple-l)">1</div>
+    <div>
+      <div class="ph-name" style="color:var(--purple-l)">Entrada do Cliente</div>
+      <div class="ph-resp">Canal: BotConversa</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="node nc-bot" onclick="openEdit(this,'Cliente Chega pelo BotConversa','Cliente entra em contato pelo canal BotConversa e é identificado como lead comercial.')">
+      <div class="step-num">1</div>
+      <div class="node-card">
+        <span class="n-icon">🤖</span>
+        <div class="n-lbl">BotConversa</div>
+        <div class="n-title">Cliente Chega pelo Bot</div>
+        <div class="n-sub">Identificado como lead comercial</div>
+        <span class="badge bg-purple">BotConversa</span>
+      </div>
+    </div>
+    <div class="arr"><span class="albl">encaminha</span></div>
+    <div class="node nc-gold" onclick="openEdit(this,'Equipe Comercial','Equipe comercial recebe o lead e inicia o processo de venda.')">
+      <div class="step-num">2</div>
+      <div class="node-card">
+        <span class="n-icon">🧑‍💼</span>
+        <div class="n-lbl">Comercial</div>
+        <div class="n-title">Equipe Comercial Recebe</div>
+        <div class="n-sub">Inicia atendimento e processo de venda</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="v-sep"><div class="v-sep-line"><div class="vl"></div><div class="vt"></div></div></div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- FASE 2 — VENDA + COLETA                 -->
+<!-- ═══════════════════════════════════════ -->
+<div class="phase" id="fase2">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(193,161,96,.2);color:var(--gold-l)">2</div>
+    <div>
+      <div class="ph-name" style="color:var(--gold-l)">Venda + Coleta de Informações</div>
+      <div class="ph-resp">Responsável: Equipe Comercial — coleta TUDO antes de passar adiante</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="node nc-gold" onclick="openEdit(this,'Venda Concluída','Vendedor conclui a negociação com o cliente e confirma o fechamento.')">
+      <div class="step-num">3</div>
+      <div class="node-card">
+        <span class="n-icon">🤝</span>
+        <div class="n-lbl">Comercial</div>
+        <div class="n-title">Venda Concluída</div>
+        <div class="n-sub">Negociação encerrada com sucesso</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-gold" onclick="openEdit(this,'Levanta Info + Documentos','Comercial levanta TODAS as informações e documentos necessários para o início do processo jurídico. Responsabilidade exclusiva do comercial — não pode faltar nada.')">
+      <div class="step-num">4</div>
+      <div class="node-card">
+        <span class="n-icon">📋</span>
+        <div class="n-lbl">Comercial</div>
+        <div class="n-title">Levanta Info + Documentos</div>
+        <div class="n-sub">Tudo que o processo jurídico precisa · 100% do comercial</div>
+        <span class="badge bg-gold">⚠️ Obrigatório completo</span>
+      </div>
+    </div>
+    <div class="arr"><span class="albl">repassa</span></div>
+    <div class="node nc-blue" onclick="openEdit(this,'Passa ao Financeiro','Comercial entrega ao financeiro todas as informações e documentos necessários para efetivação do pagamento (geração do contrato/boleto).')">
+      <div class="step-num">5</div>
+      <div class="node-card">
+        <span class="n-icon">💳</span>
+        <div class="n-lbl">Financeiro</div>
+        <div class="n-title">Recebe Info + Docs</div>
+        <div class="n-sub">Financeiro recebe do comercial para efetivar pagamento</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-blue" onclick="openEdit(this,'Gera Boleto / Carnê','Financeiro gera o boleto ou carnê com base nos dados recebidos do comercial. Prazo: até 1 hora.')">
+      <div class="step-num">6</div>
+      <div class="node-card">
+        <span class="n-icon">💰</span>
+        <div class="n-lbl">Financeiro — Eric</div>
+        <div class="n-title">Gera Boleto / Carnê</div>
+        <div class="n-sub">Envia ao cliente · registra pendência no ADVBox</div>
+        <span class="badge bg-blue">≤ 1 hora</span>
+      </div>
+    </div>
+    <div class="arr"><span class="albl">pagamento</span></div>
+    <div class="node nc-blue" onclick="openEdit(this,'Pagamento Confirmado','Cliente efetua o pagamento da 1ª parcela. Financeiro confirma e registra em Andamentos no ADVBox.')">
+      <div class="step-num">7</div>
+      <div class="node-card">
+        <span class="n-icon">✅</span>
+        <div class="n-lbl">Financeiro — Eric</div>
+        <div class="n-title">Pagamento Confirmado</div>
+        <div class="n-sub">1ª parcela paga · registra atualização em Andamentos ADVBox</div>
+        <span class="badge bg-green">Pago</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="rules">
+    <h5>📌 Regra do Financeiro no ADVBox</h5>
+    <div class="rule-item"><span class="rule-em">📝</span><span><strong>Sempre registrar em Andamentos:</strong> toda pendência de pagamento, confirmações e atualizações financeiras do cliente. Todos da equipe têm visibilidade.</span></div>
+    <div class="rule-item"><span class="rule-em">🔄</span><span><strong>Quando cliente atualizar pagamento:</strong> financeiro atualiza imediatamente o registro em Andamentos no ADVBox.</span></div>
+  </div>
+</div>
+
+<div class="v-sep"><div class="v-sep-line"><div class="vl"></div><div class="vt"></div></div></div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- FASE 3 — START DO PROCESSO              -->
+<!-- ═══════════════════════════════════════ -->
+<div class="phase" id="fase3">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(217,123,58,.2);color:var(--orange-l)">3</div>
+    <div>
+      <div class="ph-name" style="color:var(--orange-l)">Start do Processo</div>
+      <div class="ph-resp">⚠️ Responsável exclusivo: Dra. Daniela — NINGUÉM mais realiza esta etapa</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="node nc-orange" onclick="openEdit(this,'Recebe Confirmação de Pagamento','Daniela é notificada pelo financeiro de que o pagamento foi confirmado e é hora de iniciar o processo.')">
+      <div class="step-num">8</div>
+      <div class="node-card">
+        <span class="n-icon">🔔</span>
+        <div class="n-lbl">Daniela</div>
+        <div class="n-title">Recebe Confirmação</div>
+        <div class="n-sub">Pagamento confirmado pelo financeiro</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-orange" onclick="openEdit(this,'Confirma Info + Documentos','Daniela verifica se todas as informações e documentos recebidos pelo comercial estão corretos e completos.')">
+      <div class="step-num">9</div>
+      <div class="node-card">
+        <span class="n-icon">🔍</span>
+        <div class="n-lbl">Daniela</div>
+        <div class="n-title">Confirma Info + Docs</div>
+        <div class="n-sub">Valida completude das informações e documentos</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-orange" onclick="openEdit(this,'Cadastra no ADVBox','Daniela realiza o cadastro completo do cliente e do processo no ADVBox: dados, documentos, classificação do cliente (Ouro/Prata/Bronze - apenas uso interno).')">
+      <div class="step-num">10</div>
+      <div class="node-card">
+        <span class="n-icon">📊</span>
+        <div class="n-lbl">Daniela</div>
+        <div class="n-title">Cadastra no ADVBox</div>
+        <div class="n-sub">Cliente + processo + classificação interna</div>
+        <span class="badge bg-gold">ADVBox</span>
+      </div>
+    </div>
+    <div class="arr"><span class="albl">delega</span></div>
+    <div class="node nc-orange" onclick="openEdit(this,'Delega ao Advogado','Daniela define e atribui o advogado responsável pelo caso. Cria a tarefa e o card no Kanban de Onboarding no ADVBox.')">
+      <div class="step-num">11</div>
+      <div class="node-card">
+        <span class="n-icon">🚀</span>
+        <div class="n-lbl">Daniela → Advogado</div>
+        <div class="n-title">START — Delega ao Advogado</div>
+        <div class="n-sub">Atribui responsável · Card → Kanban Onboarding</div>
+        <span class="badge bg-gold">⚠️ Exclusivo Daniela</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Classificação de clientes -->
+  <div class="rules" style="margin-top:18px">
+    <h5>🏅 Classificação Interna de Clientes — Não Revelar ao Cliente</h5>
+    <div class="cls-grid">
+      <div class="cls-card cls-ouro">
+        <h6>🥇 Ouro</h6>
+        <p>Maior faturamento investido no escritório · prioridade máxima · resposta o mais rápido possível</p>
+      </div>
+      <div class="cls-card cls-prata">
+        <h6>🥈 Prata</h6>
+        <p>Faturamento médio · alta prioridade · respeita SLA de 24h normalmente</p>
+      </div>
+      <div class="cls-card cls-bronze">
+        <h6>🥉 Bronze</h6>
+        <p>Faturamento menor · prioridade padrão · SLA de 24h aplicado integralmente</p>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:10px;color:var(--muted)">
+      <strong style="color:var(--orange-l)">Urgência</strong> = relacionado ao prazo do processo · quanto menor o prazo, maior a urgência independente da classificação<br>
+      <strong style="color:var(--orange-l)">Importância</strong> = faturamento do cliente no escritório (Ouro/Prata/Bronze)
+    </div>
+  </div>
+</div>
+
+<div class="v-sep"><div class="v-sep-line"><div class="vl"></div><div class="vt"></div></div></div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- FASE 4 — ONBOARDING (ATIVO)             -->
+<!-- ═══════════════════════════════════════ -->
+<div class="phase" id="fase4">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(58,173,110,.2);color:var(--green-l)">4</div>
+    <div>
+      <div class="ph-name" style="color:var(--green-l)">Onboarding — Atendimento ATIVO (empresa toma a iniciativa)</div>
+      <div class="ph-resp">Responsável: Consultora de Pós-Vendas · Disparado após START confirmado</div>
+    </div>
+  </div>
+  <div class="flow">
+
+    <div class="node nc-green" onclick="openEdit(this,'Boas-Vindas — 1º Contato','Consultora realiza o primeiro contato de boas-vindas à Souza Ramos. Seguir roteiro: saudação calorosa, apresentação pessoal e do escritório.')">
+      <div class="step-num">12</div>
+      <div class="node-card">
+        <span class="n-icon">👋</span>
+        <div class="n-lbl">Consultora</div>
+        <div class="n-title">Boas-Vindas — 1º Contato</div>
+        <div class="n-sub">Saudação · apresentação · tom acolhedor</div>
+        <span class="badge bg-green">Ativo · D+1</span>
+      </div>
+    </div>
+
+    <div class="arr"></div>
+
+    <div class="node nc-green" onclick="openEdit(this,'Informa sobre o Escritório','Consultora informa: endereço, horários de atendimento, canais de contato disponíveis, prazo de resposta (até 24h, exceto urgências).')">
+      <div class="step-num">13</div>
+      <div class="node-card">
+        <span class="n-icon">🏛️</span>
+        <div class="n-lbl">Consultora</div>
+        <div class="n-title">Informa sobre o Escritório</div>
+        <div class="n-sub">Endereço · horários · canais · SLA 24h</div>
+      </div>
+    </div>
+
+    <div class="arr"></div>
+
+    <div class="node nc-green" onclick="openEdit(this,'Conhece o Cliente','Consultora inicia conversa para conhecer o cliente: já teve processo judicial antes? Tem ideia de como funciona? Isso ajuda a calibrar a comunicação.')">
+      <div class="step-num">14</div>
+      <div class="node-card">
+        <span class="n-icon">🗣️</span>
+        <div class="n-lbl">Consultora</div>
+        <div class="n-title">Conhece o Cliente</div>
+        <div class="n-sub">Já teve processo? Conhece o fluxo? Calibra comunicação</div>
+      </div>
+    </div>
+
+    <div class="arr"></div>
+
+    <div class="node nc-green" onclick="openEdit(this,'Explica o Acompanhamento','Consultora explica que: haverá momentos sem grandes novidades (curso normal do processo), mas o cliente pode consultar a qualquer momento. O escritório faz busca diária de movimentações e informa proativamente toda atualização.')">
+      <div class="step-num">15</div>
+      <div class="node-card">
+        <span class="n-icon">📡</span>
+        <div class="n-lbl">Consultora</div>
+        <div class="n-title">Explica Acompanhamento</div>
+        <div class="n-sub">Busca diária de processos · atualizações proativas</div>
+      </div>
+    </div>
+
+    <div class="arr"></div>
+
+    <div class="node nc-green" onclick="openEdit(this,'Verifica Documentos','Consultora verifica se o cliente já enviou todos os documentos necessários. Se houver pendência, registra e faz follow-up.')">
+      <div class="step-num">16</div>
+      <div class="node-card">
+        <span class="n-icon">📂</span>
+        <div class="n-lbl">Consultora</div>
+        <div class="n-title">Verifica Documentos</div>
+        <div class="n-sub">Checklist completo · registra pendências em Andamentos</div>
+        <span class="badge bg-gold">ADVBox · Andamentos</span>
+      </div>
+    </div>
+
+    <div class="arr"></div>
+
+    <div class="node nc-teal" onclick="openEdit(this,'Agenda 1ª Reunião com Advogado','Consultora verifica a agenda do advogado responsável durante a conversa e já garante o agendamento da primeira reunião. Registra no ADVBox (Google Calendar integrado).')">
+      <div class="step-num">17</div>
+      <div class="node-card">
+        <span class="n-icon">📅</span>
+        <div class="n-lbl">Consultora → Advogado</div>
+        <div class="n-title">Agenda 1ª Reunião</div>
+        <div class="n-sub">Consulta agenda ao vivo · garante agendamento na chamada</div>
+        <span class="badge bg-teal">ADVBox + Google Calendar</span>
+      </div>
+    </div>
+
+    <div class="arr"></div>
+
+    <div class="node nc-green" onclick="openEdit(this,'Encerramento + Avaliação','Consultora ratifica as boas-vindas, reforça disponibilidade e envia link de avaliação no Google e redes sociais.')">
+      <div class="step-num">18</div>
+      <div class="node-card">
+        <span class="n-icon">⭐</span>
+        <div class="n-lbl">Consultora</div>
+        <div class="n-title">Encerramento + Avaliação</div>
+        <div class="n-sub">Ratifica boas-vindas · envia link Google + redes sociais</div>
+        <span class="badge bg-green">✅ Onboarding Concluído</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Regras do Onboarding -->
+  <div class="rules">
+    <h5>📋 Roteiro do Onboarding — Pontos Obrigatórios</h5>
+    <div class="rule-item"><span class="rule-em">👋</span><span><strong>Saudação:</strong> boas-vindas à Souza Ramos · tom caloroso e profissional</span></div>
+    <div class="rule-item"><span class="rule-em">🏛️</span><span><strong>Informar:</strong> endereço do escritório · horários de atendimento · canais de contato</span></div>
+    <div class="rule-item"><span class="rule-em">⏱️</span><span><strong>SLA:</strong> retorno em até <strong>24 horas</strong> · casos de urgência (prazo processual curto) recebem prioridade máxima</span></div>
+    <div class="rule-item"><span class="rule-em">🗣️</span><span><strong>Conhecer o cliente:</strong> "Você já teve algum processo antes? Tem ideia de como funciona?" — calibrar o nível de explicação</span></div>
+    <div class="rule-item"><span class="rule-em">📡</span><span><strong>Explicar acompanhamento:</strong> busca diária de movimentações · atualizações proativas · pode consultar a qualquer momento</span></div>
+    <div class="rule-item"><span class="rule-em">📂</span><span><strong>Verificar documentos:</strong> confirmar se todos foram enviados · registrar pendências no ADVBox</span></div>
+    <div class="rule-item"><span class="rule-em">📅</span><span><strong>Agendar:</strong> primeira reunião com o advogado responsável ainda durante a conversa</span></div>
+    <div class="rule-item"><span class="rule-em">⭐</span><span><strong>Encerrar:</strong> ratificar boas-vindas · enviar link de avaliação Google e redes sociais</span></div>
+  </div>
+
+  <div class="sla-row">
+    <div class="sla">
+      <div class="sla-icon">⏱️</div>
+      <div>
+        <h4>SLA de Resposta — 24 horas</h4>
+        <p>Salvo urgência (prazo processual curto) — tratamento imediato</p>
+      </div>
+    </div>
+    <div class="sla" style="border-color:rgba(220,74,74,.3);background:rgba(220,74,74,.05)">
+      <div class="sla-icon">🚨</div>
+      <div>
+        <h4 style="color:var(--red-l)">Urgência = prazo processual</h4>
+        <p>Quanto menor o prazo do processo, maior a urgência — independente da classificação</p>
+      </div>
+    </div>
+    <div class="sla" style="border-color:rgba(193,161,96,.3);background:rgba(193,161,96,.05)">
+      <div class="sla-icon">🔒</div>
+      <div>
+        <h4 style="color:var(--gold-l)">Classificação Ouro/Prata/Bronze — uso interno</h4>
+        <p>Não revelar ao cliente em hipótese alguma</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="v-sep"><div class="v-sep-line"><div class="vl"></div><div class="vt"></div></div></div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- FASE 5 — CONSULTA DE ANDAMENTO (RECEP.) -->
+<!-- ═══════════════════════════════════════ -->
+<div class="phase" id="fase5">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(58,173,110,.2);color:var(--green-l)">5</div>
+    <div>
+      <div class="ph-name" style="color:var(--green-l)">Consulta de Andamento — Atendimento RECEPTIVO</div>
+      <div class="ph-resp">Quando o cliente entra em contato por conta própria · WhatsApp / BotConversa</div>
+    </div>
+  </div>
+  <div class="flow">
+
+    <div class="node nc-green" onclick="openEdit(this,'Cliente Entra em Contato','Cliente entra em contato via WhatsApp ou BotConversa solicitando atualização ou com dúvida sobre o processo.')">
+      <div class="step-num">19</div>
+      <div class="node-card">
+        <span class="n-icon">📩</span>
+        <div class="n-lbl">Cliente</div>
+        <div class="n-title">Cliente Entra em Contato</div>
+        <div class="n-sub">WhatsApp / BotConversa · dúvida ou status</div>
+      </div>
+    </div>
+
+    <div class="arr"></div>
+
+    <div class="node nc-green" onclick="openEdit(this,'Pesquisa Processo no ADVBox','REGRA DE OURO: Todo atendimento começa com a pesquisa do processo no ADVBox. Caminho: Processos → busca → abre o card. Verifica: fase atual, advogado responsável, histórico de Andamentos, tarefas em aberto.')">
+      <div class="step-num">20</div>
+      <div class="node-card">
+        <span class="n-icon">🔎</span>
+        <div class="n-lbl">Consultora</div>
+        <div class="n-title">Pesquisa no ADVBox</div>
+        <div class="n-sub">Regra de Ouro · status + responsável + andamentos + tarefas</div>
+        <span class="badge bg-gold">⚠️ Sempre primeiro</span>
+      </div>
+    </div>
+
+    <div class="arr"></div>
+
+    <!-- DIAMOND -->
+    <div class="diamond-wrap" onclick="openEdit(this,'Pós-Vendas Sabe Responder?','A consultora consegue responder com base no histórico de Andamentos e no status atual, ou precisa acionar o advogado?')">
+      <div class="diamond">
+        <div class="diamond-inner">
+          <span class="diamond-text">Sabe<br>responder?</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BRANCH -->
+    <div class="branch-wrap">
+      <!-- YES -->
+      <div class="branch-row">
+        <div class="blbl blbl-yes">SIM</div>
+        <div class="arr"><span class="albl">responde</span></div>
+        <div class="node nc-green" onclick="openEdit(this,'Responde Imediatamente','Consultora responde ao cliente de forma imediata com a informação disponível. Registra o contato em Andamentos no ADVBox.')">
+          <div class="step-num">21a</div>
+          <div class="node-card">
+            <span class="n-icon">💬</span>
+            <div class="n-lbl">Consultora</div>
+            <div class="n-title">Responde Imediatamente</div>
+            <div class="n-sub">Resposta clara ao cliente · registra em Andamentos</div>
+            <span class="badge bg-gold">ADVBox · Andamentos</span>
+          </div>
+        </div>
+      </div>
+      <!-- NO -->
+      <div class="branch-row">
+        <div class="blbl blbl-no">NÃO</div>
+        <div class="arr"><span class="albl">aciona</span></div>
+        <div class="node nc-teal" onclick="openEdit(this,'Cria Alerta + Registra','Consultora cria uma tarefa/alerta no ADVBox para que o cliente seja respondido dentro do SLA. Registra em Andamentos os detalhes da dúvida. Aciona o advogado responsável se necessário.')">
+          <div class="step-num">21b</div>
+          <div class="node-card">
+            <span class="n-icon">🔔</span>
+            <div class="n-lbl">Consultora → Advogado</div>
+            <div class="n-title">Cria Alerta + Registra</div>
+            <div class="n-sub">Tarefa com prazo + Andamentos · aciona advogado se necessário</div>
+            <span class="badge bg-gold">ADVBox · Obrigatório</span>
+          </div>
+        </div>
+        <div class="arr"><span class="albl">resposta</span></div>
+        <div class="node nc-teal" onclick="openEdit(this,'Advogado Responde','Advogado consulta o histórico em Andamentos, responde na tarefa do ADVBox e conclui a tarefa.')">
+          <div class="step-num">22</div>
+          <div class="node-card">
+            <span class="n-icon">⚖️</span>
+            <div class="n-lbl">Advogado</div>
+            <div class="n-title">Advogado Responde</div>
+            <div class="n-sub">Responde na tarefa · conclui e cria tarefa de retorno</div>
+          </div>
+        </div>
+        <div class="arr"><span class="albl">retorna</span></div>
+        <div class="node nc-green" onclick="openEdit(this,'Consultora Retorna ao Cliente','Consultora lê a resposta do advogado, transforma em linguagem acessível e retorna ao cliente dentro do SLA de 24h.')">
+          <div class="step-num">23</div>
+          <div class="node-card">
+            <span class="n-icon">💬</span>
+            <div class="n-lbl">Consultora</div>
+            <div class="n-title">Retorna ao Cliente</div>
+            <div class="n-sub">Linguagem acessível · dentro do SLA 24h</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arr" style="align-self:flex-end;"></div>
+
+    <!-- Convergência -->
+    <div class="node nc-green" style="align-self:flex-end;" onclick="openEdit(this,'Registra Andamentos + Encerra','SEMPRE registrar em Andamentos o resumo do atendimento. Histórico permanente acessível por toda a equipe. Encerra a tarefa se não houver pendências.')">
+      <div class="step-num">24</div>
+      <div class="node-card">
+        <span class="n-icon">📝</span>
+        <div class="n-lbl">Consultora · Todos</div>
+        <div class="n-title">Registra Andamentos</div>
+        <div class="n-sub">Histórico permanente · visível para toda equipe</div>
+        <span class="badge bg-gold">⚠️ Sempre obrigatório</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="rules" style="margin-top:18px">
+    <h5>📌 Regra de Andamentos — Toda a Equipe (ADVBox)</h5>
+    <div class="rule-item"><span class="rule-em">👩‍💼</span><span><strong>Pós-Vendas:</strong> registra todo contato com o cliente, atualização de status, documentos recebidos e enviados</span></div>
+    <div class="rule-item"><span class="rule-em">⚖️</span><span><strong>Advogados:</strong> registram cada movimentação do processo, decisões e orientações ao cliente</span></div>
+    <div class="rule-item"><span class="rule-em">💰</span><span><strong>Financeiro:</strong> registra pendências de pagamento, confirmações e atualizações de status financeiro</span></div>
+    <div class="rule-item"><span class="rule-em">🎯</span><span><strong>Objetivo:</strong> qualquer membro da equipe que abrir o processo em menos de 30s entende: o que foi discutido, quem é responsável e qual o próximo passo</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- FASE 6 — PROATIVO                       -->
+<!-- ═══════════════════════════════════════ -->
+<div class="phase" id="fase6">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(139,92,246,.2);color:var(--purple-l)">6</div>
+    <div>
+      <div class="ph-name" style="color:var(--purple-l)">Acompanhamento Proativo — Busca Diária + Tarefas Recorrentes</div>
+      <div class="ph-resp">Empresa antecipa: informa o cliente antes que ele precise perguntar</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="node nc-purple" onclick="openEdit(this,'Busca Diária de Movimentações','Sistema realiza busca diária de movimentações em todos os processos ativos. Quando há atualização, a consultora é alertada.')">
+      <div class="step-num">A</div>
+      <div class="node-card">
+        <span class="n-icon">🔄</span>
+        <div class="n-lbl">ADVBox — Diário</div>
+        <div class="n-title">Busca Diária de Movimentações</div>
+        <div class="n-sub">Verifica todos os processos · alerta sobre atualizações</div>
+        <span class="badge bg-purple">Automático</span>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-green" onclick="openEdit(this,'Há Atualização?','Se houver atualização no processo, a consultora informa o cliente proativamente sem esperar que ele pergunte.')">
+      <div class="step-num">B</div>
+      <div class="node-card">
+        <span class="n-icon">📤</span>
+        <div class="n-lbl">Consultora</div>
+        <div class="n-title">Informa Cliente Proativamente</div>
+        <div class="n-sub">Não espera o cliente perguntar · registra em Andamentos</div>
+        <span class="badge bg-green">Proativo</span>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-purple" onclick="openEdit(this,'Tarefa Recorrente de Contato','Tarefas recorrentes configuradas no ADVBox garantem contatos periódicos com o cliente mesmo quando não há atualização no processo.')">
+      <div class="step-num">C</div>
+      <div class="node-card">
+        <span class="n-icon">📆</span>
+        <div class="n-lbl">ADVBox · Recorrente</div>
+        <div class="n-title">Contato Periódico Programado</div>
+        <div class="n-sub">Mesmo sem novidades · cliente nunca fica sem retorno</div>
+        <span class="badge bg-purple">Recorrente</span>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-green" onclick="openEdit(this,'Registra Andamentos','Todo contato proativo deve ser registrado em Andamentos no ADVBox — histórico permanente.')">
+      <div class="step-num">D</div>
+      <div class="node-card">
+        <span class="n-icon">📝</span>
+        <div class="n-lbl">Consultora</div>
+        <div class="n-title">Registra em Andamentos</div>
+        <div class="n-sub">Histórico de todo contato proativo · ADVBox</div>
+        <span class="badge bg-gold">ADVBox · Obrigatório</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-ov" id="editModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('editModal').classList.remove('open')">✕</button>
+    <h3>✏️ Editar Etapa</h3>
+    <p id="modalDesc" style="font-size:12px;color:var(--muted);margin-bottom:18px;line-height:1.5"></p>
+    <div class="fgrp"><div class="flbl">Título</div><input class="finput" id="editTitle" type="text"></div>
+    <div class="fgrp"><div class="flbl">Descrição</div><textarea class="finput" id="editDesc"></textarea></div>
+    <div class="mactions">
+      <button class="btn btn-outline" onclick="document.getElementById('editModal').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveEdit()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let curNode = null;
+function openEdit(el, title, desc) {
+  curNode = el;
+  document.getElementById('editModal').classList.add('open');
+  document.getElementById('modalDesc').textContent = desc;
+  document.getElementById('editTitle').value = el.querySelector ? (el.querySelector('.n-title')?.textContent || title) : title;
+  document.getElementById('editDesc').value = el.querySelector ? (el.querySelector('.n-sub')?.textContent || desc) : desc;
+}
+function saveEdit() {
+  if (curNode) {
+    const t = curNode.querySelector('.n-title');
+    const s = curNode.querySelector('.n-sub');
+    const d = curNode.querySelector('.diamond-text');
+    if (t) t.textContent = document.getElementById('editTitle').value;
+    if (s) s.textContent = document.getElementById('editDesc').value;
+    if (d) d.textContent = document.getElementById('editTitle').value;
+  }
+  document.getElementById('editModal').classList.remove('open');
+}
+document.getElementById('editModal').addEventListener('click', e => { if (e.target === document.getElementById('editModal')) document.getElementById('editModal').classList.remove('open'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('editModal').classList.remove('open'); });
+</script>
+</body>
+</html>

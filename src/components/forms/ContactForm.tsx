@@ -165,7 +165,7 @@ export function ContactForm() {
             required
           />
           <span>
-            Autorizo o contato e o tratamento dos meus dados conforme a{" "}
+            Autorizo o contato, o tratamento dos meus dados e aceito receber conteúdos e promoções por e-mail, conforme a{" "}
             <Link href="/privacidade" className="font-semibold text-navy underline">
               Política de Privacidade
             </Link>

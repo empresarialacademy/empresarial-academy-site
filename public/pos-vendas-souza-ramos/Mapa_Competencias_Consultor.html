@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<link rel="icon" type="image/png" href="logo-empresarial-academy.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Competências do Consultor — Souza Ramos Advogados</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --bg: #0F1822;
+    --surface: #16212E;
+    --surface2: #1D2B3C;
+    --border: #2A3A4D;
+    --text: #F4F6F8;
+    --muted: #8A97A8;
+    --gold: #C1A160;
+    --gold-l: #D7C089;
+    --blue: #4a7cdc;
+    --blue-l: #6b9af0;
+    --green: #3aad6e;
+    --green-l: #52c986;
+    --orange: #d97b3a;
+    --orange-l: #f0964f;
+    --purple: #8b5cf6;
+    --purple-l: #a78bfa;
+    --teal: #2aa8b8;
+    --teal-l: #45c5d6;
+    --red: #dc4a4a;
+    --red-l: #f08080;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Open Sans',sans-serif; color:var(--text); overflow-x:auto; border-top:3px solid var(--gold); }
+
+  header {
+    background:linear-gradient(135deg,#12151f,#1a1d2e);
+    border-bottom:1px solid var(--border);
+    padding:22px 40px;
+    display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:100;
+    flex-wrap:wrap; gap:12px;
+  }
+  .hd-left { display:flex; align-items:center; gap:14px; }
+  .hd-badge {
+    width:44px; height:44px; border-radius:10px;
+    background:linear-gradient(135deg,var(--gold),var(--gold-l));
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:18px; color:#0F1822; flex-shrink:0;
+  }
+  .hd-title, h1, h2, h3, h4 { font-family:'Montserrat','Open Sans',sans-serif; }
+  .hd-title { font-size:16px; font-weight:700; }
+  .hd-sub { font-size:11px; color:var(--muted); margin-top:2px; }
+  .btn {
+    padding:7px 16px; border-radius:7px; font-size:12px; font-weight:500;
+    cursor:pointer; border:none; font-family:inherit; transition:all .2s; text-decoration:none; display:inline-flex; align-items:center; gap:6px;
+  }
+  .btn-outline { background:transparent; border:1px solid var(--border); color:var(--muted); }
+  .btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+  .btn-gold { background:linear-gradient(135deg,var(--gold),var(--gold-l)); color:#0F1822; font-weight:600; }
+  .toolbar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  #saveStatus { font-size:11px; color:var(--muted); }
+
+  .legend {
+    padding:10px 40px; background:var(--surface); border-bottom:1px solid var(--border);
+    display:flex; gap:18px; flex-wrap:wrap; align-items:center;
+  }
+  .leg { display:flex; align-items:center; gap:7px; font-size:11px; color:var(--muted); }
+  .leg-dot { width:11px; height:11px; border-radius:3px; flex-shrink:0; }
+
+  .phase { padding:32px 40px; border-bottom:1px solid var(--border); }
+  .phase:last-child { border-bottom:none; }
+  .ph-header { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+  .ph-num {
+    width:30px; height:30px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:800; flex-shrink:0;
+  }
+  .ph-name { font-size:15px; font-weight:700; }
+  .ph-resp { font-size:11px; color:var(--muted); margin-top:2px; }
+
+  .flow { display:flex; align-items:center; flex-wrap:wrap; gap:14px 0; overflow-x:auto; padding-bottom:4px; }
+
+  .node { flex-shrink:0; position:relative; cursor:pointer; transition:transform .2s; }
+  .node:hover { transform:translateY(-2px); }
+  .node-card {
+    border-radius:11px; padding:13px 16px;
+    min-width:165px; max-width:200px;
+    border:1.5px solid transparent;
+    transition:all .2s; position:relative; overflow:hidden;
+  }
+  .node-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+
+  .nc-gold  .node-card { background:rgba(193,161,96,.11); border-color:rgba(193,161,96,.35); }
+  .nc-gold  .node-card::before { background:linear-gradient(90deg,var(--gold),var(--gold-l)); }
+  .nc-gold  .n-lbl { color:var(--gold-l); }
+
+  .nc-blue  .node-card { background:rgba(74,124,220,.11); border-color:rgba(74,124,220,.35); }
+  .nc-blue  .node-card::before { background:linear-gradient(90deg,var(--blue),var(--blue-l)); }
+  .nc-blue  .n-lbl { color:var(--blue-l); }
+
+  .nc-green .node-card { background:rgba(58,173,110,.11); border-color:rgba(58,173,110,.35); }
+  .nc-green .node-card::before { background:linear-gradient(90deg,var(--green),var(--green-l)); }
+  .nc-green .n-lbl { color:var(--green-l); }
+
+  .nc-orange .node-card { background:rgba(217,123,58,.11); border-color:rgba(217,123,58,.35); }
+  .nc-orange .node-card::before { background:linear-gradient(90deg,var(--orange),var(--orange-l)); }
+  .nc-orange .n-lbl { color:var(--orange-l); }
+
+  .nc-purple .node-card { background:rgba(139,92,246,.11); border-color:rgba(139,92,246,.35); }
+  .nc-purple .node-card::before { background:linear-gradient(90deg,var(--purple),var(--purple-l)); }
+  .nc-purple .n-lbl { color:var(--purple-l); }
+
+  .nc-teal  .node-card { background:rgba(42,168,184,.11); border-color:rgba(42,168,184,.35); }
+  .nc-teal  .node-card::before { background:linear-gradient(90deg,var(--teal),var(--teal-l)); }
+  .nc-teal  .n-lbl { color:var(--teal-l); }
+
+  .nc-red   .node-card { background:rgba(220,74,74,.11); border-color:rgba(220,74,74,.35); }
+  .nc-red   .node-card::before { background:linear-gradient(90deg,var(--red),var(--red-l)); }
+  .nc-red   .n-lbl { color:var(--red-l); }
+
+  .n-icon { font-size:19px; margin-bottom:7px; display:block; }
+  .n-lbl { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; margin-bottom:5px; }
+  .n-title { font-size:12px; font-weight:600; color:var(--text); line-height:1.3; margin-bottom:3px; }
+  .n-sub { font-size:10px; color:var(--muted); line-height:1.4; }
+  .n-expand { font-size:9px; color:var(--gold-l); margin-top:6px; font-weight:600; }
+
+  .step-num {
+    position:absolute; top:-7px; left:-7px;
+    width:20px; height:20px; border-radius:50%;
+    background:var(--surface2); border:1.5px solid var(--border);
+    font-size:9px; font-weight:700; color:var(--muted);
+    display:flex; align-items:center; justify-content:center; z-index:10;
+  }
+  .badge {
+    display:inline-flex; align-items:center; gap:3px;
+    padding:2px 7px; border-radius:20px;
+    font-size:9px; font-weight:600; margin-top:5px;
+  }
+  .bg-gold  { background:rgba(193,161,96,.2); color:var(--gold-l); border:1px solid rgba(193,161,96,.3); }
+  .bg-green { background:rgba(58,173,110,.2); color:var(--green-l); border:1px solid rgba(58,173,110,.3); }
+  .bg-red   { background:rgba(220,74,74,.2);  color:var(--red-l);   border:1px solid rgba(220,74,74,.3);  }
+  .bg-blue  { background:rgba(74,124,220,.2); color:var(--blue-l);  border:1px solid rgba(74,124,220,.3); }
+  .bg-purple{ background:rgba(139,92,246,.2); color:var(--purple-l);border:1px solid rgba(139,92,246,.3); }
+  .bg-teal  { background:rgba(42,168,184,.2); color:var(--teal-l);  border:1px solid rgba(42,168,184,.3); }
+  .bg-orange{ background:rgba(217,123,58,.2); color:var(--orange-l);border:1px solid rgba(217,123,58,.3); }
+
+  .arr { width:34px; flex-shrink:0; position:relative; height:2px; align-self:center; }
+  .arr::before { content:''; position:absolute; top:0; left:0; right:8px; height:2px; background:var(--border); }
+  .arr::after  { content:''; position:absolute; right:0; top:-4px; border:5px solid transparent; border-left:7px solid var(--muted); }
+  .arr .albl { position:absolute; top:-14px; left:50%; transform:translateX(-50%); font-size:9px; color:var(--muted); white-space:nowrap; background:var(--bg); padding:0 3px; }
+
+  .diamond-wrap { display:flex; align-items:center; justify-content:center; width:110px; height:90px; flex-shrink:0; }
+  .diamond {
+    width:82px; height:82px; background:rgba(139,92,246,.12);
+    border:1.5px solid rgba(139,92,246,.4); transform:rotate(45deg);
+    border-radius:8px; cursor:pointer; transition:all .2s;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .diamond:hover { transform:rotate(45deg) scale(1.06); }
+  .diamond-inner { transform:rotate(-45deg); text-align:center; padding:6px; }
+  .diamond-text { font-size:10px; font-weight:600; color:var(--purple-l); line-height:1.3; }
+
+  .branch-wrap { display:flex; flex-direction:column; gap:14px; justify-content:center; }
+  .branch-row  { display:flex; align-items:center; flex-wrap:wrap; }
+  .blbl { font-size:9px; font-weight:700; padding:2px 7px; border-radius:4px; width:42px; text-align:center; flex-shrink:0; }
+  .blbl-yes { background:rgba(58,173,110,.2); color:var(--green-l); }
+  .blbl-no  { background:rgba(220,74,74,.2);  color:var(--red-l);   }
+
+  .rules { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin-top:18px; }
+  .rules h5 { font-size:11px; font-weight:700; color:var(--gold-l); text-transform:uppercase; letter-spacing:.07em; margin-bottom:10px; }
+  .rule-item { display:flex; align-items:flex-start; gap:8px; margin-bottom:7px; font-size:11px; color:var(--text); }
+  .rule-item:last-child { margin-bottom:0; }
+  .rule-em { font-size:14px; flex-shrink:0; margin-top:1px; }
+
+  .v-sep { display:flex; justify-content:center; padding:6px 0; }
+  .v-sep-line { display:flex; flex-direction:column; align-items:center; }
+  .v-sep-line .vl { width:2px; height:24px; background:var(--border); }
+  .v-sep-line .vt { border:5px solid transparent; border-top:7px solid var(--muted); }
+
+  .quote-box { background:rgba(193,161,96,.07); border:1px solid rgba(193,161,96,.3); border-radius:12px; padding:22px 26px; margin-top:18px; font-style:italic; font-size:13px; line-height:1.7; color:var(--text); }
+  .quote-box strong { font-style:normal; color:var(--gold-l); }
+
+  /* MODAL (detalhe completo) */
+  .modal-ov { position:fixed; inset:0; background:rgba(0,0,0,.72); z-index:500; display:none; align-items:center; justify-content:center; padding:24px; }
+  .modal-ov.open { display:flex; }
+  .modal { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:30px; max-width:720px; width:100%; max-height:85vh; overflow-y:auto; position:relative; }
+  .modal h3 { font-size:18px; font-weight:700; color:var(--gold-l); margin-bottom:14px; padding-right:30px; }
+  .modal-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--muted); font-size:18px; cursor:pointer; width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:7px; }
+  .modal-close:hover { background:var(--surface2); color:var(--text); }
+  .modal-body p { font-size:13px; line-height:1.65; color:var(--text); margin-bottom:12px; }
+  .modal-body h4 { font-size:13px; color:var(--gold-l); margin:16px 0 8px; }
+  .modal-body ul, .modal-body ol { margin:0 0 12px 18px; font-size:13px; line-height:1.6; color:var(--text); }
+  .modal-body li { margin-bottom:5px; }
+  .ex-box { background:var(--surface2); border:1px solid var(--border); border-radius:9px; padding:13px 16px; margin-bottom:10px; }
+  .ex-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin-bottom:5px; }
+  .ex-label.bad { color:var(--red-l); }
+  .ex-label.good { color:var(--green-l); }
+  .ex-label.tel { color:var(--blue-l); }
+  .ex-label.wa { color:var(--green-l); }
+  .ex-text { font-size:12.5px; line-height:1.6; color:var(--text); font-style:italic; }
+  .ex-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:560px){ .ex-grid{ grid-template-columns:1fr; } }
+  .mini-table { width:100%; border-collapse:collapse; font-size:12px; margin-bottom:14px; }
+  .mini-table th { background:var(--surface2); color:var(--gold-l); text-align:left; padding:8px 10px; font-weight:700; font-size:11px; }
+  .mini-table td { padding:8px 10px; border-bottom:1px solid var(--border); color:var(--text); vertical-align:top; }
+  .acc-item { border:1px solid var(--border); border-radius:8px; margin-bottom:8px; overflow:hidden; }
+  .acc-head { padding:10px 14px; background:var(--surface2); cursor:pointer; font-size:12px; font-weight:600; display:flex; justify-content:space-between; align-items:center; }
+  .acc-head:hover { color:var(--gold-l); }
+  .acc-body { display:none; padding:14px; font-size:12.5px; line-height:1.6; }
+  .acc-item.open .acc-body { display:block; }
+  .search-box { width:100%; padding:10px 14px; background:var(--bg); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:13px; margin-bottom:14px; font-family:inherit; }
+  .search-box:focus { outline:none; border-color:var(--gold); }
+  .gloss-table { width:100%; border-collapse:collapse; font-size:12px; }
+  .gloss-table td { padding:8px 10px; border-bottom:1px solid var(--border); vertical-align:top; }
+  .gloss-table .g-term { color:var(--gold-l); font-weight:600; width:38%; }
+  .gloss-table .g-tr { color:var(--muted); }
+  .gloss-empty { font-size:12px; color:var(--muted); padding:14px 0; text-align:center; }
+
+  /* MODO DE EDIÇÃO */
+  body.edit-mode [contenteditable="true"]:hover { outline:1px dashed var(--gold); outline-offset:2px; cursor:text; }
+  body.edit-mode [contenteditable="true"]:focus { outline:2px solid var(--gold); outline-offset:2px; background:rgba(193,161,96,.06); border-radius:3px; }
+
+  @media print { header { position:relative; } .toolbar { display:none; } .modal-ov { display:none!important; } }
+</style>
+<style id="_goober"> .go1475592160{height:0;}.go1671063245{height:auto;}.go1888806478{display:flex;flex-wrap:wrap;flex-grow:1;}@media (min-width:600px){.go1888806478{flex-grow:initial;min-width:288px;}}.go167266335{background-color:#313131;font-size:0.875rem;line-height:1.43;letter-spacing:0.01071em;color:#fff;align-items:center;padding:6px 16px;border-radius:4px;box-shadow:0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);}.go3162094071{padding-left:20px;}.go3844575157{background-color:#313131;}.go1725278324{background-color:#43a047;}.go3651055292{background-color:#d32f2f;}.go4215275574{background-color:#ff9800;}.go1930647212{background-color:#2196f3;}.go946087465{display:flex;align-items:center;padding:8px 0;}.go703367398{display:flex;align-items:center;margin-left:auto;padding-left:16px;margin-right:-8px;}.go3963613292{width:100%;position:relative;transform:translateX(0);top:0;right:0;bottom:0;left:0;min-width:288px;}.go1141946668{box-sizing:border-box;display:flex;max-height:100%;position:fixed;z-index:1400;height:auto;width:auto;transition:top 300ms ease 0ms,right 300ms ease 0ms,bottom 300ms ease 0ms,left 300ms ease 0ms,max-width 300ms ease 0ms;pointer-events:none;max-width:calc(100% - 40px);}.go1141946668 .notistack-CollapseWrapper{padding:6px 0px;transition:padding 300ms ease 0ms;}@media (max-width:599.95px){.go1141946668{width:100%;max-width:calc(100% - 32px);}}.go3868796639 .notistack-CollapseWrapper{padding:2px 0px;}.go3118922589{top:14px;flex-direction:column;}.go1453831412{bottom:14px;flex-direction:column-reverse;}.go4027089540{left:20px;}@media (min-width:600px){.go4027089540{align-items:flex-start;}}@media (max-width:599.95px){.go4027089540{left:16px;}}.go2989568495{right:20px;}@media (min-width:600px){.go2989568495{align-items:flex-end;}}@media (max-width:599.95px){.go2989568495{right:16px;}}.go4034260886{left:50%;transform:translateX(-50%);}@media (min-width:600px){.go4034260886{align-items:center;}}</style></head>
+<body class="edit-mode">
+
+<header>
+  <div class="hd-left">
+    <div class="hd-badge">EA</div>
+    <div>
+      <div class="hd-title">Competências do Consultor de Pós-Vendas</div>
+      <div class="hd-sub">Souza Ramos Advogados · Mapa interativo — clique em qualquer cartão para abrir o detalhe</div>
+    </div>
+  </div>
+  <div class="toolbar">
+    <a class="btn btn-outline" href="Treinamento_Consultivo_Modulo.html" target="_blank">📖 Ler versão completa em texto</a>
+    <button class="btn btn-outline" id="editToggleBtn" onclick="toggleEditMode()">✏️ Ativar edição</button>
+    <button class="btn btn-gold" id="saveNowBtn" style="display: none;" onclick="saveNow()">💾 Salvar agora</button>
+    <span id="saveStatus"></span>
+  </div>
+</header>
+
+<div class="legend">
+  <div class="leg"><div class="leg-dot" style="background:var(--gold)"></div>Cerne da função</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div>Leitura nas entrelinhas</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--teal)"></div>Tradução jurídica</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--green)"></div>Escuta &amp; rapport</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--red)"></div>Clientes difíceis (AVR)</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--orange)"></div>Atendimento consultivo</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>Ferramentas &amp; ciclo</div>
+</div>
+
+<!-- FASE 1 — CERNE DA FUNÇÃO -->
+<div class="phase" id="fase1">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(193,161,96,.2);color:var(--gold-l)">1</div>
+    <div>
+      <div class="ph-name" style="color:var(--gold-l)">O Cerne da Função</div>
+      <div class="ph-resp">Quem é o consultor de pós-vendas — antes de qualquer técnica</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="node nc-gold" onclick="openDetail('cerne')">
+      <div class="node-card">
+        <span class="n-icon">🛡️</span>
+        <div class="n-lbl">Cerne</div>
+        <div class="n-title">Guardião da Experiência do Cliente</div>
+        <div class="n-sub">3 responsabilidades centrais da função</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-gold" onclick="openDetail('perfil')">
+      <div class="node-card">
+        <span class="n-icon">🎯</span>
+        <div class="n-lbl">Perfil</div>
+        <div class="n-title">Atendente vs. Consultor</div>
+        <div class="n-sub">3 competências centrais que este mapa desenvolve</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="v-sep"><div class="v-sep-line"><div class="vl"></div><div class="vt"></div></div></div>
+
+<!-- FASE 2 — LEITURA NAS ENTRELINHAS -->
+<div class="phase" id="fase2">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(74,124,220,.2);color:var(--blue-l)">2</div>
+    <div>
+      <div class="ph-name" style="color:var(--blue-l)">Leitura nas Entrelinhas</div>
+      <div class="ph-resp">Competência 1 — identificar a real necessidade por trás da pergunta</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="node nc-blue" onclick="openDetail('pergunta-por-tras')">
+      <div class="node-card">
+        <span class="n-icon">🔍</span>
+        <div class="n-lbl">Técnica</div>
+        <div class="n-title">A pergunta por trás da pergunta</div>
+        <div class="n-sub">5 exemplos prontos de leitura + resposta</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-blue" onclick="openDetail('leitura-tom')">
+      <div class="node-card">
+        <span class="n-icon">💬</span>
+        <div class="n-lbl">Ferramenta</div>
+        <div class="n-title">Leitura de tom em texto</div>
+        <div class="n-sub">Sinais textuais + regra do CAIXA ALTA</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-blue" onclick="openDetail('pausa-sondagem')">
+      <div class="node-card">
+        <span class="n-icon">⏱️</span>
+        <div class="n-lbl">Ferramenta</div>
+        <div class="n-title">Pausa de 3s + pergunta de sondagem</div>
+        <div class="n-sub">Evitar resposta automática · abrir espaço emocional</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-blue" onclick="openDetail('segunda-opiniao')">
+      <div class="node-card">
+        <span class="n-icon">🤝</span>
+        <div class="n-lbl">Prática</div>
+        <div class="n-title">Buscar uma segunda percepção</div>
+        <div class="n-sub">Na dúvida sobre o tom, peça uma segunda leitura</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="v-sep"><div class="v-sep-line"><div class="vl"></div><div class="vt"></div></div></div>
+
+<!-- FASE 3 — TRADUÇÃO JURÍDICA -->
+<div class="phase" id="fase3">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(42,168,184,.2);color:var(--teal-l)">3</div>
+    <div>
+      <div class="ph-name" style="color:var(--teal-l)">Tradução Jurídica → Humana</div>
+      <div class="ph-resp">Competência 2 — a ponte entre o advogado e o cliente</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="node nc-teal" onclick="openDetail('metodo-3-passos')">
+      <div class="node-card">
+        <span class="n-icon">🪜</span>
+        <div class="n-lbl">Método</div>
+        <div class="n-title">Método dos 3 passos</div>
+        <div class="n-sub">Entender → separar fato/interpretação → reescrever</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-teal" onclick="openDetail('glossario')">
+      <div class="node-card">
+        <span class="n-icon">📚</span>
+        <div class="n-lbl">Referência</div>
+        <div class="n-title">Glossário de 50 termos</div>
+        <div class="n-sub">Busca instantânea · consulta no dia a dia</div>
+        <div class="n-expand">Buscar termo →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-teal" onclick="openDetail('exemplos-traducao')">
+      <div class="node-card">
+        <span class="n-icon">📝</span>
+        <div class="n-lbl">Exemplos</div>
+        <div class="n-title">5 traduções completas</div>
+        <div class="n-sub">Tradução ruim × boa, lado a lado</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="v-sep"><div class="v-sep-line"><div class="vl"></div><div class="vt"></div></div></div>
+
+<!-- FASE 4 — ESCUTA ATIVA & RAPPORT -->
+<div class="phase" id="fase4">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(58,173,110,.2);color:var(--green-l)">4</div>
+    <div>
+      <div class="ph-name" style="color:var(--green-l)">Escuta Ativa &amp; Rapport</div>
+      <div class="ph-resp">Técnicas de conexão e confiança no atendimento</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="node nc-green" onclick="openDetail('espelhamento')">
+      <div class="node-card">
+        <span class="n-icon">🪞</span>
+        <div class="n-lbl">Escuta ativa</div>
+        <div class="n-title">Espelhamento de vocabulário</div>
+        <div class="n-sub">Usar as palavras do próprio cliente</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-green" onclick="openDetail('confirmacao-resumida')">
+      <div class="node-card">
+        <span class="n-icon">✅</span>
+        <div class="n-lbl">Escuta ativa</div>
+        <div class="n-title">Confirmação resumida</div>
+        <div class="n-sub">Resumir em 1-2 frases antes de responder</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-green" onclick="openDetail('rapport')">
+      <div class="node-card">
+        <span class="n-icon">🤝</span>
+        <div class="n-lbl">Rapport</div>
+        <div class="n-title">3 comportamentos de confiança</div>
+        <div class="n-sub">Consistência · transparência · promessas cumpridas</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="v-sep"><div class="v-sep-line"><div class="vl"></div><div class="vt"></div></div></div>
+
+<!-- FASE 5 — CLIENTES DIFÍCEIS (AVR) -->
+<div class="phase" id="fase5">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(220,74,74,.2);color:var(--red-l)">5</div>
+    <div>
+      <div class="ph-name" style="color:var(--red-l)">Clientes Nervosos, Urgentes ou Irritados</div>
+      <div class="ph-resp">Você não controla a emoção do cliente — controla sua resposta a ela</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="node nc-red" onclick="openDetail('avr')">
+      <div class="node-card">
+        <span class="n-icon">🧭</span>
+        <div class="n-lbl">Técnica</div>
+        <div class="n-title">AVR — Acolher, Validar, Resolver</div>
+        <div class="n-sub">A sequência para qualquer atendimento de tensão alta</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-red" onclick="openDetail('nunca-fazer')">
+      <div class="node-card">
+        <span class="n-icon">🚫</span>
+        <div class="n-lbl">Atenção</div>
+        <div class="n-title">O que nunca fazer</div>
+        <div class="n-sub">3 erros que escalam a tensão</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-red" onclick="openDetail('scripts-prontos')">
+      <div class="node-card">
+        <span class="n-icon">📜</span>
+        <div class="n-lbl">Scripts</div>
+        <div class="n-title">5 scripts prontos por situação</div>
+        <div class="n-sub">Cobrança repetida · irritado · ameaça · urgência real</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-red" onclick="openDetail('termometro')">
+      <div class="node-card">
+        <span class="n-icon">🌡️</span>
+        <div class="n-lbl">Ferramenta</div>
+        <div class="n-title">Termômetro de urgência</div>
+        <div class="n-sub">🟢🟡🟠🔴 — classifique antes de responder</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="v-sep"><div class="v-sep-line"><div class="vl"></div><div class="vt"></div></div></div>
+
+<!-- FASE 6 — ATENDIMENTO CONSULTIVO -->
+<div class="phase" id="fase6">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(217,123,58,.2);color:var(--orange-l)">6</div>
+    <div>
+      <div class="ph-name" style="color:var(--orange-l)">Atendimento Consultivo</div>
+      <div class="ph-resp">Indo além da pergunta — antecipar, não só responder</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="node nc-orange" onclick="openDetail('responder-vs-consultar')">
+      <div class="node-card">
+        <span class="n-icon">⚖️</span>
+        <div class="n-lbl">Conceito</div>
+        <div class="n-title">Responder vs. Consultar</div>
+        <div class="n-sub">Mesma informação, valor diferente</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-orange" onclick="openDetail('e-tambem')">
+      <div class="node-card">
+        <span class="n-icon">➕</span>
+        <div class="n-lbl">Técnica</div>
+        <div class="n-title">"E também" — sempre agregue</div>
+        <div class="n-sub">Antecipe o que o cliente nem perguntou ainda</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-orange" onclick="openDetail('reclamacoes')">
+      <div class="node-card">
+        <span class="n-icon">🎭</span>
+        <div class="n-lbl">Atenção</div>
+        <div class="n-title">Reclamações disfarçadas de dúvida</div>
+        <div class="n-sub">"Vocês ainda estão cuidando do meu caso?"</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="v-sep"><div class="v-sep-line"><div class="vl"></div><div class="vt"></div></div></div>
+
+<!-- FASE 7 — FERRAMENTAS DO DIA A DIA -->
+<div class="phase" id="fase7">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(139,92,246,.2);color:var(--purple-l)">7</div>
+    <div>
+      <div class="ph-name" style="color:var(--purple-l)">Ferramentas do Dia a Dia</div>
+      <div class="ph-resp">Checklists e modelos de uso constante</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="node nc-purple" onclick="openDetail('checklist-mental')">
+      <div class="node-card">
+        <span class="n-icon">✔️</span>
+        <div class="n-lbl">Checklist</div>
+        <div class="n-title">Antes de qualquer resposta</div>
+        <div class="n-sub">6 perguntas rápidas antes de enviar</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-purple" onclick="openDetail('banco-frases')">
+      <div class="node-card">
+        <span class="n-icon">💡</span>
+        <div class="n-lbl">Referência</div>
+        <div class="n-title">Banco de frases de abertura</div>
+        <div class="n-sub">Rotina + momentos de estresse elevado</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-purple" onclick="openDetail('regra-prazos')">
+      <div class="node-card">
+        <span class="n-icon">⏳</span>
+        <div class="n-lbl">Regra</div>
+        <div class="n-title">Prazos comunicados ("em até XX horas")</div>
+        <div class="n-sub">Por que funciona + como responder a contestação</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-purple" onclick="openDetail('resumo-4-linhas')">
+      <div class="node-card">
+        <span class="n-icon">📝</span>
+        <div class="n-lbl">Registro</div>
+        <div class="n-title">Resumo de 4 linhas (ADVBox)</div>
+        <div class="n-sub">Modelo padrão de todo Andamento</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-purple" onclick="openDetail('autorregulacao')">
+      <div class="node-card">
+        <span class="n-icon">🧘</span>
+        <div class="n-lbl">Autocuidado</div>
+        <div class="n-title">Autorregulação do consultor</div>
+        <div class="n-sub">Respiração 4-4-4 antes de atender tensão alta</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-purple" onclick="openDetail('planilha-controle')">
+      <div class="node-card">
+        <span class="n-icon">📊</span>
+        <div class="n-lbl">Registro</div>
+        <div class="n-title">Planilha de Controle Pós-Vendas</div>
+        <div class="n-sub">Preencher a cada contato — complementa o ADVBox</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="v-sep"><div class="v-sep-line"><div class="vl"></div><div class="vt"></div></div></div>
+
+<!-- FASE 8 — CICLO COMPLETO DO ATENDIMENTO -->
+<div class="phase" id="fase8">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(193,161,96,.2);color:var(--gold-l)">8</div>
+    <div>
+      <div class="ph-name" style="color:var(--gold-l)">Ciclo Completo do Atendimento</div>
+      <div class="ph-resp">Tudo o que você aprendeu, em um único fluxo do início ao fim</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="node nc-gold" onclick="openDetail('ciclo-1')">
+      <div class="node-card">
+        <span class="n-icon">📩</span>
+        <div class="n-lbl">1</div>
+        <div class="n-title">Cliente entra em contato</div>
+        <div class="n-sub">WhatsApp ou ligação</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-gold" onclick="openDetail('ciclo-2')">
+      <div class="node-card">
+        <span class="n-icon">🔎</span>
+        <div class="n-lbl">2</div>
+        <div class="n-title">Pesquisar processo no ADVBox</div>
+        <div class="n-sub">Status, responsável, último andamento</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-blue" onclick="openDetail('ciclo-3')">
+      <div class="node-card">
+        <span class="n-icon">🧠</span>
+        <div class="n-lbl">3</div>
+        <div class="n-title">Identificar a pergunta real</div>
+        <div class="n-sub">Fase 2 deste mapa</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-red" onclick="openDetail('ciclo-4')">
+      <div class="node-card">
+        <span class="n-icon">🌡️</span>
+        <div class="n-lbl">4</div>
+        <div class="n-title">Avaliar o termômetro de urgência</div>
+        <div class="n-sub">🟢🟡 seguem direto · 🟠🔴 aplicam AVR</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="diamond-wrap" onclick="openDetail('ciclo-diamante')">
+      <div class="diamond"><div class="diamond-inner"><span class="diamond-text">Exige<br>jurídico?</span></div></div>
+    </div>
+    <div class="branch-wrap">
+      <div class="branch-row">
+        <div class="blbl blbl-no">NÃO</div>
+        <div class="arr"></div>
+        <div class="node nc-green" onclick="openDetail('ciclo-direto')">
+          <div class="node-card">
+            <span class="n-icon">💬</span>
+            <div class="n-title">Responde direto ao cliente</div>
+            <div class="n-sub">Informa prazo se necessário</div>
+          </div>
+        </div>
+      </div>
+      <div class="branch-row">
+        <div class="blbl blbl-yes">SIM</div>
+        <div class="arr"></div>
+        <div class="node nc-teal" onclick="openDetail('ciclo-tarefa')">
+          <div class="node-card">
+            <span class="n-icon">⚖️</span>
+            <div class="n-title">Cria tarefa para o advogado</div>
+            <div class="n-sub">Informa prazo em horas úteis</div>
+          </div>
+        </div>
+        <div class="arr"></div>
+        <div class="node nc-teal" onclick="openDetail('ciclo-traduz')">
+          <div class="node-card">
+            <span class="n-icon">🪜</span>
+            <div class="n-title">Traduz a resposta</div>
+            <div class="n-sub">Método dos 3 passos (Fase 3)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="arr" style="align-self:flex-end;"></div>
+    <div class="node nc-gold" style="align-self:flex-end;" onclick="openDetail('ciclo-registro')">
+      <div class="node-card">
+        <span class="n-icon">📝</span>
+        <div class="n-title">Registra Andamento (resumo de 4 linhas)</div>
+        <div class="n-sub">Sempre, sem exceção</div>
+        <span class="badge bg-gold">⚠️ Obrigatório</span>
+      </div>
+    </div>
+    <div class="arr" style="align-self:flex-end;"></div>
+    <div class="node nc-gold" style="align-self:flex-end;" onclick="openDetail('planilha-controle')">
+      <div class="node-card">
+        <span class="n-icon">📊</span>
+        <div class="n-title">Abastece a Planilha de Controle Pós-Vendas</div>
+        <div class="n-sub">Complementa o ADVBox — uma linha por contato</div>
+        <span class="badge bg-gold">⚠️ Obrigatório</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote-box">
+    "O cliente da Souza Ramos não está comprando apenas um serviço jurídico. Ele está atravessando, na maioria das vezes, um momento difícil da vida dele. O seu papel como consultor de pós-vendas é ser a pessoa que torna esse momento difícil um pouco mais leve, através de clareza, cuidado e presença genuína. A técnica te dá a estrutura. A atenção verdadeira ao ser humano do outro lado é o que faz a diferença ser sentida." <br><br>
+    <strong>Você é a memória viva do relacionamento, o tradutor entre dois mundos, e o termômetro humano do escritório.</strong>
+  </div>
+</div>
+
+<!-- Fontes de detalhe (ocultas) — única fonte de verdade dos cards. Editar aqui (via modal) também atualiza a versão completa em texto ao salvar. -->
+<div id="detailSources" hidden="">
+
+<div class="detail-src" id="src-cerne" data-title="Guardião da Experiência do Cliente">
+  <p>O consultor de pós-vendas <strong>não atende mensagens</strong> e <strong>não repassa informações</strong> entre cliente e advogado — essas são tarefas, não a função. A função, no cerne, é ser o <strong>guardião da experiência do cliente</strong> durante todo o tempo em que o processo está em andamento: garantir que, independente da duração ou complexidade da tramitação, o cliente nunca se sinta sozinho, perdido ou esquecido.</p>
+  <h4>3 responsabilidades centrais</h4>
+  <ul>
+    <li><strong>Memória viva do relacionamento:</strong> o cliente nunca precisa reexplicar a situação do zero.</li>
+    <li><strong>Tradutor entre dois mundos:</strong> o mundo técnico/formal do direito e o mundo cotidiano/emocional do cliente.</li>
+    <li><strong>Termômetro humano do escritório:</strong> percebe ansiedade ou insatisfação antes que vire reclamação ou avaliação negativa.</li>
+  </ul>
+</div>
+
+<div class="detail-src" id="src-perfil" data-title="Atendente vs. Consultor">
+  <p>Um <strong>atendente</strong> espera a pergunta, responde a pergunta, encerra. Um <strong>consultor</strong> escuta a pergunta, mas presta atenção no que está por trás dela — o medo, a pressa, a expectativa não dita — e responde considerando isso tudo.</p>
+  <p>Quando um cliente pergunta "como está meu processo?", raramente essa é a pergunta completa. Pode haver: "vocês me esqueceram?", "vou conseguir pagar minhas contas?", "fiz a escolha certa de escritório?".</p>
+  <h4>As 3 competências centrais (desenvolvidas neste mapa)</h4>
+  <ul>
+    <li><strong>Leitura nas entrelinhas</strong> — identificar a emoção/necessidade real por trás da pergunta formal (Fase 2).</li>
+    <li><strong>Tradução</strong> — devolver a resposta técnica do advogado em linguagem simples, sem perder precisão (Fase 3).</li>
+    <li><strong>Regulação emocional</strong> — manter calma e clareza mesmo com o cliente nervoso, sem se contaminar (Fase 5).</li>
+  </ul>
+</div>
+
+<div class="detail-src" id="src-pergunta-por-tras" data-title="A pergunta por trás da pergunta">
+  <p>Antes de responder, pergunte-se: <strong>"o que essa pessoa realmente precisa ouvir agora?"</strong></p>
+  <table class="mini-table">
+    <tbody><tr><th>O cliente pergunta</th><th>A pergunta real</th><th>Resposta sugerida</th></tr>
+    <tr><td>"Como está meu processo?"</td><td>"Vocês não me esqueceram?"</td><td>"Que bom que você perguntou — seu processo está sendo acompanhado de perto. Deixa eu te passar a atualização mais recente."</td></tr>
+    <tr><td>"Quanto tempo ainda vai demorar?"</td><td>"Eu vou aguentar até lá?"</td><td>"Entendo que esse tempo pesa. A estimativa é de [prazo], mas assim que houver movimentação eu te aviso na hora."</td></tr>
+    <tr><td>"Isso é normal?"</td><td>"Fiz a escolha certa de escritório?"</td><td>"Sim, totalmente dentro do esperado. Posso te explicar rapidinho por que essa etapa funciona assim."</td></tr>
+    <tr><td>"Vocês podem me ligar quando souberem de algo?"</td><td>"Não confio que vão me avisar sem eu cobrar"</td><td>"Com certeza — já vou anotar aqui para garantir que isso aconteça sem você precisar lembrar."</td></tr>
+    <tr><td>"Por que está demorando tanto?"</td><td>"Estou perdendo a paciência"</td><td>"Entendo sua frustração, é justo. Deixa eu te explicar exatamente em que fase estamos."</td></tr>
+  </tbody></table>
+</div>
+
+<div class="detail-src" id="src-leitura-tom" data-title="Leitura de tom em mensagens de texto">
+  <p>Sem tom de voz nem expressão facial, use estes sinais textuais como pista de estado emocional:</p>
+  <ul>
+    <li><strong>Mensagens curtas e secas</strong> ("Ok.", "Entendi.") após explicação longa → possível insatisfação não verbalizada</li>
+    <li><strong>Excesso de exclamações ou maiúsculas</strong> → urgência ou irritação</li>
+    <li><strong>Mensagens muito longas e detalhadas</strong> → ansiedade, necessidade de ser ouvido</li>
+    <li><strong>Perguntas repetidas em dias diferentes</strong> → falta de confiança na resposta anterior</li>
+    <li><strong>Texto inteiro em CAIXA ALTA</strong> → sinal forte de tensão; é universalmente lido como "gritar"</li>
+  </ul>
+  <div class="ex-box" style="border-color:rgba(220,74,74,.4)">
+    <div class="ex-label bad">Regra crítica</div>
+    <div class="ex-text">Mesmo que o cliente escreva tudo em maiúsculas, <strong>sua resposta nunca deve seguir o mesmo padrão.</strong> Espelhar o "grito" do cliente é um erro grave — equivale a gritar de volta.</div>
+  </div>
+  <p>Ao identificar qualquer sinal, nomeie com cuidado: <em>"Percebi que você tem perguntado bastante sobre esse ponto — quer que eu te explique de um outro jeito?"</em></p>
+</div>
+
+<div class="detail-src" id="src-pausa-sondagem" data-title="Pausa de 3 segundos + pergunta de sondagem">
+  <h4>Pausa de 3 segundos</h4>
+  <p>Antes de responder qualquer mensagem, especialmente por escrito, conte até 3 antes de digitar. Esse intervalo evita resposta automática e dá espaço para processar o que realmente está sendo perguntado.</p>
+  <h4>Pergunta de sondagem</h4>
+  <p>Use no onboarding e sempre que possível:</p>
+  <div class="ex-box"><div class="ex-text">"Além do andamento do processo, tem algo nessa situação que está te preocupando que eu deveria saber?"</div></div>
+  <p>Essa pergunta abre espaço para o cliente trazer a camada emocional, não só processual — e muda como você conduz o atendimento dali em diante.</p>
+</div>
+
+<div class="detail-src" id="src-segunda-opiniao" data-title="Buscar uma segunda percepção">
+  <p>Às vezes você não tem certeza: é só uma pergunta de rotina, ou há tensão escondida que você não está enxergando? Essa dúvida é normal — é sinal de que você está prestando atenção, não de despreparo.</p>
+  <p><strong>Nesses casos, peça a opinião de um supervisor ou advogado antes de responder.</strong> Mostre a mensagem como chegou: "como você leu essa mensagem? Acha que tem algo a mais por trás disso?"</p>
+  <p>Por quê: uma segunda pessoa, sem o desgaste emocional acumulado do seu dia, frequentemente enxerga nuances que passam despercebidas para quem está em contato direto e contínuo com o cliente.</p>
+</div>
+
+<div class="detail-src" id="src-metodo-3-passos" data-title="Método dos 3 passos para traduzir">
+  <ol>
+    <li><strong>Entenda antes de traduzir.</strong> Se não entendeu completamente o que o advogado quis dizer, pergunte antes de repassar. Nunca traduza algo que você mesmo não compreendeu.</li>
+    <li><strong>Separe o fato da interpretação.</strong> Identifique o que é fato concreto (data, decisão, documento) e o que é interpretação/estratégia (previsão, recomendação). Comunique os dois sem misturar.</li>
+    <li><strong>Reconstrua em linguagem cotidiana.</strong> Reescreva como se explicasse para um familiar sem conhecimento jurídico.</li>
+  </ol>
+  <p>Em caso de dúvida sobre o tom da tradução, peça uma segunda leitura (Fase 2). Depois de enviar, sempre registre o Andamento no ADVBox.</p>
+</div>
+
+<div class="detail-src" id="src-exemplos-traducao" data-title="5 exemplos completos de tradução">
+  <div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)"><span>1. Recurso após indeferimento de liminar</span><span>+</span></div>
+    <div class="acc-body">
+      <div class="ex-box"><div class="ex-label bad">Tradução ruim</div><div class="ex-text">"Doutor Fábio Ramos falou que a liminar foi indeferida mas vamos agravar e o mérito ainda não foi julgado."</div></div>
+      <div class="ex-box"><div class="ex-label good">Tradução boa</div><div class="ex-text">"O pedido urgente não foi aceito nessa primeira análise — mas isso não significa que perdemos o caso. Ainda vamos discutir o pedido principal, e o Doutor Fábio Ramos já está preparando um recurso contra essa decisão de urgência."</div></div>
+    </div></div>
+  <div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)"><span>2. Audiência redesignada</span><span>+</span></div>
+    <div class="acc-body">
+      <div class="ex-box"><div class="ex-label bad">Tradução ruim</div><div class="ex-text">"A audiência foi redesignada porque o perito pediu mais prazo para o laudo, nova data ainda não saiu."</div></div>
+      <div class="ex-box"><div class="ex-label good">Tradução boa</div><div class="ex-text">"A audiência vai ser remarcada porque o profissional responsável pela avaliação técnica pediu mais tempo — isso é bem comum e não tem relação com o andamento do seu processo. Assim que a nova data sair, eu te aviso."</div></div>
+    </div></div>
+  <div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)"><span>3. Gratuidade de justiça deferida</span><span>+</span></div>
+    <div class="acc-body">
+      <div class="ex-box"><div class="ex-label bad">Tradução ruim</div><div class="ex-text">"Foi deferida a gratuidade, não vai precisar recolher custas nessa fase."</div></div>
+      <div class="ex-box"><div class="ex-label good">Tradução boa</div><div class="ex-text">"Boa notícia: o juiz aceitou nosso pedido para que você não precise pagar as custas do processo nesta fase. Um alívio a menos para se preocupar agora."</div></div>
+    </div></div>
+  <div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)"><span>4. Improcedência parcial</span><span>+</span></div>
+    <div class="acc-body">
+      <div class="ex-box"><div class="ex-label bad">Tradução ruim</div><div class="ex-text">"Foi parcialmente improcedente, ganhamos o pedido principal mas o dano moral não foi reconhecido."</div></div>
+      <div class="ex-box"><div class="ex-label good">Tradução boa</div><div class="ex-text">"Tem uma parte boa e uma que pode decepcionar um pouco: a parte principal do pedido foi atendida — uma vitória importante. O dano moral não foi reconhecido dessa vez. O Doutor Fábio Ramos já está avaliando se recorre desse ponto."</div></div>
+    </div></div>
+  <div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)"><span>5. Processo sobrestado (repetitivo no STJ)</span><span>+</span></div>
+    <div class="acc-body">
+      <div class="ex-box"><div class="ex-label bad">Tradução ruim</div><div class="ex-text">"O processo foi sobrestado aguardando julgamento de repetitivo no STJ, pode demorar."</div></div>
+      <div class="ex-box"><div class="ex-label good">Tradução boa</div><div class="ex-text">"Existe uma questão parecida com a sua sendo julgada por um tribunal superior, que vai servir de referência para vários casos — inclusive o seu. Por isso seu processo ficou pausado, mas pode até ser favorável para fortalecer seu caso."</div></div>
+    </div></div>
+</div>
+
+<div class="detail-src" id="src-espelhamento" data-title="Espelhamento de vocabulário">
+  <p>Use as mesmas palavras que o cliente usou para descrever a situação dele. Isso sinaliza que você realmente ouviu, não só processou a mensagem.</p>
+  <div class="ex-grid">
+    <div class="ex-box"><div class="ex-label tel">Telefone</div><div class="ex-text">Cliente: "Foi um caos na minha vida."<br>Consultor: "Realmente parece que foi um caos mesmo. Vamos organizar isso juntos."</div></div>
+    <div class="ex-box"><div class="ex-label wa">WhatsApp</div><div class="ex-text">Cliente: "Isso tá virando uma bagunça."<br>Consultor: "Entendo que esteja parecendo uma bagunça. Deixa eu organizar de um jeito mais claro."</div></div>
+  </div>
+</div>
+
+<div class="detail-src" id="src-confirmacao-resumida" data-title="Confirmação resumida">
+  <p>Depois que o cliente explicar algo mais longo, resuma em 1-2 frases antes de responder.</p>
+  <div class="ex-grid">
+    <div class="ex-box"><div class="ex-label tel">Telefone</div><div class="ex-text">"Deixa eu confirmar se entendi certinho: sua principal preocupação é o prazo, porque precisa dessa decisão antes do fim do mês. É isso?"</div></div>
+    <div class="ex-box"><div class="ex-label wa">WhatsApp</div><div class="ex-text">"Só pra confirmar: você está preocupado(a) principalmente com o prazo, certo? Porque precisa da resposta antes do fim do mês. 👍"</div></div>
+  </div>
+</div>
+
+<div class="detail-src" id="src-rapport" data-title="3 comportamentos que constroem rapport">
+  <div class="acc-item open"><div class="acc-head" onclick="toggleAcc(this)"><span>Consistência</span><span>—</span></div>
+    <div class="acc-body"><p>Use o nome do cliente, referencie detalhes do caso que você já sabe, evite respostas que parecem copiadas e coladas.</p>
+      <div class="ex-box"><div class="ex-text">"Lembrei que da última vez você comentou que estava preocupado com o prazo por causa de um compromisso no fim do mês — já trago uma novidade sobre isso."</div></div>
+    </div></div>
+  <div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)"><span>Transparência sobre o processo</span><span>+</span></div>
+    <div class="acc-body"><p>Clientes confiam mais em quem explica o "porquê", não só o "o quê".</p>
+      <div class="ex-box"><div class="ex-text">"Vai demorar um pouco mais, e quero te explicar o porquê: estamos aguardando a manifestação da outra parte, etapa que não depende de nós. Assim que acontecer, eu te aviso."</div></div>
+    </div></div>
+  <div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)"><span>Cumprimento de promessas pequenas</span><span>+</span></div>
+    <div class="acc-body"><p>Se disse que volta em 5 horas, retorne em 5 horas — mesmo que só para dizer "ainda não tenho novidade, mas estou acompanhando".</p>
+      <div class="ex-box"><div class="ex-text">"É sobre o que conversamos mais cedo — ainda não tenho a resposta final, mas eu disse que ia te atualizar e queria cumprir isso."</div></div>
+    </div></div>
+</div>
+
+<div class="detail-src" id="src-avr" data-title="AVR — Acolher, Validar, Resolver">
+  <p><strong>Princípio central:</strong> nunca espelhe a emoção do cliente. Se ele está agitado e você responde com calma genuína, você se torna o ponto de estabilidade da conversa.</p>
+  <div class="acc-item open"><div class="acc-head" onclick="toggleAcc(this)"><span>1. Acolher</span><span>—</span></div>
+    <div class="acc-body"><p>Reconheça a emoção antes de tentar resolver.</p>
+      <div class="ex-box"><div class="ex-text">"Entendo que isso é muito frustrante, principalmente depois de tanto tempo aguardando."</div></div>
+    </div></div>
+  <div class="acc-item open"><div class="acc-head" onclick="toggleAcc(this)"><span>2. Validar</span><span>+</span></div>
+    <div class="acc-body"><p>Demonstre que a preocupação é legítima, sem necessariamente concordar com a interpretação.</p>
+      <div class="ex-box"><div class="ex-text">"Faz total sentido você estar preocupado com isso, é uma situação importante para você."</div></div>
+    </div></div>
+  <div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)"><span>3. Resolver</span><span>+</span></div>
+    <div class="acc-body"><p>Só depois de acolher e validar, parta para a solução concreta.</p>
+      <div class="ex-box"><div class="ex-text">"Vou verificar agora mesmo com o Doutor Fábio Ramos e te retorno em até [X] horas com uma posição clara."</div></div>
+    </div></div>
+  <p style="margin-top:10px;"><strong>Erro mais comum:</strong> pular direto para "Resolver" sem Acolher e Validar — faz o cliente sentir tratamento frio e burocrático.</p>
+</div>
+
+<div class="detail-src" id="src-nunca-fazer" data-title="O que nunca fazer com cliente nervoso">
+  <ul>
+    <li>Nunca diga <strong>"se acalme"</strong> ou <strong>"fica tranquilo"</strong> — soam como se a emoção do cliente fosse o problema.</li>
+    <li>Nunca justifique a demora com processos internos genéricos ("estamos com muita demanda") — transfere o problema do escritório para o cliente carregar.</li>
+    <li>Nunca prometa prazo que você não tem certeza de cumprir só para acalmar — resolve a tensão por 5 minutos e cria uma maior depois.</li>
+  </ul>
+</div>
+
+<div class="detail-src" id="src-scripts-prontos" data-title="5 scripts prontos por situação">
+  <div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)"><span>Cliente cobrando resposta repetidamente</span><span>+</span></div>
+    <div class="acc-body"><div class="ex-text">"Eu entendo sua ansiedade, e quero ser transparente: ainda não tenho a resposta final, mas não esqueci do seu caso. Já encaminhei novamente com prioridade e devo ter retorno até [horário]."</div></div></div>
+  <div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)"><span>Cliente irritado / caixa alta</span><span>+</span></div>
+    <div class="acc-body"><div class="ex-text">"Eu percebo que você está muito incomodado com isso, e com razão — vamos resolver juntos. Me conta com calma o que está acontecendo."</div></div></div>
+  <div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)"><span>Cliente ameaça cancelar/trocar de escritório</span><span>+</span></div>
+    <div class="acc-body"><div class="ex-text">"Entendo completamente, e lamento que tenha chegado nesse ponto. Gostaria de entender melhor o que aconteceu — e vou levar isso diretamente para o Doutor Fábio Ramos."<br><em>Nunca prometa algo fora da sua alçada — escale para a liderança imediatamente, sem deixar o cliente sem resposta.</em></div></div></div>
+  <div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)"><span>Urgência real (audiência/prazo)</span><span>+</span></div>
+    <div class="acc-body"><div class="ex-text">"Entendi a urgência, e isso é prioridade. Vou tratar com o Doutor Fábio Ramos agora mesmo, sem aguardar a fila normal, e te retorno em no máximo [prazo reduzido]."</div></div></div>
+  <div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)"><span>Cliente educado mas ansioso (sinais sutis)</span><span>+</span></div>
+    <div class="acc-body"><div class="ex-text">"Percebi que você tem perguntado com frequência sobre esse assunto — isso não é incômodo nenhum. Vamos conversar sobre o que está te deixando mais inseguro?"</div></div></div>
+</div>
+
+<div class="detail-src" id="src-termometro" data-title="Termômetro de urgência">
+  <table class="mini-table">
+    <tbody><tr><th>Nível</th><th>Sinal</th><th>Ação</th></tr>
+    <tr><td>🟢 Tranquilo</td><td>Tom neutro, pergunta pontual</td><td>Resposta no SLA padrão</td></tr>
+    <tr><td>🟡 Ansioso</td><td>Pergunta repetida, mensagens mais longas</td><td>Aplicar AVR, priorizar resposta</td></tr>
+    <tr><td>🟠 Nervoso</td><td>Tom alterado, cobranças diretas</td><td>AVR + escalar prazo + considerar ligação</td></tr>
+    <tr><td>🔴 Crítico</td><td>Ameaça de cancelamento, urgência processual real</td><td>Resposta imediata + escalar para liderança</td></tr>
+  </tbody></table>
+</div>
+
+<div class="detail-src" id="src-responder-vs-consultar" data-title="Responder vs. Consultar">
+  <p><strong>Responder</strong> é dar a informação pedida. <strong>Consultar</strong> é dar a informação pedida e, além disso, antecipar o que o cliente provavelmente vai precisar saber em seguida.</p>
+  <div class="ex-box"><div class="ex-label bad">Resposta simples</div><div class="ex-text">"Seu processo está aguardando a audiência."</div></div>
+  <div class="ex-box"><div class="ex-label good">Resposta consultiva</div><div class="ex-text">"Seu processo está aguardando a audiência, que normalmente é marcada com [X] semanas de antecedência. Assim que tivermos a data, já vou te explicar como funciona o dia, o que levar e como se preparar."</div></div>
+</div>
+
+<div class="detail-src" id="src-e-tambem" data-title="Técnica do &quot;e também&quot;">
+  <p>Depois de responder a pergunta direta, pergunte-se: "existe algo relacionado que esse cliente provavelmente quer saber, mesmo sem ter perguntado?" Se sim, adicione com "e também aproveito para te contar que...".</p>
+</div>
+
+<div class="detail-src" id="src-reclamacoes" data-title="Reclamações disfarçadas de dúvidas">
+  <p>Fique atento a perguntas como "vocês ainda estão cuidando do meu caso?" ou "tem alguém olhando isso?" — costumam ser sinais de confiança já abalada, mesmo de forma educada.</p>
+  <p>Trate como oportunidade de reconstruir confiança, não apenas como pergunta de status:</p>
+  <div class="ex-box"><div class="ex-text">"Sim, com certeza estamos acompanhando de perto — entendo que pode ter parecido silêncio da nossa parte, peço desculpas se isso te deixou inseguro. Deixa eu te atualizar com detalhes de tudo que já aconteceu."</div></div>
+</div>
+
+<div class="detail-src" id="src-checklist-mental" data-title="Checklist mental antes de qualquer resposta">
+  <ol>
+    <li>Eu entendi o que o cliente realmente está perguntando, não só a frase literal?</li>
+    <li>Se a resposta envolve algo técnico do advogado, eu traduzi para linguagem simples?</li>
+    <li>Essa resposta acolhe a emoção do cliente, se houver alguma sinalizada?</li>
+    <li>Eu informei um prazo claro, se for o caso?</li>
+    <li>Existe algo a mais que esse cliente provavelmente quer saber, mesmo sem ter perguntado?</li>
+    <li>Se eu tiver qualquer dúvida sobre o tom, já pedi uma segunda opinião antes de responder?</li>
+  </ol>
+</div>
+
+<div class="detail-src" id="src-banco-frases" data-title="Banco de frases de abertura">
+  <h4>Situações de rotina</h4>
+  <table class="mini-table">
+    <tbody><tr><th>Situação</th><th>Frase de abertura</th></tr>
+    <tr><td>Atualização de rotina</td><td>"Oi [nome], tudo bem? Vou te passar a atualização mais recente do seu processo."</td></tr>
+    <tr><td>Cliente visivelmente preocupado</td><td>"Antes de tudo, quero te dizer que entendo sua preocupação e estou aqui para te ajudar a esclarecer."</td></tr>
+    <tr><td>Precisa consultar o advogado antes</td><td>"Essa é uma ótima pergunta. Vou confirmar com o Doutor Fábio Ramos. Te retorno em até [X horas]."</td></tr>
+    <tr><td>Dando uma má notícia</td><td>"Tenho uma atualização sobre o seu processo, e quero te explicar com calma o que isso significa."</td></tr>
+    <tr><td>Encerrando o atendimento</td><td>"Ficou tudo claro? Fico à disposição se surgir qualquer outra dúvida."</td></tr>
+  </tbody></table>
+  <h4>Momentos de estresse elevado</h4>
+  <table class="mini-table">
+    <tbody><tr><th>Situação</th><th>Frase de abertura</th></tr>
+    <tr><td>Pânico por prazo apertado</td><td>"Recebi sua mensagem e entendi a urgência. Vou tratar isso com prioridade máxima agora mesmo."</td></tr>
+    <tr><td>Cliente abalado/chorando (ligação)</td><td>"Eu sinto muito que você esteja passando por isso. Vamos com calma, no seu tempo."</td></tr>
+    <tr><td>Cliente desconfiado</td><td>"Entendo sua desconfiança, quero ser o mais transparente possível. Deixa eu te mostrar o que está registrado no seu processo."</td></tr>
+    <tr><td>Cliente exausto, quer "desistir de tudo"</td><td>"Entendo o seu cansaço com essa espera. Antes de qualquer decisão, deixa eu te atualizar com tudo que já avançamos."</td></tr>
+    <tr><td>Ameaça velada de processo contra o escritório</td><td>"Entendo sua insatisfação e quero tratar com toda a seriedade. Vou registrar formalmente e levar para o Doutor Fábio Ramos."</td></tr>
+    <tr><td>Silêncio repentino após contato ativo</td><td>"Notei que faz um tempinho que não conversamos — quero saber se está tudo bem."</td></tr>
+  </tbody></table>
+</div>
+
+<div class="detail-src" id="src-regra-prazos" data-title="A regra dos prazos comunicados">
+  <p>Toda vez que precisar de tempo antes de responder, comunique um prazo específico em horas úteis — nunca deixe em aberto.</p>
+  <div class="ex-box"><div class="ex-text">"Vou verificar isso e te retorno em até [X] horas úteis."</div></div>
+  <h4>Por que funciona</h4>
+  <ul>
+    <li>O cliente para de cobrar, porque já sabe quando esperar resposta</li>
+    <li>Você ganha tempo real para consultar o advogado sem pressão</li>
+    <li>Cumprir o prazo aumenta a confiança a cada interação</li>
+    <li>Se não puder cumprir, avisar antes do vencimento fortalece ainda mais a confiança</li>
+  </ul>
+  <h4>Se o cliente contestar o prazo</h4>
+  <div class="ex-box"><div class="ex-text">"Eu entendo que esse prazo pareça longo, principalmente com a urgência que está sentindo. O motivo é que preciso de uma resposta precisa do Doutor Fábio Ramos. Mas posso sinalizar que é urgente e, assim que eu tiver qualquer posição — mesmo parcial — já te aviso antes do prazo final."</div></div>
+  <p>Se a urgência for legítima e processual, classifique como 🔴 Crítico no termômetro de urgência (Fase 5).</p>
+</div>
+
+<div class="detail-src" id="src-resumo-4-linhas" data-title="Resumo de 4 linhas (registro no ADVBox)">
+  <p>Modelo mental para todo Andamento registrado:</p>
+  <ul>
+    <li>O que o cliente perguntou/disse:</li>
+    <li>Como o cliente parecia estar (tom, urgência):</li>
+    <li>O que foi respondido ou encaminhado:</li>
+    <li>Próximo passo (se houver):</li>
+  </ul>
+  <p>Isso garante que qualquer pessoa da equipe, ao reabrir o processo depois, entenda não só o fato registrado, mas o contexto emocional da interação.</p>
+</div>
+
+<div class="detail-src" id="src-autorregulacao" data-title="Autorregulação antes de atender tensão alta">
+  <p>Atender alguém nervoso ou irritado tem custo emocional para quem atende também. Antes de responder a uma mensagem ou ligação de tensão alta, faça uma respiração consciente: <strong>inspire contando até 4, segure por 4, expire por 4.</strong></p>
+  <p>Isso ativa uma resposta fisiológica de calma que melhora sua capacidade de responder com clareza, em vez de reagir defensivamente. Não é luxo — é o que garante manter o padrão de atendimento mesmo no atendimento número 15 do dia.</p>
+</div>
+
+<div class="detail-src" id="src-planilha-controle" data-title="Planilha de Controle Pós-Vendas">
+  <p><strong>Arquivo:</strong> <code>Empresarial_Academy_Controle_Pos_Vendas_v3.xlsx</code>. É a planilha de gestão que alimenta o Dashboard de Pós-Vendas — <strong>complementar ao ADVBox, não substitui o Andamento.</strong> Toda interação com o cliente deve gerar uma linha nova na aba "Controle Pós-Vendas", logo após o contato.</p>
+  <h4>Colunas a preencher</h4>
+  <ul>
+    <li><strong>Data</strong> — data do contato.</li>
+    <li><strong>Cliente</strong> — nome completo.</li>
+    <li><strong>Canal</strong> — BotConversa, Telefone, etc.</li>
+    <li><strong>Tipo</strong> — Receptivo ou Proativo.</li>
+    <li><strong>Motivo</strong> — Alinhamento Cliente + Advogado, Alinhamento Prévio Audiência, Alinhamento Prévio Depoimento, Andamento Processual, Atualização Pró-ativa, Reclamação, entre outros.</li>
+    <li><strong>Área Jurídica</strong> — Cível, Consumidor, Criminal, Empresarial ou Família.</li>
+    <li><strong>Humor do cliente</strong> — Satisfeito, Ansioso, Preocupado, Insatisfeito ou Irritado.</li>
+    <li><strong>Observação</strong> — resumo livre do contato.</li>
+  </ul>
+  <p>Use sempre os valores padronizados da aba "Listas" do próprio arquivo — é isso que mantém o Dashboard confiável para a gestão acompanhar volume e perfil dos atendimentos.</p>
+</div>
+
+<div class="detail-src" id="src-ciclo-1" data-title="1 · Cliente entra em contato"><p>Via WhatsApp ou ligação — pode ser onboarding ativo ou atendimento receptivo.</p></div>
+<div class="detail-src" id="src-ciclo-2" data-title="2 · Pesquisar processo no ADVBox"><p>Verifique status atual, advogado responsável e último andamento antes de qualquer resposta — regra de ouro do atendimento.</p></div>
+<div class="detail-src" id="src-ciclo-3" data-title="3 · Identificar a pergunta real"><p>Use a técnica da "pergunta por trás da pergunta" (Fase 2) antes de responder ao que foi dito literalmente.</p></div>
+<div class="detail-src" id="src-ciclo-4" data-title="4 · Avaliar o termômetro de urgência"><p>Classifique 🟢🟡🟠🔴 (Fase 5). Tranquilo/ansioso seguem o fluxo normal; nervoso/crítico exigem aplicar AVR antes de continuar.</p></div>
+<div class="detail-src" id="src-ciclo-diamante" data-title="A demanda exige conhecimento jurídico específico?"><p>Se não exige, responda diretamente informando prazo se necessário. Se exige, crie uma tarefa para o advogado no ADVBox, sempre informando ao cliente o prazo em horas úteis.</p></div>
+<div class="detail-src" id="src-ciclo-direto" data-title="Responder diretamente ao cliente"><p>Quando a demanda não exige conhecimento jurídico específico, responda com a informação disponível, informando prazo se necessário, e siga para o registro do Andamento.</p></div>
+<div class="detail-src" id="src-ciclo-tarefa" data-title="Criar tarefa para o advogado"><p>Informe ao cliente o prazo em horas úteis (regra dos prazos comunicados, Fase 7). O advogado responde na tarefa do ADVBox.</p></div>
+<div class="detail-src" id="src-ciclo-traduz" data-title="Traduzir a resposta do advogado"><p>Use o método dos 3 passos (Fase 3): entenda antes de traduzir, separe fato de interpretação, reescreva em linguagem cotidiana. Em caso de dúvida sobre o tom, peça uma segunda opinião (Fase 2).</p></div>
+<div class="detail-src" id="src-ciclo-registro" data-title="Registrar o Andamento no ADVBox">
+  <p>Use o resumo de 4 linhas (Fase 7). Depois, verifique: ainda há alguma pendência em aberto com este cliente?</p>
+  <ul>
+    <li><strong>Sim</strong> → crie tarefa com responsável e prazo definidos.</li>
+    <li><strong>Não</strong> → encerre o atendimento — dúvidas sanadas.</li>
+  </ul>
+  <p>Quando este ciclo se torna hábito: o cliente sente que está sendo acompanhado de perto, o escritório ganha um histórico confiável, e você ganha previsibilidade no seu próprio trabalho.</p>
+</div>
+
+</div>
+<!-- MODAL DE DETALHE -->
+<div class="modal-ov" id="detailModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeDetail()">✕</button>
+    <h3 id="modalTitle">Atendente vs. Consultor</h3>
+    <div class="modal-body" id="modalBody">
+  <p>Um <strong>atendente</strong> espera a pergunta, responde a pergunta, encerra. Um <strong>consultor</strong> escuta a pergunta, mas presta atenção no que está por trás dela — o medo, a pressa, a expectativa não dita — e responde considerando isso tudo.</p>
+  <p>Quando um cliente pergunta "como está meu processo?", raramente essa é a pergunta completa. Pode haver: "vocês me esqueceram?", "vou conseguir pagar minhas contas?", "fiz a escolha certa de escritório?".</p>
+  <h4>As 3 competências centrais (desenvolvidas neste mapa)</h4>
+  <ul>
+    <li><strong>Leitura nas entrelinhas</strong> — identificar a emoção/necessidade real por trás da pergunta formal (Fase 2).</li>
+    <li><strong>Tradução</strong> — devolver a resposta técnica do advogado em linguagem simples, sem perder precisão (Fase 3).</li>
+    <li><strong>Regulação emocional</strong> — manter calma e clareza mesmo com o cliente nervoso, sem se contaminar (Fase 5).</li>
+  </ul>
+</div>
+  </div>
+</div>
+
+<!-- MODAL DO GLOSSÁRIO -->
+<div class="modal-ov" id="glossModal">
+  <div class="modal" style="max-width:680px;">
+    <button class="modal-close" onclick="closeGloss()">✕</button>
+    <h3>Glossário de tradução — 50 termos</h3>
+    <input type="text" class="search-box" id="glossSearch" placeholder="Buscar termo (ex: liminar, sentença, recurso)..." oninput="filterGloss(this.value)">
+    <div id="glossAddRow" style="display: none; margin-bottom: 12px;">
+      <button class="btn btn-outline" onclick="addGlossRow()">+ Adicionar termo</button>
+    </div>
+    <table class="gloss-table" id="glossTable">
+      <tbody>
+        <tr><td class="g-term">"Aguardando manifestação da parte contrária"</td><td class="g-tr">Agora é a vez da outra parte se posicionar no processo. Esse prazo não depende de nós.</td></tr>
+        <tr><td class="g-term">"O processo está em fase de instrução"</td><td class="g-tr">Estamos na etapa de reunir provas e informações para fortalecer seu caso.</td></tr>
+        <tr><td class="g-term">"Houve uma decisão interlocutória"</td><td class="g-tr">O juiz tomou uma decisão sobre um ponto específico do processo — ainda não é o resultado final.</td></tr>
+        <tr><td class="g-term">"Estamos protocolando a petição"</td><td class="g-tr">Estamos enviando formalmente nosso pedido para o juiz analisar.</td></tr>
+        <tr><td class="g-term">"O prazo é processual, não corrido"</td><td class="g-tr">Esse prazo só conta os dias em que o fórum está funcionando, pode demorar um pouco mais.</td></tr>
+        <tr><td class="g-term">"Vamos interpor recurso"</td><td class="g-tr">Não concordamos com essa decisão e vamos pedir para um juiz de instância superior reavaliar.</td></tr>
+        <tr><td class="g-term">"O processo transitou em julgado"</td><td class="g-tr">A decisão se tornou definitiva — não cabe mais recurso sobre esse ponto.</td></tr>
+        <tr><td class="g-term">"Foi deferida a liminar"</td><td class="g-tr">O juiz aceitou nosso pedido urgente, de forma provisória, antes de julgar o caso por completo.</td></tr>
+        <tr><td class="g-term">"Foi indeferido o pedido"</td><td class="g-tr">O juiz não aceitou esse pedido específico neste momento.</td></tr>
+        <tr><td class="g-term">"Houve a citação da parte ré"</td><td class="g-tr">A outra parte foi oficialmente informada do processo e agora precisa se manifestar.</td></tr>
+        <tr><td class="g-term">"O réu apresentou contestação"</td><td class="g-tr">A outra parte respondeu ao processo, apresentando os argumentos de defesa dela.</td></tr>
+        <tr><td class="g-term">"Estamos aguardando a sentença"</td><td class="g-tr">O juiz já analisou tudo e agora vai decidir o resultado do processo.</td></tr>
+        <tr><td class="g-term">"A audiência foi designada"</td><td class="g-tr">Já temos uma data marcada para a audiência.</td></tr>
+        <tr><td class="g-term">"A audiência foi redesignada"</td><td class="g-tr">A data da audiência mudou — a nova data será informada assim que confirmada.</td></tr>
+        <tr><td class="g-term">"Trata-se de uma tutela de urgência"</td><td class="g-tr">É um pedido para que o juiz tome uma decisão rápida, antes mesmo do processo terminar.</td></tr>
+        <tr><td class="g-term">"Foi expedido o mandado"</td><td class="g-tr">O juiz autorizou e enviou a ordem oficial para que algo seja executado.</td></tr>
+        <tr><td class="g-term">"O processo foi distribuído para a Vara X"</td><td class="g-tr">Seu processo foi oficialmente direcionado para o juízo responsável por julgá-lo.</td></tr>
+        <tr><td class="g-term">"Estamos no prazo de embargos"</td><td class="g-tr">Ainda há um prazo para questionarmos algum ponto da decisão antes dela seguir adiante.</td></tr>
+        <tr><td class="g-term">"Houve a juntada do documento"</td><td class="g-tr">O documento que enviamos já foi oficialmente anexado ao processo.</td></tr>
+        <tr><td class="g-term">"O cumprimento de sentença foi iniciado"</td><td class="g-tr">Estamos na fase de fazer valer, na prática, a decisão que já foi tomada pelo juiz.</td></tr>
+        <tr><td class="g-term">"Foi determinada a penhora"</td><td class="g-tr">O juiz autorizou que um bem ou valor seja reservado para garantir o cumprimento da decisão.</td></tr>
+        <tr><td class="g-term">"O processo está sobrestado"</td><td class="g-tr">O processo está temporariamente parado, aguardando alguma condição específica.</td></tr>
+        <tr><td class="g-term">"Foi reconhecida a revelia"</td><td class="g-tr">A outra parte não respondeu dentro do prazo, o que pode trazer vantagens processuais.</td></tr>
+        <tr><td class="g-term">"Trata-se de matéria de ordem pública"</td><td class="g-tr">É um ponto que o juiz pode analisar a qualquer momento, independente do que as partes pediram.</td></tr>
+        <tr><td class="g-term">"O processo foi extinto sem julgamento de mérito"</td><td class="g-tr">O processo foi encerrado por uma questão formal, sem avaliação do conteúdo do pedido.</td></tr>
+        <tr><td class="g-term">"Houve a preclusão do direito de recorrer"</td><td class="g-tr">O prazo para recorrer sobre esse ponto já passou.</td></tr>
+        <tr><td class="g-term">"Estamos pleiteando dano moral"</td><td class="g-tr">Estamos pedindo uma compensação financeira pelo sofrimento ou abalo causado.</td></tr>
+        <tr><td class="g-term">"O laudo pericial foi juntado"</td><td class="g-tr">O resultado da avaliação técnica de um especialista já está anexado ao processo.</td></tr>
+        <tr><td class="g-term">"Foi determinada a produção de provas"</td><td class="g-tr">O juiz autorizou que reunamos mais evidências para fortalecer o caso.</td></tr>
+        <tr><td class="g-term">"O processo segue o rito ordinário"</td><td class="g-tr">Esse é o caminho processual padrão, sem etapas simplificadas — geralmente mais longo.</td></tr>
+        <tr><td class="g-term">"O processo segue o rito sumaríssimo"</td><td class="g-tr">Esse é um caminho processual mais rápido, com menos etapas formais.</td></tr>
+        <tr><td class="g-term">"Houve a habilitação de novo procurador"</td><td class="g-tr">Um novo advogado foi formalmente registrado para representar a parte.</td></tr>
+        <tr><td class="g-term">"O acordo foi homologado"</td><td class="g-tr">O juiz validou oficialmente o acordo, tornando-o uma decisão judicial.</td></tr>
+        <tr><td class="g-term">"Trata-se de uma ação cautelar"</td><td class="g-tr">É uma medida para proteger um direito ou bem enquanto o processo principal está em andamento.</td></tr>
+        <tr><td class="g-term">"O processo está em grau de recurso"</td><td class="g-tr">O caso está sendo reanalisado por um tribunal superior.</td></tr>
+        <tr><td class="g-term">"Foi determinada a intimação pessoal"</td><td class="g-tr">Você precisa ser comunicado diretamente sobre essa decisão, não apenas pelo advogado.</td></tr>
+        <tr><td class="g-term">"O ônus da prova é da parte autora"</td><td class="g-tr">Cabe a nós, que movemos a ação, apresentar as provas que sustentam o pedido.</td></tr>
+        <tr><td class="g-term">"Houve a fungibilidade do pedido"</td><td class="g-tr">O juiz aceitou analisar o pedido mesmo sem a formulação processual ideal.</td></tr>
+        <tr><td class="g-term">"A decisão é terminativa"</td><td class="g-tr">Essa decisão encerra essa fase específica do processo, sem analisar o mérito.</td></tr>
+        <tr><td class="g-term">"Estamos aguardando o trânsito em julgado"</td><td class="g-tr">Estamos esperando o prazo de recursos se esgotar para a decisão se tornar definitiva.</td></tr>
+        <tr><td class="g-term">"Foi determinada a suspensão do processo"</td><td class="g-tr">O processo está pausado oficialmente por decisão do juiz.</td></tr>
+        <tr><td class="g-term">"O processo corre em segredo de justiça"</td><td class="g-tr">Esse processo tem acesso restrito — só as partes e seus advogados podem consultá-lo.</td></tr>
+        <tr><td class="g-term">"Houve a improcedência do pedido"</td><td class="g-tr">O juiz não concedeu o que foi solicitado.</td></tr>
+        <tr><td class="g-term">"Houve a procedência do pedido"</td><td class="g-tr">O juiz concedeu o que foi solicitado.</td></tr>
+        <tr><td class="g-term">"Trata-se de uma ação consignatória"</td><td class="g-tr">É uma ação para formalizar judicialmente o pagamento de um valor em caso de dúvida ou impedimento.</td></tr>
+        <tr><td class="g-term">"O processo está com pedido de gratuidade de justiça"</td><td class="g-tr">Estamos pedindo que você seja dispensado de pagar as custas, por não ter condições financeiras.</td></tr>
+        <tr><td class="g-term">"Foi determinada a perícia técnica"</td><td class="g-tr">Um especialista vai analisar tecnicamente um ponto do processo para ajudar o juiz a decidir.</td></tr>
+        <tr><td class="g-term">"O processo aguarda distribuição"</td><td class="g-tr">O processo já foi protocolado e está aguardando ser direcionado a um juiz.</td></tr>
+        <tr><td class="g-term">"Trata-se de litispendência"</td><td class="g-tr">Já existe outro processo idêntico em andamento, que pode afetar este por duplicidade.</td></tr>
+        <tr><td class="g-term">"Foi reconhecida a prescrição"</td><td class="g-tr">O prazo legal para reivindicar esse direito específico já se esgotou.</td></tr>
+      </tbody>
+    </table>
+    <div class="gloss-empty" id="glossEmpty" style="display:none;">Nenhum termo encontrado.</div>
+  </div>
+</div>
+<script>
+let editMode = false;
+let currentDetailKey = null;
+let saveTimer = null;
+
+function toggleAcc(el){ el.parentElement.classList.toggle('open'); }
+
+/* ---------- Modal de detalhe (lê/escreve nas fontes ocultas #detailSources) ---------- */
+function openDetail(key){
+  if(key === 'glossario'){ openGlossario(); return; }
+  const src = document.getElementById('src-' + key);
+  if(!src) return;
+  currentDetailKey = key;
+  document.getElementById('modalTitle').textContent = src.dataset.title;
+  document.getElementById('modalBody').innerHTML = src.innerHTML;
+  document.getElementById('detailModal').classList.add('open');
+  applyEditableState();
+}
+function syncOpenModalToSource(){
+  if(!currentDetailKey) return;
+  const src = document.getElementById('src-' + currentDetailKey);
+  if(src){
+    src.dataset.title = document.getElementById('modalTitle').textContent;
+    src.innerHTML = document.getElementById('modalBody').innerHTML;
+  }
+}
+function closeDetail(){
+  const hadKey = !!currentDetailKey;
+  if(editMode) syncOpenModalToSource();
+  document.getElementById('detailModal').classList.remove('open');
+  currentDetailKey = null;
+  if(editMode && hadKey) scheduleAutosave();
+}
+document.getElementById('detailModal').addEventListener('click', e => { if (e.target === document.getElementById('detailModal')) closeDetail(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape'){ closeDetail(); closeGloss(); } });
+
+/* ---------- Glossário (tabela real no DOM — editável e salvável) ---------- */
+function openGlossario(){
+  document.getElementById('glossModal').classList.add('open');
+  document.getElementById('glossSearch').value = '';
+  filterGloss('');
+  applyEditableState();
+  setTimeout(() => document.getElementById('glossSearch').focus(), 50);
+}
+function closeGloss(){
+  document.getElementById('glossModal').classList.remove('open');
+  if(editMode) scheduleAutosave();
+}
+function filterGloss(q){
+  const f = q.trim().toLowerCase();
+  let visible = 0;
+  document.querySelectorAll('#glossTable tr').forEach(tr => {
+    const show = !f || tr.textContent.toLowerCase().includes(f);
+    tr.style.display = show ? '' : 'none';
+    if(show) visible++;
+  });
+  document.getElementById('glossEmpty').style.display = visible ? 'none' : 'block';
+}
+function addGlossRow(){
+  const tbody = document.querySelector('#glossTable tbody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = '<td class="g-term" contenteditable="true">"Novo termo"</td><td class="g-tr" contenteditable="true">Tradução do termo...</td>';
+  tbody.appendChild(tr);
+  tr.querySelector('.g-term').focus();
+  scheduleAutosave();
+}
+
+/* ---------- Modo de edição ---------- */
+function applyEditableState(){
+  const sel = '.n-title, .n-sub, .ph-name, .ph-resp, .hd-title, .hd-sub, #modalTitle, #modalBody, .g-term, .g-tr';
+  document.querySelectorAll(sel).forEach(el => {
+    if(editMode) el.setAttribute('contenteditable', 'true');
+    else el.removeAttribute('contenteditable');
+  });
+  document.getElementById('glossAddRow').style.display = editMode ? 'block' : 'none';
+  document.body.classList.toggle('edit-mode', editMode);
+}
+function toggleEditMode(){
+  if(location.protocol === 'file:'){
+    alert('Para editar e salvar automaticamente, abra esta página pelo servidor local (ex: http://localhost:8000/Mapa_Competencias_Consultor.html) — não direto pelo arquivo no Explorer.');
+    return;
+  }
+  editMode = !editMode;
+  applyEditableState();
+  document.getElementById('editToggleBtn').textContent = editMode ? '🔒 Sair da edição' : '✏️ Ativar edição';
+  document.getElementById('saveNowBtn').style.display = editMode ? 'inline-flex' : 'none';
+  setSaveStatus(editMode ? 'Edição ativa — alterações salvas automaticamente' : '');
+}
+document.addEventListener('input', e => { if(editMode && e.target.isContentEditable) scheduleAutosave(); });
+
+function scheduleAutosave(){
+  if(!editMode) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveNow, 1200);
+}
+function setSaveStatus(msg){ document.getElementById('saveStatus').textContent = msg; }
+
+/* ---------- Serialização para salvar este arquivo ---------- */
+function buildSaveHTML(){
+  const clone = document.documentElement.cloneNode(true);
+  clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+  clone.classList.remove('edit-mode');
+  clone.querySelectorAll('.modal-ov.open').forEach(el => el.classList.remove('open'));
+  const btn = clone.querySelector('#editToggleBtn'); if(btn) btn.textContent = '✏️ Ativar edição';
+  const saveBtn = clone.querySelector('#saveNowBtn'); if(saveBtn) saveBtn.style.display = 'none';
+  const status = clone.querySelector('#saveStatus'); if(status) status.textContent = '';
+  const glossAdd = clone.querySelector('#glossAddRow'); if(glossAdd) glossAdd.style.display = 'none';
+  clone.querySelectorAll('#glossTable tr').forEach(tr => tr.removeAttribute('style'));
+  const glossEmpty = clone.querySelector('#glossEmpty'); if(glossEmpty) glossEmpty.style.display = 'none';
+  const search = clone.querySelector('#glossSearch'); if(search) search.value = '';
+  return '<!DOCTYPE html>\n' + clone.outerHTML;
+}
+
+/* ---------- Geração da "versão completa em texto" a partir dos mesmos cards ---------- */
+function buildFullTextHTML(){
+  const phases = Array.from(document.querySelectorAll('.phase'));
+  let sections = '';
+  phases.forEach(phase => {
+    const num = phase.querySelector('.ph-num').textContent.trim();
+    const name = phase.querySelector('.ph-name').textContent.trim();
+    const resp = phase.querySelector('.ph-resp').textContent.trim();
+    let blocks = '';
+    phase.querySelectorAll('[onclick^="openDetail"]').forEach(it => {
+      const m = it.getAttribute('onclick').match(/openDetail\('([^']+)'\)/);
+      if(!m) return;
+      const key = m[1];
+      if(key === 'glossario'){
+        let rows = '';
+        document.querySelectorAll('#glossTable tr').forEach(tr => {
+          const term = tr.querySelector('.g-term') ? tr.querySelector('.g-term').textContent.trim() : '';
+          const tr2 = tr.querySelector('.g-tr') ? tr.querySelector('.g-tr').textContent.trim() : '';
+          rows += `<tr><td class="g-term">${term}</td><td class="g-tr">${tr2}</td></tr>`;
+        });
+        blocks += `<h2>Glossário de tradução — termos jurídicos</h2><table class="gloss-table"><tbody>${rows}</tbody></table>`;
+      } else {
+        const src = document.getElementById('src-' + key);
+        if(!src) return;
+        blocks += `<h2>${src.dataset.title}</h2>${src.innerHTML}`;
+      }
+    });
+    sections += `<section><h1>Fase ${num} — ${name}</h1><p class="ph-resp-full">${resp}</p>${blocks}</section><hr class="sep">`;
+  });
+  const quoteBox = document.querySelector('.quote-box');
+  const quote = quoteBox ? quoteBox.innerHTML : '';
+
+  return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<link rel="icon" type="image/png" href="logo-empresarial-academy.png">
+<meta charset="UTF-8">
+<title>Treinamento de Atendimento Pós-Vendas Consultivo — Versão Completa</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap');
+  body{ font-family:'Open Sans',sans-serif; background:#16212E; color:#F4F6F8; padding:30px 40px; line-height:1.6; max-width:880px; margin:0 auto; }
+  h1,h2,h3,h4{ font-family:'Montserrat',sans-serif; color:#C1A160; margin-top:1.6em; margin-bottom:.5em; }
+  h1{ font-size:1.9em; border-bottom:1px solid rgba(193,161,96,.25); padding-bottom:10px; }
+  h2{ font-size:1.35em; border-bottom:1px solid rgba(193,161,96,.12); padding-bottom:6px; }
+  p{ margin-bottom:1em; font-size:14px; }
+  .ph-resp-full{ color:#9FB0C0; font-size:13px; margin-top:-6px; margin-bottom:1.4em; }
+  ul,ol{ margin:0 0 1em 22px; }
+  li{ margin-bottom:.4em; }
+  table{ width:100%; border-collapse:collapse; margin-bottom:18px; background:#1D2B3C; border-radius:8px; overflow:hidden; }
+  th,td{ border:1px solid rgba(255,255,255,.08); padding:10px 12px; text-align:left; font-size:13px; vertical-align:top; }
+  th{ background:rgba(193,161,96,.1); color:#C1A160; }
+  .gloss-table .g-term{ color:#D7C089; font-weight:600; width:38%; }
+  .ex-box{ background:#1D2B3C; border:1px solid #2A3A4D; border-radius:9px; padding:13px 16px; margin-bottom:10px; }
+  .ex-label{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin-bottom:5px; display:block; }
+  .ex-label.bad{ color:#f08080; } .ex-label.good{ color:#52c986; } .ex-label.tel{ color:#6b9af0; } .ex-label.wa{ color:#52c986; }
+  .ex-text{ font-size:13px; font-style:italic; }
+  .ex-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .acc-item{ border:1px solid #2A3A4D; border-radius:8px; margin-bottom:8px; overflow:hidden; }
+  .acc-head{ padding:10px 14px; background:#1D2B3C; font-size:13px; font-weight:600; display:flex; justify-content:space-between; cursor:default; }
+  .acc-body{ display:block!important; padding:14px; font-size:13px; }
+  strong{ color:#ffffff; }
+  .quote-box{ border-left:4px solid #C1A160; padding:16px 20px; margin:1.5em 0; color:#9FB0C0; font-style:italic; background:rgba(193,161,96,.05); border-radius:0 8px 8px 0; }
+  .sep{ border:none; border-top:1px solid #2A3A4D; margin:2.4em 0; }
+  .note{ font-size:12px; color:#6B7C8D; margin-top:2.5em; text-align:center; }
+</style>
+</head>
+<body>
+<h1 style="border-bottom:none;">Treinamento de Atendimento Pós-Vendas Consultivo</h1>
+<p><strong>Souza Ramos Advogados | Empresarial Academy</strong><br><em>Versão completa em texto — gerada automaticamente a partir do Mapa de Competências interativo.</em></p>
+${sections}
+<div class="quote-box">${quote}</div>
+<p class="note">Este documento é gerado automaticamente a partir de <strong>Mapa_Competencias_Consultor.html</strong>. Para atualizar o conteúdo, ative o modo de edição no mapa interativo, ajuste os cards e salve — esta versão é regravada junto, sempre em sincronia.</p>
+</body>
+</html>`;
+}
+
+/* ---------- Salvar (mapa + versão completa, juntos) ---------- */
+async function saveNow(){
+  if(currentDetailKey) syncOpenModalToSource();
+  setSaveStatus('Salvando...');
+  try{
+    const mainRes = await fetch('/__save', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ file: 'Mapa_Competencias_Consultor.html', content: buildSaveHTML() })
+    });
+    const mainData = await mainRes.json();
+    if(!mainData.ok) throw new Error(mainData.error || 'erro ao salvar o mapa');
+
+    const fullRes = await fetch('/__save', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ file: 'Treinamento_Consultivo_Modulo.html', content: buildFullTextHTML() })
+    });
+    const fullData = await fullRes.json();
+    if(!fullData.ok) throw new Error(fullData.error || 'erro ao salvar a versão completa');
+
+    setSaveStatus('Salvo ✓ (mapa + versão completa) ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}));
+  } catch(e){
+    setSaveStatus('Erro ao salvar: ' + e.message);
+  }
+}
+</script>
+
+
+</body></html>

@@ -138,7 +138,7 @@ export function DownloadButton({
               <label className="flex items-start gap-2 text-xs text-white/80">
                 <input name="consentimento" type="checkbox" className="mt-0.5 h-4 w-4 accent-[var(--color-gold)]" required />
                 <span>
-                  Aceito receber conteúdos, conforme a{" "}
+                  Aceito receber conteúdos e promoções por e-mail, conforme a{" "}
                   <Link href="/privacidade" className="underline">
                     Política de Privacidade
                   </Link>

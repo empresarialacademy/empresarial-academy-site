@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<link rel="icon" type="image/png" href="logo-empresarial-academy.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluxograma — Onboarding (Contato Ativo) | Souza Ramos Advogados</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+  :root {
+    --bg:#0F1822; --surface:#16212E; --surface2:#1D2B3C; --border:#2A3A4D;
+    --text:#F4F6F8; --muted:#8A97A8; --gold:#C1A160; --gold-l:#D7C089;
+    --green:#3aad6e; --green-l:#52c986; --blue:#4a7cdc; --blue-l:#6b9af0;
+    --purple:#8b5cf6; --purple-l:#a78bfa;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Open Sans',sans-serif; color:var(--text); overflow-x:auto; border-top:3px solid var(--gold); }
+  header { background:linear-gradient(135deg,#12151f,#1a1d2e); border-bottom:1px solid var(--border); padding:22px 40px; display:flex; align-items:center; gap:14px; position:sticky; top:0; z-index:100; flex-wrap:wrap; }
+  .hd-badge { width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,var(--gold),var(--gold-l)); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; color:#0F1822; flex-shrink:0; }
+  h1,h2,h3,h4,.hd-title { font-family:'Montserrat','Open Sans',sans-serif; }
+  .hd-title { font-size:16px; font-weight:700; }
+  .hd-sub { font-size:11px; color:var(--muted); margin-top:2px; }
+
+  .phase { padding:32px 40px; }
+  .ph-header { display:flex; align-items:center; gap:12px; margin-bottom:22px; }
+  .ph-num { width:30px; height:30px; border-radius:50%; background:rgba(193,161,96,.2); color:var(--gold-l); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex-shrink:0; }
+  .ph-name { font-size:16px; font-weight:700; color:var(--gold-l); }
+  .ph-resp { font-size:11px; color:var(--muted); margin-top:2px; }
+
+  .flow { display:flex; align-items:center; flex-wrap:wrap; gap:14px 0; }
+  .node { flex-shrink:0; position:relative; cursor:pointer; transition:transform .2s; }
+  .node:hover { transform:translateY(-2px); }
+  .node-card { border-radius:11px; padding:14px 16px; min-width:175px; max-width:215px; border:1.5px solid rgba(193,161,96,.35); background:rgba(193,161,96,.11); position:relative; overflow:hidden; }
+  .node-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--gold),var(--gold-l)); }
+  .n-icon { font-size:19px; margin-bottom:7px; display:block; }
+  .n-lbl { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; margin-bottom:5px; color:var(--gold-l); }
+  .n-title { font-size:12px; font-weight:600; line-height:1.3; margin-bottom:3px; }
+  .n-sub { font-size:10px; color:var(--muted); line-height:1.4; }
+  .n-expand { font-size:9px; color:var(--gold-l); margin-top:6px; font-weight:600; }
+  .step-num { position:absolute; top:-7px; left:-7px; width:20px; height:20px; border-radius:50%; background:var(--surface2); border:1.5px solid var(--border); font-size:9px; font-weight:700; color:var(--muted); display:flex; align-items:center; justify-content:center; z-index:10; }
+
+  .arr { width:34px; flex-shrink:0; position:relative; height:2px; align-self:center; }
+  .arr::before { content:''; position:absolute; top:0; left:0; right:8px; height:2px; background:var(--border); }
+  .arr::after { content:''; position:absolute; right:0; top:-4px; border:5px solid transparent; border-left:7px solid var(--muted); }
+  .arr-down { width:2px; height:30px; flex-shrink:0; align-self:center; }
+
+  .diamond-wrap { display:flex; align-items:center; justify-content:center; width:120px; height:96px; flex-shrink:0; cursor:pointer; }
+  .diamond { width:88px; height:88px; background:rgba(139,92,246,.12); border:1.5px solid rgba(139,92,246,.4); transform:rotate(45deg); border-radius:8px; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+  .diamond:hover { transform:rotate(45deg) scale(1.06); }
+  .diamond-inner { transform:rotate(-45deg); text-align:center; padding:6px; }
+  .diamond-text { font-size:10px; font-weight:600; color:var(--purple-l); line-height:1.3; }
+  .channel-note { font-size:10px; color:var(--muted); text-align:center; width:100%; margin:4px 0 10px; }
+
+  .rules { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin-top:24px; }
+  .rules h5 { font-size:11px; font-weight:700; color:var(--gold-l); text-transform:uppercase; letter-spacing:.07em; margin-bottom:10px; }
+  .rule-item { display:flex; align-items:flex-start; gap:8px; margin-bottom:7px; font-size:11px; }
+  .rule-em { font-size:14px; flex-shrink:0; margin-top:1px; }
+
+  .modal-ov { position:fixed; inset:0; background:rgba(0,0,0,.72); z-index:500; display:none; align-items:center; justify-content:center; padding:24px; }
+  .modal-ov.open { display:flex; }
+  .modal { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:28px; max-width:560px; width:100%; max-height:85vh; overflow-y:auto; position:relative; }
+  .modal h3 { font-size:16px; font-weight:700; color:var(--gold-l); margin-bottom:6px; padding-right:30px; }
+  .modal .modal-meta { font-size:11px; color:var(--muted); margin-bottom:16px; }
+  .modal-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--muted); font-size:18px; cursor:pointer; width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:7px; }
+  .modal-close:hover { background:var(--surface2); color:var(--text); }
+  .script-box { background:var(--surface2); border:1px solid rgba(193,161,96,.25); border-radius:9px; padding:16px 18px; font-size:13px; line-height:1.65; font-style:italic; white-space:pre-wrap; margin-bottom:14px; }
+  .modal-actions { display:flex; justify-content:flex-end; }
+  .btn { padding:8px 16px; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; border:none; font-family:inherit; display:inline-flex; align-items:center; gap:6px; transition:all .2s; }
+  .btn-gold { background:linear-gradient(135deg,var(--gold),var(--gold-l)); color:#0F1822; }
+  .btn-gold:hover { opacity:.9; }
+  .btn-outline { background:transparent; border:1px solid var(--border); color:var(--muted); text-decoration:none; }
+  .btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+  @media print { .modal-ov { display:none!important; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-badge">EA</div>
+  <div>
+    <div class="hd-title">Fluxograma — Onboarding (Contato Ativo)</div>
+    <div class="hd-sub">Souza Ramos Advogados · Pós-Vendas · clique em cada etapa para ver a fraseologia completa e copiar</div>
+  </div>
+</header>
+
+<div class="phase">
+  <div class="ph-header">
+    <div class="ph-num">1→5</div>
+    <div>
+      <div class="ph-name">Sequência do Onboarding</div>
+      <div class="ph-resp">Disparado após o Start do processo (Dra. Daniela delega ao advogado) — ver Módulo 3</div>
+    </div>
+  </div>
+
+  <div class="flow">
+    <div class="node" onclick="openScript('etapa1')">
+      <div class="step-num">1</div>
+      <div class="node-card">
+        <span class="n-icon">👋</span>
+        <div class="n-lbl">Etapa 1</div>
+        <div class="n-title">Saudação & Apresentação</div>
+        <div class="n-sub">Boas-vindas + pergunta o canal preferido</div>
+        <div class="n-expand">Ver fraseologia →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="diamond-wrap" onclick="openScript('canal')">
+      <div class="diamond"><div class="diamond-inner"><span class="diamond-text">Canal?<br>📞 / 💬</span></div></div>
+    </div>
+    <div class="arr"></div>
+    <div class="node" onclick="openScript('etapa2')">
+      <div class="step-num">2</div>
+      <div class="node-card">
+        <span class="n-icon">🏛️</span>
+        <div class="n-lbl">Etapa 2</div>
+        <div class="n-title">Dados do Escritório + Oferta de Datas</div>
+        <div class="n-sub">Horário, endereço e opções de agendamento do alinhamento</div>
+        <div class="n-expand">Ver fraseologia →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node" onclick="openScript('etapa3')">
+      <div class="step-num">3</div>
+      <div class="node-card">
+        <span class="n-icon">📅</span>
+        <div class="n-lbl">Etapa 3</div>
+        <div class="n-title">Confirma Agendamento + Orientação</div>
+        <div class="n-sub">Formato da reunião (telefone/Meet) + pergunta dúvidas</div>
+        <div class="n-expand">Ver fraseologia →</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="channel-note">📞 Ligação ou 💬 WhatsApp — mesmo conteúdo nos dois canais, a partir da Etapa 2</div>
+
+  <div class="flow" style="margin-top:18px;">
+    <div class="node" onclick="openScript('etapa4')">
+      <div class="step-num">4</div>
+      <div class="node-card">
+        <span class="n-icon">📱</span>
+        <div class="n-lbl">Etapa 4</div>
+        <div class="n-title">Convite Redes Sociais</div>
+        <div class="n-sub">Reforço institucional e canais de apoio</div>
+        <div class="n-expand">Ver fraseologia →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node" onclick="openScript('etapa5')">
+      <div class="step-num">5</div>
+      <div class="node-card">
+        <span class="n-icon">⭐</span>
+        <div class="n-lbl">Etapa 5</div>
+        <div class="n-title">Avaliação Google + Encerramento</div>
+        <div class="n-sub">Pedido de review + agradecimento final</div>
+        <div class="n-expand">Ver fraseologia →</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rules">
+    <h5>📌 Pontos obrigatórios do Onboarding</h5>
+    <div class="rule-item"><span class="rule-em">👋</span><span>Boas-vindas calorosas + identificação (Consultor Pós-Vendas, setor de Onboarding).</span></div>
+    <div class="rule-item"><span class="rule-em">🏛️</span><span>Informar horário de atendimento (Seg-Sex, 9h-17h) e endereço do escritório.</span></div>
+    <div class="rule-item"><span class="rule-em">📅</span><span>Garantir o agendamento do 1º alinhamento com o advogado ainda nesse contato.</span></div>
+    <div class="rule-item"><span class="rule-em">⭐</span><span>Sempre encerrar com convite de avaliação (Google Review) e agradecimento.</span></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-ov" id="scriptModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeScript()">✕</button>
+    <h3 id="modalTitle"></h3>
+    <div class="modal-meta" id="modalMeta"></div>
+    <div class="script-box" id="modalScript"></div>
+    <div class="modal-actions">
+      <button class="btn btn-gold" id="copyBtn" onclick="copyScript(this)"><i></i>📋 Copiar fraseologia</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SCRIPTS = {
+  'etapa1': { t:'Etapa 1 — Saudação & Apresentação', m:'Primeiro contato ativo do Onboarding', s:`"Olá, Senhor [Nome]! Tudo bem?
+
+Aqui é o Consultor Pós-Vendas, do setor de Onboarding e pós-vendas da Souza Ramos Advogados.
+
+Estou entrando em contato para dar as boas-vindas, também gostaria de passar algumas informações sobre nosso escritório e marcar seu primeiro alinhamento com o advogado.
+
+Você deseja um contato por ligação ou podemos seguir pelo WhatsApp, como você prefere?"` },
+  'canal': { t:'Canal de Atendimento', m:'Decisão — não altera o conteúdo, só o meio', s:`O cliente escolhe entre 📞 Ligação ou 💬 WhatsApp ao final da Etapa 1. A partir da Etapa 2, o conteúdo passado é exatamente o mesmo nos dois canais — só muda o meio de envio.` },
+  'etapa2': { t:'Etapa 2 — Dados do Escritório + Oferta de Datas', m:'Informações institucionais + agendamento do alinhamento', s:`"Ok, muito obrigado, seguiremos seu atendimento por aqui.
+
+Seguem alguns dados importantes:
+Nosso atendimento ao cliente funciona de Segunda a Sexta-feira das 9h as 17h.
+
+Estamos localizados na Rua Conselheiro Saraiva, 430 - Santana, São Paulo/SP CEP: 02037-020
+
+Para o agendamento do seu primeiro alinhamento com o Advogado, temos as opções abaixo:
+
+Dia 25/06/2026 Sexta-feira, podendo ser às 14, 15 e 16h.
+
+Você está disponível neste dia? Qual melhor horário?"` },
+  'etapa3': { t:'Etapa 3 — Confirma Agendamento + Orientação', m:'Fecha o horário e orienta sobre o formato da reunião', s:`"Ok! Agendado para Dia 25/06/2026 Sexta-feira, às 14h.
+
+O advogado entrará em contato de forma ativa nesta data para reunião, que poderá ser por telefone ou Google Meet.
+
+De qualquer forma, pedimos gentilmente que esteja em um local seguro e em silêncio para conseguir tirar todas as dúvidas.
+
+O senhor tem alguma dúvida neste momento?"` },
+  'etapa4': { t:'Etapa 4 — Convite Redes Sociais', m:'Reforço institucional', s:`"Gostaríamos de convidar para seguir nossas redes sociais:
+
+https://www.instagram.com/fabioramos.adv/
+https://www.facebook.com/fabio.souzaramos
+https://www.tiktok.com/@fabioramos.adv
+
+Reforço nossas boas-vindas à Souza Ramos! Embora o Doutor Fábio Ramos e toda a nossa equipe de apoio estejam disponíveis para qualquer dúvida, os contatos do escritório estarão à sua disposição através da nossa área de pós-vendas."` },
+  'etapa5': { t:'Etapa 5 — Avaliação Google + Encerramento', m:'Fechamento do onboarding', s:`"Para finalizar, sua opinião é muito importante para nós!
+
+Sua avaliação ajuda outras pessoas a encontrarem um escritório em que possam confiar e nos motiva a continuar entregando um atendimento cada vez melhor.
+
+Avalie nosso atendimento clicando no link abaixo. Leva menos de 1 minuto:
+
+https://g.page/r/CReCVQsxBbC6EBE/review
+
+A Souza Ramos agradece a sua atenção e deseja ótimo dia!"` },
+};
+
+function openScript(key){
+  const c = SCRIPTS[key];
+  if(!c) return;
+  document.getElementById('modalTitle').textContent = c.t;
+  document.getElementById('modalMeta').textContent = c.m;
+  document.getElementById('modalScript').textContent = c.s;
+  document.getElementById('scriptModal').classList.add('open');
+}
+function closeScript(){ document.getElementById('scriptModal').classList.remove('open'); }
+function copyScript(btn){
+  const text = document.getElementById('modalScript').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const original = btn.innerHTML;
+    btn.innerHTML = '✅ Copiado!';
+    setTimeout(() => { btn.innerHTML = original; }, 1800);
+  });
+}
+document.getElementById('scriptModal').addEventListener('click', e => { if (e.target === document.getElementById('scriptModal')) closeScript(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeScript(); });
+</script>
+</body>
+</html>

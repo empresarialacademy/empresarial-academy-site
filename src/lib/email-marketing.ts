@@ -6,6 +6,8 @@ import { logEmailSend } from "@/lib/email-log";
 import { siteConfig } from "@/lib/site-config";
 import { getWeakestPillar, getOverallScore } from "@/lib/lead-scoring";
 import { convertLexicalToHTMLAsync } from "@payloadcms/richtext-lexical/html-async";
+import { eaStateToStyle } from "@/lib/text-state-palette";
+import type { CSSProperties } from "react";
 
 /**
  * Núcleo do painel de campanhas (newsletter/mailmarketing manual):
@@ -20,6 +22,56 @@ const GOLD = "#C1A160";
 const INK = "#15191f";
 const GRAY = "#5b626e";
 const LINE = "#d9dce1";
+
+// Bits de formatação inline do Lexical (mesmos valores do NodeFormat).
+const IS_BOLD = 1;
+const IS_ITALIC = 1 << 1;
+const IS_STRIKETHROUGH = 1 << 2;
+const IS_UNDERLINE = 1 << 3;
+const IS_CODE = 1 << 4;
+const IS_SUBSCRIPT = 1 << 5;
+const IS_SUPERSCRIPT = 1 << 6;
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function styleToInlineCss(style: CSSProperties): string {
+  return Object.entries(style)
+    .filter(([, v]) => v != null)
+    .map(([k, v]) => `${k.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`)}:${v}`)
+    .join(";");
+}
+
+type SerializedTextNode = { text: string; format: number; $?: Record<string, unknown> | null };
+
+/**
+ * Conversor de texto para o HTML do e-mail que, além dos formatos padrão
+ * (negrito/itálico/…), aplica a paleta EA de cor/tamanho (TextStateFeature) —
+ * o conversor padrão do Payload (`convertLexicalToHTMLAsync`) a ignora.
+ * Espelha `EaRichText.tsx` (mesma lógica, para React) e `src/lib/editor.ts`.
+ */
+const eaEmailTextConverter = {
+  text: ({ node }: { node: SerializedTextNode }) => {
+    let text = escapeHtml(node.text);
+    if (node.format & IS_BOLD) text = `<strong>${text}</strong>`;
+    if (node.format & IS_ITALIC) text = `<em>${text}</em>`;
+    if (node.format & IS_STRIKETHROUGH) text = `<span style="text-decoration:line-through">${text}</span>`;
+    if (node.format & IS_UNDERLINE) text = `<span style="text-decoration:underline">${text}</span>`;
+    if (node.format & IS_CODE) text = `<code>${text}</code>`;
+    if (node.format & IS_SUBSCRIPT) text = `<sub>${text}</sub>`;
+    if (node.format & IS_SUPERSCRIPT) text = `<sup>${text}</sup>`;
+
+    const style = eaStateToStyle(node.$);
+    if (style) text = `<span style="${styleToInlineCss(style)}">${text}</span>`;
+    return text;
+  },
+};
 
 const FROM = "Empresarial Academy <contato@empresarialacademy.com>";
 const REPLY_TO = siteConfig.contact.email;
@@ -230,7 +282,11 @@ export async function sendCampaignNow(campaignId: string | number): Promise<void
   }
 
   const bodyHtml = campaign.body
-    ? await convertLexicalToHTMLAsync({ data: campaign.body as never })
+    ? await convertLexicalToHTMLAsync({
+        data: campaign.body as never,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        converters: ({ defaultConverters }: any) => ({ ...defaultConverters, ...eaEmailTextConverter }),
+      })
     : "";
 
   let sent = 0;

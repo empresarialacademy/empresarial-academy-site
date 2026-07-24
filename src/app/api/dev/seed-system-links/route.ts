@@ -15,7 +15,7 @@ import { getPayloadClient } from "@/lib/payload";
 /** Links internos (rota do próprio EA HUB): a URL DEVE ser mantida em dia
  * mesmo em linhas já existentes — quando o admin mudou de /admin para /eahub,
  * estas precisaram ser reescritas no banco. */
-const INTERNAL_NAMES = new Set(["EA Marketing Manager", "EA ADS"]);
+const INTERNAL_NAMES = new Set(["EA Marketing Manager", "EA ADS", "Portal de Pós-Vendas", "Playbook de Vendas"]);
 
 const INITIAL_LINKS = [
   { name: "Site Empresarial Academy", url: "https://empresarialacademy.com", description: "Site institucional no ar.", order: 10 },
@@ -25,8 +25,8 @@ const INITIAL_LINKS = [
   { name: "EA Impulsiona", url: "https://ea-impulsiona.web.app", description: "Plataforma EA Impulsiona.", order: 50 },
   { name: "EA Recovery", url: "https://recovery.empresarialacademy.com/", description: "CRM de Cobrança (Souza Ramos).", order: 60 },
   { name: "EA Recovery — Admin", url: "https://recovery.empresarialacademy.com/admin", description: "Painel administrativo do EA Recovery.", order: 70 },
-  { name: "Portal de Pós-Vendas", url: "", description: "Hoje local (OneDrive) — link entra quando for publicado.", order: 80 },
-  { name: "Playbook de Vendas", url: "", description: "Hoje local (OneDrive) — link entra quando for publicado.", order: 90 },
+  { name: "Portal de Pós-Vendas", url: "/pos-vendas-souza-ramos", description: "Treinamento pós-vendas (Souza Ramos) — protegido por senha.", order: 80 },
+  { name: "Playbook de Vendas", url: "/playbook-souza-ramos", description: "Playbook comercial (Souza Ramos) — protegido por senha.", order: 90 },
 ];
 
 export async function GET() {

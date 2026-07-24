@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { sendCampaignNow } from "@/lib/email-marketing";
+import { eaEditor } from "@/lib/editor";
 
 /**
  * Campanha manual de e-mail (newsletter/mailmarketing) para um Segmento.
@@ -40,6 +41,7 @@ export const EmailCampaigns: CollectionConfig = {
       type: "richText",
       required: true,
       label: "Conteúdo do e-mail",
+      editor: eaEditor,
     },
     {
       name: "status",

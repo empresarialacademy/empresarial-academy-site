@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<link rel="icon" type="image/png" href="logo-empresarial-academy.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluxograma — Alinhamento Pré-Audiência e Pré-Depoimento | Souza Ramos Advogados</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+  :root {
+    --bg:#0F1822; --surface:#16212E; --surface2:#1D2B3C; --border:#2A3A4D;
+    --text:#F4F6F8; --muted:#8A97A8; --gold:#C1A160; --gold-l:#D7C089;
+    --green:#3aad6e; --green-l:#52c986; --blue:#4a7cdc; --blue-l:#6b9af0;
+    --purple:#8b5cf6; --purple-l:#a78bfa; --red:#dc4a4a; --red-l:#f08080;
+    --teal:#2aa8b8; --teal-l:#45c5d6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Open Sans',sans-serif; color:var(--text); overflow-x:auto; border-top:3px solid var(--gold); }
+  header { background:linear-gradient(135deg,#12151f,#1a1d2e); border-bottom:1px solid var(--border); padding:22px 40px; display:flex; align-items:center; gap:14px; position:sticky; top:0; z-index:100; flex-wrap:wrap; }
+  .hd-badge { width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,var(--gold),var(--gold-l)); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; color:#0F1822; flex-shrink:0; }
+  h1,h2,h3,h4,.hd-title { font-family:'Montserrat','Open Sans',sans-serif; }
+  .hd-title { font-size:16px; font-weight:700; }
+  .hd-sub { font-size:11px; color:var(--muted); margin-top:2px; }
+
+  .legend { padding:10px 40px; background:var(--surface); border-bottom:1px solid var(--border); display:flex; gap:18px; flex-wrap:wrap; align-items:center; }
+  .leg { display:flex; align-items:center; gap:7px; font-size:11px; color:var(--muted); }
+  .leg-dot { width:11px; height:11px; border-radius:3px; flex-shrink:0; }
+
+  .phase { padding:32px 40px; border-bottom:1px solid var(--border); }
+  .phase:last-child { border-bottom:none; }
+  .ph-header { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+  .ph-num { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex-shrink:0; }
+  .ph-name { font-size:15px; font-weight:700; }
+  .ph-resp { font-size:11px; color:var(--muted); margin-top:2px; }
+
+  .flow { display:flex; align-items:center; flex-wrap:wrap; gap:14px 0; }
+  .node { flex-shrink:0; position:relative; cursor:pointer; transition:transform .2s; }
+  .node:hover { transform:translateY(-2px); }
+  .node-card { border-radius:11px; padding:14px 16px; min-width:170px; max-width:210px; border:1.5px solid transparent; position:relative; overflow:hidden; }
+  .node-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+  .nc-gold .node-card { background:rgba(193,161,96,.11); border-color:rgba(193,161,96,.35); } .nc-gold .node-card::before { background:linear-gradient(90deg,var(--gold),var(--gold-l)); } .nc-gold .n-lbl{color:var(--gold-l);}
+  .nc-teal .node-card { background:rgba(42,168,184,.11); border-color:rgba(42,168,184,.35); } .nc-teal .node-card::before { background:linear-gradient(90deg,var(--teal),var(--teal-l)); } .nc-teal .n-lbl{color:var(--teal-l);}
+  .nc-green .node-card { background:rgba(58,173,110,.11); border-color:rgba(58,173,110,.35); } .nc-green .node-card::before { background:linear-gradient(90deg,var(--green),var(--green-l)); } .nc-green .n-lbl{color:var(--green-l);}
+  .nc-red .node-card { background:rgba(220,74,74,.11); border-color:rgba(220,74,74,.35); } .nc-red .node-card::before { background:linear-gradient(90deg,var(--red),var(--red-l)); } .nc-red .n-lbl{color:var(--red-l);}
+  .nc-purple .node-card { background:rgba(139,92,246,.11); border-color:rgba(139,92,246,.35); } .nc-purple .node-card::before { background:linear-gradient(90deg,var(--purple),var(--purple-l)); } .nc-purple .n-lbl{color:var(--purple-l);}
+
+  .n-icon { font-size:19px; margin-bottom:7px; display:block; }
+  .n-lbl { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; margin-bottom:5px; }
+  .n-title { font-size:12px; font-weight:600; line-height:1.3; margin-bottom:3px; }
+  .n-sub { font-size:10px; color:var(--muted); line-height:1.4; }
+  .n-expand { font-size:9px; color:var(--gold-l); margin-top:6px; font-weight:600; }
+  .step-num { position:absolute; top:-7px; left:-7px; width:20px; height:20px; border-radius:50%; background:var(--surface2); border:1.5px solid var(--border); font-size:9px; font-weight:700; color:var(--muted); display:flex; align-items:center; justify-content:center; z-index:10; }
+  .badge { display:inline-flex; align-items:center; gap:3px; padding:2px 7px; border-radius:20px; font-size:9px; font-weight:600; margin-top:5px; }
+  .bg-gold { background:rgba(193,161,96,.2); color:var(--gold-l); border:1px solid rgba(193,161,96,.3); }
+
+  .arr { width:34px; flex-shrink:0; position:relative; height:2px; align-self:center; }
+  .arr::before { content:''; position:absolute; top:0; left:0; right:8px; height:2px; background:var(--border); }
+  .arr::after { content:''; position:absolute; right:0; top:-4px; border:5px solid transparent; border-left:7px solid var(--muted); }
+  .arr .albl { position:absolute; top:-14px; left:50%; transform:translateX(-50%); font-size:9px; color:var(--muted); white-space:nowrap; background:var(--bg); padding:0 3px; }
+
+  .v-sep { display:flex; justify-content:center; padding:6px 0; }
+  .v-sep-line { display:flex; flex-direction:column; align-items:center; }
+  .v-sep-line .vl { width:2px; height:24px; background:var(--border); }
+  .v-sep-line .vt { border:5px solid transparent; border-top:7px solid var(--muted); }
+
+  .diamond-wrap { display:flex; align-items:center; justify-content:center; width:120px; height:96px; flex-shrink:0; cursor:pointer; }
+  .diamond { width:88px; height:88px; background:rgba(139,92,246,.12); border:1.5px solid rgba(139,92,246,.4); transform:rotate(45deg); border-radius:8px; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+  .diamond:hover { transform:rotate(45deg) scale(1.06); }
+  .diamond-inner { transform:rotate(-45deg); text-align:center; padding:6px; }
+  .diamond-text { font-size:10px; font-weight:600; color:var(--purple-l); line-height:1.3; }
+
+  .branch-wrap { display:flex; flex-direction:column; gap:14px; justify-content:center; }
+  .branch-row { display:flex; align-items:center; flex-wrap:wrap; }
+  .blbl { font-size:9px; font-weight:700; padding:2px 7px; border-radius:4px; width:42px; text-align:center; flex-shrink:0; }
+  .blbl-yes { background:rgba(220,74,74,.2); color:var(--red-l); }
+  .blbl-no { background:rgba(58,173,110,.2); color:var(--green-l); }
+
+  .rules { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin-top:18px; }
+  .rules h5 { font-size:11px; font-weight:700; color:var(--gold-l); text-transform:uppercase; letter-spacing:.07em; margin-bottom:10px; }
+  .rule-item { display:flex; align-items:flex-start; gap:8px; margin-bottom:7px; font-size:11px; }
+  .rule-em { font-size:14px; flex-shrink:0; margin-top:1px; }
+
+  .modal-ov { position:fixed; inset:0; background:rgba(0,0,0,.72); z-index:500; display:none; align-items:center; justify-content:center; padding:24px; }
+  .modal-ov.open { display:flex; }
+  .modal { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:28px; max-width:560px; width:100%; max-height:85vh; overflow-y:auto; position:relative; }
+  .modal h3 { font-size:16px; font-weight:700; color:var(--gold-l); margin-bottom:6px; padding-right:30px; }
+  .modal .modal-meta { font-size:11px; color:var(--muted); margin-bottom:16px; }
+  .modal-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--muted); font-size:18px; cursor:pointer; width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:7px; }
+  .modal-close:hover { background:var(--surface2); color:var(--text); }
+  .script-box { background:var(--surface2); border:1px solid rgba(193,161,96,.25); border-radius:9px; padding:16px 18px; font-size:13px; line-height:1.65; font-style:italic; white-space:pre-wrap; margin-bottom:14px; }
+  .modal-actions { display:flex; justify-content:flex-end; }
+  .btn { padding:8px 16px; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; border:none; font-family:inherit; display:inline-flex; align-items:center; gap:6px; transition:all .2s; }
+  .btn-gold { background:linear-gradient(135deg,var(--gold),var(--gold-l)); color:#0F1822; }
+  .btn-gold:hover { opacity:.9; }
+  @media print { .modal-ov { display:none!important; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-badge">EA</div>
+  <div>
+    <div class="hd-title">Fluxograma — Alinhamento Pré-Audiência (D-3) e Pré-Depoimento (D-1)</div>
+    <div class="hd-sub">Souza Ramos Advogados · Contato proativo · clique em cada etapa para ver a fraseologia e copiar</div>
+  </div>
+</header>
+
+<div class="legend">
+  <div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>Tarefa interna (sem cliente)</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--teal)"></div>Contato ativo — proposta de alinhamento</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--red)"></div>Escalonamento jurídico</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--green)"></div>Registro & encerramento (mesma ligação)</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--gold)"></div>Lembrete da véspera (dias depois)</div>
+</div>
+
+<!-- FASE 1: PREPARAÇÃO INTERNA -->
+<div class="phase">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(139,92,246,.2);color:var(--purple-l)">1</div>
+    <div>
+      <div class="ph-name" style="color:var(--purple-l)">Preparação Interna</div>
+      <div class="ph-resp">Antes de qualquer contato com o cliente</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="node nc-purple" onclick="openScript('verificar-agenda')">
+      <div class="step-num">1</div>
+      <div class="node-card">
+        <span class="n-icon">🗓️</span>
+        <div class="n-lbl">Interno</div>
+        <div class="n-title">Verificar Agenda do Advogado</div>
+        <div class="n-sub">No ADVBox, mínimo 5 dias de antecedência</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="v-sep"><div class="v-sep-line"><div class="vl"></div><div class="vt"></div></div></div>
+
+<!-- FASE 2: CONTATO ATIVO — PROPOSTA DE ALINHAMENTO (começo, meio e fim de UMA ligação) -->
+<div class="phase">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(42,168,184,.2);color:var(--teal-l)">2</div>
+    <div>
+      <div class="ph-name" style="color:var(--teal-l)">Contato Ativo — Proposta de Alinhamento</div>
+      <div class="ph-resp">D-7 a D-5 · uma única ligação: abertura → meio → fechamento do agendamento</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="node nc-teal" onclick="openScript('convite')">
+      <div class="step-num">2</div>
+      <div class="node-card">
+        <span class="n-icon">📞</span>
+        <div class="n-lbl">Início da ligação</div>
+        <div class="n-title">Abertura + Convite para Alinhamento</div>
+        <div class="n-sub">Apresenta-se e já propõe data/horário</div>
+        <div class="n-expand">Ver fraseologia →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-teal" onclick="openScript('formato')">
+      <div class="step-num">3</div>
+      <div class="node-card">
+        <span class="n-icon">🎥</span>
+        <div class="n-lbl">Meio da ligação</div>
+        <div class="n-title">Formato + Orientação de Vídeo</div>
+        <div class="n-sub">Vídeo, voz ou presencial — vídeo é preferível</div>
+        <div class="n-expand">Ver fraseologia →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-teal" onclick="openScript('fechamento-agendamento')">
+      <div class="step-num">4</div>
+      <div class="node-card">
+        <span class="n-icon">✔️</span>
+        <div class="n-lbl">Fim da ligação</div>
+        <div class="n-title">Confirma o Agendamento</div>
+        <div class="n-sub">Fecha o horário antes de seguir para o registro</div>
+        <div class="n-expand">Ver fraseologia →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="v-sep"><div class="v-sep-line"><div class="vl"></div><div class="vt"></div></div></div>
+
+<!-- FASE 3: TRIAGEM JURÍDICA -->
+<div class="phase">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(220,74,74,.2);color:var(--red-l)">3</div>
+    <div>
+      <div class="ph-name" style="color:var(--red-l)">Triagem — Precisa de Validação Jurídica?</div>
+      <div class="ph-resp">Se o cliente trouxer dúvida que vai além do agendamento</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="diamond-wrap" onclick="openScript('triagem')">
+      <div class="diamond"><div class="diamond-inner"><span class="diamond-text">Precisa de<br>validação<br>jurídica?</span></div></div>
+    </div>
+    <div class="branch-wrap">
+      <div class="branch-row">
+        <div class="blbl blbl-no">NÃO</div>
+        <div class="arr"></div>
+        <div class="node nc-green" onclick="openScript('registro')">
+          <div class="node-card">
+            <span class="n-icon">📝</span>
+            <div class="n-title">Segue direto para o registro</div>
+            <div class="n-sub">Sem necessidade de escalonamento</div>
+          </div>
+        </div>
+      </div>
+      <div class="branch-row">
+        <div class="blbl blbl-yes">SIM</div>
+        <div class="arr"></div>
+        <div class="node nc-red" onclick="openScript('escalonar')">
+          <div class="node-card">
+            <span class="n-icon">⚖️</span>
+            <div class="n-title">Escalonar Solicitação</div>
+            <div class="n-sub">Encaminha para validação interna · retorno em 24h</div>
+            <span class="badge bg-gold">Fraseologia</span>
+          </div>
+        </div>
+        <div class="arr"><span class="albl">até 24h, dia separado</span></div>
+        <div class="node nc-red" onclick="openScript('retorno')">
+          <div class="node-card">
+            <span class="n-icon">📞</span>
+            <div class="n-title">Retorno de Solicitação ao Cliente</div>
+            <div class="n-sub">Ligação de retorno, em outro momento</div>
+            <span class="badge bg-gold">Fraseologia</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="v-sep"><div class="v-sep-line"><div class="vl"></div><div class="vt"></div></div></div>
+
+<!-- FASE 4: FECHAMENTO DA LIGAÇÃO ATUAL -->
+<div class="phase">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(58,173,110,.2);color:var(--green-l)">4</div>
+    <div>
+      <div class="ph-name" style="color:var(--green-l)">Fechamento da Ligação Atual</div>
+      <div class="ph-resp">Ainda na mesma ligação — registra e encerra o contato de hoje</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="node nc-green" onclick="openScript('registro')">
+      <div class="step-num">5</div>
+      <div class="node-card">
+        <span class="n-icon">🗂️</span>
+        <div class="n-lbl">Interno</div>
+        <div class="n-title">Registrar no ADVBox e na Agenda do Advogado</div>
+        <div class="n-sub">Marca o compromisso na agenda de quem vai conduzir o alinhamento</div>
+        <div class="n-expand">Ver detalhe →</div>
+      </div>
+    </div>
+    <div class="arr"></div>
+    <div class="node nc-green" onclick="openScript('encerramento')">
+      <div class="step-num">6</div>
+      <div class="node-card">
+        <span class="n-icon">🤝</span>
+        <div class="n-lbl">Fraseologia</div>
+        <div class="n-title">Encerramento</div>
+        <div class="n-sub">Agradecimento final — fim desta ligação</div>
+        <div class="n-expand">Ver fraseologia →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="v-sep"><div class="v-sep-line"><div class="vl"></div><div class="vt"></div></div></div>
+
+<!-- FASE 5: LEMBRETE DA VÉSPERA (dias depois — contato separado) -->
+<div class="phase">
+  <div class="ph-header">
+    <div class="ph-num" style="background:rgba(193,161,96,.2);color:var(--gold-l)">5</div>
+    <div>
+      <div class="ph-name" style="color:var(--gold-l)">Lembrete da Véspera — Dias Depois</div>
+      <div class="ph-resp">Contato separado, não é continuação da ligação anterior</div>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="node nc-gold" onclick="openScript('confirmacao24h')">
+      <div class="step-num">7</div>
+      <div class="node-card">
+        <span class="n-icon">✅</span>
+        <div class="n-lbl">Fraseologia</div>
+        <div class="n-title">Confirmação 24h Antes</div>
+        <div class="n-sub">Enviada no dia anterior à audiência/depoimento, não na ligação de agendamento</div>
+        <div class="n-expand">Ver fraseologia →</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rules">
+    <h5>📌 Regras gerais</h5>
+    <div class="rule-item"><span class="rule-em">⏳</span><span>D-3 (audiência) e D-1 (depoimento) são prazos <strong>mínimos</strong> — quanto mais antecedência, melhor.</span></div>
+    <div class="rule-item"><span class="rule-em">🎥</span><span>Vídeo é preferível à ligação simples — o contato visual fortalece a confiança antes do ato.</span></div>
+    <div class="rule-item"><span class="rule-em">🧭</span><span>Se o cliente demonstrar muita ansiedade, aplique a técnica AVR antes de seguir com o agendamento.</span></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-ov" id="scriptModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeScript()">✕</button>
+    <h3 id="modalTitle"></h3>
+    <div class="modal-meta" id="modalMeta"></div>
+    <div class="script-box" id="modalScript"></div>
+    <div class="modal-actions">
+      <button class="btn btn-gold" id="copyBtn" onclick="copyScript(this)">📋 Copiar fraseologia</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SCRIPTS = {
+  'verificar-agenda': { t:'Verificar Agenda do Advogado', m:'Tarefa interna — sem contato com o cliente', s:`Ao identificar audiência ou depoimento marcado, verifique a disponibilidade do advogado responsável no ADVBox com pelo menos 5 dias de antecedência — margem suficiente para agendar sem pressão de tempo.` },
+  'convite': { t:'Abertura + Convite para Alinhamento', m:'Início da ligação ativa — apresentação e proposta de data (audiência D-3 / depoimento D-1)', s:`"Oi [nome], tudo bem? Estou entrando em contato porque sua [audiência/depoimento] está marcada para [data], e o Doutor Fábio Ramos gostaria de fazer uma reunião com você antes para alinhar tudo com calma. Você teria disponibilidade em [sugestão de data e horário]?"` },
+  'formato': { t:'Formato + Orientação de Vídeo', m:'Meio da ligação — confirma o meio da reunião e orienta o ambiente', s:`"Essa reunião pode ser por vídeo — como Google Meet ou WhatsApp Vídeo — ou você prefere presencialmente?"
+
+(Se escolher vídeo)
+
+"Ótimo. Para que a reunião seja mais aproveitada, peço que você esteja em um local tranquilo, sem barulho externo, com boa conexão de internet e, se possível, com fone de ouvido. O advogado vai passar informações importantes e é essencial que você consiga ouvir e se concentrar com clareza."` },
+  'fechamento-agendamento': { t:'Confirma o Agendamento', m:'Fim da ligação de proposta — fecha o horário antes do registro', s:`"Perfeito, [nome]! Já deixo esse horário reservado e confirmado com o Doutor Fábio Ramos por aqui. Qualquer coisa antes da nossa reunião, estou à disposição."` },
+  'triagem': { t:'Triagem — Precisa de validação jurídica?', m:'Decisão antes de prosseguir', s:`Se o cliente, durante o contato, trouxer uma dúvida ou pedido que vai além do simples agendamento (uma questão de mérito do processo, por exemplo), a solicitação precisa ser escalonada para a equipe jurídica antes de qualquer posicionamento. Se for só o agendamento em si, siga direto para o registro no ADVBox.` },
+  'escalonar': { t:'Escalonar Solicitação', m:'Quando a dúvida exige validação da equipe jurídica', s:`"Olá, Senhor [nome]!
+
+Essa é uma questão que precisa ser analisada por nossa equipe jurídica para que eu possa te passar uma orientação precisa e segura.
+
+Por esse motivo, vou encaminhar sua solicitação para validação interna e retornarei para você em até 24 horas com um posicionamento.
+
+Pode ficar tranquilo(a), pois eu mesma acompanharei essa demanda e entrarei em contato assim que receber a resposta.
+
+Te ajudo com mais alguma questão?"` },
+  'retorno': { t:'Retorno de Solicitação ao Cliente', m:'Ligação de volta após a validação jurídica', s:`"Olá Senhor [nome],
+
+Aqui é o Consultor Pós-Vendas da Souza Ramos Advogados, tudo bem!?
+
+Estou entrando em contato para retornar com as informações que solicitou."` },
+  'registro': { t:'Registrar no ADVBox e na Agenda do Advogado', m:'Após confirmar o agendamento com o cliente', s:`Marque este compromisso diretamente na agenda do advogado responsável pelo processo — não basta anotar só no histórico do cliente. Inclua: nome do cliente, data/horário, formato (vídeo ou presencial) e tipo do registro — "Alinhamento Pré-Audiência (D-3)" ou "Alinhamento Pré-Depoimento (D-1)". Isso sincroniza automaticamente com o Google Calendar do advogado, garantindo que ele saiba da reunião marcada para conduzir o alinhamento.` },
+  'confirmacao24h': { t:'Confirmação 24h Antes', m:'Mensagem-lembrete no dia anterior à reunião — contato separado, não faz parte da ligação de agendamento', s:`"Oi [nome], só confirmando nossa reunião com o Doutor Fábio Ramos amanhã às [horário] por [formato]. Lembro de estar em um local tranquilo para melhor aproveitamento. Qualquer dúvida, é só me chamar!"` },
+  'encerramento': { t:'Encerramento', m:'Fechamento de qualquer contato', s:`"Senhor [nome], a Souza Ramos agradece seu contato e deseja um ótimo dia!"` },
+};
+
+function openScript(key){
+  const c = SCRIPTS[key];
+  if(!c) return;
+  document.getElementById('modalTitle').textContent = c.t;
+  document.getElementById('modalMeta').textContent = c.m;
+  document.getElementById('modalScript').textContent = c.s;
+  document.getElementById('scriptModal').classList.add('open');
+}
+function closeScript(){ document.getElementById('scriptModal').classList.remove('open'); }
+function copyScript(btn){
+  const text = document.getElementById('modalScript').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const original = btn.innerHTML;
+    btn.innerHTML = '✅ Copiado!';
+    setTimeout(() => { btn.innerHTML = original; }, 1800);
+  });
+}
+document.getElementById('scriptModal').addEventListener('click', e => { if (e.target === document.getElementById('scriptModal')) closeScript(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeScript(); });
+</script>
+</body>
+</html>

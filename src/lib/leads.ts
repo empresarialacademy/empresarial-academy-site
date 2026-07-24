@@ -19,6 +19,7 @@ type LeadInput = {
 export async function saveLead(lead: LeadInput): Promise<string | number | null> {
   try {
     const payload = await getPayloadClient();
+    const consent = lead.consent ?? false;
     const doc = await payload.create({
       collection: "leads",
       data: {
@@ -29,7 +30,12 @@ export async function saveLead(lead: LeadInput): Promise<string | number | null>
         instagram: lead.instagram || undefined,
         source: lead.source,
         details: lead.details && Object.keys(lead.details).length > 0 ? lead.details : undefined,
-        consent: lead.consent ?? false,
+        consent,
+        // O checkbox único de consentimento dos formulários públicos cobre
+        // newsletter e promoções ao mesmo tempo (decisão do Thiago, 24/07) —
+        // não há opt-in granular separado por enquanto.
+        wantsNewsletter: consent,
+        wantsPromotions: consent,
       },
     });
     return doc.id;

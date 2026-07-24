@@ -47,10 +47,20 @@ export const ImportMarkdownButton = () => {
         if (frontmatter.keywords) set('seo.metaKeywords', frontmatter.keywords);
         if (frontmatter.status) set('status', frontmatter.status);
         if (frontmatter.tags) {
-          const arr = Array.isArray(frontmatter.tags)
+          // Campos `array` do Payload não aceitam um UPDATE direto com o array
+          // pronto — o form precisa da metadata interna `rows`, criada linha a
+          // linha via ADD_ROW (sem isso, o ArrayField quebra com "Cannot read
+          // properties of undefined (reading 'map')" ao tentar renderizar).
+          const arr: string[] = Array.isArray(frontmatter.tags)
             ? frontmatter.tags
             : String(frontmatter.tags).split(',').map((t: string) => t.trim());
-          set('tags', arr.map((t: string) => ({ tag: t, id: Math.random().toString(36).slice(2, 8) })));
+          arr.forEach((t) => {
+            dispatchFields({
+              type: 'ADD_ROW',
+              path: 'tags',
+              subFieldState: { tag: { value: t, initialValue: t, valid: true } },
+            });
+          });
         }
         if (frontmatter.categoryId) set('category', frontmatter.categoryId);
         if (frontmatter.authorId) set('author', frontmatter.authorId);
