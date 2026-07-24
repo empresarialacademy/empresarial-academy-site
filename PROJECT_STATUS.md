@@ -390,7 +390,24 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
-### Sessão 2026-07-24 (m) (botão "Publicar" novo + fix CRÍTICO: publicar travava em "Submitting...")
+### Sessão 2026-07-24 (n) (BUG CRÍTICO: nenhuma imagem do R2/S3 carregava no site — falta remotePatterns)
+Thiago reportou "imagens não aparecem" (capa que ele mesmo subiu, sumida no preview E
+no /blog). Achado: `next.config.ts` **não tinha `images.remotePatterns`/`domains`
+configurado** — sem isso, o `next/image` recusa carregar QUALQUER imagem de domínio
+externo, incluindo o Cloudflare R2 onde toda a mídia do site vive (capas de artigo,
+imagens do editor, materiais). Bug real e sério — provavelmente afetava TODA imagem
+enviada via upload no admin desde sempre, não só a do Thiago agora.
+- **Causa confirmada:** `@payloadcms/storage-s3` gera URLs no formato
+  `${S3_ENDPOINT}/${S3_BUCKET}/${arquivo}` (path-style, sem prefixo/CDN customizado —
+  `generateURL.js` da lib). Domínio real: `5ce1f9a7546634eeba9b1cc823111fe5.
+  r2.cloudflarestorage.com`, bucket `empresarial-academy-media`.
+- **Fix:** `images.remotePatterns` adicionado no `next.config.ts` com esse host +
+  pathname do bucket.
+- **Confirmado que NÃO afeta o Instagram** (feed usa `<img>` puro, não `next/image` —
+  não passa pela checagem de domínio, não precisava entrar na lista).
+- **Deployado.**
+
+
 Dois pedidos/achados nesta leva:
 - **Botão "Publicar"** ao lado do "Salvar" nativo, em Posts e Materials
   (`src/components/admin/publish/PublishButton.tsx`, registrado via

@@ -6,6 +6,17 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
+    // Mídia (capas, imagens do editor, etc.) fica no Cloudflare R2
+    // (S3-compatível) — sem isso o next/image recusa carregar qualquer
+    // imagem de lá (URLs vêm como `${endpoint}/${bucket}/${arquivo}`,
+    // path-style — ver @payloadcms/storage-s3/generateURL.js).
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "5ce1f9a7546634eeba9b1cc823111fe5.r2.cloudflarestorage.com",
+        pathname: "/empresarial-academy-media/**",
+      },
+    ],
   },
   async redirects() {
     return [
