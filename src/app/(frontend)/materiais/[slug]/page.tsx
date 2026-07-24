@@ -67,8 +67,14 @@ export default async function MaterialPage({ params }: Params) {
 
       <section className="mx-auto max-w-6xl px-6 py-16">
         {isDraft && (
-          <div className="mb-8 rounded-lg border border-gold-ink/40 bg-surface px-4 py-2 text-sm text-navy">
-            Pré-visualização (rascunho) — assim ficará no site ao publicar.
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gold-ink/40 bg-surface px-4 py-2 text-sm text-navy">
+            <span>Pré-visualização (rascunho) — assim ficará no site ao publicar.</span>
+            <a
+              href={`/preview/exit?redirect=/materiais/${material.slug}`}
+              className="font-semibold text-gold-ink hover:underline"
+            >
+              Sair da pré-visualização
+            </a>
           </div>
         )}
         <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr]">

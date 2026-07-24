@@ -95,8 +95,14 @@ export default async function PostPage({ params }: Params) {
         )}
 
         {isDraft && (
-          <div className="mt-6 rounded-lg border border-gold-ink/40 bg-surface px-4 py-2 text-sm text-navy">
-            Pré-visualização (rascunho) — assim ficará no site ao publicar.
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gold-ink/40 bg-surface px-4 py-2 text-sm text-navy">
+            <span>Pré-visualização (rascunho) — assim ficará no site ao publicar.</span>
+            <a
+              href={`/preview/exit?redirect=/blog/${post.slug}`}
+              className="font-semibold text-gold-ink hover:underline"
+            >
+              Sair da pré-visualização
+            </a>
           </div>
         )}
 

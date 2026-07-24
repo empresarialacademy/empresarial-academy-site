@@ -390,7 +390,27 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
-### Sessão 2026-07-24 (n) (BUG CRÍTICO: nenhuma imagem do R2/S3 carregava no site — falta remotePatterns)
+### Sessão 2026-07-24 (o) (preview: faltava rota para SAIR do modo rascunho)
+Thiago reportou artigo já publicado mostrando "Pré-visualização (rascunho)" no topo,
+mais formatação e imagem "sumidas" comparado ao esperado. Investigação: como o projeto
+NÃO usa o sistema nativo de rascunhos/versões do Payload (1 doc só, sem snapshot
+separado — `draft: true` só ativa `overrideAccess`, ignorando o filtro de "publicado"),
+o conteúdo servido em draftMode É o mesmo documento — não deveria haver diferença real
+de dado entre draft/normal. **Causa confirmada do banner:** draftMode é ligado ao clicar
+"Visualizar" no admin (`/preview`), mas **não existia NENHUMA rota para desligá-lo** —
+uma vez em preview, ficava preso lá (só limpando cookies manualmente resolvia), fazendo
+o artigo já publicado continuar mostrando o banner de rascunho indefinidamente.
+- **Fix:** nova rota `/preview/exit` (desliga `draftMode()`) + link "Sair da
+  pré-visualização" no banner, em `/blog/[slug]` e `/materiais/[slug]`.
+- **Formatação e imagem "sumidas" ainda NÃO explicadas por código** — a teoria mais
+  provável é que o Thiago estava vendo uma página com o cache de FALHA antigo do
+  navegador (a imagem falhava mesmo antes do fix da sessão (n), e o banner de rascunho
+  pode ter causado confusão sobre qual conteúdo/formatação estava vendo). **Pendente:**
+  Thiago vai re-testar do zero (saindo do preview, hard refresh) depois deste deploy —
+  se persistir, investigar mais a fundo com print concreto.
+- **Deployado.**
+
+
 Thiago reportou "imagens não aparecem" (capa que ele mesmo subiu, sumida no preview E
 no /blog). Achado: `next.config.ts` **não tinha `images.remotePatterns`/`domains`
 configurado** — sem isso, o `next/image` recusa carregar QUALQUER imagem de domínio
