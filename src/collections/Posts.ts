@@ -3,6 +3,11 @@ import { formatSlug } from "@/lib/slug";
 import { sendNewPostAlert } from "@/lib/content-alerts";
 import { eaEditor } from "@/lib/editor";
 import { buildPreviewUrl } from "@/lib/preview";
+import {
+  requiredToPublish,
+  requiredToPublishArray,
+  requiredToPublishRichText,
+} from "@/lib/publish-validation";
 
 export const Posts: CollectionConfig = {
   slug: "posts",
@@ -54,20 +59,29 @@ export const Posts: CollectionConfig = {
       label: "Resumo",
       maxLength: 300,
       admin: { description: "Texto curto exibido na listagem e no SEO." },
+      validate: requiredToPublish("Resumo"),
     },
     {
       name: "coverImage",
       type: "upload",
       relationTo: "media",
       label: "Imagem destacada",
+      validate: requiredToPublish("Imagem destacada"),
     },
-    { name: "content", type: "richText", label: "Conteúdo", editor: eaEditor },
+    {
+      name: "content",
+      type: "richText",
+      label: "Conteúdo",
+      editor: eaEditor,
+      validate: requiredToPublishRichText("Conteúdo"),
+    },
     {
       name: "category",
       type: "relationship",
       relationTo: "categories",
       label: "Categoria",
       admin: { position: "sidebar" },
+      validate: requiredToPublish("Categoria"),
     },
     {
       name: "tags",
@@ -75,6 +89,7 @@ export const Posts: CollectionConfig = {
       label: "Tags",
       admin: { position: "sidebar" },
       fields: [{ name: "tag", type: "text" }],
+      validate: requiredToPublishArray("Tags"),
     },
     {
       name: "author",
@@ -82,6 +97,7 @@ export const Posts: CollectionConfig = {
       relationTo: "users",
       label: "Autor",
       admin: { position: "sidebar" },
+      validate: requiredToPublish("Autor"),
     },
     {
       name: "status",
@@ -110,8 +126,13 @@ export const Posts: CollectionConfig = {
       type: "group",
       label: "SEO",
       fields: [
-        { name: "metaTitle", type: "text", label: "Meta title" },
-        { name: "metaDescription", type: "textarea", label: "Meta description" },
+        { name: "metaTitle", type: "text", label: "Meta title", validate: requiredToPublish("Meta title") },
+        {
+          name: "metaDescription",
+          type: "textarea",
+          label: "Meta description",
+          validate: requiredToPublish("Meta description"),
+        },
       ],
     },
     {

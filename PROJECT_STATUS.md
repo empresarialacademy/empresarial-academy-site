@@ -390,7 +390,33 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
-### Sessão 2026-07-24 (u) (import .md em Materiais: categoria nunca resolvia + kind/version)
+### Sessão 2026-07-24 (v) (campos obrigatórios só ao Publicar, Posts e Materials)
+Pedido do Thiago: não deixar publicar sem TODOS os campos preenchidos. Decisão dele:
+só ao **Publicar** (Salvar como rascunho continua livre — permite salvar
+incompleto, ex.: logo após importar o `.md`, antes de por capa/arquivo).
+- `src/lib/publish-validation.ts` novo: 3 helpers (`requiredToPublish` — texto/
+  relacionamento/upload; `requiredToPublishArray` — array, ex. tags, exige ≥1
+  linha; `requiredToPublishRichText` — richText, considera vazio sem nó na raiz).
+  Cada um só valida quando `data.status === 'published'`; senão sempre passa.
+- Aplicado em Posts (excerpt, coverImage, content, category, tags, author,
+  seo.metaTitle, seo.metaDescription) e Materials (description, content,
+  coverImage, kind, category, version, seo.metaTitle, seo.metaDescription).
+  `title`/`slug`/`status`/`file` (Materials) já eram `required:true`
+  incondicional — mantido.
+- **Achado importante ao implementar:** o botão "Publicar" (sessão t) usava
+  `submit({overrides:{status:'published'}})` — mas `Form/index.js` roda
+  `validateForm()` **ANTES** de aplicar `overrides` (confirmado lendo o source
+  da lib). Isso faria a validação condicional nova rodar vendo o status ANTIGO,
+  sem bloquear nada — bug que teria anulado a própria feature. Corrigido: o
+  botão agora `dispatchFields` o `status` de verdade primeiro, espera 1 tick
+  (`setTimeout 0`), só então chama `submit()` sem overrides.
+- Testado localmente (sqlite): página de criação compila e renderiza sem erro
+  com os novos `validate`. Não testado o fluxo completo de bloqueio via browser
+  autenticado (sem sessão do Thiago disponível) — Thiago deve confirmar
+  tentando publicar um artigo incompleto.
+- **Deployado.**
+
+
 6º bug encontrado na rotina de import (após os 5 já corrigidos em a/j/k/l): a busca
 de categoria no `/api/parse-markdown` era **hardcoded na coleção `categories`**
 (a de Posts) — em Materiais (`material-categories`, coleção diferente) a categoria

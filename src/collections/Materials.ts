@@ -3,6 +3,7 @@ import { formatSlug } from "@/lib/slug";
 import { sendNewMaterialAlert } from "@/lib/content-alerts";
 import { eaEditor } from "@/lib/editor";
 import { buildPreviewUrl } from "@/lib/preview";
+import { requiredToPublish, requiredToPublishRichText } from "@/lib/publish-validation";
 
 export const Materials: CollectionConfig = {
   slug: "materials",
@@ -50,19 +51,22 @@ export const Materials: CollectionConfig = {
       type: "textarea",
       label: "Descrição (resumo)",
       admin: { description: "Resumo curto exibido na listagem e no topo da página do material." },
+      validate: requiredToPublish("Descrição"),
     },
     {
       name: "content",
       type: "richText",
-      label: "Conteúdo (texto completo, opcional)",
+      label: "Conteúdo (texto completo)",
       editor: eaEditor,
       admin: { description: "Texto rico exibido na página do material (abaixo do resumo). Importável do .md." },
+      validate: requiredToPublishRichText("Conteúdo"),
     },
     {
       name: "coverImage",
       type: "upload",
       relationTo: "media",
       label: "Imagem de capa",
+      validate: requiredToPublish("Imagem de capa"),
     },
     {
       name: "file",
@@ -87,6 +91,7 @@ export const Materials: CollectionConfig = {
         { label: "Apresentação", value: "apresentacao" },
         { label: "Vídeo", value: "video" },
       ],
+      validate: requiredToPublish("Tipo de material"),
     },
     {
       name: "category",
@@ -94,12 +99,14 @@ export const Materials: CollectionConfig = {
       relationTo: "material-categories",
       label: "Categoria",
       admin: { position: "sidebar" },
+      validate: requiredToPublish("Categoria"),
     },
     {
       name: "version",
       type: "text",
       label: "Versão",
       admin: { position: "sidebar", description: "Ex.: v1.0, 2026" },
+      validate: requiredToPublish("Versão"),
     },
     {
       name: "downloads",
@@ -137,8 +144,13 @@ export const Materials: CollectionConfig = {
       type: "group",
       label: "SEO",
       fields: [
-        { name: "metaTitle", type: "text", label: "Meta title" },
-        { name: "metaDescription", type: "textarea", label: "Meta description" },
+        { name: "metaTitle", type: "text", label: "Meta title", validate: requiredToPublish("Meta title") },
+        {
+          name: "metaDescription",
+          type: "textarea",
+          label: "Meta description",
+          validate: requiredToPublish("Meta description"),
+        },
       ],
     },
     {
