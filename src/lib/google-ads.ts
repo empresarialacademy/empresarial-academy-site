@@ -27,6 +27,9 @@ export async function getGoogleAdsClient() {
 
   const customer = client.Customer({
     customer_id: process.env.GOOGLE_CUSTOMER_ID || '',
+    // Conta MCC (EA MKT HUB) — as campanhas rodam na própria MCC, então
+    // login_customer_id == customer_id.
+    login_customer_id: process.env.GOOGLE_CUSTOMER_ID || '',
     refresh_token: settings.refreshToken,
   });
 

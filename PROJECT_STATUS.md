@@ -390,6 +390,31 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-23 (e) (Google Ads — CONECTADO; conta trocada p/ MCC EA MKT HUB)
+- **OAuth conectado com sucesso** (Thiago fez o consent no navegador dele — o
+  callback retornou `?oauth=success`, refresh token salvo no global `ads-settings`).
+  ⚠️ Se a Tela de permissão OAuth do projeto `ea-impulsiona` estiver em modo
+  "Testando", o refresh token pode expirar em 7 dias — considerar publicar o app
+  ou garantir marchi.thiago@gmail.com como usuário de teste.
+- **Conta trocada:** o Thiago decidiu usar a conta **"EA MKT HUB" (779-237-1166)**
+  em vez da 308-507-1783 configurada antes — é uma conta **MCC (gerente)**, e as
+  campanhas rodam DENTRO da própria MCC (confirmado pelo Thiago, não em conta-cliente
+  separada). `GOOGLE_CUSTOMER_ID` = `7792371166` (era `3085071783`) — atualizado na
+  Vercel produção E no `.env.local` dev.
+- **Código:** `src/lib/google-ads.ts` — `getGoogleAdsClient()` agora passa
+  `login_customer_id` (== `customer_id` aqui, pois a MCC roda as campanhas nela
+  mesma). Sem isso, contas MCC dão erro de permissão na Google Ads API.
+- **Limpeza do `.env.local`:** o arquivo estava em **UTF-16** (aparência de
+  "espaços entre letras" ao ler) e tinha uma linha `GEMINI_API_KEY` malformada
+  contendo um **token efêmero do Gemini (`AQ.…`)** — não é a API key persistente
+  (`AIza…`) e quebraria o parsing de env do Next mesmo se fosse válida. Removida.
+  Reescrito em UTF-8 limpo. `GEMINI_API_KEY` real (`AIza…`) segue **pendente**
+  (Thiago vai gerar em aistudio.google.com/apikey).
+- **Pendências que restam pro Ads mostrar dado real:** developer token em
+  **Basic access** (Central de API do Google Ads — hoje deve estar em "teste");
+  **criar 1 campanha** na conta 779-237-1166 (hoje zero); depois clicar
+  "Sincronizar" no EA ADS Manager.
+
 ### Sessão 2026-07-23 (d) (DEPLOY das sessões b+c — no ar e validado)
 **Deployado via Vercel CLI** (`vercel --prod`, build 2m, sem tocar no `main` do GitHub).
 Deployment `dpl_Hs5BPyPYBry4HnyPsYQxVXCGD9T9`, aliased para `empresarialacademy.com`.
