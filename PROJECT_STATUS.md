@@ -390,6 +390,13 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (i) (repo EA-MKT-HUB apagado — limpeza de infraestrutura 100% concluída)
+Thiago apagou o repo GitHub `EA-MKT-HUB` (confirmado via `gh repo view` → 404/não existe).
+**Fecha por completo o bloco de limpeza/infra autorizado nesta sessão** (f)-(i): Vercel
+desconectada do GitHub, secret rotacionado, secret antigo apagado, backup real em
+`ea-hub`, `ea-mkt-hub` removido (local+GitHub). Nada pendente nessa frente.
+**Restam só:** Ads (aguardando Google) e o bug do `.md` (aguardando print do console).
+
 ### Sessão 2026-07-24 (h) (secret antigo confirmado apagado; repo EA-MKT-HUB — link passado ao Thiago)
 - **Confirmado pelo Thiago: secret antigo do Google (`...12_u`) apagado** no Google
   Cloud. Fecha a pendência da sessão (f)/(g) — só o novo (`...LIFNJdFw-`) está ativo.
