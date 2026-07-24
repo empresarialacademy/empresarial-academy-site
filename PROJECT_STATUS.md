@@ -390,6 +390,35 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (g) (limpeza OneDrive concluída: backup real + ea-mkt-hub removido)
+Continuação da (f). Backup na nuvem resolvido por cópia de arquivo (não git push, que
+seguia bloqueado pelo secret-scanning até a rotação) direto para uma pasta que já era
+candidata a limpeza — dois pássaros, uma cajadada.
+- **`Projeto IA/ea-hub`**: conteúdo antigo (duplicado Prisma de outra IA — `.git` próprio,
+  `render.yaml`, `.windsurf`, docs de outra sessão) apagado; substituído pelo código-fonte
+  real do site (`robocopy` de `C:\dev\empresarial-academy-site`, excluindo
+  `node_modules`/`.next`/`.git`/`*.db` — 232 arquivos). **Esse é o backup real na nuvem
+  pedido pelo Thiago.**
+- **`Projeto IA/ea-mkt-hub`**: também duplicado Prisma (banco Postgres PRÓPRIO/separado,
+  sem relação com o Neon de produção — apagar não tocou em nada real). Conteúdo removido
+  por completo (`.env`/`.env.local` com credenciais de outro banco, `.git`, `node_modules`,
+  `prisma/`, etc.). **Restou só a pasta vazia** — lock persistente do driver do OneDrive
+  (independe do processo `OneDrive.exe`; sobreviveu a parar+religar o OneDrive). Não vale
+  mais esforço — resolve sozinho num reboot, ou o Thiago apaga manualmente quando quiser.
+  Repositório GitHub `EA-MKT-HUB` **não foi apagado** (token do `gh` sem escopo
+  `delete_repo`) — fica pro Thiago fazer pelo github.com se quiser.
+- **⚠️ CORREÇÃO DE MEMÓRIA IMPORTANTE:** o registro antigo listava `Antigravity` como um
+  dos "projetos paralelos" candidatos a limpeza. **Isso está ERRADO** — `Antigravity` é a
+  pasta de trabalho REAL do Thiago (conteúdo de blog, Portal de Pós-Vendas e Playbook
+  Souza Ramos publicados nesta mesma sessão vieram de lá). **NÃO tocar nela.**
+- **Efeito colateral limpo:** processos `next dev` órfãos (portas 3900/3901/3902, das
+  sincronizações de Neon de sessões anteriores desta mesma conversa — o `pkill` de antes
+  só matava o wrapper do shell, não a árvore de processos node completa) finalmente
+  encerrados.
+- **Pendente do Thiago:** confirmar se o secret antigo do Google (`...12_u`) foi mesmo
+  excluído no Google Cloud (ele reportou "Adicionar secret indisponível" antes de eu
+  explicar o limite de 2 secrets — não tenho confirmação do apagamento em si).
+
 ### Sessão 2026-07-24 (f) (limpeza/infra: Vercel desconectada do GitHub, secret rotacionado, backup pendente)
 Autorizado pelo Thiago: risco do `main`, backup na nuvem, limpeza OneDrive.
 - **Vercel DESCONECTADA do GitHub** (`DELETE /v9/projects/.../link` via API, confirmado
