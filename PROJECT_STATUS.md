@@ -390,6 +390,30 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (r) (CAUSA RAIZ DEFINITIVA da imagem: rota catch-all do Payload sem handler HEAD)
+Thiago subiu OUTRA imagem com nome LIMPO (`modulo1-post2-empresario-fracassado.png`,
+sem espaço) e o 400 continuou — provando que a teoria da sessão (p) (espaço no nome)
+era **só parte do problema, não a causa raiz**. Investigação com `curl` direto:
+- `GET /api/media/file/<qualquer-arquivo>` → sempre 200, headers corretos
+  (`Content-Type: image/png`, `Content-Length` certo).
+- **`HEAD` no mesmo arquivo → SEMPRE 404**, `Content-Type: application/json`,
+  `X-Matched-Path: /api/[...slug]` (cai num catch-all genérico).
+- **Causa raiz real:** `src/app/(payload)/api/[...slug]/route.ts` (o catch-all REST do
+  Payload) importa `REST_GET/POST/DELETE/PATCH/PUT/OPTIONS` de `@payloadcms/next/routes`
+  — mas **Payload 3.85 não exporta `REST_HEAD`**. Sem handler de `HEAD`, TODA imagem
+  servida por essa rota falha. O otimizador de imagem da própria Vercel faz `HEAD` para
+  validar o recurso ANTES de buscar — com 404 aí, rejeita com
+  `400 INVALID_IMAGE_OPTIMIZE_REQUEST`, mesmo pra arquivos que existem e servem
+  perfeitamente via GET. **Isso explica por que TODA imagem enviada por upload — desde
+  sempre — nunca funcionou no site**, independente do nome do arquivo.
+- **Fix definitivo:** `export async function HEAD()` no mesmo arquivo, reaproveitando o
+  handler do GET e descartando o corpo (mesmos headers/status, sem corpo — semântica
+  padrão de HEAD).
+- A sanitização de nome de arquivo da sessão (p) **continua válida e foi mantida**
+  (boa prática, evita outros problemas de URL com espaço/acento), mas não era o que
+  bloqueava — o bloqueio de verdade era a falta do `HEAD`.
+- **Deployado.**
+
 ### Sessão 2026-07-24 (q) (filtro por categoria no /blog)
 Pedido do Thiago. Implementado:
 - `getPublishedPosts()` (`src/lib/payload.ts`) ganhou 3º parâmetro `categorySlug`
