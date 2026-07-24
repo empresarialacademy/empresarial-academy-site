@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageHero } from "@/components/layout/PageHero";
 import { PostCard } from "@/components/blog/PostCard";
-import { getPublishedPosts } from "@/lib/payload";
+import { getPublishedPosts, getBlogCategories } from "@/lib/payload";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -16,8 +17,15 @@ export const metadata: Metadata = {
 // Revalida periodicamente para refletir publicações do CMS.
 export const revalidate = 60;
 
-export default async function BlogPage() {
-  const { docs: posts } = await getPublishedPosts(12);
+type Props = { searchParams: Promise<{ categoria?: string }> };
+
+export default async function BlogPage({ searchParams }: Props) {
+  const { categoria } = await searchParams;
+  const [{ docs: posts }, categories] = await Promise.all([
+    getPublishedPosts(12, 1, categoria),
+    getBlogCategories(),
+  ]);
+  const activeSlug = categoria && categoria !== "todas" ? categoria : "todas";
 
   return (
     <main>
@@ -30,17 +38,51 @@ export default async function BlogPage() {
       />
 
       <section className="mx-auto max-w-6xl px-6 py-20">
+        {categories.length > 0 && (
+          <nav
+            aria-label="Filtrar por categoria"
+            className="mb-10 flex flex-wrap gap-2"
+          >
+            <Link
+              href="/blog"
+              className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                activeSlug === "todas"
+                  ? "bg-navy text-white"
+                  : "bg-surface text-navy hover:bg-line"
+              }`}
+            >
+              Todos
+            </Link>
+            {categories.map((cat) => (
+              <Link
+                key={cat.id}
+                href={`/blog?categoria=${cat.slug}`}
+                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                  activeSlug === cat.slug
+                    ? "bg-navy text-white"
+                    : "bg-surface text-navy hover:bg-line"
+                }`}
+              >
+                {cat.name}
+              </Link>
+            ))}
+          </nav>
+        )}
+
         {posts.length === 0 ? (
           <div className="rounded-2xl border border-line bg-white p-12 text-center">
             <p className="text-4xl" aria-hidden>
               ✍️
             </p>
             <h2 className="mt-4 text-xl font-semibold text-navy">
-              Em breve, novos conteúdos
+              {activeSlug === "todas"
+                ? "Em breve, novos conteúdos"
+                : "Nenhum artigo nesta categoria ainda"}
             </h2>
             <p className="mt-2 text-gray">
-              Estamos preparando artigos práticos para impulsionar a sua gestão.
-              Volte em breve.
+              {activeSlug === "todas"
+                ? "Estamos preparando artigos práticos para impulsionar a sua gestão. Volte em breve."
+                : "Volte em breve ou confira todos os artigos do blog."}
             </p>
           </div>
         ) : (

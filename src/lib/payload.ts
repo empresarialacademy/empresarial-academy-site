@@ -5,22 +5,44 @@ import config from "@payload-config";
 /** Cliente do Payload (Local API) para uso em Server Components e route handlers. */
 export const getPayloadClient = () => getPayload({ config });
 
-/** Busca artigos publicados (status published e data de publicação já alcançada). */
-export async function getPublishedPosts(limit = 12, page = 1) {
+/**
+ * Busca artigos publicados (status published e data de publicação já
+ * alcançada). `categorySlug` filtra por categoria (usado pelo filtro do
+ * /blog); omitido ou "todas" traz todas.
+ */
+export async function getPublishedPosts(
+  limit = 12,
+  page = 1,
+  categorySlug?: string,
+) {
   const payload = await getPayloadClient();
+  const and: Where[] = [
+    { status: { equals: "published" } },
+    { publishedAt: { less_than_equal: new Date().toISOString() } },
+  ];
+  if (categorySlug && categorySlug !== "todas") {
+    and.push({ "category.slug": { equals: categorySlug } });
+  }
   return payload.find({
     collection: "posts",
-    where: {
-      and: [
-        { status: { equals: "published" } },
-        { publishedAt: { less_than_equal: new Date().toISOString() } },
-      ],
-    },
+    where: { and },
     sort: "-publishedAt",
     depth: 1,
     limit,
     page,
   });
+}
+
+/** Categorias do blog (para o filtro em /blog), ordenadas por nome. */
+export async function getBlogCategories() {
+  const payload = await getPayloadClient();
+  const { docs } = await payload.find({
+    collection: "categories",
+    sort: "name",
+    depth: 0,
+    limit: 100,
+  });
+  return docs;
 }
 
 /**

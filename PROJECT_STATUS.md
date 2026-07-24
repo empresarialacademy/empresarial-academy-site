@@ -390,7 +390,19 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
-### Sessão 2026-07-24 (p) (CAUSA RAIZ real da imagem: nome de arquivo com espaço quebra o otimizador da Vercel)
+### Sessão 2026-07-24 (q) (filtro por categoria no /blog)
+Pedido do Thiago. Implementado:
+- `getPublishedPosts()` (`src/lib/payload.ts`) ganhou 3º parâmetro `categorySlug`
+  (filtra por `category.slug`); nova `getBlogCategories()` lista as categorias
+  (`categories`, sort por nome) para montar os filtros.
+- `/blog` (`page.tsx`) lê `?categoria=<slug>` da URL, mostra pills de filtro
+  ("Todos" + uma por categoria) acima da grade, estado ativo destacado (navy).
+  Mensagem de vazio diferenciada quando o filtro não retorna nada (vs. blog
+  genuinamente sem conteúdo). Sem JS client-side — é só link com querystring,
+  cada filtro é uma navegação normal (cacheável via `revalidate=60`).
+- **Deployado.**
+
+
 Investigação com print + rede real (browser tool) achou a causa verdadeira — **diferente
 da hipótese da sessão (n)** (remotePatterns não era o problema; a URL da imagem nem usa
 o domínio do R2 direto, usa a rota própria do Payload `/api/media/file/<nome>`, mesma
