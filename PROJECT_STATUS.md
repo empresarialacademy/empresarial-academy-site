@@ -390,8 +390,35 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-23 (c) (Google Ads — config real de produção; estado corrigido)
+**Descoberta que corrige registro antigo:** as env vars do Google Ads/Gemini NÃO
+estavam na Vercel de produção deste site (só 14 vars: S3, DB, Resend...). Provavelmente
+viviam no projeto paralelo `ea-mkt-hub` (a mensagem de erro do código dizia "Vá no EA
+MKT HUB"). Ou seja, o "Conectar Google Ads" e o forecast NUNCA funcionaram em produção.
+
+- **Env vars setadas na Vercel produção (via `vercel env add`, valores puxados do
+  `.env.local` sem exposição):** `NEXT_PUBLIC_SITE_URL=https://empresarialacademy.com`,
+  `GOOGLE_ADS_CLIENT_ID`, `GOOGLE_ADS_CLIENT_SECRET`, `GOOGLE_DEVELOPER_TOKEN`,
+  `GOOGLE_CUSTOMER_ID=3085071783` (conta real 308-507-1783 sem traços — o valor de 8
+  dígitos que estava no dev estava errado). **`GEMINI_API_KEY` ainda PENDENTE** (o
+  Thiago passou um token `AQ.…`, que é efêmero do Gemini, não a API key persistente
+  `AIza…`; não setei — precisa da key do aistudio.google.com/apikey).
+- **⚠️ Blocker do OAuth (você-only, Google Cloud):** o `GOOGLE_ADS_CLIENT_ID` é o client
+  `1072174739551-…` do projeto **`ea-impulsiona`** (Firebase) — o único redirect URI
+  registrado nele é o do Firebase. Para o "Conectar Google Ads" funcionar, PRECISA
+  registrar `https://empresarialacademy.com/api/ads/callback` como redirect URI
+  autorizado nesse client (Google Cloud Console → projeto ea-impulsiona → Credenciais).
+- **Outros blockers você-only:** developer token precisa de **Basic access** (não "test"
+  — test não lê conta real); conta tem **zero campanhas** (sem dados pra sincronizar até
+  criar 1). Código não usa `login_customer_id` (assume conta standalone/não-MCC).
+- **Código:** mensagem de erro obsoleta "EA MKT HUB" → "EA ADS Manager (dentro do EA HUB)"
+  em `src/lib/google-ads.ts`. **NÃO deployado ainda** (junto com a sessão (b)).
+- **Fluxo de conexão relembrado:** `/api/ads/oauth` → consent Google → `/api/ads/callback`
+  salva `refreshToken` no global `ads-settings`; `/api/ads/sync-all` puxa métricas;
+  `/api/ads/forecast` usa Gemini.
+
 ### Sessão 2026-07-23 (b) (EA HUB — correções de usabilidade, bug de import .md, favicon)
-Correções pontuais sobre o EA HUB (não deployado ainda — aguardando sync do Neno/deploy).
+Correções pontuais sobre o EA HUB (não deployado ainda — aguardando sync do Neon/deploy).
 
 - **Bug corrigido — import de `.md` em Artigos:** `/api/parse-markdown` buscava a
   categoria com `where: { title: ... }`, mas a coleção `categories` usa o campo

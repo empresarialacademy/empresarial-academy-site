@@ -16,7 +16,7 @@ export async function getGoogleAdsClient() {
   const settings = await payload.findGlobal({ slug: 'ads-settings' }) as unknown as { refreshToken?: string };
   
   if (!settings?.refreshToken) {
-    throw new Error('Google Ads não está conectado. Vá no EA MKT HUB e autorize o acesso.');
+    throw new Error('Google Ads não está conectado. Vá no EA ADS Manager (dentro do EA HUB) e autorize o acesso.');
   }
 
   const client = new GoogleAdsApi({
