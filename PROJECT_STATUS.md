@@ -390,6 +390,16 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (h) (secret antigo confirmado apagado; repo EA-MKT-HUB — link passado ao Thiago)
+- **Confirmado pelo Thiago: secret antigo do Google (`...12_u`) apagado** no Google
+  Cloud. Fecha a pendência da sessão (f)/(g) — só o novo (`...LIFNJdFw-`) está ativo.
+- Passado o link direto para o Thiago apagar o repo GitHub `EA-MKT-HUB`
+  (`github.com/empresarialacademy/EA-MKT-HUB/settings` → Danger Zone) — ele mesmo faz,
+  meu token não tem `delete_repo`. Ainda sem confirmação se ele já apagou.
+- **Ads e bug do `.md` seguem exatamente como estavam** (sessão g): Ads aguardando
+  aprovação do Google; `.md` aguardando o Thiago reproduzir e mandar o print do console
+  (log de diagnóstico já no ar desde a sessão (f)/(g), ninguém reproduziu ainda).
+
 ### Sessão 2026-07-24 (g) (limpeza OneDrive concluída: backup real + ea-mkt-hub removido)
 Continuação da (f). Backup na nuvem resolvido por cópia de arquivo (não git push, que
 seguia bloqueado pelo secret-scanning até a rotação) direto para uma pasta que já era
