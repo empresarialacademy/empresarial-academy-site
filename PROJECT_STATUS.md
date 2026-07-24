@@ -390,6 +390,19 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (e) (Ads — erro real da sincronização confirma causa esperada)
+Com o fix da sessão (d) deployado, Thiago testou "Sincronizar" de novo e a mensagem
+real apareceu: **"The customer account can't be accessed because it is not yet
+enabled or has been deactivated."** Duas causas prováveis, ambas já mapeadas:
+1. **Mais provável:** developer token ainda em nível de Teste — só acessa contas
+   marcadas como "conta de teste" do Google; 770-135-7894 é conta real. Resolve
+   sozinho quando o Basic Access (protocolo `4-9720000040725`) for aprovado.
+2. **Possível:** a conta 770-135-7894 ficou com o cadastro de **pagamento
+   incompleto** — Thiago saiu do assistente de criação de campanha antes de
+   terminar (não chegou no passo "Inserir os detalhes da forma de pagamento").
+   **Decisão do Thiago: deixar pra depois** (não completar agora) — revisitar
+   se o erro persistir mesmo depois do Basic Access aprovado.
+
 ### Sessão 2026-07-24 (d) (fix: "Erro: undefined" ao sincronizar Ads — mensagem de erro real do Google)
 Thiago reconectou o Google Ads (token novo, pós-publicação da Tela OAuth) e clicou em
 "Sincronizar" — deu **"Erro: undefined"**. Esperado o SYNC falhar agora (Basic Access
