@@ -390,6 +390,24 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (k) (import .md — 3º bug: campo "content" não abastecia visualmente)
+Thiago testou após o fix (j): sem erro, título/slug/SEO/tags preencheram, mas o
+**conteúdo do editor ficou vazio**. Não é o arquivo — é o mesmo padrão de bug de novo,
+em outro campo.
+- **Causa:** `RichText/field/Field.js` do Payload só remonta/recarrega o editor Lexical
+  visualmente quando o **`initialValue`** do campo muda (`useEffect` ouvindo
+  `initialValue`, dispara `setRerenderProviderKey`) — **não quando `value` muda**. O
+  `ImportMarkdownButton` fazia `dispatchFields({type:'UPDATE', path:'content',
+  value:lexical})`, sem `initialValue`. Confirmado no reducer (`fieldReducer.js` caso
+  `UPDATE`): só aplica as chaves literalmente enviadas na action. Resultado: o VALOR a
+  ser salvo ficava correto nos bastidores, mas o editor continuava mostrando vazio (os
+  campos de texto simples — title/slug — não têm esse problema por serem inputs
+  controlados comuns, reativos a `value` diretamente).
+- **Fix:** `dispatchFields({type:'UPDATE', path:'content', value:lexical,
+  initialValue:lexical, valid:true})` — manda os dois. Terceiro bug distinto encontrado
+  nesta mesma rotina de import (após: title/categoria por campo errado (a), tags
+  precisando de ADD_ROW (a), config do conversor não-sanitizada (j)). **Deployado.**
+
 ### Sessão 2026-07-24 (j) (CAUSA RAIZ do bug do import .md achada e corrigida)
 O bug do import `.md` (que ressurgiu na sessão f/g) NÃO era o campo `tags` (client) — era
 **erro 500 no servidor**, dentro de `/api/parse-markdown`. Diagnóstico definitivo:

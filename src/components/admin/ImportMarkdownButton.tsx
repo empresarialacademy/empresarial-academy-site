@@ -66,7 +66,15 @@ export const ImportMarkdownButton = () => {
         if (frontmatter.authorId) set('author', frontmatter.authorId);
       }
 
-      if (lexical) set('content', lexical);
+      if (lexical) {
+        // Campo `richText` (Lexical): o editor visual só recarrega quando o
+        // `initialValue` do campo muda (não o `value`) — é o gatilho interno
+        // que o Payload usa para decidir se remonta o editor
+        // (RichText/field/Field.js: useEffect ouvindo `initialValue`). Um
+        // UPDATE só com `value` preenche o dado que será salvo, mas o editor
+        // fica "cego" visualmente ao novo conteúdo. Precisa mandar os dois.
+        dispatchFields({ type: 'UPDATE', path: 'content', value: lexical, initialValue: lexical, valid: true });
+      }
 
       setFeedback({ kind: 'ok', msg: 'Conteúdo importado. Revise, adicione a capa e visualize antes de publicar.' });
     } catch (error) {
