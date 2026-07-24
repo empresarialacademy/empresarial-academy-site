@@ -1,8 +1,12 @@
 /**
  * Avaliações do Google via Featurable (https://featurable.com — plano free).
- * Ativa apenas com FEATURABLE_WIDGET_ID definido; sem ele (ou em erro),
- * retorna null e as seções de prova social simplesmente não renderizam.
- * Mesmo padrão defensivo do lib/instagram.ts.
+ * Ativa apenas com FEATURABLE_API_KEY + FEATURABLE_WIDGET_ID definidos; sem
+ * eles (ou em erro), retorna null e as seções de prova social simplesmente
+ * não renderizam. Mesmo padrão defensivo do lib/instagram.ts.
+ *
+ * API real (confirmada em featurable.com/docs/api-reference/widgets/,
+ * 2026-07-24): GET https://featurable.com/api/v2/widgets/{uuid} com header
+ * X-API-Key — retorna { widget: { reviews: [...], gbpLocationSummary } }.
  */
 
 export type GoogleReview = {
@@ -19,58 +23,60 @@ export type GoogleReviewsData = {
   reviews: GoogleReview[];
 };
 
-const STAR_ENUM: Record<string, number> = {
-  ONE: 1,
-  TWO: 2,
-  THREE: 3,
-  FOUR: 4,
-  FIVE: 5,
+type FeaturableReview = {
+  author?: { name?: string };
+  text?: string;
+  rating?: { value?: number };
+  publishedAt?: string;
 };
 
-function toRating(v: unknown): number {
-  if (typeof v === "number" && v >= 1 && v <= 5) return v;
-  if (typeof v === "string" && STAR_ENUM[v]) return STAR_ENUM[v];
-  return 5;
-}
+type FeaturableWidgetResponse = {
+  success?: boolean;
+  widget?: {
+    reviews?: FeaturableReview[];
+    gbpLocationSummary?: { reviewsCount?: number; rating?: number };
+    /** true enquanto o widget não está de fato ligado a um Google Business Profile. */
+    isExampleReviews?: boolean;
+  };
+};
 
 export async function getGoogleReviews(): Promise<GoogleReviewsData | null> {
+  const apiKey = process.env.FEATURABLE_API_KEY;
   const widgetId = process.env.FEATURABLE_WIDGET_ID;
-  if (!widgetId) return null;
+  if (!apiKey || !widgetId) return null;
 
   try {
     const res = await fetch(
-      `https://featurable.com/api/v1/widgets/${widgetId}`,
-      { next: { revalidate: 3600 } },
+      `https://featurable.com/api/v2/widgets/${widgetId}`,
+      {
+        headers: { accept: "application/json", "X-API-Key": apiKey },
+        next: { revalidate: 3600 },
+      },
     );
     if (!res.ok) return null;
-    const data = await res.json();
+    const data = (await res.json()) as FeaturableWidgetResponse;
+    const widget = data.widget;
+    // Enquanto o widget não estiver de fato ligado a um Google Business
+    // Profile, a API devolve avaliações de exemplo fictícias — nunca exibir
+    // (decisão do projeto: não fabricar prova social falsa).
+    if (!widget || widget.isExampleReviews) return null;
 
-    const rawReviews: unknown[] = Array.isArray(data?.reviews)
-      ? data.reviews
-      : [];
-
-    const reviews: GoogleReview[] = rawReviews
-      .map((raw) => {
-        const r = raw as {
-          reviewer?: { displayName?: string };
-          starRating?: unknown;
-          comment?: string;
-          createTime?: string;
-        };
-        return {
-          name: r.reviewer?.displayName?.trim() || "Cliente Google",
-          rating: toRating(r.starRating),
-          text: (r.comment ?? "").trim(),
-          date: r.createTime ?? null,
-        };
-      })
+    const reviews: GoogleReview[] = (widget.reviews ?? [])
+      .map((r) => ({
+        name: r.author?.name?.trim() || "Cliente Google",
+        rating:
+          typeof r.rating?.value === "number" ? r.rating.value : 5,
+        text: (r.text ?? "").trim(),
+        date: r.publishedAt ?? null,
+      }))
       .filter((r) => r.text.length > 0);
 
     if (reviews.length === 0) return null;
 
+    const summary = widget.gbpLocationSummary;
     const averageRating =
-      typeof data?.averageRating === "number"
-        ? Math.round(data.averageRating * 10) / 10
+      typeof summary?.rating === "number"
+        ? Math.round(summary.rating * 10) / 10
         : Math.round(
             (reviews.reduce((a, r) => a + r.rating, 0) / reviews.length) * 10,
           ) / 10;
@@ -78,8 +84,8 @@ export async function getGoogleReviews(): Promise<GoogleReviewsData | null> {
     return {
       averageRating,
       totalCount:
-        typeof data?.totalReviewCount === "number"
-          ? data.totalReviewCount
+        typeof summary?.reviewsCount === "number"
+          ? summary.reviewsCount
           : reviews.length,
       reviews,
     };
