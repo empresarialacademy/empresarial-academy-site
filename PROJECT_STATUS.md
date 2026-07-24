@@ -390,6 +390,46 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-25 (z) (EA Content Engine — 22 artigos de blog produzidos e publicados em massa)
+- **Pedido do Thiago:** usar a skill `ea-content-engine` para produzir 20 artigos
+  novos de blog (Gestão/Vendas/Liderança, sem redes sociais desta vez), avaliar
+  contra os critérios da skill, apagar os 6 posts de teste que estavam em
+  produção e subir os 20 novos + os 2 já feitos com a skill (Representantes vs
+  CLT, Treinamento vs Consultoria) — **22 artigos publicados no total.**
+- **Conteúdo fonte:** `Projeto IA/Antigravity/Conteudo_Estrategico_Blog/
+  {Gestão,Vendas,Liderança}/blog/Tema_XX_.../artigo.md` — 20 arquivos novos,
+  auditados por script (sem palavra do anti-glossário, sem tabela Markdown,
+  categoria/autor/status corretos, com FAQ/checklist/erros comuns em todos).
+  Achados e corrigidos na auditoria: 1 palavra proibida ("segredo"), 1 tabela
+  Markdown indevida, 1 erro de YAML (aspas duplas aninhadas no
+  `meta_description`) — todos corrigidos antes da publicação.
+- **Publicação em massa via backend (autorizado pelo Thiago), sem passar pelo
+  fluxo manual do admin:**
+  1. Backup dos 6 posts antigos (id/title/slug/content/tags) salvo local antes
+     de apagar — reversível se precisar.
+  2. Rota temporária `src/app/api/dev/bulk-import-posts/route.ts` (removida
+     depois do uso) — usa a **Local API do Payload** de verdade (não SQL cru)
+     para criar os 22 posts como **Rascunho** (evita a trava de
+     "obrigatório ao publicar" por falta de capa), com `convertMarkdownToLexical`
+     igual ao importador real, categoria/autor resolvidos, tags como array.
+  3. Deletados os 6 posts antigos (`DELETE FROM posts` + `posts_tags`) — 2 dos
+     slugs novos colidiam com slugs antigos de propósito (mesma URL, para não
+     perder SEO): `treinamento-de-vendas-vs-consultoria` e (parcialmente)
+     `representantes-comerciais-vs-equipe-clt`.
+  4. `UPDATE posts SET status='published'` direto no banco para os 22 — **sem
+     imagem de capa**, usando o mesmo fallback visual `BrandCover` (navy/dourado)
+     que os posts antigos já usavam sem capa própria. Thiago vai substituir por
+     imagens reais depois, editando cada post no EA HUB.
+  5. Mesmo cuidado da sessão anterior: `.env.local` apontado pro Neon só
+     durante a operação, revertido depois; `importMap.js` conferido (não foi
+     corrompido desta vez).
+- **Validado em produção:** `/blog` 200, amostra de 5 artigos novos (uma por
+  categoria + os 2 com slug reaproveitado) 200, post antigo (`5-sinais-
+  empresa-depende-de-voce`) agora 404 (removido de fato), `sitemap.xml` já
+  lista os 22 URLs novos.
+- **Pendência explícita do Thiago:** gerar e subir as imagens de capa
+  separadamente, depois.
+
 ### Sessão 2026-07-24 (y) (3 pendências apontadas pelo Thiago: busca sem acento, posts travados, reviews do Google)
 Thiago listou 3 itens pendentes no início da sessão:
 1. **Avaliações do Google bloqueadas** por verificação do Google Business Profile —
