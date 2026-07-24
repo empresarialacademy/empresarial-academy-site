@@ -10,6 +10,7 @@ import { getPublishedMaterials, getPublishedPosts } from "@/lib/payload";
 import { getLatestVideos } from "@/lib/youtube";
 import { InstagramFeed } from "@/components/InstagramFeed";
 import { GoogleReviews } from "@/components/GoogleReviews";
+import { GoogleRatingCard } from "@/components/GoogleRatingCard";
 import { VideoTestimonial } from "@/components/VideoTestimonial";
 import { depoimentosVideo } from "@/lib/content";
 import { servicosMenu, siteConfig } from "@/lib/site-config";
@@ -279,6 +280,10 @@ export default async function Home() {
                   </a>
                 </li>
               ))}
+              {/* Preenche o espaço vazio ao lado dos vídeos com a nota do Google */}
+              <li>
+                <GoogleRatingCard />
+              </li>
             </ul>
             <div className="mt-10">
               <Button href={siteConfig.social.youtube} variant="secondary" size="md">

@@ -2,7 +2,7 @@ import { getGoogleReviews } from "@/lib/reviews";
 import { siteConfig } from "@/lib/site-config";
 import { formatDatePtBR } from "@/lib/format";
 
-function Stars({ rating, size = 16 }: { rating: number; size?: number }) {
+export function Stars({ rating, size = 16 }: { rating: number; size?: number }) {
   return (
     <span
       className="inline-flex gap-0.5"
