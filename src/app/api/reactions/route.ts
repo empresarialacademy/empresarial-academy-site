@@ -55,11 +55,19 @@ export async function POST(req: Request) {
     const likes = Math.max(0, (doc.likes ?? 0) + likeDelta);
     const dislikes = Math.max(0, (doc.dislikes ?? 0) + dislikeDelta);
 
-    await payload.update({
-      collection: collection as ReactableCollection,
-      id: doc.id,
-      data: { likes, dislikes },
-    });
+    // UPDATE direto no banco (em vez de `payload.update`): artigos/materiais
+    // antigos, publicados antes da regra "obrigatório só ao publicar" (capa/
+    // tags), não têm esses campos preenchidos — `payload.update` revalida o
+    // documento inteiro e rejeitaria esse voto por causa deles. Like/dislike
+    // é só um contador público, não precisa (nem deve) passar por essa
+    // validação de conteúdo.
+    const pool = (payload.db as { pool?: { query: (sql: string, params: unknown[]) => Promise<unknown> } }).pool;
+    if (!pool) throw new Error("Pool do Postgres indisponível.");
+    await pool.query(`UPDATE ${collection} SET likes = $1, dislikes = $2 WHERE id = $3`, [
+      likes,
+      dislikes,
+      doc.id,
+    ]);
 
     return NextResponse.json({ likes, dislikes });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -390,6 +390,71 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (x) (fila: skill "EA Content Engine" — análise de aptidão, ainda não implementada)
+- **Pedido do Thiago:** avaliar se a spec de skill "EA Content Engine" (produção de
+  artigos + materiais ricos para blog/redes) está apta para começar a produzir
+  conteúdo. **Só análise — a skill NÃO foi criada/implementada ainda.**
+- **Veredito Módulo 1 (Artigos): apto, com 4 ajustes obrigatórios** antes de rodar,
+  verificados contra o importador real (`src/app/api/parse-markdown/route.ts` +
+  `ImportMarkdownButton.tsx`):
+  1. **Tabelas Markdown quebram** — `defaultEditorFeatures` (Lexical, usado no
+     `convertMarkdownToLexical` do importador) não tem `TableFeature`. A skill não
+     pode prometer tabela como entregável padrão; usar lista ou o `ChecklistFeature`
+     (esse sim suportado).
+  2. **Campo "resumo" não existe no importador** — só `meta_description` (preenche
+     excerpt + description + SEO description juntos). Front matter da skill deve
+     usar só essa chave.
+  3. **Categoria/autor resolvidos por nome EXATO** (`payload.find` por `name`).
+     Categorias reais hoje (únicas 3 que existem): **Gestão, Vendas, Liderança**
+     (Posts) — Materials só tem Gestão/Vendas. Autor único: **Thiago Marchi**. A
+     skill precisa usar essas strings exatas, sem variação.
+  4. Chaves do front matter são `meta_title`/`meta_description` (snake_case), não
+     "meta title"/"meta description".
+  - **Recomendação de segurança:** skill deve sempre gerar `status: draft` (nunca
+     `published` direto) — preserva revisão humana e evita a trava "obrigatório só
+     ao publicar" (ver sessão (v) abaixo e o bugfix de reactions logo acima nesta
+     mesma sessão). Capa/imagem continua manual no EA HUB — a skill não gera isso.
+- **Veredito Módulo 2 (Materiais Ricos): NÃO apta como especificada.** A coleção
+  real `Materials` exige um arquivo baixável de verdade (`material-files`
+  collection). A spec da skill produz o roteiro/copy do material mas não define o
+  formato final nem gera o arquivo pronto para upload — falta acoplar com uma
+  skill de geração de arquivo (pdf/xlsx/docx) antes disso virar operacional.
+- **Arquitetura:** dois subcomandos (`criar_artigo`/`criar_material_rico`) numa
+  única skill é o formato certo, mas o texto enviado ainda é uma spec de
+  comportamento — falta o frontmatter padrão de skill (name/description) para
+  virar um arquivo de skill de verdade. Sugestão: montar via `skill-creator`
+  quando for implementar.
+- **Próximo passo sugerido:** revisar a spec com os 4 ajustes do Módulo 1 e decidir
+  o formato de entrega do Módulo 2 antes de pedir a implementação da skill.
+
+### Sessão 2026-07-24 (w) (bugfix: curtir/não curtir com 500 em produção — causa raiz e correção)
+- **Achado durante teste completo do site (pedido do Thiago):** `POST
+  /api/reactions` retornava **500** em qualquer artigo/material, em produção.
+- **Causa raiz real (não era schema faltando):** as colunas `likes`/`dislikes`
+  já existiam no Postgres — o erro real (visto rodando `next dev` local
+  apontado pro Neon) era `ValidationError: The following fields are invalid:
+  Imagem destacada, Tags`. **4 dos 6 posts publicados** (ids 1–4, anteriores à
+  regra "obrigatório só ao publicar" da sessão (v)) não têm capa nem tags —
+  `payload.update()` revalida o documento inteiro e barra QUALQUER alteração
+  nesses posts, inclusive um simples voto de curtir. Isso também significa que
+  **editar esses 4 posts pelo admin e salvar (mantendo status Publicado) vai
+  falhar do mesmo jeito** até alguém preencher capa+tags neles.
+- **Fix aplicado em `src/app/api/reactions/route.ts`:** trocado `payload.update()`
+  por um `UPDATE` SQL direto via `payload.db.pool` (pool Postgres exposto pelo
+  adapter), escrevendo só `likes`/`dislikes` — sem disparar a validação de
+  conteúdo completo do documento (curtir é um contador público, não precisa
+  passar pela regra de "obrigatório para publicar"). `collection` já vem
+  validado contra allowlist (`posts`/`materials`) antes do interpolar no SQL —
+  sem risco de injection.
+- **Validado:** testado contra produção (rodando dev local com `DATABASE_URI`
+  do Neon) — curtir, não curtir e voltar a zero funcionando nas duas coleções
+  (`posts` e `materials`), dados de teste revertidos a 0/0 depois. `typecheck`
+  e `lint` limpos.
+- **Pendência separada (não corrigida nesta sessão):** os 4 posts antigos sem
+  capa/tags continuam bloqueados para edição normal no admin — precisa alguém
+  preencher capa+tags neles (ou trocar o status para Rascunho) quando for
+  editá-los de novo.
+
 ### Sessão 2026-07-24 (v) (campos obrigatórios só ao Publicar, Posts e Materials)
 Pedido do Thiago: não deixar publicar sem TODOS os campos preenchidos. Decisão dele:
 só ao **Publicar** (Salvar como rascunho continua livre — permite salvar

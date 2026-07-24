@@ -4,9 +4,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { VideoTestimonial } from "@/components/VideoTestimonial";
 import {
-  depoimentosVideo,
   diferenciais,
   fundador,
   fundadorConquistas,
@@ -166,33 +164,6 @@ export default function Page() {
               </li>
             ))}
           </ul>
-        </div>
-      </section>
-
-      {/* O impacto do nosso método — prova social em vídeo */}
-      <section className="bg-surface">
-        <div className="mx-auto max-w-6xl px-6 py-16">
-          <SectionHeading title="O impacto do nosso método" align="center" />
-          <div className="mx-auto mt-10 grid max-w-4xl items-center gap-8 md:grid-cols-[320px_1fr]">
-            <div className="mx-auto w-full max-w-sm md:mx-0">
-              <VideoTestimonial
-                video={depoimentosVideo.daniella.video}
-                poster={depoimentosVideo.daniella.poster}
-                name={depoimentosVideo.daniella.name}
-                role={depoimentosVideo.daniella.role}
-                caption={false}
-              />
-            </div>
-            <div className="text-center md:text-left">
-              <p className="text-sm font-semibold text-gold-ink">
-                {depoimentosVideo.daniella.name} · {depoimentosVideo.daniella.role}
-              </p>
-              <h3 className="mt-2 text-lg font-semibold text-navy">
-                {depoimentosVideo.daniella.chamada}
-              </h3>
-              <p className="mt-3 text-sm text-gray">{depoimentosVideo.daniella.texto}</p>
-            </div>
-          </div>
         </div>
       </section>
 

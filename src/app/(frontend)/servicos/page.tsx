@@ -112,21 +112,21 @@ export default function Page() {
           <div className="mx-auto mt-10 grid max-w-4xl items-center gap-8 md:grid-cols-[320px_1fr]">
             <div className="mx-auto w-full max-w-sm md:mx-0">
               <VideoTestimonial
-                video={depoimentosVideo.erik.video}
-                poster={depoimentosVideo.erik.poster}
-                name={depoimentosVideo.erik.name}
-                role={depoimentosVideo.erik.role}
+                video={depoimentosVideo.daniella.video}
+                poster={depoimentosVideo.daniella.poster}
+                name={depoimentosVideo.daniella.name}
+                role={depoimentosVideo.daniella.role}
                 caption={false}
               />
             </div>
             <div className="text-center md:text-left">
               <p className="text-sm font-semibold text-gold-ink">
-                {depoimentosVideo.erik.name} · {depoimentosVideo.erik.role}
+                {depoimentosVideo.daniella.name} · {depoimentosVideo.daniella.role}
               </p>
               <h3 className="mt-2 text-lg font-semibold text-navy">
-                {depoimentosVideo.erik.chamada}
+                {depoimentosVideo.daniella.chamada}
               </h3>
-              <p className="mt-3 text-sm text-gray">{depoimentosVideo.erik.texto}</p>
+              <p className="mt-3 text-sm text-gray">{depoimentosVideo.daniella.texto}</p>
             </div>
           </div>
         </div>
