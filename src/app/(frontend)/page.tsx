@@ -41,11 +41,22 @@ const servicos = servicosMenu.slice(0, 4);
 export const revalidate = 60;
 
 export default async function Home() {
-  const [{ docs: posts }, { docs: materiais }, videos] = await Promise.all([
-    getPublishedPosts(3),
+  const [{ docs: latestPosts }, { docs: materiais }, videos] = await Promise.all([
+    // Busca um lote maior para poder escolher 1 artigo por categoria (Gestão/
+    // Vendas/Liderança), em vez dos 3 mais recentes — que podem cair todos na
+    // mesma categoria quando várias publicações saem juntas.
+    getPublishedPosts(12),
     getPublishedMaterials(3),
     getLatestVideos(3),
   ]);
+  const seenCategories = new Set<string>();
+  const posts = latestPosts.filter((post) => {
+    const categoryName =
+      typeof post.category === "object" && post.category ? post.category.name : null;
+    if (!categoryName || seenCategories.has(categoryName)) return false;
+    seenCategories.add(categoryName);
+    return true;
+  });
 
   return (
     <main>

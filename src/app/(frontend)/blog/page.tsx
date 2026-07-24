@@ -17,12 +17,24 @@ export const metadata: Metadata = {
 // Revalida periodicamente para refletir publicações do CMS.
 export const revalidate = 60;
 
-type Props = { searchParams: Promise<{ categoria?: string }> };
+type Props = { searchParams: Promise<{ categoria?: string; pagina?: string }> };
+
+function pageHref(categoria: string | undefined, page: number) {
+  const params = new URLSearchParams();
+  if (categoria && categoria !== "todas") params.set("categoria", categoria);
+  if (page > 1) params.set("pagina", String(page));
+  const qs = params.toString();
+  return qs ? `/blog?${qs}` : "/blog";
+}
 
 export default async function BlogPage({ searchParams }: Props) {
-  const { categoria } = await searchParams;
-  const [{ docs: posts }, categories] = await Promise.all([
-    getPublishedPosts(12, 1, categoria),
+  const { categoria, pagina } = await searchParams;
+  const currentPage = Math.max(1, Number(pagina) || 1);
+  const [
+    { docs: posts, hasNextPage, hasPrevPage, totalPages, page: resolvedPage },
+    categories,
+  ] = await Promise.all([
+    getPublishedPosts(12, currentPage, categoria),
     getBlogCategories(),
   ]);
   const activeSlug = categoria && categoria !== "todas" ? categoria : "todas";
@@ -86,13 +98,52 @@ export default async function BlogPage({ searchParams }: Props) {
             </p>
           </div>
         ) : (
-          <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post) => (
-              <li key={post.id}>
-                <PostCard post={post} />
-              </li>
-            ))}
-          </ul>
+          <>
+            <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {posts.map((post) => (
+                <li key={post.id}>
+                  <PostCard post={post} />
+                </li>
+              ))}
+            </ul>
+
+            {totalPages > 1 && (
+              <nav
+                aria-label="Paginação do blog"
+                className="mt-14 flex items-center justify-center gap-4"
+              >
+                {hasPrevPage ? (
+                  <Link
+                    href={pageHref(categoria, (resolvedPage ?? currentPage) - 1)}
+                    className="rounded-full border border-line bg-white px-5 py-2 text-sm font-medium text-navy transition-colors hover:border-gold hover:text-gold-ink"
+                  >
+                    ← Anterior
+                  </Link>
+                ) : (
+                  <span className="rounded-full border border-line px-5 py-2 text-sm font-medium text-gray/40">
+                    ← Anterior
+                  </span>
+                )}
+
+                <span className="text-sm text-gray">
+                  Página {resolvedPage ?? currentPage} de {totalPages}
+                </span>
+
+                {hasNextPage ? (
+                  <Link
+                    href={pageHref(categoria, (resolvedPage ?? currentPage) + 1)}
+                    className="rounded-full border border-line bg-white px-5 py-2 text-sm font-medium text-navy transition-colors hover:border-gold hover:text-gold-ink"
+                  >
+                    Próxima →
+                  </Link>
+                ) : (
+                  <span className="rounded-full border border-line px-5 py-2 text-sm font-medium text-gray/40">
+                    Próxima →
+                  </span>
+                )}
+              </nav>
+            )}
+          </>
         )}
       </section>
     </main>

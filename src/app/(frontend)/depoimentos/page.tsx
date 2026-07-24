@@ -1,9 +1,18 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/layout/PageHero";
 import { Button } from "@/components/ui/Button";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TestimonialCard } from "@/components/TestimonialCard";
+import { VideoTestimonial } from "@/components/VideoTestimonial";
 import { GoogleReviews } from "@/components/GoogleReviews";
+import { depoimentosVideo } from "@/lib/content";
 import { getTestimonials } from "@/lib/payload";
+
+const videosDepoimento = [
+  depoimentosVideo.fabio,
+  depoimentosVideo.daniella,
+  depoimentosVideo.erik,
+];
 
 export const metadata: Metadata = {
   title: "Depoimentos",
@@ -28,6 +37,29 @@ export default async function DepoimentosPage() {
 
       {/* Avaliações reais do Google (com AggregateRating p/ estrelas na busca) */}
       <GoogleReviews limit={12} withSchema />
+
+      {/* Depoimentos em vídeo — mesmo conteúdo usado na Home/Serviços/Materiais */}
+      <section className="bg-surface">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <SectionHeading
+            title="Depoimentos em vídeo"
+            subtitle="Clientes contando, com a própria voz, o resultado que tiveram."
+            align="center"
+          />
+          <ul className="mx-auto mt-12 grid max-w-4xl gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {videosDepoimento.map((v) => (
+              <li key={v.name}>
+                <VideoTestimonial
+                  video={v.video}
+                  poster={v.poster}
+                  name={v.name}
+                  role={v.role}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
       <section className="mx-auto max-w-6xl px-6 py-20">
         {items.length === 0 ? (
