@@ -16,6 +16,15 @@ const nextConfig: NextConfig = {
         hostname: "5ce1f9a7546634eeba9b1cc823111fe5.r2.cloudflarestorage.com",
         pathname: "/empresarial-academy-media/**",
       },
+      // Payload monta a URL de mídia como ABSOLUTA (`${siteConfig.url}/api/
+      // media/file/...`) — o next/image trata QUALQUER URL absoluta como
+      // "externa" e exige remotePatterns, mesmo sendo o próprio domínio do
+      // site. Sem isso, next/image rejeita com INVALID_IMAGE_OPTIMIZE_REQUEST.
+      {
+        protocol: "https",
+        hostname: "empresarialacademy.com",
+        pathname: "/api/media/file/**",
+      },
     ],
   },
   async redirects() {

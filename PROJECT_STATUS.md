@@ -390,6 +390,27 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (s) (imagem: 2ª peça que faltava — domínio ausente do remotePatterns)
+Fix da sessão (r) (HEAD handler) funcionou de verdade — `HEAD` confirmado 200 depois de
+2 tentativas (a 1ª só reencaminhava o `Request` original com `method: "HEAD"`, o
+roteamento interno do Payload provavelmente inspeciona `request.method` e não
+reconhecia; a 2ª clona a Request como `GET` antes de chamar o handler — aí sim 200).
+**Mas o `/_next/image` continuou 400 mesmo com HEAD 200** — faltava mais uma peça:
+- **Causa:** a URL de mídia do Payload é **ABSOLUTA**
+  (`https://empresarialacademy.com/api/media/file/...`), não relativa. O `next/image`
+  trata QUALQUER URL absoluta como "externa" e exige estar no `images.remotePatterns`
+  — **mesmo sendo o próprio domínio do site**. O `remotePatterns` só tinha o host do R2
+  (sessão n), nunca `empresarialacademy.com`.
+- **Fix:** adicionado `{ hostname: "empresarialacademy.com", pathname: "/api/media/
+  file/**" }` ao `remotePatterns`.
+- **Resumo da cadeia completa de causas da imagem** (3 sessões, 3 peças, todas
+  necessárias): nome de arquivo sanitizado (p, boa prática mas não bloqueava) + HEAD
+  handler no catch-all (r, bloqueava) + domínio próprio no remotePatterns (s, também
+  bloqueava). Só com as 3 juntas a imagem carrega de ponta a ponta.
+- **Deployado — ainda precisa validação final do Thiago** (reenviar a capa, já que o
+  arquivo antigo tem nome ruim; arquivos com nome limpo como
+  `modulo1-post2-empresario-fracassado.png` já deveriam funcionar sem reenvio).
+
 ### Sessão 2026-07-24 (r) (CAUSA RAIZ DEFINITIVA da imagem: rota catch-all do Payload sem handler HEAD)
 Thiago subiu OUTRA imagem com nome LIMPO (`modulo1-post2-empresario-fracassado.png`,
 sem espaço) e o 400 continuou — provando que a teoria da sessão (p) (espaço no nome)
