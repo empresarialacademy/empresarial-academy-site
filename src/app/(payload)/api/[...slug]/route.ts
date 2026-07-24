@@ -30,6 +30,13 @@ export async function HEAD(
   request: Request,
   args: { params: Promise<{ slug?: string[] }> },
 ) {
-  const res = await getHandler(request, args);
+  // O handler do GET provavelmente inspeciona `request.method` por dentro
+  // (roteamento interno do Payload) — passar o Request original (method:
+  // "HEAD") direto faz cair no 404 genérico de novo. Clona como GET.
+  const getRequest = new Request(request.url, {
+    method: "GET",
+    headers: request.headers,
+  });
+  const res = await getHandler(getRequest, args);
   return new Response(null, { status: res.status, headers: res.headers });
 }
