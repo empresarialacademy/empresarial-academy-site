@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getPayloadClient } from '@/lib/payload';
-import { getGoogleAdsClient, isGoogleAdsConfigured } from '@/lib/google-ads';
+import { getGoogleAdsClient, isGoogleAdsConfigured, extractGoogleAdsErrorMessage } from '@/lib/google-ads';
 
 export async function POST(req: Request) {
   try {
@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     // Omit user check since it's an internal route triggered from admin panel
     
     if (!isGoogleAdsConfigured()) {
-      return NextResponse.json({ error: 'Variáveis de ambiente do Google Ads não configuradas.' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Variáveis de ambiente do Google Ads não configuradas.' }, { status: 400 });
     }
 
     const { customer } = await getGoogleAdsClient();
@@ -71,8 +71,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, added, updated });
   } catch (error: unknown) {
-    const err = error as Error;
-    console.error('Erro na sincronização de campanhas:', err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error('Erro na sincronização de campanhas:', error);
+    return NextResponse.json({ success: false, error: extractGoogleAdsErrorMessage(error) }, { status: 500 });
   }
 }

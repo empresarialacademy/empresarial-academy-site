@@ -2,6 +2,31 @@ import { GoogleAdsApi, enums } from 'google-ads-api';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 
+/**
+ * A `google-ads-api` não lança `Error` padrão — decodifica a falha da API do
+ * Google num objeto próprio (`{ errors: [{ message, error_code }] }`, do proto
+ * `GoogleAdsFailure`), às vezes sem `.message` na raiz. Sem isso, o front acaba
+ * mostrando literalmente "Erro: undefined" (ex.: developer token em nível de
+ * teste tentando ler a conta real — erro comum até o Basic Access ser aprovado).
+ */
+export function extractGoogleAdsErrorMessage(error: unknown): string {
+  const e = error as {
+    message?: string;
+    errors?: Array<{ message?: string; error_code?: unknown }>;
+    response?: { data?: { error?: { message?: string } } };
+  };
+  const fromFailure = e?.errors?.[0]?.message;
+  if (fromFailure) return fromFailure;
+  if (e?.message) return e.message;
+  const fromRest = e?.response?.data?.error?.message;
+  if (fromRest) return fromRest;
+  try {
+    return JSON.stringify(error);
+  } catch {
+    return String(error);
+  }
+}
+
 export function isGoogleAdsConfigured(): boolean {
   return Boolean(
     process.env.GOOGLE_ADS_CLIENT_ID &&
@@ -73,12 +98,12 @@ export async function fetchDailyCampaignMetrics(sinceDate: string): Promise<Fetc
     }));
 
     return { ok: true, rows };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (e: any) {
-    if (e.message.includes('não está conectado')) {
+  } catch (e: unknown) {
+    const message = extractGoogleAdsErrorMessage(e);
+    if (message.includes('não está conectado')) {
       return { ok: false, reason: "no-refresh-token" };
     }
-    console.error("[google-ads] falha ao buscar métricas:", e);
+    console.error("[google-ads] falha ao buscar métricas:", message);
     return { ok: false, reason: "exception" };
   }
 }

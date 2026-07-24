@@ -390,6 +390,26 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-24 (d) (fix: "Erro: undefined" ao sincronizar Ads — mensagem de erro real do Google)
+Thiago reconectou o Google Ads (token novo, pós-publicação da Tela OAuth) e clicou em
+"Sincronizar" — deu **"Erro: undefined"**. Esperado o SYNC falhar agora (Basic Access
+ainda não aprovado), mas a mensagem estava quebrada.
+- **Causa raiz:** a lib `google-ads-api` NÃO lança `Error` padrão — decodifica a falha
+  da API do Google num objeto próprio (proto `GoogleAdsFailure`, formato
+  `{errors:[{message, error_code}]}`), às vezes sem `.message` na raiz. Código lia
+  `err.message` direto → `undefined` → concatenado na string vira "undefined" literal.
+- **Bug mais grave encontrado no mesmo lugar:** `fetchDailyCampaignMetrics` (usado
+  pelo cron `ads-sync`) fazia `e.message.includes(...)` sem checar se `e.message`
+  existia — com esse formato de erro, isso quebra DENTRO do catch (exceção não
+  tratada, pior que só uma mensagem feia).
+- **Fix:** novo `extractGoogleAdsErrorMessage()` em `src/lib/google-ads.ts` — tenta
+  `errors[0].message` (formato GoogleAdsFailure) → `.message` (Error padrão) →
+  `response.data.error.message` (REST) → `JSON.stringify` como último recurso (nunca
+  mais mostra "undefined"). Aplicado em `/api/ads/sync-all` e `fetchDailyCampaignMetrics`.
+  `/api/ads/forecast` e `/api/ads/callback` NÃO tocados — erros deles são de
+  Gemini/fetch OAuth padrão, `.message` já é seguro ali.
+- **Ainda não deployado.**
+
 ### Sessão 2026-07-24 (c) (Tela de Permissão OAuth publicada + risco do main confirmado)
 - **Tela de Permissão OAuth (`ea-impulsiona`) publicada** ("Testando" → "Em
   produção") — elimina a expiração de 7 dias do refresh token do Google Ads.
