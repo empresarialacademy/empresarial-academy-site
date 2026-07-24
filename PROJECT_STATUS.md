@@ -390,6 +390,14 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-23 (f) (Basic Access solicitado)
+Thiago enviou o formulário oficial de Basic Access do Google Ads API (Central de Ajuda
+do Google, não a Central de API do próprio Ads) — protocolo **4-9720000040725**, e-mail
+de confirmação recebido. Prazo do próprio Google: **até 5 dias úteis** (não ~1 dia como
+estimado antes). MCC informada: 779-237-1166. Documento de design anexado (gerado nesta
+sessão, `.rtf`, cobrindo arquitetura, fluxo OAuth, uso da API, controle de acesso).
+**Aguardando aprovação — nada a fazer no código até lá.**
+
 ### Sessão 2026-07-23 (e) (Google Ads — CONECTADO; conta trocada p/ MCC EA MKT HUB)
 - **OAuth conectado com sucesso** (Thiago fez o consent no navegador dele — o
   callback retornou `?oauth=success`, refresh token salvo no global `ads-settings`).
