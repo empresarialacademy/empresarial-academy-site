@@ -9,7 +9,7 @@ import { MaterialCard } from "@/components/materials/MaterialCard";
 import { getPublishedMaterials, getPublishedPosts } from "@/lib/payload";
 import { getLatestVideos } from "@/lib/youtube";
 import { InstagramFeed } from "@/components/InstagramFeed";
-import { GoogleReviewsMini } from "@/components/GoogleReviewsMini";
+import { GoogleReviewsHome } from "@/components/GoogleReviewsHome";
 import { VideoTestimonial } from "@/components/VideoTestimonial";
 import { depoimentosVideo } from "@/lib/content";
 import { servicosMenu, siteConfig } from "@/lib/site-config";
@@ -295,12 +295,6 @@ export default async function Home() {
                   </a>
                 </li>
               ))}
-              {/* Preenche o espaço vazio ao lado dos vídeos com o carrossel
-                  de avaliações reais do Google (a pedido do Thiago — antes
-                  havia aqui só um card resumido com a nota). */}
-              <li className="w-full max-w-sm">
-                <GoogleReviewsMini />
-              </li>
             </ul>
             <div className="mt-10 flex justify-center">
               <Button href={siteConfig.social.youtube} variant="secondary" size="md">
@@ -311,8 +305,11 @@ export default async function Home() {
         </section>
       )}
 
-      {/* Avaliações do Google já aparecem ao lado dos vídeos do YouTube acima
-          (GoogleReviewsMini) — não duplicar em seção própria aqui na Home. */}
+      {/* PROVA SOCIAL — avaliações do Google, seção própria com fundo navy
+          (separada do YouTube a pedido do Thiago: YouTube fundo branco,
+          avaliações fundo azul). O componente só renderiza se houver
+          avaliações reais configuradas. */}
+      <GoogleReviewsHome />
 
       {/* INSTAGRAM */}
       <InstagramFeed />
