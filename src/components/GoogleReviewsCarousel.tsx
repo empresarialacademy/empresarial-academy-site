@@ -142,7 +142,7 @@ export function GoogleReviewsCarousel({ reviews }: { reviews: GoogleReview[] }) 
               onClick={() => go(i)}
               aria-label={`Ver avaliação ${i + 1} de ${count}`}
               aria-current={i === index ? "true" : undefined}
-              className="flex h-11 w-11 items-center justify-center"
+              className="flex h-11 w-11 shrink-0 items-center justify-center"
             >
               <span
                 aria-hidden
