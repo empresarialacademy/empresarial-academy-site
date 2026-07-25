@@ -390,6 +390,54 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-25 (aa) (Avaliações do Google NO AR — causa raiz do Featurable achada e corrigida)
+As 2 primeiras avaliações reais do Google entraram, mas não apareciam no site.
+Investigação profunda (a pedido do Thiago) isolou a causa — **não era o site**.
+- **Site inocente (comprovado):** rodado o código exato de `lib/reviews.ts` com as
+  credenciais reais → API devolvia `isExampleReviews: true`, então `getGoogleReviews()`
+  retornava `null` e a seção se ocultava. O guard estava **certo**: o Featurable servia
+  9 avaliações FALSAS em inglês (Isabella Li, Sophia Moore…) com `totalReviewCount: 123`
+  e `profileUrl: "google.com"`. Sem o guard, o site publicaria prova social fabricada.
+- **CAUSA RAIZ (Featurable):** o Featurable busca as avaliações **só no momento em que o
+  local é conectado** — é um job único (`reviewJobUuid`) disparado pelo assistente
+  "Connect Location". **Não há re-sync automático.** O local foi conectado ANTES das
+  avaliações existirem → o job capturou zero. Confirmado consultando o banco deles:
+  `GET /v2/locations/gbp/{uuid}/reviews` → `{"reviews":[],"total":0}`.
+- **Bug secundário:** o widget criado pelo caminho "Widgets → Create Widget" **nunca
+  vincula o local** (`gbpLocationUuid: null`) — só o assistente de Locations faz o
+  vínculo. Sintoma visível: o painel "Manage Reviews" pedia
+  `/v2/locations/gbp/**null**/reviews` e mostrava "No reviews found".
+- **Fluxo real do Featurable (decifrado do bundle `app.featurable.com/assets/index-*.js`
+  — documentar, não há doc pública disso):**
+  1. `POST /v2/locations/gbp` body `{placeId}` → `{locationUuid, reviewJobUuid}`
+  2. polling `GET /v2/locations/gbp/{loc}/reviews/fetch/{job}/status` até `statusCode: 20000`
+  3. `POST /v2/widgets` `{layoutSlug}` → `{widgetUuid}`
+  4. `POST /v2/locations/gbp/{loc}/summary` (calcula nota/contagem; dá **500 se houver 0
+     avaliações** — bom sinal de diagnóstico)
+  5. `GET /v2/locations/gbp/{loc}/reviews?sort=newest&take=15&excludeEmpty=true&minStars=4`
+  6. `POST /v2/widgets/{widget}/reviews` `{reviewUuids, mode:"replace"}` ← **é este passo
+     que vincula**; sem ele o widget serve exemplos para sempre.
+- **Correção aplicada (sem recriar o widget):** local antigo apagado
+  (`POST /v2/locations/gbp/{uuid}/delete`), reconectado com o **Place ID**
+  `ChIJH2XCKQSOwIgRlKIj5HrAgR0` (fornecido pelo Thiago — o `/v1/google-places/search`
+  NÃO acha o negócio por ser de área de serviço com endereço oculto; por isso ele não
+  conseguia achar o Place ID), job rodado, summary calculado e os passos 5+6 aplicados
+  ao widget que já existia. Resultado: `isExampleReviews: false`,
+  `gbpLocationSummary: {reviewsCount: 2, rating: 5}`.
+- **NO AR e validado em produção:** Home e `/depoimentos` exibindo **Anselmo Cavelani** e
+  **Adriano Tartari** (5★ cada), selo "5,0 · 2 avaliações no Google" e JSON-LD
+  `"aggregateRating":{"ratingValue":5,"reviewCount":2}` (estrelas na busca do Google).
+- **UUIDs atuais:** widget `f81e803e-107e-4d19-9597-6cd6e0c7c35e` (o mesmo já configurado
+  em `FEATURABLE_WIDGET_ID`, dev e Vercel produção), local
+  `e78ed03e-8437-4f16-843b-afda6c47d280`.
+- ⚠️ **ATENÇÃO FUTURA:** como não há re-sync automático, **avaliações novas do Google NÃO
+  entram sozinhas**. Para atualizar, repetir os passos 5+6 (buscar reviews do local e
+  re-postar com `mode:"replace"` no widget) pela sessão logada do Featurable. Se virar
+  rotina, vale automatizar — mas 5/6 exigem cookie de sessão do painel, não a API Key.
+- **Ajuste de UX:** removido o bloco "Em breve, histórias de transformação" de
+  `/depoimentos` — com avaliações reais e vídeos logo acima, ele contradizia a página.
+  Trocado por um CTA ("Quer ser a próxima história de resultado?").
+
 ### Sessão 2026-07-25 (z) (EA Content Engine — 22 artigos de blog produzidos e publicados em massa)
 - **Pedido do Thiago:** usar a skill `ea-content-engine` para produzir 20 artigos
   novos de blog (Gestão/Vendas/Liderança, sem redes sociais desta vez), avaliar

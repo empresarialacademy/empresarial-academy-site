@@ -62,26 +62,8 @@ export default async function DepoimentosPage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-20">
-        {items.length === 0 ? (
-          <div className="rounded-2xl border border-line bg-white p-12 text-center">
-            <p className="text-4xl" aria-hidden>
-              💬
-            </p>
-            <h2 className="mt-4 text-xl font-semibold text-navy">
-              Em breve, histórias de transformação
-            </h2>
-            <p className="mt-2 text-gray">
-              Estamos reunindo os depoimentos de quem já cresceu com a Empresarial
-              Academy.
-            </p>
-            <div className="mt-6">
-              <Button href="/contato" variant="primary" size="md">
-                Quero ser o próximo case
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {items.length > 0 && (
+          <ul className="mb-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((t) => (
               <li key={t.id}>
                 <TestimonialCard item={t} />
@@ -89,6 +71,24 @@ export default async function DepoimentosPage() {
             ))}
           </ul>
         )}
+        {/* CTA sempre presente. O antigo bloco "Em breve, histórias de
+            transformação" foi removido: com as avaliações do Google e os
+            vídeos acima, dizer que ainda estamos reunindo depoimentos
+            contradizia a própria página. */}
+        <div className="rounded-2xl border border-line bg-white p-12 text-center">
+          <h2 className="text-xl font-semibold text-navy">
+            Quer ser a próxima história de resultado?
+          </h2>
+          <p className="mx-auto mt-2 max-w-xl text-gray">
+            Comece pelo diagnóstico gratuito e descubra o que está travando o
+            crescimento da sua empresa hoje.
+          </p>
+          <div className="mt-6">
+            <Button href="/contato" variant="primary" size="md">
+              Quero ser o próximo case
+            </Button>
+          </div>
+        </div>
       </section>
     </main>
   );
