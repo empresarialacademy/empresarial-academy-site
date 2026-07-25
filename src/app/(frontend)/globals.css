@@ -93,6 +93,15 @@ body {
 [data-theme="dark"] .text-navy {
   color: var(--ea-dark-text);
 }
+/* EXCEÇÃO: texto sobre dourado. O fundo dourado é o mesmo nos dois temas, então
+   o texto tem de continuar navy — clarear deixava os botões e selos em 2,08:1
+   (ilegível). Cobre botão primário, selos ("Em breve", "Planilha") e o hover do
+   botão outline. */
+[data-theme="dark"] .bg-gold.text-navy,
+[data-theme="dark"] .bg-gold-light.text-navy,
+[data-theme="dark"] .hover\:bg-gold:hover.hover\:text-navy:hover {
+  color: var(--color-navy);
+}
 [data-theme="dark"] .text-gray {
   color: var(--ea-dark-muted);
 }
