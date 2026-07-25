@@ -9,8 +9,7 @@ import { MaterialCard } from "@/components/materials/MaterialCard";
 import { getPublishedMaterials, getPublishedPosts } from "@/lib/payload";
 import { getLatestVideos } from "@/lib/youtube";
 import { InstagramFeed } from "@/components/InstagramFeed";
-import { GoogleReviews } from "@/components/GoogleReviews";
-import { GoogleRatingCard } from "@/components/GoogleRatingCard";
+import { GoogleReviewsMini } from "@/components/GoogleReviewsMini";
 import { VideoTestimonial } from "@/components/VideoTestimonial";
 import { depoimentosVideo } from "@/lib/content";
 import { servicosMenu, siteConfig } from "@/lib/site-config";
@@ -296,9 +295,11 @@ export default async function Home() {
                   </a>
                 </li>
               ))}
-              {/* Preenche o espaço vazio ao lado dos vídeos com a nota do Google */}
-              <li>
-                <GoogleRatingCard />
+              {/* Preenche o espaço vazio ao lado dos vídeos com o carrossel
+                  de avaliações reais do Google (a pedido do Thiago — antes
+                  havia aqui só um card resumido com a nota). */}
+              <li className="w-full max-w-sm">
+                <GoogleReviewsMini />
               </li>
             </ul>
             <div className="mt-10 flex justify-center">
@@ -310,8 +311,8 @@ export default async function Home() {
         </section>
       )}
 
-      {/* PROVA SOCIAL — avaliações do Google (aparece quando configurado) */}
-      <GoogleReviews limit={6} />
+      {/* Avaliações do Google já aparecem ao lado dos vídeos do YouTube acima
+          (GoogleReviewsMini) — não duplicar em seção própria aqui na Home. */}
 
       {/* INSTAGRAM */}
       <InstagramFeed />
