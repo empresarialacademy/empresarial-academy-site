@@ -390,6 +390,63 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-07-25 (ab) (Header navy, MODO ESCURO, carrossel de avaliações e mobile)
+Pedidos do Thiago: revisão mobile-first, dark mode, resolver a "faixa branca"
+do topo, centralizar blocos e pôr as avaliações em carrossel.
+- **Header navy (Opção A, escolhida entre 3 mockups):** o logo tem fundo
+  `#12263b` — praticamente o `--color-navy` (`#1D2B3C`). Sobre a faixa branca
+  ele lia como adesivo recortado, pior no celular (header = 81px = 10% da tela,
+  logo acima do herói navy). Agora `bg-navy/95` + fio `border-gold/30`: o logo
+  funde e o dourado ganha destaque. Nav/busca/hambúrguer em branco, menu mobile
+  em navy. **O mega menu (dropdown) segue claro de propósito** — é painel
+  flutuante.
+- **MODO ESCURO.** Estratégia: o site foi escrito com classes de cor literais
+  (`bg-white`, `text-navy`, `border-line`), então em vez de reescrever dezenas
+  de componentes, os utilitários são **sobrescritos sob `[data-theme="dark"]`**
+  (especificidade maior vence; e as regras ficam FORA de `@layer`, que também
+  vence). Bônus: variantes com opacidade (`bg-white/5`, brilho decorativo sobre
+  navy) não são afetadas, porque são outra classe. Paleta escura em
+  `globals.css` (`--ea-dark-page/card/raised/border/text/muted`).
+  `bg-navy`/`bg-navy-light` seguem escuros de propósito.
+  - Tema aplicado por **script inline no `<head>`** antes da primeira pintura
+    (sem flash branco); `suppressHydrationWarning` no `<html>`. Padrão = sistema;
+    escolha manual em `localStorage['ea-theme']`; enquanto não houver escolha,
+    acompanha o sistema em tempo real. Botão em `ThemeToggle.tsx`, no header
+    (desktop e mobile — no mobile fica FORA do menu, alcançável com uma mão).
+- ⚠️ **2 bugs reais encontrados testando em produção (documentar, são sutis):**
+  1. **Cards presos na cor clara:** 19 dos 33 `.bg-white` continuavam brancos no
+     escuro — e **todos os 19 tinham `transition-all`**. Quando a cor passa a vir
+     de outra regra por causa de uma **variável CSS herdada** que mudou, o
+     navegador **não inicia a transição** e o valor antigo persiste. Comprovado:
+     zerar `transition` no elemento fazia escurecer na hora e permanecer certo.
+     **Fix:** `applyTheme()` adiciona `.ea-theme-switching` (que zera todas as
+     transições), troca o tema, força reflow e religa no frame seguinte. De
+     quebra evita 33 cards em cross-fade de 300ms a cada troca.
+  2. **Texto ilegível sobre dourado (2,08:1):** a regra que clareia `.text-navy`
+     também pegava o texto que fica SOBRE o dourado (botão primário, selos "Em
+     breve"/"Planilha"). O fundo dourado é o mesmo nos dois temas → exceção
+     `[data-theme="dark"] .bg-gold.text-navy { color: var(--color-navy) }`.
+- **Contraste validado em produção (modo escuro):** corpo 7,75:1, títulos
+  13,89:1, links dourados 9,23:1 — todos acima de AA. Varredura automática em
+  `/`, `/blog`, artigo, `/contato`: **0 problemas**. Corrigido de passagem um
+  problema PRÉ-EXISTENTE (valia nos dois temas): faixa "POR QUE A EMPRESARIAL
+  ACADEMY" usava `text-gold` sobre `bg-navy-light` = 4,14:1 → `text-gold-light`.
+- **Avaliações do Google em carrossel** (`GoogleReviewsCarousel.tsx`, client): 1
+  por vez, centralizada, autoplay 8s pausável, setas/dots com 44px, respeita
+  `prefers-reduced-motion`; com 1 avaliação vira card estático sem controles.
+- **Texto das avaliações em PT-BR:** a API tem `text` (traduzido pelo Google
+  para inglês) e `originalText` (o que o cliente escreveu). `lib/reviews.ts`
+  passou a preferir `originalText` — sem tradução nossa por cima das palavras
+  do cliente.
+- **Blocos centralizados:** seção do YouTube deixou de ser grade de 3 colunas
+  (que abria vão à direita com poucos vídeos) e passou a `flex-wrap justify-center`
+  com `max-w-sm` por card. Título, botão e carrossel centralizados.
+- **Alvos de toque ≥44px:** setas e dots do carrossel do topo, hambúrguer, busca
+  e links "Saiba mais". Diagnóstico inicial em produção (375px) apontava **76
+  alvos abaixo de 44px** e **nenhum scroll horizontal**.
+- ⏳ **Pendente:** ainda restam alvos <44px fora das seções tratadas; e os selos
+  de categoria (GESTÃO/VENDAS/LIDERANÇA) usam fonte 11px.
+
 ### Sessão 2026-07-25 (aa) (Avaliações do Google NO AR — causa raiz do Featurable achada e corrigida)
 As 2 primeiras avaliações reais do Google entraram, mas não apareciam no site.
 Investigação profunda (a pedido do Thiago) isolou a causa — **não era o site**.

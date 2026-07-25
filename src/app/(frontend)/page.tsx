@@ -66,7 +66,9 @@ export default async function Home() {
       {/* Números / credenciais */}
       <section className="bg-navy-light text-white">
         <div className="mx-auto max-w-6xl px-6 py-12">
-          <p className="text-center font-[var(--font-heading)] text-sm uppercase tracking-[0.25em] text-gold">
+          {/* gold-light (não gold): sobre o navy-light desta faixa, o dourado
+              padrão fica em 4,14:1 — abaixo do mínimo de 4,5:1 para texto. */}
+          <p className="text-center font-[var(--font-heading)] text-sm uppercase tracking-[0.25em] text-gold-light">
             Por que a Empresarial Academy
           </p>
           <ul className="mt-8 grid gap-5 sm:grid-cols-3">
