@@ -54,7 +54,7 @@ export function PostCard({ post }: { post: Post }) {
         <div className="mt-4 flex items-center justify-between gap-2">
           <Link
             href={`/blog/${post.slug}`}
-            className="text-sm font-semibold text-gold-ink hover:underline"
+            className="inline-flex min-h-11 items-center text-sm font-semibold text-gold-ink hover:underline"
           >
             Ler artigo →
           </Link>

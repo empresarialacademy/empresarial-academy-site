@@ -120,7 +120,7 @@ export function HeroCarousel() {
             type="button"
             onClick={() => go(index - 1)}
             aria-label="Slide anterior"
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-gold hover:text-gold"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-gold hover:text-gold"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
               <path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -134,7 +134,12 @@ export function HeroCarousel() {
                   onClick={() => go(i)}
                   aria-label={`Ir para o slide ${i + 1}`}
                   aria-current={i === index}
-                  className="flex h-11 min-w-11 items-center justify-center px-1"
+                  // 5 pontos a 44px cada não cabem ao lado das duas setas em
+                  // telas de celular — o flex comprimia as SETAS pra caber
+                  // (achado testando em produção: viravam 30px de largura).
+                  // 36px é o meio-termo: bem maior que os 24px originais,
+                  // sem forçar overflow.
+                  className="flex h-9 min-w-9 shrink-0 items-center justify-center px-1"
                 >
                   <span
                     className={`block h-2 rounded-full transition-all ${
@@ -149,7 +154,7 @@ export function HeroCarousel() {
             type="button"
             onClick={() => go(index + 1)}
             aria-label="Próximo slide"
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-gold hover:text-gold"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-gold hover:text-gold"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
               <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

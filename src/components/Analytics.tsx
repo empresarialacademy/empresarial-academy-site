@@ -77,14 +77,14 @@ export function Analytics() {
           <button
             type="button"
             onClick={() => choose("denied")}
-            className="rounded-lg border border-white/30 px-4 py-2 text-sm font-medium text-white/85 transition-colors hover:border-gold hover:text-gold"
+            className="min-h-11 rounded-lg border border-white/30 px-4 py-2 text-sm font-medium text-white/85 transition-colors hover:border-gold hover:text-gold"
           >
             Recusar
           </button>
           <button
             type="button"
             onClick={() => choose("granted")}
-            className="rounded-lg bg-gold px-5 py-2 text-sm font-semibold text-navy transition-colors hover:bg-gold-light"
+            className="min-h-11 rounded-lg bg-gold px-5 py-2 text-sm font-semibold text-navy transition-colors hover:bg-gold-light"
           >
             Aceitar
           </button>

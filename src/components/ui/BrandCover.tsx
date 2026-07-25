@@ -17,7 +17,7 @@ export function BrandCover({ title, tag }: { title: string; tag?: string }) {
         EA
       </div>
       {tag && (
-        <span className="relative text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">
+        <span className="relative text-xs font-semibold uppercase tracking-[0.2em] text-gold">
           {tag}
         </span>
       )}

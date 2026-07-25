@@ -72,9 +72,16 @@ export function LikeDislike({
     }
   };
 
+  // `compact` fica dentro de cards apertados (grade de posts/materiais) — não
+  // dá para virar 44px sem estourar o layout. `before:` estende a área
+  // clicável de verdade sem mudar o visual; -inset-1 (4px por lado) soma
+  // exatamente aos 8px de `gap-2` entre os dois botões, então as áreas
+  // invisíveis se encostam sem se sobrepor (sobrepor causaria clique
+  // "vazando" para o botão vizinho). A versão completa (rodapé do artigo/
+  // material) já tem espaço de sobra, então essa vai direto a 44px de altura.
   const btnBase = compact
-    ? "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition-colors"
-    : "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors";
+    ? "relative inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition-colors before:absolute before:-inset-1 before:content-['']"
+    : "inline-flex min-h-11 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors";
 
   return (
     <div className={`flex items-center gap-2 ${compact ? "" : "justify-center"}`}>
