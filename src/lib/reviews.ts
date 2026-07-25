@@ -25,7 +25,10 @@ export type GoogleReviewsData = {
 
 type FeaturableReview = {
   author?: { name?: string };
+  /** Pode vir traduzido pelo Google (ex.: PT-BR → inglês). */
   text?: string;
+  /** Texto EXATAMENTE como o cliente escreveu; vazio quando não houve tradução. */
+  originalText?: string;
   rating?: { value?: number };
   publishedAt?: string;
 };
@@ -66,7 +69,10 @@ export async function getGoogleReviews(): Promise<GoogleReviewsData | null> {
         name: r.author?.name?.trim() || "Cliente Google",
         rating:
           typeof r.rating?.value === "number" ? r.rating.value : 5,
-        text: (r.text ?? "").trim(),
+        // `originalText` é o que o cliente realmente escreveu; o Google às
+        // vezes devolve `text` já traduzido para inglês. Preferir o original
+        // mantém a avaliação em PT-BR e fiel às palavras da pessoa.
+        text: ((r.originalText ?? "").trim() || (r.text ?? "").trim()),
         date: r.publishedAt ?? null,
       }))
       .filter((r) => r.text.length > 0);

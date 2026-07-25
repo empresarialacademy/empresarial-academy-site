@@ -264,8 +264,11 @@ export default async function Home() {
             <SectionHeading
               title="Empresarial Academy no YouTube"
               subtitle="Conteúdo em vídeo para impulsionar a sua gestão."
+              align="center"
             />
-            <ul className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Centralizado e com largura dos cards limitada: com poucos vídeos
+                no canal, uma grade de 3 colunas deixava um vão vazio à direita. */}
+            <ul className="mx-auto mt-12 flex max-w-5xl flex-wrap justify-center gap-8 [&>li]:w-full [&>li]:max-w-sm">
               {videos.map((v) => (
                 <li key={v.id}>
                   <a
@@ -296,7 +299,7 @@ export default async function Home() {
                 <GoogleRatingCard />
               </li>
             </ul>
-            <div className="mt-10">
+            <div className="mt-10 flex justify-center">
               <Button href={siteConfig.social.youtube} variant="secondary" size="md">
                 Ver todos os vídeos
               </Button>

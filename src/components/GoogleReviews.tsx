@@ -1,6 +1,6 @@
 import { getGoogleReviews } from "@/lib/reviews";
 import { siteConfig } from "@/lib/site-config";
-import { formatDatePtBR } from "@/lib/format";
+import { GoogleReviewsCarousel } from "@/components/GoogleReviewsCarousel";
 
 export function Stars({ rating, size = 16 }: { rating: number; size?: number }) {
   return (
@@ -98,37 +98,7 @@ export async function GoogleReviews({
           </p>
         </div>
 
-        <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {shown.map((r) => (
-            <li
-              key={`${r.name}-${r.date ?? r.text.slice(0, 16)}`}
-              className="flex flex-col rounded-2xl border border-line bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold/50 hover:shadow-xl"
-            >
-              <div className="flex items-center gap-3">
-                <span
-                  aria-hidden
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy font-[var(--font-heading)] text-sm font-bold text-gold"
-                >
-                  {r.name.charAt(0).toUpperCase()}
-                </span>
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-navy">
-                    {r.name}
-                  </p>
-                  <Stars rating={r.rating} size={13} />
-                </div>
-              </div>
-              <p className="mt-4 flex-1 text-sm leading-relaxed text-gray">
-                “{r.text}”
-              </p>
-              {r.date && (
-                <p className="mt-3 text-xs text-gray/70">
-                  {formatDatePtBR(r.date)}
-                </p>
-              )}
-            </li>
-          ))}
-        </ul>
+        <GoogleReviewsCarousel reviews={shown} />
       </div>
     </section>
   );
