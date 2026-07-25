@@ -175,7 +175,7 @@ export default async function Home() {
               <p className="mt-2 text-sm text-gray">{s.desc}</p>
               <Link
                 href={s.href}
-                className="mt-4 inline-block text-sm font-semibold text-gold-ink hover:underline"
+                className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-gold-ink hover:underline"
               >
                 Saiba mais →
               </Link>
@@ -367,7 +367,7 @@ function ProductCard({
         <p className="mt-2 text-sm text-gray">{text}</p>
         <Link
           href={href}
-          className="mt-4 inline-block text-sm font-semibold text-gold-ink hover:underline"
+          className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-gold-ink hover:underline"
         >
           Saiba mais →
         </Link>

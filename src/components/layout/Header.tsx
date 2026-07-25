@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { mainNav, servicosMenu, siteConfig } from "@/lib/site-config";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { cn } from "@/lib/utils";
 
 export function Header() {
@@ -18,7 +19,11 @@ export function Header() {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-white/95 backdrop-blur">
+    // Cabeçalho navy: o logo tem fundo #12263b, praticamente este mesmo navy —
+    // sobre branco ele lia como um adesivo recortado (pior no celular, logo
+    // acima do herói navy). No navy ele funde e o dourado ganha destaque.
+    // O fio dourado inferior separa o header do conteúdo sem cortar o logo.
+    <header className="sticky top-0 z-50 border-b border-gold/30 bg-navy/95 text-white backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2" aria-label={`${siteConfig.name} — início`}>
@@ -48,7 +53,7 @@ export function Header() {
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={cn(
                     "rounded-md px-3 py-2 text-base font-medium transition-colors hover:text-gold",
-                    isActive(item.href) ? "text-gold" : "text-navy",
+                    isActive(item.href) ? "text-gold" : "text-white/90",
                   )}
                 >
                   {item.label}
@@ -82,7 +87,7 @@ export function Header() {
                 aria-current={isActive(item.href) ? "page" : undefined}
                 className={cn(
                   "rounded-md px-3 py-2 text-base font-medium transition-colors hover:text-gold",
-                  isActive(item.href) ? "text-gold" : "text-navy",
+                  isActive(item.href) ? "text-gold" : "text-white/90",
                 )}
               >
                 {item.label}
@@ -91,11 +96,12 @@ export function Header() {
           )}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden items-center gap-1 lg:flex">
+          <ThemeToggle className="text-white/90 hover:bg-white/10 hover:text-gold" />
           <Link
             href="/busca"
             aria-label="Buscar no site"
-            className="flex h-9 w-9 items-center justify-center rounded-md text-navy transition-colors hover:text-gold"
+            className="flex h-11 w-11 items-center justify-center rounded-md text-white/90 transition-colors hover:text-gold"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
               <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
@@ -107,10 +113,12 @@ export function Header() {
           </Button>
         </div>
 
-        {/* Botão mobile */}
+        {/* Ações mobile — tema fica fora do menu, alcançável com uma mão */}
+        <div className="flex items-center gap-1 lg:hidden">
+          <ThemeToggle className="text-white/90 hover:bg-white/10 hover:text-gold" />
         <button
           type="button"
-          className="inline-flex items-center justify-center rounded-md p-2 text-navy lg:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-md text-white"
           aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
           aria-expanded={mobileOpen}
           onClick={() => setMobileOpen((v) => !v)}
@@ -123,12 +131,13 @@ export function Header() {
             )}
           </svg>
         </button>
+        </div>
       </div>
 
       {/* Menu mobile */}
       {mobileOpen && (
         <nav
-          className="border-t border-line bg-white lg:hidden"
+          className="border-t border-white/10 bg-navy lg:hidden"
           aria-label="Menu principal (mobile)"
         >
           <ul className="mx-auto max-w-6xl px-6 py-3">
@@ -139,8 +148,8 @@ export function Header() {
                   onClick={() => setMobileOpen(false)}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={cn(
-                    "block rounded-md px-2 py-3 text-base font-medium transition-colors hover:bg-surface",
-                    isActive(item.href) ? "text-gold" : "text-navy",
+                    "block rounded-md px-2 py-3 text-base font-medium transition-colors hover:bg-white/10",
+                    isActive(item.href) ? "text-gold" : "text-white/90",
                   )}
                 >
                   {item.label}
@@ -151,7 +160,7 @@ export function Header() {
               <Link
                 href="/busca"
                 onClick={() => setMobileOpen(false)}
-                className="block rounded-md px-2 py-3 text-base font-medium text-navy transition-colors hover:bg-surface"
+                className="block rounded-md px-2 py-3 text-base font-medium text-white/90 transition-colors hover:bg-white/10"
               >
                 Buscar
               </Link>

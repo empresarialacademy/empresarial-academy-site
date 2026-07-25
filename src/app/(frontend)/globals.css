@@ -42,6 +42,83 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* ============================================================
+   MODO ESCURO
+   O site foi escrito com classes de cor literais (bg-white,
+   text-navy, border-line…). Em vez de reescrever dezenas de
+   componentes, sobrescrevemos esses utilitários sob
+   [data-theme="dark"] — a especificidade maior faz o override
+   vencer. Vantagem extra: variantes com opacidade (bg-white/5,
+   usadas como brilho decorativo sobre o navy) NÃO são afetadas,
+   porque são outra classe.
+   `bg-navy` / `bg-navy-light` seguem escuros de propósito: as
+   faixas da marca continuam valendo no tema escuro.
+   ============================================================ */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --ea-dark-page: #0e1620;
+  --ea-dark-card: #16202c;
+  --ea-dark-raised: #1e2a38;
+  --ea-dark-border: #2a3746;
+  --ea-dark-text: #e9ecf1;
+  --ea-dark-muted: #a9b3c0;
+}
+
+[data-theme="dark"] body {
+  background-color: var(--ea-dark-page);
+  color: var(--ea-dark-text);
+}
+
+[data-theme="dark"] .bg-surface {
+  background-color: var(--ea-dark-page);
+}
+[data-theme="dark"] .bg-white {
+  background-color: var(--ea-dark-card);
+}
+[data-theme="dark"] .hover\:bg-surface:hover {
+  background-color: var(--ea-dark-raised);
+}
+
+[data-theme="dark"] .text-ink,
+[data-theme="dark"] .text-navy {
+  color: var(--ea-dark-text);
+}
+[data-theme="dark"] .text-gray {
+  color: var(--ea-dark-muted);
+}
+/* Dourado escurecido só existe para contraste sobre fundo claro;
+   no escuro ele fica ilegível — voltar ao dourado claro da marca. */
+[data-theme="dark"] .text-gold-ink {
+  color: var(--color-gold-light);
+}
+
+[data-theme="dark"] .border-line {
+  border-color: var(--ea-dark-border);
+}
+
+/* Sombras somem no escuro; a borda passa a fazer a separação. */
+[data-theme="dark"] .shadow-sm,
+[data-theme="dark"] .shadow-md,
+[data-theme="dark"] .shadow-lg,
+[data-theme="dark"] .shadow-xl {
+  box-shadow: none;
+}
+
+/* Conteúdo de artigos */
+[data-theme="dark"] .prose-ea {
+  color: var(--ea-dark-text);
+}
+[data-theme="dark"] .prose-ea h2,
+[data-theme="dark"] .prose-ea h3,
+[data-theme="dark"] .prose-ea strong,
+[data-theme="dark"] .prose-ea a {
+  color: var(--ea-dark-text);
+}
+[data-theme="dark"] .prose-ea blockquote {
+  color: var(--ea-dark-muted);
+}
+
 h1,
 h2,
 h3,

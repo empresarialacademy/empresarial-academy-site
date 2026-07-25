@@ -130,7 +130,19 @@ export default function RootLayout({
     <html
       lang="pt-BR"
       className={`${montserrat.variable} ${openSans.variable} ${cormorant.variable}`}
+      // O script abaixo grava data-theme no <html> antes da hidratação;
+      // sem isto o React acusa divergência entre servidor e cliente.
+      suppressHydrationWarning
     >
+      <head>
+        {/* Aplica o tema ANTES da primeira pintura — evita o flash branco
+            ao abrir o site no modo escuro. Precisa ser síncrono e inline. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem('ea-theme');var d=s?s==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body>
         <a
           href="#conteudo"
