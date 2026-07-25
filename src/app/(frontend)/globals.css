@@ -54,6 +54,15 @@ body {
    `bg-navy` / `bg-navy-light` seguem escuros de propósito: as
    faixas da marca continuam valendo no tema escuro.
    ============================================================ */
+/* Durante a troca de tema, nenhuma transição roda (ver applyTheme no
+   ThemeToggle): elementos com `transition-all` ficavam presos na cor antiga
+   quando a cor passava a vir de outra regra por variável CSS herdada. */
+.ea-theme-switching *,
+.ea-theme-switching *::before,
+.ea-theme-switching *::after {
+  transition: none !important;
+}
+
 [data-theme="dark"] {
   color-scheme: dark;
 

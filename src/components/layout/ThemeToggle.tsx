@@ -5,6 +5,30 @@ import { useEffect, useState } from "react";
 type Theme = "light" | "dark";
 
 /**
+ * Aplica o tema com as transições suspensas por um instante.
+ *
+ * Sem isso, elementos com `transition-all` (os cards) ficavam TRAVADOS na cor
+ * antiga: quando a cor passa a vir de outra regra por causa de uma variável CSS
+ * herdada que mudou, o navegador não inicia a transição e o valor velho
+ * persiste. Verificado em produção — 19 dos 33 cards continuavam brancos no
+ * modo escuro, e todos os 19 tinham `transition`.
+ * Suspender também evita 33 cards fazendo cross-fade de 300ms ao trocar.
+ */
+function applyTheme(next: Theme) {
+  const root = document.documentElement;
+  root.classList.add("ea-theme-switching");
+  root.setAttribute("data-theme", next);
+  if (next === "light") root.removeAttribute("data-theme");
+  // Força o navegador a recalcular ainda com as transições desligadas.
+  void root.offsetHeight;
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      root.classList.remove("ea-theme-switching");
+    });
+  });
+}
+
+/**
  * Alterna claro/escuro. A escolha do usuário fica no localStorage; sem
  * escolha salva, segue a preferência do aparelho (e continua acompanhando
  * mudanças do sistema enquanto ninguém escolher manualmente).
@@ -28,7 +52,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
     const onChange = (e: MediaQueryListEvent) => {
       if (localStorage.getItem("ea-theme")) return;
       const next: Theme = e.matches ? "dark" : "light";
-      document.documentElement.setAttribute("data-theme", next);
+      applyTheme(next);
       setTheme(next);
     };
     mq.addEventListener("change", onChange);
@@ -37,7 +61,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
 
   const toggle = () => {
     const next: Theme = theme === "dark" ? "light" : "dark";
-    document.documentElement.setAttribute("data-theme", next);
+    applyTheme(next);
     try {
       localStorage.setItem("ea-theme", next);
     } catch {
