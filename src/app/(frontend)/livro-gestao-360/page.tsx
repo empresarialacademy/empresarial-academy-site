@@ -66,6 +66,7 @@ export default function Page() {
       <PageHero
         title="Livro Gestão 360: a gestão que gera lucro, liberdade e domínio"
         subtitle="Aprendizados reais de quem viveu os desafios da liderança e construiu negócios lucrativos com propósito. O livro será lançado em breve — entre na lista de espera."
+        badge="Em produção — lançamento em breve"
         crumbs={[{ label: "Livro Gestão 360" }]}
         video="/videos/banner-livro-gestao.mp4"
         imageAlt="Vídeo de apresentação do Livro Gestão 360, de Thiago Marchi"
