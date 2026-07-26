@@ -59,14 +59,19 @@ export default function Page() {
         ]}
       />
 
-      {/* Introdução */}
+      {/* Para quem é o curso */}
       <section className="mx-auto max-w-6xl px-6 py-16">
-        <p className="max-w-3xl text-lg text-gray">
-          A metodologia Gestão 360 completa, em formato de curso — para você
-          aplicar com autonomia. Reúne as estratégias que realmente funcionam
-          para transformar empresas em organizações mais lucrativas, organizadas
-          e de alto desempenho: vendas, marketing, liderança, processos,
-          finanças, cultura organizacional, experiência do cliente e expansão.
+        <h2 className="font-[var(--font-heading)] text-2xl font-bold text-navy md:text-3xl">
+          O curso é para quem?
+        </h2>
+        <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray">
+          O curso é para empresários e líderes que querem ampliar a visão
+          estratégica do negócio, corrigir gargalos e potencializar lucros. É
+          a metodologia Gestão 360 completa, em formato online, para você
+          aplicar com autonomia no seu próprio ritmo: vendas, marketing,
+          liderança, processos, finanças, cultura organizacional, experiência
+          do cliente e expansão — com exemplos reais, ferramentas práticas e
+          materiais de apoio para aplicar de imediato.
         </p>
         <ul className="mt-8 grid gap-3 sm:grid-cols-2">
           {cursoBeneficios.map((b) => (
@@ -144,17 +149,12 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Para quem + CTA */}
+      {/* CTA final */}
       <section className="bg-navy text-white">
         <div className="mx-auto max-w-4xl px-6 py-16 text-center">
           <h2 className="text-2xl font-bold md:text-3xl">
-            Para empresários e líderes que querem crescer com método
+            Pronto para aplicar o método na sua empresa?
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-white/80">
-            Ideal para quem deseja ampliar a visão estratégica do negócio,
-            corrigir gargalos e potencializar lucros — com exemplos reais,
-            ferramentas práticas e materiais de apoio para aplicar de imediato.
-          </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Button href="/contato" variant="primary" size="lg">
               Entrar na lista de prioridade

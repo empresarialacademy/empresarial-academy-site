@@ -257,19 +257,17 @@ export const servicosDetalhe: Record<string, ServicoDetalhe> = {
     image: "/images/mentoria-executiva.jpg",
     intro:
       "Uma jornada individual com Thiago Marchi, para empresários e gestores que querem tomar decisões com mais clareza, segurança e planejamento estratégico — destravando o crescimento do negócio.",
-    bullets: [
-      "Diagnóstico do seu negócio",
-      "Acompanhamento direto, com orientações práticas",
-      "Planos de ação personalizados para a sua realidade",
-      "Foco em resultado: gestão, cultura, vendas e liderança",
-    ],
+    bullets: [],
     ctaLabel: "Agendar sessão estratégica",
+    paraQuem: {
+      titulo: "A mentoria é para quem?",
+      texto:
+        "A mentoria é uma jornada individual com Thiago Marchi, para empresários e gestores que querem tomar decisões com mais clareza, segurança e planejamento estratégico. Os 6 pilares do Gestão 360 servem de mapa para escolher onde focar: o diagnóstico mostra em quais pilares está o gargalo hoje, e o plano de desenvolvimento ataca esses pilares na ordem que realmente destrava o crescimento do seu negócio.",
+    },
     metodo: {
       titulo: "Como conduzimos a mentoria",
       subtitulo:
         "Trabalho personalizado: parte do seu momento como empresário e do momento da empresa. Não existe programa de prateleira, porque a trava de cada negócio é diferente.",
-      ligacaoGestao360:
-        "Os 6 pilares do Gestão 360 servem de mapa para escolher onde focar. O diagnóstico mostra em quais pilares está o gargalo hoje, e o plano de desenvolvimento ataca esses pilares na ordem que faz diferença para o seu resultado.",
       trilhas: [
         {
           etapas: [
@@ -342,19 +340,17 @@ export const servicosDetalhe: Record<string, ServicoDetalhe> = {
     image: "/images/palestras.jpg",
     intro:
       "Leve para o seu evento ou empresa uma palestra impactante sobre liderança, vendas, gestão estratégica, cultura organizacional e crescimento empresarial — com insights valiosos e aplicáveis.",
-    bullets: [
-      "Palestras presenciais ou online",
-      "Conteúdo personalizado de acordo com o público",
-      "Experiência envolvente, com insights aplicáveis",
-      "Foco em motivar equipes e fortalecer a cultura",
-    ],
+    bullets: [],
     ctaLabel: "Levar essa palestra para meu time",
+    paraQuem: {
+      titulo: "As palestras são para quem?",
+      texto:
+        "As palestras são para empresas e eventos que querem levar ao time uma conversa de alto nível sobre liderança, vendas, gestão estratégica, cultura organizacional e crescimento — com insights aplicáveis, não só teoria motivacional. Todos os temas nascem dos 6 pilares do Gestão 360 e do conteúdo que publicamos: a palestra não é um evento isolado, é o primeiro passo de uma conversa que pode continuar em diagnóstico, mentoria ou consultoria, se fizer sentido para a empresa.",
+    },
     metodo: {
       titulo: "Dois caminhos, conforme o seu objetivo",
       subtitulo:
         "Você pode escolher um tema já estruturado do nosso escopo ou uma palestra construída sob medida, a partir do que está acontecendo dentro da sua empresa.",
-      ligacaoGestao360:
-        "Todos os temas nascem dos 6 pilares do Gestão 360 e do conteúdo que publicamos. A palestra não é um evento isolado: ela abre a conversa que continua em diagnóstico, mentoria ou consultoria, se fizer sentido para a empresa.",
       trilhas: [
         {
           rotulo: "Palestra do nosso escopo",
@@ -542,9 +538,9 @@ export const servicosDetalhe: Record<string, ServicoDetalhe> = {
       ],
       fechamento:
         "O resultado: uma equipe com processo definido, pipeline visível para a gestão em tempo real e um padrão de atendimento consistente entre vendedores. É isso que a consultoria muda — tirar a gestão comercial do improviso e colocá-la sob controle.",
-      imagemSrc: "/images/consultoria-caso-reestruturacao-comercial.png",
+      imagemSrc: "/images/consultoria-caso-reestruturacao-comercial.jpg",
       imagemAlt:
-        "Ilustração de um funil de vendas organizado que se transforma em resultado crescente",
+        "Ilustração de uma taça-funil dourada organizando ícones de negócio em resultado",
     },
     diferencialIA: {
       titulo: "IA e automação como parte da solução",

@@ -85,13 +85,13 @@ function CircularDiagram({ etapas }: { etapas: TrilhaMetodo["etapas"] }) {
           );
         })}
 
-        {/* Centro: contagem de etapas, foco visual do ciclo. */}
-        <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center">
-          <span className="font-[var(--font-heading)] text-4xl font-bold text-gold drop-shadow-[0_0_18px_rgba(193,161,96,0.6)] sm:text-5xl">
-            {n}
+        {/* Centro: ancora o ciclo no método, não numa contagem genérica. */}
+        <div className="absolute left-1/2 top-1/2 flex w-[38%] -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center leading-tight">
+          <span className="font-[var(--font-heading)] text-[11px] font-bold uppercase tracking-wide text-gold drop-shadow-[0_0_14px_rgba(193,161,96,0.6)] sm:text-sm">
+            Método
           </span>
-          <span className="text-[11px] font-semibold uppercase tracking-widest text-white/70 sm:text-xs">
-            etapas
+          <span className="font-[var(--font-heading)] text-[11px] font-bold uppercase tracking-wide text-gold drop-shadow-[0_0_14px_rgba(193,161,96,0.6)] sm:text-sm">
+            Gestão 360
           </span>
         </div>
       </div>

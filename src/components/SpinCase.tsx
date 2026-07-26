@@ -45,8 +45,8 @@ export function SpinCase({ caso }: { caso: CasoPraticoSpin }) {
               <Image
                 src={caso.imagemSrc}
                 alt={caso.imagemAlt ?? ""}
-                width={480}
-                height={600}
+                width={450}
+                height={559}
                 sizes="(max-width: 1024px) 320px, 420px"
                 className="w-full rounded-2xl shadow-lg"
               />
