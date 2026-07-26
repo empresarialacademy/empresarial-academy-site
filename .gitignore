@@ -40,3 +40,8 @@ yarn-error.log*
 
 .vercel
 .env*
+
+# Artefatos temporarios do scripts/import-covers-and-materials.mjs
+scripts/.payload-config.built.mjs
+.tmp-capas-otimizadas/
+import-log*.txt
