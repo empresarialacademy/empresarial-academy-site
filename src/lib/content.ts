@@ -315,6 +315,30 @@ export const servicosDetalhe: Record<string, ServicoDetalhe> = {
         },
       ],
     },
+    casoPratico: {
+      titulo: "Como a mentoria funciona na prática",
+      resumo:
+        "Um cenário comum entre os empresários que buscam mentoria — não é um caso específico, mas um padrão que se repete.",
+      situacao:
+        "A empresa cresceu, mas todas as decisões — grandes ou pequenas — ainda passam pela mesma pessoa. A agenda vira uma sequência de apagar incêndio, e o tempo que deveria ir para pensar o negócio vira tempo de operar o negócio.",
+      problema:
+        "O empresário sabe que precisa delegar, mas cada tentativa de soltar as rédeas trouxe um problema maior do que resolver ele mesmo — o que reforça a ideia de que só ele consegue fazer certo. Ao mesmo tempo, faltam indicadores claros: as decisões são tomadas pela percepção de como as coisas estão indo, não por número.",
+      implicacao:
+        "Sem uma virada, o crescimento da empresa esbarra na capacidade de uma única pessoa dar conta de tudo. O empresário se esgota, decisões importantes ficam represadas esperando um horário livre, e a equipe aprende a não decidir nada sem antes perguntar.",
+      necessidadeIntro:
+        "A mentoria trabalha essa dupla frente ao mesmo tempo — o momento do empresário e o momento da empresa:",
+      acoes: [
+        "Diagnóstico do momento pessoal e do momento da empresa, para entender por que as tentativas de delegar até agora não deram certo",
+        "Plano de desenvolvimento combinando temas técnicos (indicadores, processos) e comportamentais (delegação, comunicação, decisão sob pressão)",
+        "Encontros que tratam decisões reais em curso — não teoria genérica de liderança",
+        "Definição de indicadores de evolução, tanto do negócio quanto da forma como o empresário está liderando",
+      ],
+      fechamento:
+        "O resultado esperado não é o empresário virar espectador do próprio negócio, mas parar de ser o único ponto de decisão — abrindo espaço para pensar estrategicamente, em vez de só operar.",
+      imagemSrc: "/images/mentoria-caso-delegacao.png",
+      imagemAlt:
+        "Ilustração de um único ponto de decisão se transformando em estrutura distribuída de liderança",
+    },
     diferencialIA: {
       titulo: "Inteligência artificial aplicada ao seu negócio",
       desc: "Boa parte dos empresários hoje sabe que precisa usar IA, mas não sabe por onde começar sem desperdiçar dinheiro. Quando faz sentido para o seu momento, esse vira um dos temas do plano: onde a IA e a automação realmente geram ganho na sua operação, o que priorizar primeiro e o que ainda não vale o investimento.",
