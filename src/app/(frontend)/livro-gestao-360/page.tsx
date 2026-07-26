@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { PageHero } from "@/components/layout/PageHero";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
+import { pilares } from "@/lib/content";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
@@ -17,6 +20,23 @@ const destaques = [
   "Casos reais e soluções aplicáveis",
   "Ideal para empresários, gestores e novos líderes",
 ];
+
+/**
+ * "O que você vai encontrar" — um capítulo por pilar do método, escrito em
+ * voz de recomendação (como quem já leu e está indicando), não como
+ * sumário técnico. Pedido do Thiago (2026-07-26): ser mais abrangente sobre
+ * o conteúdo e "um bom crítico" — por isso a seção termina com o aviso
+ * honesto sobre para quem o livro serve e para quem não serve, em vez de só
+ * elogio.
+ */
+const oQueVaiEncontrar = [
+  "Como organizar a rotina, a liderança e a execução para tirar a operação do caos e devolver o seu tempo.",
+  "Como estruturar a empresa com propósito e um modelo de crescimento que se sustenta — não um crescimento por acaso.",
+  "Como transformar visão em meta, indicador e prazo, em vez de intenção vaga que nunca sai do papel.",
+  "Como tomar decisão por indicador e controle financeiro, não por achismo ou pela sensação de que as coisas 'parecem' estar indo bem.",
+  "Como lidar com pessoas, pressão e conflito — a parte que a maioria dos livros de gestão pula.",
+  "Como manter a empresa competitiva com inovação, marketing e visão de futuro, sem parar no primeiro resultado.",
+] as const;
 
 const bookJsonLd = {
   "@context": "https://schema.org",
@@ -93,6 +113,49 @@ export default function Page() {
                 Entrar na lista de espera
               </Button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* O que você vai encontrar — voz de recomendação, um capítulo por pilar */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <SectionHeading
+            title="No Gestão 360, você vai encontrar"
+            subtitle="O livro segue os mesmos 6 pilares que sustentam o método — cada capítulo resolve um gargalo específico da gestão, nesta ordem."
+          />
+          <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {pilares.map((p, i) => (
+              <li
+                key={p.n}
+                className="relative rounded-xl border border-line bg-surface p-7"
+              >
+                <span className="absolute right-6 top-6 font-[var(--font-heading)] text-3xl font-bold text-line">
+                  {p.n}
+                </span>
+                <Icon name={p.icon} className="h-9 w-9 text-gold-ink" />
+                <h3 className="mt-4 text-lg font-semibold text-navy">
+                  {p.titulo}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-gray">
+                  {oQueVaiEncontrar[i]}
+                </p>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-12 max-w-3xl rounded-2xl border-l-2 border-gold bg-surface p-7">
+            <h3 className="font-[var(--font-heading)] text-sm font-semibold uppercase tracking-wide text-gold-ink">
+              Um aviso honesto
+            </h3>
+            <p className="mt-3 leading-relaxed text-navy">
+              Não é um livro de fórmula mágica nem de motivação vazia — é
+              método, escrito para quem está disposto a aplicar, não só a
+              ler. Se você busca um atalho ou uma leitura leve de fim de
+              semana, provavelmente não é para você. Se você quer organizar a
+              gestão com disciplina e sair do improviso, é exatamente para
+              isso que ele foi escrito.
+            </p>
           </div>
         </div>
       </section>

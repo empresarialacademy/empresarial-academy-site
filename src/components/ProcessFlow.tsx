@@ -99,11 +99,24 @@ function CircularDiagram({ etapas }: { etapas: TrilhaMetodo["etapas"] }) {
   );
 }
 
-function TrilhaBloco({ trilha, ramificado }: { trilha: TrilhaMetodo; ramificado: boolean }) {
+function TrilhaBloco({
+  trilha,
+  ramificado,
+  index,
+}: {
+  trilha: TrilhaMetodo;
+  ramificado: boolean;
+  index: number;
+}) {
   return (
     <div>
       {trilha.rotulo && (
         <div className="mb-8 rounded-xl border border-gold/30 bg-navy/[0.03] p-5">
+          {ramificado && (
+            <span className="mb-2 inline-block rounded-full bg-navy px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-gold">
+              Caminho {index + 1}
+            </span>
+          )}
           <h3 className="font-[var(--font-heading)] text-lg font-bold text-navy">
             {trilha.rotulo}
           </h3>
@@ -158,15 +171,24 @@ export function ProcessFlow({ metodo }: { metodo: MetodoServico }) {
 
         <div
           className={cn(
-            "mt-12",
+            "relative mt-12",
             ramificado ? "grid gap-14 md:grid-cols-2 md:gap-12" : "",
           )}
         >
+          {ramificado && (
+            <span
+              aria-hidden
+              className="absolute left-1/2 top-10 z-10 hidden -translate-x-1/2 items-center justify-center rounded-full border border-gold/40 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-gold-ink shadow-md md:flex"
+            >
+              ou
+            </span>
+          )}
           {metodo.trilhas.map((trilha, i) => (
             <TrilhaBloco
               key={trilha.rotulo ?? i}
               trilha={trilha}
               ramificado={ramificado}
+              index={i}
             />
           ))}
         </div>

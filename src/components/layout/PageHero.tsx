@@ -7,6 +7,7 @@ type Crumb = { label: string; href?: string };
 export function PageHero({
   title,
   subtitle,
+  badge,
   crumbs = [],
   image,
   imageAlt = "",
@@ -14,6 +15,8 @@ export function PageHero({
 }: {
   title: string;
   subtitle?: string;
+  /** Selo curto acima do título (ex.: "Em produção — lançamento em breve"). */
+  badge?: string;
   crumbs?: Crumb[];
   /**
    * Imagem ilustrativa exibida em card ao lado do título (modelo aprovado
@@ -109,6 +112,11 @@ export function PageHero({
           </div>
           <div>
             {breadcrumbNav}
+            {badge && (
+              <span className="mb-3 inline-block rounded-full border border-gold/50 bg-gold/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gold">
+                {badge}
+              </span>
+            )}
             <h1 className="text-3xl font-bold leading-tight md:text-4xl">
               {title}
             </h1>
@@ -120,6 +128,11 @@ export function PageHero({
       ) : (
         <div className="mx-auto w-full max-w-6xl px-6 py-10 md:py-12">
           {breadcrumbNav}
+          {badge && (
+            <span className="mb-3 inline-block rounded-full border border-gold/50 bg-gold/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gold">
+              {badge}
+            </span>
+          )}
           <h1 className="max-w-3xl text-3xl font-bold leading-tight md:text-5xl">
             {title}
           </h1>

@@ -117,8 +117,6 @@ export const cursoJornada: MetodoServico = {
   titulo: "Como funciona a sua jornada no curso",
   subtitulo:
     "Um pacote completo, feito para ser assistido no seu ritmo e aplicado na sua empresa enquanto você avança. Cada módulo termina com algo implantado, não com uma prova.",
-  ligacaoGestao360:
-    "A trilha percorre os 6 pilares na ordem em que eles se sustentam: primeiro organizar a operação e a estrutura, depois definir objetivos e métricas, e só então lidar com os desafios do crescimento e a evolução constante. Pular etapa é o erro que faz a maioria das empresas travar.",
   trilhas: [
     {
       etapas: [
@@ -151,6 +149,12 @@ export const cursoJornada: MetodoServico = {
           titulo: "Indicadores e evolução",
           desc: "Você define os indicadores que mostram o que mudou de fato e passa a acompanhar a empresa por dado, não por percepção.",
           icon: "trending-up",
+        },
+        {
+          n: "06",
+          titulo: "Melhoria contínua",
+          desc: "O aprendizado não termina no último módulo: você revisa o que já resolveu, o que o crescimento trouxe de novo, e ajusta a rota — o método continua funcionando depois que o curso acaba.",
+          icon: "rocket",
         },
       ],
     },
@@ -443,6 +447,14 @@ export const servicosDetalhe: Record<string, ServicoDetalhe> = {
         titulo: "IA aplicada à PME: por onde começar",
         desc: "O que a inteligência artificial já resolve em uma empresa pequena e média, o que ainda não vale o investimento e como priorizar sem desperdiçar dinheiro.",
       },
+      {
+        titulo: "Liderança que a equipe segue de verdade",
+        desc: "A diferença entre mandar e liderar — e por que os melhores profissionais saem primeiro de empresas com liderança fraca.",
+      },
+      {
+        titulo: "Da visão à meta: por que a estratégia não sai do papel",
+        desc: "Como transformar intenção em objetivo, indicador e prazo — sem isso, estratégia continua sendo só desejo.",
+      },
     ],
     faq: [
       {
@@ -643,6 +655,7 @@ export const cursoBeneficios = [
   "Aulas dinâmicas e práticas",
   "Acompanhamento estratégico e ferramentas exclusivas",
   "100% online, com acesso flexível e certificação",
+  "Apoio contínuo para aplicar, revisar e melhorar sempre",
 ] as const;
 
 /** Conquistas do fundador (briefing "Estrutura do site"). */

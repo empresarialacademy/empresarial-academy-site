@@ -52,6 +52,7 @@ export default function Page() {
       <PageHero
         title="Curso Gestão 360: transforme seu negócio em uma máquina de resultados"
         subtitle="Um curso completo, direto e prático que integra todos os pilares fundamentais da gestão empresarial."
+        badge="Em produção — lançamento em breve"
         image="/images/curso-gestao-360.jpg"
         crumbs={[
           { label: "Serviços", href: "/servicos" },
@@ -66,8 +67,10 @@ export default function Page() {
         </h2>
         <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray">
           O curso é para empresários e líderes que querem ampliar a visão
-          estratégica do negócio, corrigir gargalos e potencializar lucros. É
-          a metodologia Gestão 360 completa, em formato online, para você
+          estratégica do negócio, corrigir gargalos e potencializar lucros —
+          e também para qualquer pessoa que busca crescimento profissional e
+          quer entender como um verdadeiro líder pensa e toma decisão. É a
+          metodologia Gestão 360 completa, em formato online, para você
           aplicar com autonomia no seu próprio ritmo: vendas, marketing,
           liderança, processos, finanças, cultura organizacional, experiência
           do cliente e expansão — com exemplos reais, ferramentas práticas e
