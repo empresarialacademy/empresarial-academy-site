@@ -1,4 +1,5 @@
 import { PageHero } from "@/components/layout/PageHero";
+import { ProcessFlow } from "@/components/ProcessFlow";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { Faq } from "@/components/ui/Faq";
@@ -73,6 +74,48 @@ export function ServiceDetail({ data }: { data: ServicoDetalhe }) {
           </Button>
         </div>
       </section>
+
+      {data.metodo && <ProcessFlow metodo={data.metodo} />}
+
+      {data.temas && data.temas.length > 0 && (
+        <section className="bg-white">
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <SectionHeading
+              title="Temas disponíveis"
+              subtitle="Cada tema nasce dos 6 pilares do Gestão 360 e do conteúdo que publicamos no blog. Se a sua necessidade não estiver aqui, construímos sob medida."
+            />
+            <ul className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {data.temas.map((tema) => (
+                <li
+                  key={tema.titulo}
+                  className="rounded-xl border border-line bg-surface p-6"
+                >
+                  <h3 className="font-semibold text-navy">{tema.titulo}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-gray">
+                    {tema.desc}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {data.diferencialIA && (
+        <section className="bg-navy text-white">
+          <div className="mx-auto max-w-4xl px-6 py-20">
+            <span className="font-[var(--font-heading)] text-xs font-bold uppercase tracking-widest text-gold">
+              Diferencial
+            </span>
+            <h2 className="mt-3 font-[var(--font-heading)] text-2xl font-bold md:text-3xl">
+              {data.diferencialIA.titulo}
+            </h2>
+            <p className="mt-5 leading-relaxed text-white/80">
+              {data.diferencialIA.desc}
+            </p>
+          </div>
+        </section>
+      )}
 
       {data.faq.length > 0 && (
         <section className="bg-white">

@@ -8,8 +8,10 @@ import {
   diferenciais,
   fundador,
   fundadorConquistas,
+  fundadorFormacao,
   missao,
   porqueConfiar,
+  tecnologiaIA,
   valores,
   visao,
 } from "@/lib/content";
@@ -32,6 +34,25 @@ const personJsonLd = {
   worksFor: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
   url: `${siteConfig.url}/institucional`,
   sameAs: [siteConfig.social.linkedin, siteConfig.social.instagram],
+  alumniOf: [
+    { "@type": "CollegeOrUniversity", name: "Fundação Getulio Vargas (FGV)" },
+    { "@type": "CollegeOrUniversity", name: "Universidade Nove de Julho" },
+  ],
+  hasCredential: fundadorFormacao.map((f) => ({
+    "@type": "EducationalOccupationalCredential",
+    name: f.titulo,
+    recognizedBy: { "@type": "Organization", name: f.instituicao },
+  })),
+  knowsAbout: [
+    "Gestão empresarial",
+    "Liderança",
+    "Vendas",
+    "Processos e indicadores",
+    "Lean Six Sigma",
+    "Customer Experience",
+    "Inteligência artificial aplicada a negócios",
+    "Automação de processos",
+  ],
 };
 
 export default function Page() {
@@ -139,6 +160,41 @@ export default function Page() {
                 </li>
               ))}
             </ul>
+
+            <div className="mt-10 border-t border-white/15 pt-8">
+              <h3 className="font-[var(--font-heading)] text-sm font-semibold uppercase tracking-wide text-gold">
+                Formação e certificações
+              </h3>
+              <ul className="mt-5 grid gap-4 sm:grid-cols-2">
+                {fundadorFormacao.map((f) => (
+                  <li key={f.titulo}>
+                    <p className="text-sm font-semibold text-white">{f.titulo}</p>
+                    <p className="mt-0.5 text-sm text-white/60">{f.instituicao}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Tecnologia e IA — diferencial transversal, não serviço à parte */}
+      <section className="mx-auto max-w-6xl px-6 py-20">
+        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+          <div>
+            <span className="font-[var(--font-heading)] text-xs font-bold uppercase tracking-widest text-gold-ink">
+              Diferencial
+            </span>
+            <h2 className="mt-3 font-[var(--font-heading)] text-2xl font-bold text-navy md:text-3xl">
+              {tecnologiaIA.titulo}
+            </h2>
+          </div>
+          <div className="space-y-4">
+            {tecnologiaIA.paragrafos.map((p) => (
+              <p key={p.slice(0, 24)} className="leading-relaxed text-gray">
+                {p}
+              </p>
+            ))}
           </div>
         </div>
       </section>

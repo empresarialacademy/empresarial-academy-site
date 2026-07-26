@@ -3,9 +3,11 @@ import { PageHero } from "@/components/layout/PageHero";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { ProcessFlow } from "@/components/ProcessFlow";
 import {
   cursoBeneficios,
   cursoFerramentas,
+  cursoJornada,
   cursoModulos,
   pilares,
 } from "@/lib/content";
@@ -107,6 +109,8 @@ export default function Page() {
           </ul>
         </div>
       </section>
+
+      <ProcessFlow metodo={cursoJornada} />
 
       {/* Módulos + Ferramentas */}
       <section className="mx-auto max-w-6xl px-6 py-16">
