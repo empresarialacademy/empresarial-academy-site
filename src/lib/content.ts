@@ -194,13 +194,21 @@ export type MetodoServico = {
 export type CasoPraticoSpin = {
   titulo: string;
   resumo?: string;
+  /**
+   * Os 4 campos abaixo (situacao/problema/implicacao/necessidadeIntro) NÃO
+   * são exibidos com rótulo algum — viram parágrafos corridos, em ordem, de
+   * modo que o leitor é conduzido pelo raciocínio do SPIN Selling sem nunca
+   * ver a técnica nomeada (decisão do Thiago, 2026-07-26).
+   */
   situacao: string;
   problema: string;
   implicacao: string;
-  /** Introdução da seção de solução, antes da lista de ações executadas. */
+  /** Frase de transição antes da lista de ações executadas. */
   necessidadeIntro: string;
   acoes: readonly string[];
   fechamento?: string;
+  imagemSrc?: string;
+  imagemAlt?: string;
 };
 
 /** Conteúdo das páginas de serviço (briefing "Estrutura do site"). */
@@ -221,6 +229,12 @@ export type ServicoDetalhe = {
   metodo?: MetodoServico;
   /** Título + texto de qualificação ("Como saber se precisa de...?"). */
   comoSaber?: { titulo: string; texto: string };
+  /**
+   * Bloco de abertura logo abaixo do banner, substituindo o parágrafo de
+   * `intro` quando presente. Usado para consolidar textos que fariam sentido
+   * juntos (ex.: para quem é o serviço + como ele aplica o Gestão 360).
+   */
+  paraQuem?: { titulo: string; texto: string };
   /** Caso prático real, anonimizado, estruturado em SPIN Selling. */
   casoPratico?: CasoPraticoSpin;
   /** Temas disponíveis (usado em Palestras). */
@@ -457,17 +471,15 @@ export const servicosDetalhe: Record<string, ServicoDetalhe> = {
       "Para empresas que desejam uma atuação próxima e intensiva. Analisamos, propomos e implementamos soluções reais que geram lucro, eficiência e estrutura — com indicadores e cultura de performance.",
     bullets: [],
     ctaLabel: "Falar sobre uma consultoria",
-    comoSaber: {
-      titulo: "Como saber se precisa de uma consultoria?",
+    paraQuem: {
+      titulo: "A consultoria é para quem?",
       texto:
-        "Toda empresa que está passando por uma reestruturação — comercial, operacional, financeira ou de back office — e precisa alcançar resultados maiores tem um desafio em comum: desenvolver um projeto eficiente, com o apoio certo, indo direto ao ponto. Sem isso, o caminho normal é a tentativa e erro, que custa tempo e dinheiro que a empresa não precisava ter perdido.",
+        "A consultoria é para empresas que querem uma atuação próxima e intensiva, sem depender de relatório genérico. Aplicamos os pilares do Gestão 360 ao seu caso específico: o mapeamento organiza o Fluxo de Alta Performance, os gaps expõem onde a Arquitetura do Crescimento não sustenta mais a operação, e o acompanhamento instala as Métricas de Sucesso que mantêm a decisão baseada em dado, não em achismo. O resultado é lucro, eficiência e estrutura — com indicadores e uma cultura de performance que continua depois que a consultoria termina.",
     },
     metodo: {
       titulo: "Como trabalhamos na consultoria",
       subtitulo:
         "Um caminho definido, do primeiro diagnóstico até o time operando sozinho. Cada etapa entrega algo concreto — nada de relatório que termina na gaveta.",
-      ligacaoGestao360:
-        "Cada etapa aplica os pilares do Gestão 360 ao seu caso: o mapeamento organiza o Fluxo de Alta Performance, os gaps expõem onde a Arquitetura do Crescimento não sustenta a operação, e o acompanhamento instala as Métricas de Sucesso que mantêm a decisão baseada em dado, não em achismo.",
       trilhas: [
         {
           etapas: [
@@ -514,29 +526,29 @@ export const servicosDetalhe: Record<string, ServicoDetalhe> = {
     casoPratico: {
       titulo: "Um caso real de reestruturação comercial",
       resumo:
-        "Para ilustrar como o método se aplica, veja como conduzimos a reestruturação comercial de uma empresa em pleno crescimento — sem identificar o cliente, mas sem esconder o que foi feito.",
+        "Sem identificar o cliente, mas sem esconder o que foi feito — veja como conduzimos a reestruturação comercial de uma empresa em pleno crescimento.",
       situacao:
-        "A empresa vinha de um crescimento acelerado da operação comercial, mas sem uma rotina estruturada acompanhando esse ritmo: cada vendedor conduzia a negociação à própria maneira, sem um roteiro comum, e a gestão não tinha uma ferramenta única para enxergar o andamento de cada oportunidade.",
+        "A empresa vinha de um crescimento acelerado da operação comercial, mas sem uma rotina estruturada para sustentar esse ritmo: cada vendedor conduzia a negociação à própria maneira, sem um roteiro comum, e a gestão não tinha uma ferramenta única para enxergar o andamento de cada oportunidade.",
       problema:
-        "A liderança percebia sintomas claros: reuniões de vendas guiadas por sensação em vez de dado, follow-up perdido entre uma conversa e outra, e um padrão de atendimento que variava conforme quem atendia o cliente.",
+        "As reuniões de vendas eram guiadas por sensação, não por dado. O follow-up se perdia entre uma conversa e outra, e o padrão de atendimento variava conforme quem atendia o cliente — um problema que a liderança sentia, mas não sabia dizer exatamente de onde vinha.",
       implicacao:
-        "Sem correção, esse cenário custava oportunidades reais — vendas que esfriavam por falta de acompanhamento, supervisores sem visibilidade para intervir a tempo, e uma experiência de atendimento inconsistente que colocava em risco a percepção que o cliente tinha da empresa.",
+        "Sem correção, esse cenário custava oportunidades reais: vendas esfriavam por falta de acompanhamento, os supervisores não tinham visibilidade para intervir a tempo, e a experiência inconsistente de atendimento colocava em risco a própria percepção que o cliente tinha da empresa.",
       necessidadeIntro:
-        "O trabalho começou pelo mesmo caminho de qualquer consultoria nossa — entrevistas, estudo do cenário e um projeto apresentado antes de qualquer ação — e seguiu para a execução:",
+        "O trabalho começou pelo mesmo caminho de qualquer consultoria nossa — entrevistas com a liderança, os supervisores e o time de vendas, um estudo preliminar do funil e da operação, e a apresentação do projeto antes de qualquer ação. A partir daí, a execução:",
       acoes: [
-        "Entrevistas com a liderança, os supervisores e o time de vendas, para entender o processo pela ótica de quem vive a rotina comercial todos os dias",
-        "Estudo preliminar do funil e da operação, mapeando exatamente onde as oportunidades travavam",
-        "Apresentação do projeto de reestruturação, com as ações priorizadas e os indicadores que passariam a acompanhar o resultado",
         "Implantação de CRM, com uma rotina diária definida para a equipe extrair o máximo da ferramenta — não bastava ter o sistema, era preciso saber planejar o dia de trabalho usando ele",
         "Treinamento da equipe de vendedores, supervisores e gestão nas técnicas SPIN Selling e BANT, para qualificar oportunidades e conduzir a venda consultiva com critério",
         "Padronização do atendimento, para que a experiência do cliente deixasse de depender de quem estava do outro lado da linha",
       ],
       fechamento:
-        "O resultado: uma equipe operando com processo definido, pipeline visível para a gestão em tempo real, e um padrão de atendimento consistente entre vendedores — decisões passaram a ser tomadas com base no CRM, não em percepção.",
+        "O resultado: uma equipe com processo definido, pipeline visível para a gestão em tempo real e um padrão de atendimento consistente entre vendedores. É isso que a consultoria muda — tirar a gestão comercial do improviso e colocá-la sob controle.",
+      imagemSrc: "/images/consultoria-caso-reestruturacao-comercial.png",
+      imagemAlt:
+        "Ilustração de um funil de vendas organizado que se transforma em resultado crescente",
     },
     diferencialIA: {
-      titulo: "Tecnologia e automação como parte da solução",
-      desc: "Quando o gargalo é operacional, processo redesenhado no papel não resolve sozinho. Nas etapas de solução e implantação avaliamos onde a tecnologia elimina trabalho manual: sistemas sob medida para a sua operação e automações que removem o ruído de comunicação entre departamentos — aquele retrabalho que nasce de informação que se perde entre uma área e outra. O ganho é tempo operacional devolvido à equipe, com mais qualidade na entrega e menos falha entre as pontas.",
+      titulo: "IA e automação como parte da solução",
+      desc: "Quando o gargalo está na comunicação entre áreas, processo redesenhado só no papel não resolve. Usamos sistemas personalizados e inteligência artificial para facilitar a comunicação entre as áreas e os processos, eliminando o ruído que gera retrabalho e informação perdida de um departamento para o outro. O resultado é uma operação mais fluida, com melhores resultados e mais qualidade em cada entrega.",
     },
     faq: [
       {

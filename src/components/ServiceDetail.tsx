@@ -55,7 +55,18 @@ export function ServiceDetail({ data }: { data: ServicoDetalhe }) {
       />
 
       <section className="mx-auto max-w-6xl px-6 py-16">
-        <p className="max-w-3xl text-lg text-gray">{data.intro}</p>
+        {data.paraQuem ? (
+          <>
+            <h2 className="font-[var(--font-heading)] text-2xl font-bold text-navy md:text-3xl">
+              {data.paraQuem.titulo}
+            </h2>
+            <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray">
+              {data.paraQuem.texto}
+            </p>
+          </>
+        ) : (
+          <p className="max-w-3xl text-lg text-gray">{data.intro}</p>
+        )}
         {data.bullets.length > 0 && (
           <ul className="mt-8 grid gap-3 sm:grid-cols-2">
             {data.bullets.map((b) => (
