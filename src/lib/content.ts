@@ -184,6 +184,25 @@ export type MetodoServico = {
   ligacaoGestao360?: string;
 };
 
+/**
+ * Caso prático apresentado com a estrutura SPIN Selling (Situação, Problema,
+ * Implicação, Necessidade de solução) — usa a mesma técnica que ensinamos
+ * para também estruturar a prova de que o método funciona. A empresa NUNCA é
+ * nomeada nem identificável (decisão do Thiago, 2026-07-26): descreve o
+ * cenário e as ações reais, sem expor o cliente.
+ */
+export type CasoPraticoSpin = {
+  titulo: string;
+  resumo?: string;
+  situacao: string;
+  problema: string;
+  implicacao: string;
+  /** Introdução da seção de solução, antes da lista de ações executadas. */
+  necessidadeIntro: string;
+  acoes: readonly string[];
+  fechamento?: string;
+};
+
 /** Conteúdo das páginas de serviço (briefing "Estrutura do site"). */
 export type ServicoDetalhe = {
   slug: string;
@@ -200,6 +219,10 @@ export type ServicoDetalhe = {
   video?: string;
   /** Método de trabalho + fluxograma. Sem isso, a seção não é renderizada. */
   metodo?: MetodoServico;
+  /** Título + texto de qualificação ("Como saber se precisa de...?"). */
+  comoSaber?: { titulo: string; texto: string };
+  /** Caso prático real, anonimizado, estruturado em SPIN Selling. */
+  casoPratico?: CasoPraticoSpin;
   /** Temas disponíveis (usado em Palestras). */
   temas?: readonly { titulo: string; desc: string }[];
   /**
@@ -432,14 +455,13 @@ export const servicosDetalhe: Record<string, ServicoDetalhe> = {
     subtitle: "Análise, proposta e implementação de soluções reais no seu negócio.",
     intro:
       "Para empresas que desejam uma atuação próxima e intensiva. Analisamos, propomos e implementamos soluções reais que geram lucro, eficiência e estrutura — com indicadores e cultura de performance.",
-    bullets: [
-      "Diagnóstico completo do negócio",
-      "Estratégias práticas sob medida",
-      "Reestruturação de processos e estratégias comerciais",
-      "Geração de indicadores (KPIs) e acompanhamento próximo",
-      "Resultados mensuráveis",
-    ],
+    bullets: [],
     ctaLabel: "Falar sobre uma consultoria",
+    comoSaber: {
+      titulo: "Como saber se precisa de uma consultoria?",
+      texto:
+        "Toda empresa que está passando por uma reestruturação — comercial, operacional, financeira ou de back office — e precisa alcançar resultados maiores tem um desafio em comum: desenvolver um projeto eficiente, com o apoio certo, indo direto ao ponto. Sem isso, o caminho normal é a tentativa e erro, que custa tempo e dinheiro que a empresa não precisava ter perdido.",
+    },
     metodo: {
       titulo: "Como trabalhamos na consultoria",
       subtitulo:
@@ -488,6 +510,29 @@ export const servicosDetalhe: Record<string, ServicoDetalhe> = {
           ],
         },
       ],
+    },
+    casoPratico: {
+      titulo: "Um caso real de reestruturação comercial",
+      resumo:
+        "Para ilustrar como o método se aplica, veja como conduzimos a reestruturação comercial de uma empresa em pleno crescimento — sem identificar o cliente, mas sem esconder o que foi feito.",
+      situacao:
+        "A empresa vinha de um crescimento acelerado da operação comercial, mas sem uma rotina estruturada acompanhando esse ritmo: cada vendedor conduzia a negociação à própria maneira, sem um roteiro comum, e a gestão não tinha uma ferramenta única para enxergar o andamento de cada oportunidade.",
+      problema:
+        "A liderança percebia sintomas claros: reuniões de vendas guiadas por sensação em vez de dado, follow-up perdido entre uma conversa e outra, e um padrão de atendimento que variava conforme quem atendia o cliente.",
+      implicacao:
+        "Sem correção, esse cenário custava oportunidades reais — vendas que esfriavam por falta de acompanhamento, supervisores sem visibilidade para intervir a tempo, e uma experiência de atendimento inconsistente que colocava em risco a percepção que o cliente tinha da empresa.",
+      necessidadeIntro:
+        "O trabalho começou pelo mesmo caminho de qualquer consultoria nossa — entrevistas, estudo do cenário e um projeto apresentado antes de qualquer ação — e seguiu para a execução:",
+      acoes: [
+        "Entrevistas com a liderança, os supervisores e o time de vendas, para entender o processo pela ótica de quem vive a rotina comercial todos os dias",
+        "Estudo preliminar do funil e da operação, mapeando exatamente onde as oportunidades travavam",
+        "Apresentação do projeto de reestruturação, com as ações priorizadas e os indicadores que passariam a acompanhar o resultado",
+        "Implantação de CRM, com uma rotina diária definida para a equipe extrair o máximo da ferramenta — não bastava ter o sistema, era preciso saber planejar o dia de trabalho usando ele",
+        "Treinamento da equipe de vendedores, supervisores e gestão nas técnicas SPIN Selling e BANT, para qualificar oportunidades e conduzir a venda consultiva com critério",
+        "Padronização do atendimento, para que a experiência do cliente deixasse de depender de quem estava do outro lado da linha",
+      ],
+      fechamento:
+        "O resultado: uma equipe operando com processo definido, pipeline visível para a gestão em tempo real, e um padrão de atendimento consistente entre vendedores — decisões passaram a ser tomadas com base no CRM, não em percepção.",
     },
     diferencialIA: {
       titulo: "Tecnologia e automação como parte da solução",

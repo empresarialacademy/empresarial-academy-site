@@ -1,5 +1,6 @@
 import { PageHero } from "@/components/layout/PageHero";
 import { ProcessFlow } from "@/components/ProcessFlow";
+import { SpinCase } from "@/components/SpinCase";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { Faq } from "@/components/ui/Faq";
@@ -55,19 +56,21 @@ export function ServiceDetail({ data }: { data: ServicoDetalhe }) {
 
       <section className="mx-auto max-w-6xl px-6 py-16">
         <p className="max-w-3xl text-lg text-gray">{data.intro}</p>
-        <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-          {data.bullets.map((b) => (
-            <li
-              key={b}
-              className="flex items-center gap-3 rounded-lg border border-line bg-white p-4 text-sm text-navy"
-            >
-              <span className="text-gold-ink" aria-hidden>
-                ✔
-              </span>
-              {b}
-            </li>
-          ))}
-        </ul>
+        {data.bullets.length > 0 && (
+          <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+            {data.bullets.map((b) => (
+              <li
+                key={b}
+                className="flex items-center gap-3 rounded-lg border border-line bg-white p-4 text-sm text-navy"
+              >
+                <span className="text-gold-ink" aria-hidden>
+                  ✔
+                </span>
+                {b}
+              </li>
+            ))}
+          </ul>
+        )}
         <div className="mt-10">
           <Button href="/contato" variant="primary" size="lg">
             {data.ctaLabel}
@@ -75,7 +78,20 @@ export function ServiceDetail({ data }: { data: ServicoDetalhe }) {
         </div>
       </section>
 
+      {data.comoSaber && (
+        <section className="bg-white">
+          <div className="mx-auto max-w-6xl px-6 py-16">
+            <SectionHeading title={data.comoSaber.titulo} />
+            <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray">
+              {data.comoSaber.texto}
+            </p>
+          </div>
+        </section>
+      )}
+
       {data.metodo && <ProcessFlow metodo={data.metodo} />}
+
+      {data.casoPratico && <SpinCase caso={data.casoPratico} />}
 
       {data.temas && data.temas.length > 0 && (
         <section className="bg-white">
