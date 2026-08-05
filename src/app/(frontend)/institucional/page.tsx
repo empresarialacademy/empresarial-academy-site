@@ -30,7 +30,7 @@ const personJsonLd = {
   name: fundador.nome,
   jobTitle: fundador.cargo,
   description:
-    "Fundador da Empresarial Academy. Mais de 20 anos em liderança estratégica e 15 anos como empresário, especialista em gestão, vendas e liderança de alta performance.",
+    "Fundador da Empresarial Academy. Sócio-proprietário de uma PME por 7 anos e quase duas décadas estruturando operações comerciais em empresas como Telefônica VIVO, Atento e Grupo Allcom.",
   worksFor: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
   url: `${siteConfig.url}/institucional`,
   sameAs: [siteConfig.social.linkedin, siteConfig.social.instagram],

@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diagnóstico de Maturidade Empresarial Gratuito | Empresarial Academy</title>
-<meta name="description" content="Avaliação gratuita: descubra em poucos minutos o nível de maturidade da sua empresa em Comercial, Operações, Indicadores e Liderança — com plano de ação personalizado.">
+<meta name="description" content="Avaliação gratuita: descubra em poucos minutos o nível de maturidade da sua empresa em Comercial, Operações, Indicadores, Liderança e Financeiro — com plano de ação personalizado.">
 <link rel="canonical" href="https://empresarialacademy.com/diagnostico-maturidade-empresarial.html">
 <link rel="icon" href="/icon.png">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Empresarial Academy">
 <meta property="og:title" content="Diagnóstico de Maturidade Empresarial Gratuito">
-<meta property="og:description" content="24 perguntas, resultado na hora: pontuação por pilar (Comercial, Operações, Indicadores, Liderança) e plano de melhoria com ações e prazos.">
+<meta property="og:description" content="30 perguntas, resultado na hora: pontuação por pilar (Comercial, Operações, Indicadores, Liderança, Financeiro) e plano de melhoria com ações e prazos.">
 <meta property="og:url" content="https://empresarialacademy.com/diagnostico-maturidade-empresarial.html">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
@@ -21,7 +21,7 @@
   "name": "Diagnóstico de Maturidade Empresarial",
   "url": "https://empresarialacademy.com/diagnostico-maturidade-empresarial.html",
   "inLanguage": "pt-BR",
-  "description": "Avaliação gratuita e interativa da maturidade de gestão da empresa em 4 pilares: Comercial, Operações, Gestão de Indicadores e Liderança. 24 perguntas com resultado imediato e plano de melhoria.",
+  "description": "Avaliação gratuita e interativa da maturidade de gestão da empresa em 5 pilares: Comercial, Operações, Gestão de Indicadores, Liderança e Financeiro. 30 perguntas com resultado imediato e plano de melhoria.",
   "isPartOf": { "@type": "WebSite", "name": "Empresarial Academy", "url": "https://empresarialacademy.com" },
   "provider": { "@type": "Organization", "name": "Empresarial Academy", "url": "https://empresarialacademy.com" },
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" }
@@ -265,24 +265,27 @@
     transition:width .3s ease;
   }
   #leadGate{display:none;}
-  #leadGate .field{margin-bottom:14px;}
-  #leadGate label{
+  #assessmentBody{display:none;}
+  .gate-card .field{margin-bottom:14px;}
+  .gate-card label{
     display:block;
     font-size:13px;
     font-weight:600;
     color:var(--navy);
     margin-bottom:5px;
   }
-  #leadGate input[type=text], #leadGate input[type=email], #leadGate input[type=tel]{
+  .gate-card input[type=text], .gate-card input[type=email], .gate-card input[type=tel], .gate-card select{
     width:100%;
     border:1px solid var(--gray-light);
     border-radius:6px;
     padding:10px 12px;
     font-size:14px;
     font-family:inherit;
+    background:var(--white);
+    color:var(--graphite);
   }
-  #leadGate input:focus{outline:2px solid var(--gold);border-color:var(--gold);}
-  #leadGate .consent{
+  .gate-card input:focus, .gate-card select:focus{outline:2px solid var(--gold);border-color:var(--gold);}
+  .gate-card .consent{
     display:flex;
     gap:8px;
     align-items:flex-start;
@@ -290,8 +293,20 @@
     color:var(--gray);
     margin-top:4px;
   }
-  #leadGate .error{color:var(--red);font-size:12.5px;margin-top:4px;display:none;}
-  #leadGate .visually-hidden{position:absolute;left:-9999px;}
+  .gate-card .error{color:var(--red);font-size:12.5px;margin-top:4px;display:none;}
+  .gate-card .visually-hidden{position:absolute;left:-9999px;}
+  .gate-card .promise{
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+    background:var(--offwhite);
+    border:1px solid var(--gray-light);
+    border-radius:8px;
+    padding:10px 12px;
+    font-size:12.5px;
+    color:var(--gray);
+    margin:14px 0 18px;
+  }
   #results{display:none;}
   .results-cover{
     background:var(--navy);
@@ -461,23 +476,64 @@
   <br>
   <img src="/logo-empresarial-academy.png" alt="Empresarial Academy">
   <h1>Diagnóstico de Maturidade Empresarial</h1>
-  <p class="subtitle">Comercial · Operações · Gestão de Indicadores · Liderança</p>
+  <p class="subtitle">Comercial · Operações · Gestão de Indicadores · Liderança · Financeiro</p>
   <p class="slogan">Conhecimento que Impulsiona</p>
 </div>
 
 <div class="wrap">
 
+  <div class="card gate-card" id="entryGate">
+    <h2>Antes de começar: para onde enviamos o seu diagnóstico?</h2>
+    <p class="pillar-sub" style="margin-bottom:4px">30 perguntas rápidas, cerca de 8 minutos. Você vê o resultado completo — pontuação por pilar e plano de ação — assim que terminar.</p>
+    <div class="promise">
+      <span aria-hidden>⏱</span>
+      <span>Mesmo que não termine agora, guardamos seu contato para você retomar depois — nada se perde.</span>
+    </div>
+    <form id="entryForm" novalidate>
+      <div aria-hidden="true" class="visually-hidden">
+        <input type="text" name="website" id="entryWebsite" tabindex="-1" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="entryNome">Seu nome *</label>
+        <input type="text" id="entryNome" name="nome" required>
+        <p class="error" id="entryErrNome">Informe seu nome.</p>
+      </div>
+      <div class="field">
+        <label for="entryEmail">Seu melhor e-mail *</label>
+        <input type="email" id="entryEmail" name="email" required>
+        <p class="error" id="entryErrEmail">Informe um e-mail válido.</p>
+      </div>
+      <div class="field">
+        <label for="entryWhatsapp">WhatsApp *</label>
+        <input type="tel" id="entryWhatsapp" name="whatsapp" placeholder="(11) 90000-0000" required>
+        <p class="error" id="entryErrWhatsapp">Informe um WhatsApp com DDD.</p>
+      </div>
+      <label class="consent">
+        <input type="checkbox" id="entryConsent" name="consentimento" required style="margin-top:2px">
+        <span>Aceito receber meu diagnóstico e contatos da Empresarial Academy, conforme a <a href="/privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.</span>
+      </label>
+      <p class="error" id="entryErrConsent">É necessário aceitar para continuar.</p>
+      <div class="btn-row">
+        <button type="submit" id="btnEntrySubmit">Começar o diagnóstico →</button>
+      </div>
+      <p class="error" id="entryErrSubmit" style="text-align:center">Não foi possível enviar agora. Tente novamente.</p>
+    </form>
+  </div>
+
+  <div id="assessmentBody">
+
   <div class="card intro">
     <h2>Como funciona</h2>
-    <p>Em poucos minutos, você tem um retrato claro de como sua empresa está estruturada nas quatro áreas que mais pesam no crescimento: Comercial, Operações, Indicadores e Liderança. Responda com base na realidade atual — não no cenário ideal.</p>
+    <p>Em poucos minutos, você tem um retrato claro de como sua empresa está estruturada nas cinco áreas que mais pesam no crescimento: Comercial, Operações, Indicadores, Liderança e Financeiro. Responda com base na realidade atual — não no cenário ideal.</p>
     <p>Ao final, você recebe a pontuação de cada área, o seu nível de maturidade e um plano de melhoria com ações, indicadores e prazos para aplicar na prática.</p>
+    <p style="font-size:13.5px;color:var(--gray);margin-top:14px"><strong style="color:var(--navy)">Você vê o resultado agora mesmo, na tela.</strong> Se quiser, nossa equipe entra em contato em até 2 dias úteis para uma leitura estratégica do que encontramos.</p>
     <div class="legend" id="legend"></div>
   </div>
 
   <div class="progress-sticky" id="progressBar">
     <div class="progress-label">
       <span>Seu progresso</span>
-      <span id="progressText">0 de 24 respondidas</span>
+      <span id="progressText">0 de 30 respondidas</span>
     </div>
     <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
   </div>
@@ -489,36 +545,41 @@
   </div>
   <p class="hint" id="hint">Responda todas as perguntas para gerar o diagnóstico.</p>
 
-  <div class="card" id="leadGate">
-    <h2>Quase lá! Para onde enviamos o seu resultado?</h2>
-    <p class="pillar-sub" style="margin-bottom:18px">Preencha seus dados para ver a pontuação completa e o plano de ação — sem custo e sem compromisso.</p>
+  </div>
+
+  <div class="card gate-card" id="leadGate">
+    <h2>Quase lá! Só mais alguns dados para liberar o resultado completo</h2>
+    <p class="pillar-sub" style="margin-bottom:18px">Isso ajuda a gente a te mandar um plano de ação que faz sentido para o tamanho da sua empresa — sem custo e sem compromisso.</p>
     <form id="leadForm" novalidate>
-      <div aria-hidden="true" class="visually-hidden">
-        <input type="text" name="website" id="leadWebsite" tabindex="-1" autocomplete="off">
+      <div class="field">
+        <label for="leadEmpresa">Nome da empresa *</label>
+        <input type="text" id="leadEmpresa" name="empresa" required>
+        <p class="error" id="errEmpresa">Informe o nome da empresa.</p>
       </div>
       <div class="field">
-        <label for="leadNome">Seu nome *</label>
-        <input type="text" id="leadNome" name="nome" required>
-        <p class="error" id="errNome">Informe seu nome.</p>
+        <label for="leadCargo">Seu cargo *</label>
+        <select id="leadCargo" name="cargo" required>
+          <option value="">Selecione...</option>
+          <option>Sócio(a) / Proprietário(a)</option>
+          <option>CEO / Diretor(a)</option>
+          <option>Gerente / Coordenador(a)</option>
+          <option>Outro</option>
+        </select>
+        <p class="error" id="errCargo">Selecione seu cargo.</p>
       </div>
       <div class="field">
-        <label for="leadEmpresa">Empresa</label>
-        <input type="text" id="leadEmpresa" name="empresa">
+        <label for="leadFaturamento">Faturamento anual da empresa *</label>
+        <select id="leadFaturamento" name="faturamento" required>
+          <option value="">Selecione...</option>
+          <option>Até R$ 500 mil</option>
+          <option>R$ 500 mil – R$ 1,2 milhão</option>
+          <option>R$ 1,2 – 3,6 milhões</option>
+          <option>R$ 3,6 – 5 milhões</option>
+          <option>R$ 5 – 12 milhões</option>
+          <option>Acima de R$ 12 milhões</option>
+        </select>
+        <p class="error" id="errFaturamento">Selecione a faixa de faturamento.</p>
       </div>
-      <div class="field">
-        <label for="leadEmail">Seu melhor e-mail *</label>
-        <input type="email" id="leadEmail" name="email" required>
-        <p class="error" id="errEmail">Informe um e-mail válido.</p>
-      </div>
-      <div class="field">
-        <label for="leadWhatsapp">WhatsApp</label>
-        <input type="tel" id="leadWhatsapp" name="whatsapp" placeholder="(11) 90000-0000">
-      </div>
-      <label class="consent">
-        <input type="checkbox" id="leadConsent" name="consentimento" required style="margin-top:2px">
-        <span>Aceito receber meu diagnóstico e contatos da Empresarial Academy, conforme a <a href="/privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.</span>
-      </label>
-      <p class="error" id="errConsent">É necessário aceitar para continuar.</p>
       <div class="btn-row">
         <button type="submit" id="btnLeadSubmit">Ver meu diagnóstico completo →</button>
       </div>
@@ -642,6 +703,19 @@ const PILLARS = [
       "A empresa realiza avaliação de desempenho e feedback estruturado com a equipe?",
       "Existe plano de sucessão ou desenvolvimento de novas lideranças internas?",
       "As lideranças comunicam visão, metas e prioridades de forma clara para o time?"
+    ]
+  },
+  {
+    id:"financeiro",
+    name:"Financeiro",
+    color:"#2E7D5B",
+    questions:[
+      "A empresa tem fluxo de caixa projetado e atualizado, não só o saldo do banco?",
+      "Existe separação clara entre o dinheiro da empresa e o dinheiro dos sócios?",
+      "Você sabe, produto a produto ou serviço a serviço, qual dá lucro de verdade e qual só gera faturamento?",
+      "Existe um orçamento anual formal, comparado com o realizado pelo menos uma vez por mês?",
+      "A precificação é calculada com base em custo e margem — não só copiada do concorrente?",
+      "Há uma reserva ou linha de crédito estruturada para os meses de sazonalidade mais fraca?"
     ]
   }
 ];
@@ -802,6 +876,43 @@ const RECS = {
       owner:"Diretor(a) Geral",
       deadline:"Contínuo"
     }
+  },
+  financeiro:{
+    "Inicial":{
+      finding:"Não há fluxo de caixa projetado nem separação entre o dinheiro da empresa e o dos sócios — a gestão financeira é o saldo do banco.",
+      action:"Separe as contas de empresa e sócio, e monte um fluxo de caixa simples (entradas e saídas) projetado para as próximas 4 semanas.",
+      kpi:"Fluxo de caixa projetado atualizado semanalmente (meta: 100% das semanas)",
+      owner:"Sócio(a) / Diretor(a) Financeiro",
+      deadline:"30 dias"
+    },
+    "Em Desenvolvimento":{
+      finding:"Existe algum controle de caixa, mas falta saber qual produto ou serviço realmente dá lucro.",
+      action:"Calcule a margem de contribuição dos principais produtos ou serviços e pare de precificar só olhando o concorrente.",
+      kpi:"% do faturamento com margem de contribuição calculada (meta: 100%)",
+      owner:"Sócio(a) / Diretor(a) Financeiro",
+      deadline:"45 dias"
+    },
+    "Estruturado":{
+      finding:"O fluxo de caixa e a margem por produto já existem, mas o orçamento anual não é comparado com o realizado.",
+      action:"Monte o orçamento do próximo ciclo e implante a comparação orçado x realizado todo mês.",
+      kpi:"Desvio entre orçado e realizado (revisão mensal)",
+      owner:"Diretor(a) Financeiro",
+      deadline:"60 dias"
+    },
+    "Avançado":{
+      finding:"O financeiro é acompanhado com disciplina, com oportunidade de estruturar reserva para sazonalidade.",
+      action:"Defina o valor-alvo de reserva de caixa (meses de despesa fixa) e monte um plano de acúmulo até lá.",
+      kpi:"Meses de despesa fixa cobertos pela reserva",
+      owner:"Diretor(a) Financeiro / Sócio(a)",
+      deadline:"90 dias"
+    },
+    "Referência":{
+      finding:"A gestão financeira é madura: caixa projetado, margem conhecida por produto, orçamento comparado e reserva estruturada.",
+      action:"Avance para indicadores de rentabilidade por linha de negócio e cenários de investimento.",
+      kpi:"ROI por linha de negócio ou produto",
+      owner:"Diretor(a) Financeiro",
+      deadline:"Contínuo"
+    }
   }
 };
 
@@ -861,6 +972,68 @@ form.addEventListener('change', e=>{
   }
 });
 
+// ---------- Entry gate (captura leve antes das perguntas) ----------
+const EMAIL_RE_ENTRY = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+let entryData = null;
+
+document.getElementById('entryForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+
+  const nome = document.getElementById('entryNome').value.trim();
+  const email = document.getElementById('entryEmail').value.trim();
+  const whatsapp = document.getElementById('entryWhatsapp').value.trim();
+  const consentimento = document.getElementById('entryConsent').checked;
+  const website = document.getElementById('entryWebsite').value.trim();
+
+  let ok = true;
+  document.getElementById('entryErrNome').style.display = nome.length < 2 ? 'block' : 'none';
+  if(nome.length < 2) ok = false;
+  document.getElementById('entryErrEmail').style.display = !EMAIL_RE_ENTRY.test(email) ? 'block' : 'none';
+  if(!EMAIL_RE_ENTRY.test(email)) ok = false;
+  document.getElementById('entryErrWhatsapp').style.display = whatsapp.length < 8 ? 'block' : 'none';
+  if(whatsapp.length < 8) ok = false;
+  document.getElementById('entryErrConsent').style.display = !consentimento ? 'block' : 'none';
+  if(!consentimento) ok = false;
+  if(!ok) return;
+
+  entryData = { nome, email, whatsapp, consentimento };
+
+  const btn = document.getElementById('btnEntrySubmit');
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+  document.getElementById('entryErrSubmit').style.display = 'none';
+
+  const entryExtra = {};
+  try {
+    const qp = new URLSearchParams(location.search);
+    ['gclid','gad_source','utm_source','utm_medium','utm_campaign','utm_term','utm_content'].forEach(k=>{
+      const v = qp.get(k);
+      if (v) entryExtra[k] = v.slice(0, 180);
+    });
+  } catch (e) { /* no-op */ }
+
+  try {
+    await fetch('/api/newsletter', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        nome, email, whatsapp, consentimento,
+        origem: 'Diagnóstico de Maturidade Empresarial — Início',
+        website,
+        extra: entryExtra
+      })
+    });
+  } catch (err) {
+    // Não bloqueia o início do diagnóstico se a captura leve falhar.
+    console.error('Falha ao registrar início do diagnóstico:', err);
+  }
+
+  document.getElementById('entryGate').style.display = 'none';
+  const body = document.getElementById('assessmentBody');
+  body.style.display = 'block';
+  body.scrollIntoView({behavior:'smooth'});
+});
+
 // ---------- Calculate (gate de captura antes do resultado) ----------
 let pendingPillarScores = null;
 let pendingOverallPct = null;
@@ -908,26 +1081,28 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 document.getElementById('leadForm').addEventListener('submit', async (e)=>{
   e.preventDefault();
-  if(!pendingPillarScores) return;
+  if(!pendingPillarScores || !entryData) return;
 
-  const nome = document.getElementById('leadNome').value.trim();
-  const email = document.getElementById('leadEmail').value.trim();
+  const { nome, email, whatsapp, consentimento } = entryData;
   const empresa = document.getElementById('leadEmpresa').value.trim();
-  const whatsapp = document.getElementById('leadWhatsapp').value.trim();
-  const consentimento = document.getElementById('leadConsent').checked;
-  const website = document.getElementById('leadWebsite').value.trim();
+  const cargo = document.getElementById('leadCargo').value;
+  const faturamento = document.getElementById('leadFaturamento').value;
 
   let ok = true;
-  document.getElementById('errNome').style.display = nome.length < 2 ? 'block' : 'none';
-  if(nome.length < 2) ok = false;
-  document.getElementById('errEmail').style.display = !EMAIL_RE.test(email) ? 'block' : 'none';
-  if(!EMAIL_RE.test(email)) ok = false;
-  document.getElementById('errConsent').style.display = !consentimento ? 'block' : 'none';
-  if(!consentimento) ok = false;
+  document.getElementById('errEmpresa').style.display = empresa.length < 2 ? 'block' : 'none';
+  if(empresa.length < 2) ok = false;
+  document.getElementById('errCargo').style.display = !cargo ? 'block' : 'none';
+  if(!cargo) ok = false;
+  document.getElementById('errFaturamento').style.display = !faturamento ? 'block' : 'none';
+  if(!faturamento) ok = false;
   if(!ok) return;
 
   const lvl = levelInfo(pendingOverallPct);
-  const extra = { "Maturidade Geral": pendingOverallPct + '% (' + lvl.name + ')' };
+  const extra = {
+    "Maturidade Geral": pendingOverallPct + '% (' + lvl.name + ')',
+    "Cargo": cargo,
+    "Faturamento anual": faturamento
+  };
   PILLARS.forEach(p=>{
     const s = pendingPillarScores[p.id];
     extra[p.name] = s.pct + '% (' + levelInfo(s.pct).name + ')';
@@ -955,7 +1130,6 @@ document.getElementById('leadForm').addEventListener('submit', async (e)=>{
       body: JSON.stringify({
         nome, empresa, email, whatsapp, consentimento,
         origem: 'Diagnóstico de Maturidade Empresarial',
-        website,
         extra
       })
     });

@@ -114,6 +114,20 @@ const PILLAR_COPY: Record<PillarName, PillarCopy> = {
     metodo:
       "No pilar de Liderança, a consultoria trabalha a estrutura de responsabilidades, a delegação com padrão e os rituais de gestão (reuniões, acompanhamento, feedback). O objetivo é uma equipe que decide e executa dentro de combinados claros — e um dono que volta a ter tempo para pensar o crescimento.",
   },
+  Financeiro: {
+    custo: [
+      "Faturamento sobe, mas o dinheiro não sobra — e ninguém sabe dizer exatamente por quê.",
+      "Conta da empresa e conta pessoal se misturam, o que esconde o resultado real do negócio.",
+      "Preço definido no feeling ou copiado do concorrente, sem saber a margem real de cada produto ou serviço.",
+    ],
+    acoes: [
+      "Separe hoje a conta da empresa da conta pessoal, se ainda não estiverem separadas.",
+      "Monte um fluxo de caixa simples projetado para as próximas 4 semanas — entradas e saídas.",
+      "Calcule a margem de pelo menos um produto ou serviço-chave: preço menos custo direto.",
+    ],
+    metodo:
+      "No pilar Financeiro, a consultoria estrutura o fluxo de caixa, calcula a margem real por produto ou serviço e implanta o acompanhamento de orçado x realizado. O objetivo é parar de confundir faturamento com lucro — e decidir preço e investimento com número, não com sensação.",
+  },
 };
 
 const GENERIC_ACOES = [
@@ -255,8 +269,9 @@ export function renderNurtureEmail(
         </td></tr>
       </table>
       <p style="margin:0 0 14px;font-size:15px;line-height:1.6">
-        O trabalho é conduzido por mim, Thiago Marchi — foram mais de 20 anos em liderança e 8 como
-        empresário. Sem teoria distante: plano, indicadores e acompanhamento, dentro da sua realidade.
+        O trabalho é conduzido por mim, Thiago Marchi — 7 anos como sócio-proprietário de uma PME e quase
+        duas décadas estruturando operações comerciais em empresas como Telefônica VIVO e Grupo Allcom.
+        Sem teoria distante: plano, indicadores e acompanhamento, dentro da sua realidade.
       </p>
       ${goldButton(`${siteConfig.url}/servicos/consultoria`, "Conhecer a consultoria")}
       <p style="margin:14px 0 0;font-size:13px;color:${GRAY}">

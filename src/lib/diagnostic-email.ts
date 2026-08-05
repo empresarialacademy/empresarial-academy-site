@@ -31,6 +31,7 @@ const PILLAR_KEYS = [
   "Operações",
   "Gestão de Indicadores",
   "Liderança",
+  "Financeiro",
 ] as const;
 
 /** "Por onde começar" por pilar — tom direto, alinhado ao Gestão 360. */
@@ -43,6 +44,8 @@ const PILLAR_TIP: Record<string, string> = {
     "Escolha de 3 a 5 indicadores-chave e implante uma reunião mensal de resultados. O que não se mede, não se gerencia.",
   Liderança:
     "Comece a delegar com clareza de responsabilidades e a desenvolver seus líderes. Empresa que só anda com o dono trava no dono.",
+  Financeiro:
+    "Separe a conta da empresa da conta pessoal e monte um fluxo de caixa projetado. Faturar bem não é o mesmo que sobrar dinheiro no fim do mês.",
 };
 
 type Pillar = { name: string; pct: number; label: string };
@@ -114,7 +117,7 @@ function buildHtml(opts: {
     <p style="margin:0 0 12px;font-size:16px">Olá, ${esc(firstName)},</p>
     <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:${INK}">
       Obrigado por concluir o diagnóstico${empresaTxt}. Este é o retrato da sua
-      gestão hoje, nos quatro pilares que mais pesam no crescimento.
+      gestão hoje, nos cinco pilares que mais pesam no crescimento.
     </p>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${NAVY};border-radius:12px;margin:0 0 22px">

@@ -25,6 +25,13 @@ const WHATSAPP_LEAD = `https://wa.me/${siteConfig.contact.phoneRaw}?text=${encod
   "Olá! Vim pelo site e quero falar sobre a consultoria para a minha empresa.",
 )}`;
 
+/** Saída para o Diagnóstico Executivo (imersão paga) — sem preço publicado
+ * na LP por decisão do Thiago (04/08/2026); a conversa de WhatsApp qualifica
+ * e apresenta o valor. Ver `Projeto IA/.../Plano de Posicionamento e Esteira`. */
+const WHATSAPP_EXECUTIVO = `https://wa.me/${siteConfig.contact.phoneRaw}?text=${encodeURIComponent(
+  "Olá! Vim pelo site e quero saber mais sobre o Diagnóstico Executivo 360.",
+)}`;
+
 const paraQuem = [
   "Sua empresa fatura entre R$ 500 mil e R$ 5 milhões por ano e cresceu mais rápido que a organização interna.",
   "A operação trava quando você não está — tudo passa por você.",
@@ -86,7 +93,7 @@ const passos = [
   {
     n: "01",
     titulo: "Faça o diagnóstico gratuito",
-    desc: "24 perguntas rápidas. Você recebe na hora uma pontuação por área e um feedback gratuito com plano de ação inicial para impulsionar o seu negócio.",
+    desc: "30 perguntas rápidas. Você recebe na hora uma pontuação por área e um feedback gratuito com plano de ação inicial para impulsionar o seu negócio.",
   },
   {
     n: "02",
@@ -131,7 +138,7 @@ const faqItems = [
   },
   {
     q: "Já tentei consultoria antes e não funcionou. Por que seria diferente agora?",
-    a: "Consultoria genérica costuma entregar teoria sem aplicação prática. Aqui o método nasce da vivência real — mais de 20 anos em liderança, 15 como empresário — e o acompanhamento é próximo, mês a mês, não um relatório único. A diferença está na execução, não só no diagnóstico.",
+    a: "Consultoria genérica costuma entregar teoria sem aplicação prática. Aqui o método nasce da vivência real — 7 anos como sócio-proprietário de uma PME e quase duas décadas estruturando operações comerciais em empresas como Telefônica VIVO e Grupo Allcom — e o acompanhamento é próximo, mês a mês, não um relatório único. A diferença está na execução, não só no diagnóstico.",
   },
   {
     q: "Preciso decidir tudo já na primeira conversa?",
@@ -177,9 +184,10 @@ export default function Page() {
               a gestão.
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-white/80 md:mx-0">
-              Consultoria prática para donos de pequenas e médias empresas que
-              querem sair da correria do dia a dia, colocar indicadores no
-              lugar e crescer com método — não no improviso.
+              As empresas não quebram por falta de vendas — quebram por falta
+              de gestão. Consultoria prática para donos de pequenas e médias
+              empresas que querem sair da correria do dia a dia, colocar
+              indicadores no lugar e crescer com método, não no improviso.
             </p>
             <div className="mt-6 flex justify-center md:justify-start">
               <ConversionCTA href={DIAGNOSTICO_URL} size="lg">
@@ -190,8 +198,9 @@ export default function Page() {
               Abre em uma nova aba — esta página continua aberta.
             </p>
             <p className="mt-3 text-sm text-white/60">
-              Mais de 20 anos em liderança · 15 anos como empresário ·
-              Metodologia própria Gestão 360
+              Sócio-proprietário de uma PME por 7 anos · MBA pela FGV · Green
+              Belt em Lean Six Sigma · 19 anos estruturando operações
+              comerciais na Telefônica VIVO, Atento e Grupo Allcom
             </p>
           </div>
           <div>
@@ -420,13 +429,17 @@ export default function Page() {
           <div>
             <SectionHeading title="Quem vai trabalhar ao seu lado" />
             <p className="mt-6 text-gray">
-              A Empresarial Academy foi fundada por{" "}
-              <strong className="text-navy">{fundador.nome}</strong>, com mais de
-              20 anos em liderança estratégica e 15 como empresário. A autoridade
-              aqui vem da prática: de quem já esteve na operação, estruturou
-              times comerciais, montou indicadores e construiu gestão que
-              funciona no dia a dia — não da teoria distante da realidade da
-              empresa.
+              Durante 7 anos, <strong className="text-navy">{fundador.nome}</strong>{" "}
+              foi sócio-proprietário de uma empresa de varejo — loja física,
+              e-commerce e fábrica própria. Depois disso, passou quase duas
+              décadas estruturando operações comerciais em empresas como
+              Telefônica VIVO, Atento e Grupo Allcom. O Gestão 360 nasceu de
+              juntar as duas experiências: o rigor de método da empresa
+              grande, no tamanho e no orçamento de quem é dono de PME.
+            </p>
+            <p className="mt-4 text-sm font-semibold text-navy">
+              Quem vai atender você é o próprio fundador — não existe
+              consultor designado.
             </p>
           </div>
         </div>
@@ -459,6 +472,67 @@ export default function Page() {
         </div>
       </section>
 
+      {/* 6.5 Diagnóstico Executivo — caminho pago para quem quer ir mais rápido */}
+      <section className="bg-navy text-white">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <div className="grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+            <div>
+              <p className="font-[var(--font-heading)] text-sm font-semibold uppercase tracking-wide text-gold">
+                Para quem não quer esperar
+              </p>
+              <h2 className="mt-3 text-2xl font-bold md:text-3xl">
+                Diagnóstico Executivo 360
+              </h2>
+              <p className="mt-5 text-white/80">
+                Um dia de imersão com Thiago Marchi, presencial ou online, com
+                você e a sua liderança. Em vez do questionário, uma conversa
+                aprofundada sobre os cinco pilares do Gestão 360 — com
+                relatório executivo, prioridades claras e um plano de 90 dias
+                que a sua empresa já pode começar a aplicar sozinha.
+              </p>
+              <ul className="mt-6 space-y-3 text-sm text-white/80">
+                <li className="flex gap-3">
+                  <span className="text-gold" aria-hidden>✓</span>
+                  <span>Relatório executivo com prioridades e plano de 90 dias</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-gold" aria-hidden>✓</span>
+                  <span>Devolutiva com você e as principais lideranças</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-gold" aria-hidden>✓</span>
+                  <span>Acesso ao painel de acompanhamento por 3 meses</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-gold" aria-hidden>✓</span>
+                  <span>Valor abatido integralmente se você contratar a consultoria em até 30 dias</span>
+                </li>
+              </ul>
+              <div className="mt-8">
+                <ConversionCTA href={WHATSAPP_EXECUTIVO} size="lg" eventName="cta_diagnostico_executivo">
+                  Quero saber mais sobre o Diagnóstico Executivo
+                </ConversionCTA>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-white/15 bg-white/5 p-7">
+              <p className="text-sm font-semibold uppercase tracking-wide text-gold">
+                Para quem prefere começar sem custo
+              </p>
+              <p className="mt-3 text-white/80">
+                Se você quer testar o caminho antes de investir, o Diagnóstico
+                de Maturidade gratuito e a Chamada de Diagnóstico Estratégico
+                seguem disponíveis — sem custo, sem compromisso.
+              </p>
+              <div className="mt-6">
+                <ConversionCTA href={DIAGNOSTICO_URL} size="md" eventName="cta_diagnostico_gratuito_secundario">
+                  Fazer o diagnóstico gratuito
+                </ConversionCTA>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 7. CTA final */}
       <section className="bg-surface">
         <div className="mx-auto max-w-3xl px-6 py-20 text-center">
@@ -468,7 +542,7 @@ export default function Page() {
           />
           <p className="mx-auto mt-4 max-w-2xl text-gray">
             Faça o diagnóstico gratuito de maturidade e receba uma leitura
-            clara das quatro áreas do seu negócio, com um feedback gratuito e
+            clara das cinco áreas do seu negócio, com um feedback gratuito e
             um plano de ação inicial para impulsionar o seu crescimento — sem
             custo e sem compromisso.
           </p>

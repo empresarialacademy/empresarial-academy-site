@@ -26,7 +26,7 @@ A Empresarial Academy é uma empresa brasileira de consultoria, mentoria e forma
 - [Consultoria](${base}/servicos/consultoria): consultoria empresarial com foco em resultado e KPIs.
 - [Livro Gestão 360](${base}/livro-gestao-360): livro de ${siteConfig.founder} (em breve).
 - [Materiais Gratuitos](${base}/materiais): e-books, planilhas, templates e checklists.
-- [Diagnóstico de Maturidade Empresarial](${base}/diagnostico-maturidade-empresarial.html): avaliação gratuita e interativa em 4 pilares (Comercial, Operações, Indicadores, Liderança) — 24 perguntas com resultado imediato e plano de melhoria.
+- [Diagnóstico de Maturidade Empresarial](${base}/diagnostico-maturidade-empresarial.html): avaliação gratuita e interativa em 5 pilares (Comercial, Operações, Indicadores, Liderança, Financeiro) — 30 perguntas com resultado imediato e plano de melhoria.
 - [Blog](${base}/blog): artigos sobre gestão, vendas, processos e liderança.
 - [Contato](${base}/contato): formulário e canais de atendimento.
 - [Perguntas Frequentes](${base}/faq): dúvidas comuns sobre os serviços.

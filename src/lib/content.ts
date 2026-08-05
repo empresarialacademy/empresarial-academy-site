@@ -86,8 +86,9 @@ export const fundador = {
   frase:
     "Meu propósito é, por meio da minha experiência, desenvolver e capacitar líderes para o sucesso.",
   bio: [
-    "Com mais de 20 anos de experiência em cargos de liderança estratégica e 15 anos como empresário, Thiago Marchi construiu sua carreira impulsionando o crescimento de empresas por meio da gestão estruturada, foco em vendas e liderança de alta performance.",
-    "Especialista em gerar lucro, organizar processos e desenvolver equipes de resultado, atuou diretamente na transformação de operações comerciais, estratégias de marketing e construção de culturas empresariais sólidas — de grandes corporações a pequenas empresas.",
+    "Durante 7 anos, Thiago Marchi foi sócio-proprietário de uma empresa de varejo — loja física, e-commerce e fábrica própria. Conhece por dentro a rotina de fechar o mês sem saber se sobrou e de segurar a operação porque o time ainda não dá conta.",
+    "Depois disso, construiu quase duas décadas estruturando operações comerciais dentro de empresas como Telefônica VIVO, Atento e Grupo Allcom — sempre à frente de Vendas, Marketing e Customer Experience, com método, indicador e meta. É MBA em Gerenciamento de Projetos pela FGV e Green Belt em Lean Six Sigma.",
+    "O Gestão 360 nasceu de juntar as duas experiências: o rigor de método que a empresa grande usa, no tamanho e no orçamento de quem é dono de uma PME.",
   ],
 } as const;
 
@@ -716,7 +717,7 @@ export const porqueConfiar = [
   {
     icon: "briefcase",
     titulo: "Experiência real de quem já esteve na prática",
-    desc: "Fundada por Thiago Marchi, com mais de 20 anos em liderança e 15 como empresário, atuando no desenvolvimento de empresas de diferentes segmentos.",
+    desc: "Fundada por Thiago Marchi, sócio-proprietário de uma PME por 7 anos e com quase duas décadas estruturando operações comerciais em empresas como Telefônica VIVO e Grupo Allcom.",
   },
   {
     icon: "trending-up",
@@ -781,7 +782,7 @@ export const faq = [
   },
   {
     q: "Como funciona a avaliação gratuita?",
-    a: "Você responde online o Diagnóstico de Maturidade Empresarial: 24 perguntas sobre Comercial, Operações, Indicadores e Liderança. O resultado sai na hora, com pontuação por pilar e um plano de melhoria com ações, indicadores e prazos sugeridos — sem custo e sem compromisso.",
+    a: "Você responde online o Diagnóstico de Maturidade Empresarial: 30 perguntas sobre Comercial, Operações, Indicadores, Liderança e Financeiro. O resultado sai na hora, com pontuação por pilar e um plano de melhoria com ações, indicadores e prazos sugeridos — sem custo e sem compromisso.",
   },
   {
     q: "Vocês atendem presencialmente ou online?",

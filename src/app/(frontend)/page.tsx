@@ -135,10 +135,11 @@ export default async function Home() {
             <p className="mt-6 text-gray">
               Nascemos para transformar empresas através da educação aplicada à
               realidade dos negócios. Fundada por{" "}
-              <strong className="text-navy">Thiago Marchi</strong> — mais de 20
-              anos em liderança estratégica e 15 como empresário — unimos
-              conhecimento prático, estratégia e visão de mercado para gerar mais
-              lucro, controle e liberdade.
+              <strong className="text-navy">Thiago Marchi</strong> — sócio-
+              proprietário de uma PME por 7 anos e quase duas décadas
+              estruturando operações comerciais em empresas como Telefônica
+              VIVO e Grupo Allcom — unimos conhecimento prático, estratégia e
+              visão de mercado para gerar mais lucro e controle.
             </p>
             <p className="mt-4 text-gray">
               Nossa missão é impulsionar o crescimento sustentável de pequenas e

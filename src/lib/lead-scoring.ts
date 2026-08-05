@@ -10,6 +10,7 @@ export const PILLAR_NAMES = [
   "Operações",
   "Gestão de Indicadores",
   "Liderança",
+  "Financeiro",
 ] as const;
 
 export type PillarName = (typeof PILLAR_NAMES)[number];

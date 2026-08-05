@@ -109,7 +109,7 @@ export function Header() {
             </svg>
           </Link>
           <Button href="/diagnostico-maturidade-empresarial.html" external variant="primary" size="sm">
-            Avaliação Gratuita
+            Diagnóstico Gratuito
           </Button>
         </div>
 
@@ -167,7 +167,7 @@ export function Header() {
             </li>
             <li className="pt-2">
               <Button href="/diagnostico-maturidade-empresarial.html" external variant="primary" size="md" className="w-full">
-                Avaliação Gratuita
+                Diagnóstico Gratuito
               </Button>
             </li>
           </ul>
