@@ -121,7 +121,8 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-5 text-center text-xs text-white/60 sm:flex-row">
           <p>
-            © {year} {siteConfig.name}. Todos os direitos reservados.
+            © {year} {siteConfig.name} — CNPJ {siteConfig.cnpj}. Todos os
+            direitos reservados.
           </p>
           <ul className="flex gap-4">
             {legalNav.map((i) => (

@@ -114,7 +114,15 @@ const passos = [
 const faqItems = [
   {
     q: "Quanto custa a consultoria?",
-    a: "O investimento depende do formato certo para o seu momento, e a gente define isso na conversa de diagnóstico, olhando a realidade da sua empresa. O diagnóstico inicial é gratuito.",
+    a: "Consultoria de gestão que funciona costuma ficar entre 0,5% e 2,5% do faturamento anual da empresa — abaixo disso, o acompanhamento não sustenta o resultado; acima, o investimento pesa demais para o tamanho do negócio. O valor exato depende do formato certo para o seu momento, e a gente define isso na conversa de diagnóstico, olhando a realidade da sua empresa. O diagnóstico inicial é gratuito.",
+  },
+  {
+    q: "Por que não é mais barato que uma consultoria grande?",
+    a: "Não estamos competindo em preço por hora — estamos competindo em quem atende você. Nas grandes consultorias, quem assina a proposta raramente é quem senta nas suas reuniões; entra um consultor júnior recém-formado. Aqui, quem atende é o próprio fundador, do diagnóstico ao acompanhamento mensal, com 7 anos de experiência como sócio-proprietário de PME e quase duas décadas estruturando operação comercial em empresa grande. Isso custa a atenção de uma pessoa só — por isso o número de empresas atendidas por vez é limitado.",
+  },
+  {
+    q: "Quantos clientes vocês atendem hoje?",
+    a: "Poucos, de propósito. O modelo é atendimento direto do fundador, não uma equipe de consultores júniores rodando vários contratos ao mesmo tempo — então a capacidade é limitada por escolha, não por falta de demanda. Isso significa que quem entra tem prioridade real na agenda, não uma fatia dividida entre dezenas de contas.",
   },
   {
     q: "Preciso ter a empresa organizada para começar?",
@@ -206,6 +214,18 @@ export function ConsultoriaLPTemplate({
             </div>
             <p className="mt-3 text-xs text-white/50">
               Abre em uma nova aba — esta página continua aberta.
+            </p>
+            <p className="mt-2 text-sm text-white/70">
+              Prefere conversar direto?{" "}
+              <a
+                href={WHATSAPP_LEAD}
+                target="_blank"
+                rel="noopener"
+                className="font-semibold text-gold underline underline-offset-2 hover:text-gold-light"
+              >
+                Fale no WhatsApp
+              </a>
+              , sem passar pelo questionário.
             </p>
             <p className="mt-3 text-sm text-white/60">
               Sócio-proprietário de uma PME por 7 anos · MBA pela FGV · Green

@@ -22,6 +22,9 @@ export const siteConfig = {
     address: "São Paulo - SP, Brasil",
     whatsappMessage: "Olá! Vim pelo site e gostaria de saber mais sobre a Empresarial Academy.",
   },
+  /** Exposto no rodapé (item 15 do checklist da LP, 04/08/2026) — existência
+   * formal é diferencial gratuito contra concorrentes sem identificação. */
+  cnpj: "52.281.916/0001-60",
   social: {
     instagram: "https://www.instagram.com/empresarial.academy",
     linkedin: "https://www.linkedin.com/company/empresarial-academy",
