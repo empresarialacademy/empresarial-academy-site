@@ -390,6 +390,40 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-08-05 (LPs dedicadas por palavra-chave do Google Ads)
+Continuação da sessão anterior — item que tinha ficado registrado como "fora
+desta rodada". Commit `955c8c5`, deploy em produção.
+- **Extraído `src/components/landing/ConsultoriaLPTemplate.tsx`** com todo o
+  corpo que antes vivia direto em `consultoria-pme/page.tsx` (prova social,
+  método Gestão 360, passos, "Quem conduz", bloco Diagnóstico Executivo, FAQ,
+  newsletter) — agora parametrizado por `{ eyebrow, h1, subtitle,
+  newsletterOrigem }`. **Motivo de existir:** permitir H1/título em
+  correspondência exata com a palavra-chave do anúncio (o que faz a Rox ganhar
+  Índice de Qualidade contra a EA, ver benchmarking) sem duplicar ~550 linhas
+  de conteúdo já validado.
+- **`consultoria-pme/page.tsx` virou wrapper fino** — mesma copy exata de
+  antes, comportamento e SEO inalterados (H1, canonical e conteúdo
+  bit-a-bit idênticos, confirmado via leitura do DOM renderizado antes de
+  publicar).
+- **2 rotas novas**, cada uma só com `metadata` + chamada ao template:
+  - `/consultoria-de-gestao-empresarial` — palavra-chave "consultoria de
+    gestão empresarial" (100–1k buscas/mês, lance R$ 6,96–31,72)
+  - `/consultoria-empresarial-para-pequenas-empresas` — palavra-chave
+    "consultoria empresarial para pequenas empresas" (+900% no ano, menor
+    concorrência)
+  - Ambas com `alternates: { canonical: "/consultoria-pme" }` **de
+    propósito** — consolida o sinal de indexação orgânica na página já
+    ranqueada, sem afetar a relevância que o Google Ads lê na página
+    renderizada (Quality Score não olha canonical). **Se um dia quiser que
+    alguma delas rankeie sozinha no orgânico, é preciso remover o
+    canonical — hoje é decisão consciente de não competir.**
+- **Não estão no sitemap nem na navegação** — são páginas só de destino de
+  anúncio, de propósito. Não linkar de lugar nenhum do site.
+- Google Ads: Final URL de cada grupo de anúncio já atualizado no pacote de
+  texto pronto (`Projeto IA/Funil Inbound (Google Ads)/Pacote de Textos
+  Prontos...md`, seção 4) para apontar para a LP dedicada, não mais para
+  `/consultoria-pme` genérica.
+
 ### Sessão 2026-08-04 (Diagnóstico: pilar Financeiro + captura em 2 tempos; credenciais reais em todo o site)
 Execução do "Plano de Posicionamento e Esteira" (benchmarking de 8 concorrentes,
 ver `Projeto IA/Funil Inbound (Google Ads)/`). Commit `4d77666`, deploy em produção.
