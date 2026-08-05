@@ -390,6 +390,65 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-08-04 (Diagnóstico: pilar Financeiro + captura em 2 tempos; credenciais reais em todo o site)
+Execução do "Plano de Posicionamento e Esteira" (benchmarking de 8 concorrentes,
+ver `Projeto IA/Funil Inbound (Google Ads)/`). Commit `4d77666`, deploy em produção.
+- **Diagnóstico de Maturidade ganhou o 5º pilar: Financeiro** (6 perguntas, RECS
+  para os 5 níveis). Motivo: os 5 concorrentes diretos anunciam "onde seu lucro
+  some" e o instrumento da EA não media isso — era a dor mais óbvia do mercado
+  ficando de fora. Total agora é **30 perguntas** (era 24) — todo texto/meta/JSON-LD
+  que citava "24" ou "4 pilares" foi corrigido (site, `llms.txt`, e-mails).
+- **Captura em dois tempos no diagnóstico** (`public/diagnostico-maturidade-empresarial.html`):
+  - `#entryGate` NOVO — popup leve (nome/e-mail/WhatsApp) **antes** das perguntas.
+    Envia lead parcial via `/api/newsletter` com `origem` distinta
+    (`"... — Início"`, propositalmente diferente de `DIAGNOSTIC_ORIGIN` em
+    `diagnostic-email.ts` para NÃO disparar o e-mail de resultado antes de haver
+    score). Protege contra abandono no meio do questionário — hoje esse lead
+    simplesmente se perdia.
+  - `#leadGate` (gate de saída, já existia) — deixou de recoletar nome/e-mail/
+    WhatsApp (já capturados no entryGate) e passou a pedir **empresa, cargo e
+    faixa de faturamento anual**, enviados em `extra.Cargo`/`extra["Faturamento
+    anual"]`. Motivo: o instrumento entregava conteúdo de nível Mid
+    Falconi/TaaS mas qualificava como Weedu/Aya (nada) — pior combinação
+    possível das duas escolas do mercado.
+  - CSS refatorado: seletores `#leadGate .field` etc. viraram `.gate-card .field`
+    (classe compartilhada pelos dois cards) — **se adicionar um 3º gate no
+    futuro, reusar a classe `.gate-card`, não duplicar CSS**.
+  - Testado ponta a ponta local (entry → 30 perguntas → exit → resultado com 5
+    barras/radar/recomendações) via requisições reais a `/api/newsletter`
+    (2× 200 OK) — sem erros de console.
+- **Credenciais desatualizadas corrigidas em TODO o site** ("mais de 20 anos em
+  liderança · 15 anos como empresário" → fatos verificados no LinkedIn
+  `Profile.pdf`, não mais no repo por decisão do Thiago). Tocado: hero e FAQ de
+  `/consultoria-pme`, `fundador.bio` em `content.ts` (usado também no
+  institucional), JSON-LD do institucional, home (`page.tsx`), e-mail de
+  nutrição (`nurture-emails.ts`). Nova linha oficial: **"Sócio-proprietário de
+  uma PME por 7 anos · MBA pela FGV · Green Belt em Lean Six Sigma · 19 anos
+  estruturando operações comerciais na Telefônica VIVO, Atento e Grupo
+  Allcom"**. Mesma correção aplicada na descrição do LinkedIn da empresa dentro
+  de `Branding Empresarial Academy v2 (2026).md` §6 (era a mesma divergência,
+  na fonte da verdade da marca).
+- **Novo bloco "Diagnóstico Executivo 360"** em `/consultoria-pme`, entre a
+  seção "Quem conduz" e o CTA final — produto pago de imersão de 1 dia,
+  **sem preço publicado** (decisão explícita: adiar até validar o valor em
+  venda real). CTA vai para WhatsApp com mensagem pré-preenchida distinta
+  (`WHATSAPP_EXECUTIVO`), não para o mesmo link do diagnóstico gratuito.
+- **CTA do header unificado:** "Avaliação Gratuita" → "Diagnóstico Gratuito"
+  (duas ocorrências em `Header.tsx`, desktop e mobile) — eliminava
+  inconsistência de nome do mesmo produto entre header e corpo da página.
+- **`ConversionCTA` não aceita `variant` nem `external`** (só `href`, `size`,
+  `eventName` — sempre estilo "primary", sempre `target="_blank"`). Tentei
+  usar essas props ao criar o bloco novo e o `tsc --noEmit` apontou na hora —
+  se precisar de um CTA secundário/inline, usar `Button` de `ui/Button.tsx`
+  em vez de `ConversionCTA`.
+- **Pendente, registrado e não esquecido:** LP dedicada por palavra-chave
+  (hoje as duas keywords do Ads apontam para a mesma `/consultoria-pme`),
+  Painel Gestão 360 (adiado a pedido do Thiago — só depois de todos os ajustes
+  de conteúdo, para não gerar divergência), publicação da faixa de preço.
+  Texto pronto para colar no LinkedIn pessoal/empresa e nos anúncios do
+  Google Ads (keywords, negativas, RSA) está em
+  `Projeto IA/Funil Inbound (Google Ads)/Pacote de Textos Prontos...md`.
+
 ### Sessão 2026-07-25 (ab) (Header navy, MODO ESCURO, carrossel de avaliações e mobile)
 Pedidos do Thiago: revisão mobile-first, dark mode, resolver a "faixa branca"
 do topo, centralizar blocos e pôr as avaliações em carrossel.
@@ -2385,3 +2444,12 @@ deploy, site público intacto.
 - **Nunca usar os links "unblock-secret"** que o GitHub oferece na mensagem de erro: eles liberam o push *com* o segredo, publicando a credencial. O caminho correto é remover do histórico (feito) e rotacionar (pendente).
 - **Histórico reescrito:** `git filter-branch --index-filter` removeu os dois arquivos dos 58 commits do `master` (seguro: nunca haviam sido enviados). Backup completo em `C:\dev\backup-empresarial-academy-site-20260726-0200.bundle` (63MB, `git bundle verify` OK) — **atenção: o bundle contém o histórico ANTIGO, com os segredos**; apagar quando não for mais necessário. Depois da reescrita: `refs/original` e a tag de segurança removidos + `reflog expire` + `gc --prune=now`; varredura confirma 0 ocorrências de padrões de segredo em todo o histórico.
 - **Estado do GitHub (descoberta):** o repo `empresarialacademy/empresarial-academy-site` tinha **apenas o branch `main`** (parado em `feat: migrate materials from payload to EA-HUB`), e o `master` local — com os 58 commits de todo o trabalho do site — **nunca havia sido enviado**. Os dois históricos **não têm ancestral comum**. Passou despercebido porque o deploy é via `vercel --prod` (CLI), não pelo GitHub. Agora `master` está publicado e com upstream configurado (`origin/master`). **Decidir depois** o que fazer com o `main` órfão (arquivar, apagar, ou tornar `master` o branch padrão).
+
+### Sessão 2026-07-31 (EA ADS — invalid_grant resolvido; bloqueio restante é só o Basic Access do Google)
+- **Client Secret do Google Ads rotacionado de novo** (novo terminado em `...aRjA`, valor anterior `...LIFNJdFw-` era o que ficou exposto no histórico local achado em 26/07). Atualizado em `.env.local` e Vercel produção (`vercel env rm` + `vercel env add` + `vercel --prod`). **Essa era a rotação pendente apontada na sessão anterior — feita.** A do Developer Token e da API Key seguem pendentes (Thiago ainda precisa rotacionar no Google Cloud Console).
+- **Erro `invalid_grant` no sync:** causa era o refresh token salvo estar mesmo inválido (não a troca de secret em si). **Bug de UI achado e corrigido:** `AdsPerformanceView.tsx` só renderizava o botão "Conectar Google Ads" quando `!Boolean(refreshToken)` — com um token (inválido) já salvo no banco, o botão sumia da tela e não tinha como reconectar pela UI. Fix: botão sempre visível, virando "Reconectar Google Ads" com aviso sobre `invalid_grant` quando já há token salvo. Deployado.
+- **Thiago reconectou via `/api/ads/oauth` → resolveu o `invalid_grant`.** Sync agora retorna um erro diferente (e já esperado): `"The developer token is only approved for use with test accounts."` — confirma que o **Basic Access segue pendente**, mesmo passado o prazo de 5 dias úteis estimado no pedido de 23/07 (protocolo `4-9720000040725`). Pedido para o Thiago conferir o status em Google Ads → Ferramentas → Configuração → Central da API (MCC 779-237-1166) e o e-mail dele.
+- **Conclusão:** conexão OAuth do EA ADS 100% funcional agora. Único bloqueio restante pro sync trazer dados reais é a aprovação do Basic Access pelo Google — não depende mais de nada no código/config local.
+- **Atualização mesma sessão:** o pedido `4-9720000040725` (23/07) foi **NEGADO**. Thiago registrou uma **nova solicitação de Basic Access** na Central da API da MCC 779-237-1166. Motivo da negativa ainda não verificado (vale conferir o e-mail do Google com a justificativa antes do próximo pedido cair no mesmo problema). Novo protocolo ainda não coletado.
+- **PIPELINE TÉCNICO VALIDADO PONTA A PONTA (31/07), sem depender do Basic Access:** ao testar o sync de métricas (`/api/cron/ads-sync`), apareceu um erro real de sintaxe GAQL — `"Expects filters on the following field to limit a finite date range: 'segments.date'"` — a query em `fetchDailyCampaignMetrics()` ([src/lib/google-ads.ts:84-89](src/lib/google-ads.ts)) só tinha `WHERE segments.date >= X`, sem limite superior; a API do Google Ads exige intervalo fechado. **Fix:** trocado para `WHERE segments.date BETWEEN 'inicio' AND 'hoje'`. Deployado. Depois do fix, `/api/cron/ads-sync` retorna `{ok:true, processed:0, results:[]}` — sem erro, zero linhas porque a campanha "Consultoria PME - Pesquisa" está pausada e nunca gastou nada real. **Conclusão: OAuth + permissão da API + query, tudo funcionando; só falta a campanha rodar de verdade (Thiago decide quando ativar) pra aparecer dado real no painel.**
+- **Forecast IA quebrado (mesma sessão): `gemini-2.5-flash` descontinuado** ("no longer available to new users" — a `GEMINI_API_KEY` é de uma conta/projeto novo, que o Google já não deixa usar modelos antigos). **Fix:** trocado para `gemini-3.6-flash` em [src/app/api/ads/forecast/route.ts:92](src/app/api/ads/forecast/route.ts). Deployado e testado com sucesso (campanha id=2, resposta completa em Markdown). **Achado do próprio relatório gerado:** o teto de CPC da campanha está em R$5, mas o mercado de consultoria B2B fica entre R$8–18/clique — pode ser a causa real de zero impressões mesmo depois de ativada; recomendação da IA foi subir o teto para ~R$12 antes de reativar.
