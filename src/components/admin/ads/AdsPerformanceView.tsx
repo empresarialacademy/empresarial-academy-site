@@ -1,4 +1,5 @@
 import type { AdminViewServerProps } from "payload";
+import { redirect } from "next/navigation";
 import {
   computeCampaignScorecard,
   type AttributedDeal,
@@ -88,7 +89,7 @@ type LeadDealDoc = {
 export async function AdsPerformanceView({ payload, searchParams, initPageResult }: AdminViewServerProps) {
   const user = initPageResult?.req?.user;
   if (!user) {
-    return <div style={{ padding: 24 }}>Acesso restrito ao admin.</div>;
+    redirect("/eahub/login?redirect=%2Feahub%2Fads-performance");
   }
 
   const { docs: campaignDocs } = await payload.find({
@@ -113,15 +114,17 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
             Google Ads conectado com sucesso!
           </div>
         )}
-        {!isConnected && (
-          <div style={{ padding: 16, backgroundColor: "#fef7e0", color: "#b06000", marginBottom: 24, borderRadius: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span>O EA ADS precisa de acesso à sua conta do Google Ads para puxar os dados reais e analisar a performance.</span>
-            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-            <a href="/api/ads/oauth" style={{ padding: "8px 16px", backgroundColor: "#1a73e8", color: "#fff", textDecoration: "none", borderRadius: 4, fontWeight: "bold" }}>
-              Conectar Google Ads
-            </a>
-          </div>
-        )}
+        <div style={{ padding: 16, backgroundColor: "#fef7e0", color: "#b06000", marginBottom: 24, borderRadius: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span>
+            {isConnected
+              ? "Se o Sincronizar der erro de autenticação (ex.: invalid_grant), reconecte o Google Ads abaixo."
+              : "O EA ADS precisa de acesso à sua conta do Google Ads para puxar os dados reais e analisar a performance."}
+          </span>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          <a href="/api/ads/oauth" style={{ padding: "8px 16px", backgroundColor: "#1a73e8", color: "#fff", textDecoration: "none", borderRadius: 4, fontWeight: "bold" }}>
+            {isConnected ? "Reconectar Google Ads" : "Conectar Google Ads"}
+          </a>
+        </div>
         <p>
           Nenhuma campanha cadastrada ainda. Crie uma em &quot;Marketing → Campanhas de Ads&quot;
           (ou conecte seu Google Ads e aperte em Sincronizar).
@@ -241,22 +244,33 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
   return (
     <div style={{ padding: "var(--base, 24px)", maxWidth: 1100 }}>
       <EaHubBackLink />
-      <h1>EA ADS Manager</h1>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h1 style={{ margin: 0 }}>EA ADS Manager</h1>
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a
+          href="/eahub/globals/ads-settings"
+          style={{ padding: "6px 12px", border: "1px solid var(--theme-elevation-150)", borderRadius: 4, textDecoration: "none", color: "inherit", fontSize: 13 }}
+        >
+          ⚙️ Configurações do EA ADS
+        </a>
+      </div>
 
       {oauthSuccess && (
         <div style={{ padding: 12, backgroundColor: "#e6f4ea", color: "#137333", marginBottom: 16, borderRadius: 4 }}>
           Google Ads conectado com sucesso!
         </div>
       )}
-      {!isConnected && (
-        <div style={{ padding: 16, backgroundColor: "#fef7e0", color: "#b06000", marginBottom: 24, borderRadius: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span>O EA ADS precisa de acesso à sua conta do Google Ads para puxar os dados reais e analisar a performance.</span>
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-          <a href="/api/ads/oauth" style={{ padding: "8px 16px", backgroundColor: "#1a73e8", color: "#fff", textDecoration: "none", borderRadius: 4, fontWeight: "bold" }}>
-            Conectar Google Ads
-          </a>
-        </div>
-      )}
+      <div style={{ padding: 16, backgroundColor: "#fef7e0", color: "#b06000", marginBottom: 24, borderRadius: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span>
+          {isConnected
+            ? "Se o Sincronizar der erro de autenticação (ex.: invalid_grant), reconecte o Google Ads abaixo."
+            : "O EA ADS precisa de acesso à sua conta do Google Ads para puxar os dados reais e analisar a performance."}
+        </span>
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a href="/api/ads/oauth" style={{ padding: "8px 16px", backgroundColor: "#1a73e8", color: "#fff", textDecoration: "none", borderRadius: 4, fontWeight: "bold" }}>
+          {isConnected ? "Reconectar Google Ads" : "Conectar Google Ads"}
+        </a>
+      </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
         <p style={{ color: "var(--theme-elevation-600)", margin: 0, maxWidth: '600px' }}>

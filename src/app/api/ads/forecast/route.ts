@@ -89,7 +89,7 @@ Responda SOMENTE com o relatório em Markdown. Evite jargões excessivos se não
     `;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.6-flash',
       contents: prompt,
     });
 

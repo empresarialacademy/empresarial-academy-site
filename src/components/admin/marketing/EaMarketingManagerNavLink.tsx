@@ -14,7 +14,7 @@ export function EaMarketingManagerNavLink() {
         className="nav__link"
         style={{ display: "flex", alignItems: "center", gap: 6 }}
       >
-        EA Marketing Manager
+        Empresarial Academy Hub
       </Link>
     </div>
   );

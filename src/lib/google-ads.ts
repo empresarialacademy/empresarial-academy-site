@@ -80,12 +80,13 @@ export async function fetchDailyCampaignMetrics(sinceDate: string): Promise<Fetc
 
   try {
     const { customer } = await getGoogleAdsClient();
+    const today = new Date().toISOString().slice(0, 10);
 
     const results = await customer.query(`
       SELECT campaign.id, segments.date, metrics.impressions, metrics.clicks,
              metrics.cost_micros, metrics.conversions
       FROM campaign
-      WHERE segments.date >= '${sinceDate}'
+      WHERE segments.date BETWEEN '${sinceDate}' AND '${today}'
     `);
 
     const rows: CampaignMetricsRow[] = (results as Array<Record<string, Record<string, unknown>>>).map((r) => ({

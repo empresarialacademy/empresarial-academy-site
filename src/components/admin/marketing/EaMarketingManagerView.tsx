@@ -104,7 +104,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
       >
         <Image src="/logo-empresarial-academy.png" alt="" width={192} height={183} style={{ width: 56, height: "auto" }} />
         <div>
-          <h1 style={{ margin: 0, color: "#fff" }}>EA Marketing Manager</h1>
+          <h1 style={{ margin: 0, color: "#fff" }}>Empresarial Academy Hub</h1>
           <p style={{ margin: "0.25rem 0 0", color: GOLD }}>
             {firstName ? `Olá, ${firstName}. ` : ""}Hub de sistemas da Empresarial Academy — conteúdo, e-mail marketing, Ads e todos os sistemas num só lugar.
           </p>
