@@ -34,6 +34,7 @@ import { EaMarketingManagerView as EaMarketingManagerView_8800c28b6a62ca0cf96bd5
 import { CentralEaRedirect as CentralEaRedirect_559e0831624fc1ba8d14c4406d6e41e0 } from '@/components/admin/central/CentralEaRedirect'
 import { AdsPerformanceView as AdsPerformanceView_b0a2e4bac77edbfc8244bba00bb695a3 } from '@/components/admin/ads/AdsPerformanceView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
+import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
@@ -72,5 +73,6 @@ export const importMap = {
   "@/components/admin/marketing/EaMarketingManagerView#EaMarketingManagerView": EaMarketingManagerView_8800c28b6a62ca0cf96bd5a2639bcec4,
   "@/components/admin/central/CentralEaRedirect#CentralEaRedirect": CentralEaRedirect_559e0831624fc1ba8d14c4406d6e41e0,
   "@/components/admin/ads/AdsPerformanceView#AdsPerformanceView": AdsPerformanceView_b0a2e4bac77edbfc8244bba00bb695a3,
-  "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
+  "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
+  "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24
 }
