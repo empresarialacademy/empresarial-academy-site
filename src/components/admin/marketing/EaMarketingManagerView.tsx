@@ -88,6 +88,37 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     { title: "Leads", description: "Base de contatos — origem, consentimento, atribuição de campanha e resultado comercial.", href: "/eahub/collections/leads", stat: `${leads.totalDocs} lead(s)` },
   ];
 
+  /** Regras automáticas ativas (12/08/2026) — vivem no código
+   * (nurture-emails.ts, diagnostic-email.ts, content-alerts.ts), não numa
+   * coleção, então não há tela pra editar por aqui. Este bloco é só de
+   * controle/visibilidade: toda vez que uma regra nova entrar em produção,
+   * adicionar uma linha aqui. */
+  const automationRules: {
+    nome: string;
+    gatilho: string;
+    quando: string;
+    publico: string;
+  }[] = [
+    {
+      nome: "Resultado do diagnóstico",
+      gatilho: "Lead conclui o Diagnóstico de Maturidade",
+      quando: "Imediato",
+      publico: "Quem termina o diagnóstico — personalizado pelo pilar mais fraco",
+    },
+    {
+      nome: "Nutrição pós-diagnóstico (E1/E2/E3)",
+      gatilho: "Cron diário (mesmo lead do diagnóstico)",
+      quando: "D+2 (custo + ações) · D+5 (método) · D+7 (convite pra call)",
+      publico: "Leads do diagnóstico com consentimento e sem opt-out, criados a partir de 18/07/2026 — encerra sem enviar após 30 dias parado",
+    },
+    {
+      nome: "Alerta de novo conteúdo",
+      gatilho: "Publicação de Artigo ou Material",
+      quando: "Imediato (publicação direta) ou no cron diário (agendados)",
+      publico: "Assinantes da newsletter/pop-up com consentimento e sem opt-out de marketing",
+    },
+  ];
+
   const systemCards: Card[] = systemLinks.map((l) => {
     const url = (l.url ?? "").trim();
     return {
@@ -136,6 +167,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
 
         <Section title="E-mail marketing e leads">
           <CardGrid cards={emailCards} />
+          <RuleTable title="Regras automáticas ativas" rules={automationRules} />
         </Section>
 
         <Section
@@ -170,6 +202,44 @@ function Section({
       </div>
       {children}
     </section>
+  );
+}
+
+function RuleTable({
+  title,
+  rules,
+}: {
+  title: string;
+  rules: { nome: string; gatilho: string; quando: string; publico: string }[];
+}) {
+  return (
+    <div style={{ marginTop: "1.1rem" }}>
+      <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--theme-elevation-700)", marginBottom: "0.5rem" }}>
+        {title}
+      </div>
+      <div style={{ overflowX: "auto", border: "1px solid var(--theme-elevation-150)", borderRadius: 6 }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
+          <thead>
+            <tr style={{ background: "var(--theme-elevation-50)", borderBottom: `2px solid ${GOLD}` }}>
+              <th style={{ textAlign: "left", padding: "0.6rem 0.9rem" }}>Regra</th>
+              <th style={{ textAlign: "left", padding: "0.6rem 0.9rem" }}>Gatilho</th>
+              <th style={{ textAlign: "left", padding: "0.6rem 0.9rem" }}>Quando</th>
+              <th style={{ textAlign: "left", padding: "0.6rem 0.9rem" }}>Público</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rules.map((r) => (
+              <tr key={r.nome} style={{ borderTop: "1px solid var(--theme-elevation-150)" }}>
+                <td style={{ padding: "0.6rem 0.9rem", fontWeight: 600 }}>{r.nome}</td>
+                <td style={{ padding: "0.6rem 0.9rem", color: "var(--theme-elevation-700)" }}>{r.gatilho}</td>
+                <td style={{ padding: "0.6rem 0.9rem", color: "var(--theme-elevation-700)" }}>{r.quando}</td>
+                <td style={{ padding: "0.6rem 0.9rem", color: "var(--theme-elevation-700)" }}>{r.publico}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }
 
