@@ -2,9 +2,10 @@ import {
   breakEvenCloseRate,
   computeForecastScenarios,
   FORECAST_ASSUMPTIONS,
+  ADS_INSIGHTS_THRESHOLDS,
   type GoogleForecast,
 } from "@/lib/ads-insights";
-import { card, table, th, td, money, pct } from "./adsStyles";
+import { card, table, th, td, rowBg, sectionTitle, callout, kpiCard, kpiLabel, kpiValue, EA_GOLD, money, pct, type KpiState } from "./adsStyles";
 
 /**
  * Simulação pré-investimento: a previsão OFICIAL do Google (Planejador de
@@ -27,8 +28,11 @@ export function AdsForecastPanel({
 
   return (
     <section style={{ ...card, marginTop: "1.5rem" }}>
-      <h2 style={{ marginTop: 0 }}>Simulação pré-investimento (Forecast)</h2>
-      <p style={{ color: "var(--theme-elevation-600)", marginTop: "-0.4rem" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <span style={{ fontSize: "1.3rem" }}>🔮</span>
+        <h2 style={{ margin: 0 }}>Simulação pré-investimento (Forecast)</h2>
+      </div>
+      <p style={{ color: "var(--theme-elevation-600)", marginTop: "0.3rem" }}>
         Previsão oficial do Google (Planejador de Palavras-chave)
         {forecast.capturedAt ? ` — capturada em ${new Date(forecast.capturedAt).toLocaleDateString("pt-BR")}` : ""}.
       </p>
@@ -42,7 +46,7 @@ export function AdsForecastPanel({
         <Metric label="Orçamento/dia" value={money(forecast.dailyBudget)} />
       </div>
 
-      <h3>Projeção de resultados (cenários)</h3>
+      <div style={sectionTitle}>📈 Projeção de resultados (cenários)</div>
       <p style={{ fontSize: "0.85rem", color: "var(--theme-elevation-600)" }}>
         Premissas: {pct(FORECAST_ASSUMPTIONS.LEAD_CONVERSION.conservador)}–
         {pct(FORECAST_ASSUMPTIONS.LEAD_CONVERSION.otimista)} dos cliques viram lead (Diagnóstico);{" "}
@@ -61,40 +65,53 @@ export function AdsForecastPanel({
           </tr>
         </thead>
         <tbody>
-          {scenarios.map((s) => (
-            <tr key={s.key}>
-              <td style={td}>
-                <strong>{s.label}</strong>
-              </td>
-              <td style={td}>{s.leadsPerMonth.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td>
-              <td style={td}>{s.cac !== null ? money(s.cac) : "—"}</td>
-              <td style={td}>{s.clientsPerMonth.toLocaleString("pt-BR", { maximumFractionDigits: 2 })}</td>
-              <td style={td}>{money(s.revenuePerMonth)}</td>
-              <td style={td}>{s.roiMultiple !== null ? `${s.roiMultiple.toFixed(1)}x` : "—"}</td>
-            </tr>
-          ))}
+          {scenarios.map((s, i) => {
+            const isBase = s.key === "base";
+            const roiState: KpiState =
+              s.roiMultiple === null ? "neutral" : s.roiMultiple >= ADS_INSIGHTS_THRESHOLDS.ROI_GOOD_MULTIPLE ? "good" : "warn";
+            return (
+              <tr
+                key={s.key}
+                style={{
+                  ...rowBg(i),
+                  ...(isBase ? { boxShadow: `inset 3px 0 0 ${EA_GOLD}` } : {}),
+                }}
+              >
+                <td style={td}>
+                  <strong>{s.label}</strong>
+                </td>
+                <td style={td}>{s.leadsPerMonth.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td>
+                <td style={td}>{s.cac !== null ? money(s.cac) : "—"}</td>
+                <td style={td}>{s.clientsPerMonth.toLocaleString("pt-BR", { maximumFractionDigits: 2 })}</td>
+                <td style={td}>{money(s.revenuePerMonth)}</td>
+                <td style={{ ...td, color: roiState === "good" ? "var(--theme-success-600)" : roiState === "warn" ? "var(--theme-warning-600)" : undefined, fontWeight: 600 }}>
+                  {s.roiMultiple !== null ? `${s.roiMultiple.toFixed(1)}x` : "—"}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
 
-      <div style={{ marginTop: "1rem", fontSize: "0.9rem", display: "grid", gap: "0.5rem" }}>
+      <div style={{ marginTop: "1rem", display: "grid", gap: "0.6rem" }}>
         {breakEven !== null ? (
-          <p style={{ margin: 0 }}>
+          <div style={callout}>
             <strong>Ponto de equilíbrio:</strong> no cenário Base (
             {base.leadsPerMonth.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} leads/mês), basta fechar{" "}
             <strong>{pct(breakEven)}</strong> dos leads para a campanha se pagar — um único cliente Essencial
             cobre {(FORECAST_ASSUMPTIONS.REVENUE_PER_CLIENT / forecast.cost).toFixed(1)} meses de investimento.
-          </p>
+          </div>
         ) : null}
         {keywordsWithoutVolume > 0 ? (
-          <p style={{ margin: 0, color: "var(--theme-warning-500)" }}>
-            <strong>Atenção:</strong> {keywordsWithoutVolume} das {keywordsTotal} palavras planejadas não têm
+          <div style={{ ...callout, borderLeftColor: "var(--theme-warning-500)", color: "var(--theme-warning-700)" }}>
+            <strong>⚠️ Atenção:</strong> {keywordsWithoutVolume} das {keywordsTotal} palavras planejadas não têm
             volume de busca mensurável no Brasil (ver campo &quot;Planejador do Google&quot; em cada
             palavra-chave) — o tráfego real virá quase todo das demais. Vale ampliar a lista com as ideias do
             Planejador antes de ativar.
-          </p>
+          </div>
         ) : null}
         {forecast.notes ? (
-          <p style={{ margin: 0, color: "var(--theme-elevation-600)" }}>{forecast.notes}</p>
+          <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--theme-elevation-600)" }}>{forecast.notes}</p>
         ) : null}
       </div>
     </section>
@@ -103,9 +120,9 @@ export function AdsForecastPanel({
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div>
-      <div style={{ fontSize: "0.75rem", color: "var(--theme-elevation-500)" }}>{label}</div>
-      <div style={{ fontSize: "1.1rem", fontWeight: 600 }}>{value}</div>
+    <div style={kpiCard("neutral")}>
+      <div style={kpiLabel}>{label}</div>
+      <div style={kpiValue}>{value}</div>
     </div>
   );
 }

@@ -1,6 +1,26 @@
 import type { CampaignScorecard, DailyMetric, Flag } from "@/lib/ads-insights";
-import { computeAdGroupFlags, computeKeywordFlags } from "@/lib/ads-insights";
-import { card, table, th, td, badge, statusColor, statusLabel, money, pct } from "./adsStyles";
+import { computeAdGroupFlags, computeKeywordFlags, ADS_INSIGHTS_THRESHOLDS } from "@/lib/ads-insights";
+import {
+  card,
+  table,
+  th,
+  td,
+  rowBg,
+  badge,
+  statusColor,
+  statusLabel,
+  statusIcon,
+  sectionTitle,
+  kpiCard,
+  kpiLabel,
+  kpiValue,
+  kpiHint,
+  flagPill,
+  flagSeverity,
+  type KpiState,
+  money,
+  pct,
+} from "./adsStyles";
 
 type CampaignDoc = {
   id: string | number;
@@ -36,10 +56,10 @@ type KeywordDoc = {
 function FlagList({ flags }: { flags: Flag[] }) {
   if (flags.length === 0) return <span style={{ color: "var(--theme-elevation-400)" }}>—</span>;
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 5, alignItems: "flex-start" }}>
       {flags.map((f) => (
-        <span key={f.code} title={f.recommendation}>
-          <strong>{f.label}:</strong> {f.recommendation}
+        <span key={f.code} title={f.recommendation} style={flagPill(flagSeverity(f.code))}>
+          {f.label}
         </span>
       ))}
     </div>
@@ -117,34 +137,67 @@ export function AdsCampaignDetail({
   adGroups: AdGroupDoc[];
   keywordsByGroup: Map<string, KeywordDoc[]>;
 }) {
+  const T = ADS_INSIGHTS_THRESHOLDS;
+  const isColletando = scorecard.status === "coletando";
+  const ctrState: KpiState = isColletando ? "neutral" : scorecard.ctr < T.CTR_LOW_THRESHOLD ? "warn" : "good";
+  const cpcState: KpiState = isColletando
+    ? "neutral"
+    : scorecard.avgCpc > (campaign.cpcCeiling || T.CPC_CEILING_FALLBACK)
+      ? "bad"
+      : "good";
+  const cacState: KpiState =
+    scorecard.cac === null ? "neutral" : scorecard.cac > T.CAC_TARGET * T.CAC_WARNING_RATIO ? "bad" : "good";
+  const roiState: KpiState =
+    scorecard.roiMultiple === null ? "neutral" : scorecard.roiMultiple >= T.ROI_GOOD_MULTIPLE ? "good" : "warn";
+
   return (
     <section style={{ ...card, marginTop: "1.5rem" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.4rem", flexWrap: "wrap", gap: "0.5rem" }}>
         <h2 style={{ margin: 0 }}>{campaign.name}</h2>
-        <span>
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "0.3rem 0.7rem",
+            borderRadius: 999,
+            fontSize: "0.8rem",
+            fontWeight: 600,
+            background: "var(--theme-elevation-100)",
+          }}
+        >
           <span style={badge(statusColor[scorecard.status])} />
-          {statusLabel[scorecard.status]}
+          {statusIcon[scorecard.status]} {statusLabel[scorecard.status]}
         </span>
       </div>
 
-      <p style={{ margin: "0 0 1rem", color: "var(--theme-elevation-700)" }}>{scorecard.recommendation}</p>
+      <p style={{ margin: "0 0 1.1rem", color: "var(--theme-elevation-700)" }}>{scorecard.recommendation}</p>
 
       <AIForecastButton campaignId={String(campaign.id)} campaignName={campaign.name} />
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "0.75rem", marginBottom: "1.25rem" }}>
-        <Metric label="Cliques" value={String(scorecard.totals.clicks)} />
-        <Metric label="CTR" value={pct(scorecard.ctr)} />
-        <Metric label="CPC médio" value={money(scorecard.avgCpc)} />
-        <Metric label="Gasto total" value={money(scorecard.totals.cost)} />
-        <Metric label="Leads atribuídos" value={String(scorecard.leadsCount)} />
-        <Metric label="CAC" value={scorecard.cac !== null ? money(scorecard.cac) : "—"} />
-        <Metric label="Receita (ganhos)" value={money(scorecard.revenue)} />
-        <Metric label="ROI" value={scorecard.roiMultiple !== null ? `${scorecard.roiMultiple.toFixed(1)}x` : "—"} />
+      <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.03em", color: "var(--theme-elevation-500)", margin: "1.5rem 0 0.5rem" }}>
+        Tráfego e custo
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "0.75rem", marginBottom: "1.1rem" }}>
+        <Kpi label="Cliques" value={String(scorecard.totals.clicks)} state="neutral" />
+        <Kpi label="CTR" value={pct(scorecard.ctr)} state={ctrState} hint={`meta: ≥ ${pct(T.CTR_LOW_THRESHOLD)}`} />
+        <Kpi label="CPC médio" value={money(scorecard.avgCpc)} state={cpcState} hint={`teto: ${money(campaign.cpcCeiling || T.CPC_CEILING_FALLBACK)}`} />
+        <Kpi label="Gasto total" value={money(scorecard.totals.cost)} state="neutral" />
+      </div>
+
+      <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.03em", color: "var(--theme-elevation-500)", margin: "1.5rem 0 0.5rem" }}>
+        Conversão e retorno
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "0.75rem", marginBottom: "1.25rem" }}>
+        <Kpi label="Leads atribuídos" value={String(scorecard.leadsCount)} state="neutral" />
+        <Kpi label="CAC" value={scorecard.cac !== null ? money(scorecard.cac) : "—"} state={cacState} hint={`meta: ≤ ${money(T.CAC_TARGET)}`} />
+        <Kpi label="Receita (ganhos)" value={money(scorecard.revenue)} state="neutral" />
+        <Kpi label="ROI" value={scorecard.roiMultiple !== null ? `${scorecard.roiMultiple.toFixed(1)}x` : "—"} state={roiState} hint={`meta: ≥ ${T.ROI_GOOD_MULTIPLE}x`} />
       </div>
 
       <DailyCostChart dailyMetrics={dailyMetrics} dailyBudget={campaign.dailyBudgetTarget} />
 
-      <h3 style={{ marginTop: "2rem" }}>Grupos de anúncios</h3>
+      <div style={sectionTitle}>📁 Grupos de anúncios</div>
       <table style={table}>
         <thead>
           <tr>
@@ -156,10 +209,10 @@ export function AdsCampaignDetail({
           </tr>
         </thead>
         <tbody>
-          {adGroups.map((g) => {
+          {adGroups.map((g, i) => {
             const flags = computeAdGroupFlags(g);
             return (
-              <tr key={g.id}>
+              <tr key={g.id} style={rowBg(i)}>
                 <td style={td}>{g.name}</td>
                 <td style={td}>{g.rollupClicks}</td>
                 <td style={td}>{money(g.rollupCost)}</td>
@@ -173,7 +226,7 @@ export function AdsCampaignDetail({
         </tbody>
       </table>
 
-      <h3 style={{ marginTop: "2rem" }}>Palavras-chave</h3>
+      <div style={sectionTitle}>🔑 Palavras-chave</div>
       <table style={table}>
         <thead>
           <tr>
@@ -187,35 +240,35 @@ export function AdsCampaignDetail({
           </tr>
         </thead>
         <tbody>
-          {adGroups.map((g) =>
-            (keywordsByGroup.get(String(g.id)) ?? []).map((k) => {
-              const flags = computeKeywordFlags(k, campaign.cpcCeiling);
-              return (
-                <tr key={k.id}>
-                  <td style={td}>{k.text}</td>
-                  <td style={td}>{g.name}</td>
-                  <td style={td}>{k.matchType}</td>
-                  <td style={td}>{k.rollupClicks}</td>
-                  <td style={td}>{money(k.rollupCost)}</td>
-                  <td style={td}>{k.rollupConversions}</td>
-                  <td style={td}>
-                    <FlagList flags={flags} />
-                  </td>
-                </tr>
-              );
-            }),
-          )}
+          {adGroups.flatMap((g) => keywordsByGroup.get(String(g.id)) ?? []).map((k, i) => {
+            const group = adGroups.find((g) => String(g.id) === String(k.adGroup));
+            const flags = computeKeywordFlags(k, campaign.cpcCeiling);
+            return (
+              <tr key={k.id} style={rowBg(i)}>
+                <td style={td}>{k.text}</td>
+                <td style={td}>{group?.name ?? "—"}</td>
+                <td style={td}>{k.matchType}</td>
+                <td style={td}>{k.rollupClicks}</td>
+                <td style={td}>{money(k.rollupCost)}</td>
+                <td style={td}>{k.rollupConversions}</td>
+                <td style={td}>
+                  <FlagList flags={flags} />
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </section>
   );
 }
 
-function Metric({ label, value }: { label: string; value: string }) {
+function Kpi({ label, value, state, hint }: { label: string; value: string; state: KpiState; hint?: string }) {
   return (
-    <div>
-      <div style={{ fontSize: "0.75rem", color: "var(--theme-elevation-500)" }}>{label}</div>
-      <div style={{ fontSize: "1.1rem", fontWeight: 600 }}>{value}</div>
+    <div style={kpiCard(state)}>
+      <div style={kpiLabel}>{label}</div>
+      <div style={kpiValue}>{value}</div>
+      {hint ? <div style={kpiHint}>{hint}</div> : null}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import type { CampaignScorecard } from "@/lib/ads-insights";
-import { card, badge, statusColor, statusLabel, money, pct } from "./adsStyles";
+import { card, badge, statusColor, statusLabel, statusIcon, EA_GOLD, money, pct } from "./adsStyles";
 
 /**
  * Visão "matriz" — um card por campanha, pensado para leitura rápida (é o
@@ -30,14 +30,28 @@ export function AdsMatrix({
               display: "block",
               textDecoration: "none",
               color: "inherit",
-              borderColor: isSelected ? "var(--theme-elevation-800)" : "var(--theme-elevation-150)",
+              borderColor: isSelected ? EA_GOLD : "var(--theme-elevation-150)",
+              borderWidth: isSelected ? 2 : 1,
+              boxShadow: isSelected ? `0 0 0 1px ${EA_GOLD}` : "none",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <strong>{s.campaignName}</strong>
-              <span style={{ fontSize: "0.8rem" }}>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 5,
+                  fontSize: "0.75rem",
+                  fontWeight: 600,
+                  padding: "0.2rem 0.55rem",
+                  borderRadius: 999,
+                  background: "var(--theme-elevation-100)",
+                  whiteSpace: "nowrap",
+                }}
+              >
                 <span style={badge(statusColor[s.status])} />
-                {statusLabel[s.status]}
+                {statusIcon[s.status]} {statusLabel[s.status]}
               </span>
             </div>
 

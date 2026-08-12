@@ -1,11 +1,37 @@
 import { computeCompetitorSummary, type CompetitorRow } from "@/lib/ads-insights";
-import { card, table, th, td } from "./adsStyles";
+import { card, table, th, td, rowBg, sectionTitle, callout, kpiCard, kpiLabel, kpiValue } from "./adsStyles";
 
 const TYPE_LABEL: Record<CompetitorRow["type"], string> = {
   patrocinado: "Anúncio",
   organico: "Orgânico",
   local: "Local (mapa)",
 };
+
+const TYPE_PILL: Record<CompetitorRow["type"], { bg: string; fg: string }> = {
+  patrocinado: { bg: "var(--theme-warning-100)", fg: "var(--theme-warning-800)" },
+  organico: { bg: "var(--theme-success-100)", fg: "var(--theme-success-800)" },
+  local: { bg: "var(--theme-elevation-150)", fg: "var(--theme-elevation-700)" },
+};
+
+function TypeBadge({ type }: { type: CompetitorRow["type"] }) {
+  const c = TYPE_PILL[type];
+  return (
+    <span
+      style={{
+        display: "inline-block",
+        padding: "0.2rem 0.55rem",
+        borderRadius: 999,
+        fontSize: "0.72rem",
+        fontWeight: 600,
+        background: c.bg,
+        color: c.fg,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {TYPE_LABEL[type]}
+    </span>
+  );
+}
 
 /**
  * Concorrentes que o Google apresenta nas buscas pelas palavras da campanha
@@ -23,24 +49,34 @@ export function AdsCompetitorsPanel({ rows }: { rows: CompetitorRow[] }) {
 
   return (
     <section style={{ ...card, marginTop: "1.5rem" }}>
-      <h2 style={{ marginTop: 0 }}>Concorrentes no Google</h2>
-      <p style={{ color: "var(--theme-elevation-600)", marginTop: "-0.4rem" }}>
-        {summary.totalAdvertisers} anunciante(s) observados em {summary.keywordsCovered} busca(s) pelas
-        palavras da campanha.
-        {summary.dominant.length > 0 ? (
-          <>
-            {" "}Presença dominante (2+ buscas): <strong>{summary.dominant.join(", ")}</strong>.
-          </>
-        ) : null}
-        {summary.freeDiagnosisCount > 0 ? (
-          <>
-            {" "}<strong>{summary.freeDiagnosisCount} anunciante(s) ofertam &quot;diagnóstico gratuito&quot;</strong> — a
-            mesma isca da EA; o diferencial precisa vir do método (Gestão 360) e da prova social, não da
-            oferta em si.
-          </>
-        ) : null}
-      </p>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <span style={{ fontSize: "1.3rem" }}>🕵️</span>
+        <h2 style={{ margin: 0 }}>Concorrentes no Google</h2>
+      </div>
 
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "0.75rem", margin: "1rem 0" }}>
+        <div style={kpiCard("neutral")}>
+          <div style={kpiLabel}>Anunciantes observados</div>
+          <div style={kpiValue}>{summary.totalAdvertisers}</div>
+        </div>
+        <div style={kpiCard("neutral")}>
+          <div style={kpiLabel}>Buscas cobertas</div>
+          <div style={kpiValue}>{summary.keywordsCovered}</div>
+        </div>
+        <div style={kpiCard(summary.dominant.length > 0 ? "warn" : "neutral")}>
+          <div style={kpiLabel}>Presença dominante (2+ buscas)</div>
+          <div style={{ ...kpiValue, fontSize: "1rem" }}>{summary.dominant.length > 0 ? summary.dominant.join(", ") : "—"}</div>
+        </div>
+      </div>
+
+      {summary.freeDiagnosisCount > 0 ? (
+        <div style={{ ...callout, marginBottom: "1.1rem" }}>
+          <strong>{summary.freeDiagnosisCount} anunciante(s) ofertam &quot;diagnóstico gratuito&quot;</strong> — a mesma
+          isca da EA; o diferencial precisa vir do método (Gestão 360) e da prova social, não da oferta em si.
+        </div>
+      ) : null}
+
+      <div style={sectionTitle}>📋 Anúncios e resultados observados</div>
       <table style={table}>
         <thead>
           <tr>
@@ -52,14 +88,16 @@ export function AdsCompetitorsPanel({ rows }: { rows: CompetitorRow[] }) {
         </thead>
         <tbody>
           {sorted.map((r, i) => (
-            <tr key={`${r.name}-${r.keywordText}-${i}`}>
+            <tr key={`${r.name}-${r.keywordText}-${i}`} style={rowBg(i)}>
               <td style={td}>
                 <strong>{r.name}</strong>
                 {r.domain ? (
                   <div style={{ fontSize: "0.75rem", color: "var(--theme-elevation-500)" }}>{r.domain}</div>
                 ) : null}
               </td>
-              <td style={td}>{TYPE_LABEL[r.type]}</td>
+              <td style={td}>
+                <TypeBadge type={r.type} />
+              </td>
               <td style={td}>{r.keywordText}</td>
               <td style={td}>{r.adSnippet || "—"}</td>
             </tr>

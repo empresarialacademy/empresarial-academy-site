@@ -15,6 +15,9 @@ export const card: CSSProperties = {
   padding: "1.2rem 1.4rem",
 };
 
+/** Acento dourado da marca — só para bordas/ícones/linhas, nunca fundo de texto. */
+export const EA_GOLD = "#C1A160";
+
 export const statusColor: Record<ScorecardStatus, string> = {
   coletando: "var(--theme-elevation-400)",
   atencao: "var(--theme-warning-500)",
@@ -29,6 +32,13 @@ export const statusLabel: Record<ScorecardStatus, string> = {
   saudavel: "Saudável",
 };
 
+export const statusIcon: Record<ScorecardStatus, string> = {
+  coletando: "⏳",
+  atencao: "⚠️",
+  estavel: "➖",
+  saudavel: "✅",
+};
+
 export const table: CSSProperties = {
   width: "100%",
   borderCollapse: "collapse",
@@ -37,17 +47,26 @@ export const table: CSSProperties = {
 
 export const th: CSSProperties = {
   textAlign: "left",
-  padding: "0.5rem 0.6rem",
-  borderBottom: "1px solid var(--theme-elevation-150)",
-  color: "var(--theme-elevation-600)",
-  fontWeight: 500,
+  padding: "0.55rem 0.7rem",
+  borderBottom: "2px solid var(--theme-elevation-150)",
+  background: "var(--theme-elevation-100)",
+  color: "var(--theme-elevation-700)",
+  fontWeight: 600,
+  fontSize: "0.75rem",
+  textTransform: "uppercase",
+  letterSpacing: "0.03em",
 };
 
 export const td: CSSProperties = {
-  padding: "0.5rem 0.6rem",
+  padding: "0.55rem 0.7rem",
   borderBottom: "1px solid var(--theme-elevation-100)",
   verticalAlign: "top",
 };
+
+/** Zebra de linha — chamar com o índice da linha dentro do .map(). */
+export const rowBg = (i: number): CSSProperties => ({
+  background: i % 2 === 1 ? "var(--theme-elevation-50)" : "transparent",
+});
 
 export const badge = (bg: string): CSSProperties => ({
   display: "inline-block",
@@ -57,6 +76,99 @@ export const badge = (bg: string): CSSProperties => ({
   background: bg,
   marginRight: 6,
 });
+
+/** Título de seção com marcador dourado — usar em todo h2/h3 do painel. */
+export const sectionTitle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: "0.5rem",
+  fontSize: "1.05rem",
+  fontWeight: 700,
+  margin: "2rem 0 1rem",
+  paddingBottom: "0.5rem",
+  borderBottom: `2px solid ${EA_GOLD}`,
+};
+
+export type KpiState = "good" | "warn" | "bad" | "neutral";
+
+const KPI_STATE_COLOR: Record<KpiState, string> = {
+  good: "var(--theme-success-500)",
+  warn: "var(--theme-warning-500)",
+  bad: "var(--theme-error-500)",
+  neutral: "var(--theme-elevation-300)",
+};
+
+/** Card de indicador único — número grande + estado por cor na borda esquerda. */
+export const kpiCard = (state: KpiState = "neutral"): CSSProperties => ({
+  background: "var(--theme-elevation-50)",
+  border: "1px solid var(--theme-elevation-150)",
+  borderLeft: `3px solid ${KPI_STATE_COLOR[state]}`,
+  borderRadius: 6,
+  padding: "0.75rem 0.9rem",
+});
+
+export const kpiLabel: CSSProperties = {
+  fontSize: "0.72rem",
+  color: "var(--theme-elevation-500)",
+  textTransform: "uppercase",
+  letterSpacing: "0.03em",
+  fontWeight: 600,
+};
+
+export const kpiValue: CSSProperties = {
+  fontSize: "1.4rem",
+  fontWeight: 700,
+  marginTop: "0.15rem",
+  lineHeight: 1.2,
+};
+
+/** Legenda pequena de contexto sob o valor do KPI (ex.: "meta: 3,0x"). */
+export const kpiHint: CSSProperties = {
+  fontSize: "0.72rem",
+  color: "var(--theme-elevation-500)",
+  marginTop: "0.15rem",
+};
+
+export type FlagSeverity = "good" | "warn" | "bad";
+
+const FLAG_SEVERITY_BY_CODE: Record<string, FlagSeverity> = {
+  good_performer: "good",
+  low_ctr: "warn",
+  low_volume: "warn",
+  negative_candidate: "bad",
+  no_conversion_spend: "bad",
+  cpc_above_ceiling: "bad",
+};
+
+export function flagSeverity(code: string): FlagSeverity {
+  return FLAG_SEVERITY_BY_CODE[code] ?? "warn";
+}
+
+const FLAG_PILL_COLOR: Record<FlagSeverity, { bg: string; fg: string }> = {
+  good: { bg: "var(--theme-success-100)", fg: "var(--theme-success-800)" },
+  warn: { bg: "var(--theme-warning-100)", fg: "var(--theme-warning-800)" },
+  bad: { bg: "var(--theme-error-100)", fg: "var(--theme-error-800)" },
+};
+
+export const flagPill = (severity: FlagSeverity): CSSProperties => ({
+  display: "inline-block",
+  padding: "0.2rem 0.55rem",
+  borderRadius: 999,
+  fontSize: "0.72rem",
+  fontWeight: 600,
+  background: FLAG_PILL_COLOR[severity].bg,
+  color: FLAG_PILL_COLOR[severity].fg,
+  whiteSpace: "nowrap",
+});
+
+/** Caixa de destaque com barra dourada — para o achado mais importante de um bloco. */
+export const callout: CSSProperties = {
+  background: "var(--theme-elevation-50)",
+  borderLeft: `3px solid ${EA_GOLD}`,
+  borderRadius: "0 6px 6px 0",
+  padding: "0.75rem 1rem",
+  fontSize: "0.88rem",
+};
 
 export const money = (n: number) =>
   `R$ ${n.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
