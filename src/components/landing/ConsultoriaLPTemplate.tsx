@@ -86,6 +86,34 @@ const depoimentoFabio = depoimentosVideo.fabio;
 const depoimentoDaniella = depoimentosVideo.daniella;
 const depoimentoErik = depoimentosVideo.erik;
 
+/** Faixa de credenciais abaixo da bio do fundador (trajetória + formação).
+ * Badges tipográficos, não logos rasterizados — o projeto não tem os
+ * arquivos oficiais de marca de terceiros ainda; ver PROJECT_STATUS.md
+ * sobre a pendência de logos reais (VIVO/Atento/AllCom/FGV/Six Sigma/WCES). */
+const credenciais = [
+  "Ex-Telefônica VIVO",
+  "Ex-Atento",
+  "Ex-AllCom Telecom",
+  "MBA · FGV",
+  "Green Belt · Lean Six Sigma",
+  "Certificação CX · WCES (Utah)",
+];
+
+function LogoBar() {
+  return (
+    <ul className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-line pt-6">
+      {credenciais.map((c) => (
+        <li
+          key={c}
+          className="text-xs font-semibold uppercase tracking-wide text-gray/70"
+        >
+          {c}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 const metodoBullets = [
   "Diagnóstico dos pontos que mais travam o crescimento hoje.",
   "Plano de ação priorizado, com responsáveis e prazos.",
@@ -212,10 +240,7 @@ export function ConsultoriaLPTemplate({
                 Quero meu diagnóstico gratuito agora
               </ConversionCTA>
             </div>
-            <p className="mt-3 text-xs text-white/50">
-              Abre em uma nova aba — esta página continua aberta.
-            </p>
-            <p className="mt-2 text-sm text-white/70">
+            <p className="mt-3 text-base text-white/70">
               Prefere conversar direto?{" "}
               <a
                 href={WHATSAPP_LEAD}
@@ -227,7 +252,7 @@ export function ConsultoriaLPTemplate({
               </a>
               , sem passar pelo questionário.
             </p>
-            <p className="mt-3 text-sm text-white/60">
+            <p className="mt-3 text-base text-white/60">
               Sócio-proprietário de uma PME por 7 anos · MBA pela FGV · Green
               Belt em Lean Six Sigma · 19 anos estruturando operações
               comerciais na Telefônica VIVO, Atento e Grupo Allcom
@@ -266,7 +291,7 @@ export function ConsultoriaLPTemplate({
               <span className="mt-0.5 text-gold-ink" aria-hidden>
                 ✔
               </span>
-              <span className="text-sm">{item}</span>
+              <span className="text-base leading-snug">{item}</span>
             </li>
           ))}
         </ul>
@@ -287,7 +312,7 @@ export function ConsultoriaLPTemplate({
               >
                 <Icon name={p.icon} className="h-9 w-9 text-gold-ink" />
                 <h3 className="mt-4 text-lg font-semibold text-navy">{p.area}</h3>
-                <p className="mt-2 text-sm text-gray">{p.sintoma}</p>
+                <p className="mt-2 text-base text-gray">{p.sintoma}</p>
               </li>
             ))}
           </ul>
@@ -298,7 +323,7 @@ export function ConsultoriaLPTemplate({
             </p>
             <ul className="mt-4 space-y-3">
               {implicacoes.map((item) => (
-                <li key={item} className="flex gap-3 text-sm text-gray">
+                <li key={item} className="flex gap-3 text-base text-gray">
                   <span className="mt-0.5 text-gold-ink" aria-hidden>
                     —
                   </span>
@@ -339,7 +364,7 @@ export function ConsultoriaLPTemplate({
               <h3 className="mt-2 text-lg font-semibold text-navy">
                 {depoimentoFabio.chamada}
               </h3>
-              <p className="mt-3 text-sm text-gray">{depoimentoFabio.texto}</p>
+              <p className="mt-3 text-base leading-relaxed text-gray">{depoimentoFabio.texto}</p>
             </div>
           </div>
         </div>
@@ -373,7 +398,7 @@ export function ConsultoriaLPTemplate({
                 <span className="text-gold" aria-hidden>
                   ✓
                 </span>
-                <span className="text-sm">{b}</span>
+                <span className="text-base">{b}</span>
               </li>
             ))}
           </ul>
@@ -401,7 +426,7 @@ export function ConsultoriaLPTemplate({
               <h3 className="mt-2 text-lg font-semibold text-navy">
                 {depoimentoDaniella.chamada}
               </h3>
-              <p className="mt-3 text-sm text-gray">{depoimentoDaniella.texto}</p>
+              <p className="mt-3 text-base leading-relaxed text-gray">{depoimentoDaniella.texto}</p>
             </div>
           </div>
         </div>
@@ -425,7 +450,7 @@ export function ConsultoriaLPTemplate({
                   <h3 className="text-lg font-semibold text-navy">
                     {p.titulo}
                   </h3>
-                  <p className="mt-2 text-sm text-gray">{p.desc}</p>
+                  <p className="mt-2 text-base text-gray">{p.desc}</p>
                 </div>
               </div>
               {i < passos.length - 1 && (
@@ -458,19 +483,24 @@ export function ConsultoriaLPTemplate({
           />
           <div>
             <SectionHeading title="Quem vai trabalhar ao seu lado" />
-            <p className="mt-6 text-gray">
-              Durante 7 anos, <strong className="text-navy">{fundador.nome}</strong>{" "}
-              foi sócio-proprietário de uma empresa de varejo — loja física,
-              e-commerce e fábrica própria. Depois disso, passou quase duas
-              décadas estruturando operações comerciais em empresas como
-              Telefônica VIVO, Atento e Grupo Allcom. O Gestão 360 nasceu de
-              juntar as duas experiências: o rigor de método da empresa
-              grande, no tamanho e no orçamento de quem é dono de PME.
-            </p>
-            <p className="mt-4 text-sm font-semibold text-navy">
+            {fundador.bio.map((paragrafo, i) => (
+              <p key={i} className="mt-6 text-base leading-relaxed text-gray first:mt-6">
+                {i === 0 ? (
+                  <>
+                    {paragrafo.split(fundador.nome)[0]}
+                    <strong className="text-navy">{fundador.nome}</strong>
+                    {paragrafo.split(fundador.nome)[1]}
+                  </>
+                ) : (
+                  paragrafo
+                )}
+              </p>
+            ))}
+            <p className="mt-4 text-base font-semibold text-navy">
               Quem vai atender você é o próprio fundador — não existe
               consultor designado.
             </p>
+            <LogoBar />
           </div>
         </div>
       </section>
@@ -496,7 +526,7 @@ export function ConsultoriaLPTemplate({
               <h3 className="mt-2 text-lg font-semibold text-navy">
                 {depoimentoErik.chamada}
               </h3>
-              <p className="mt-3 text-sm text-gray">{depoimentoErik.texto}</p>
+              <p className="mt-3 text-base leading-relaxed text-gray">{depoimentoErik.texto}</p>
             </div>
           </div>
         </div>
@@ -520,7 +550,7 @@ export function ConsultoriaLPTemplate({
                 relatório executivo, prioridades claras e um plano de 90 dias
                 que a sua empresa já pode começar a aplicar sozinha.
               </p>
-              <ul className="mt-6 space-y-3 text-sm text-white/80">
+              <ul className="mt-6 space-y-3 text-base text-white/80">
                 <li className="flex gap-3">
                   <span className="text-gold" aria-hidden>✓</span>
                   <span>Relatório executivo com prioridades e plano de 90 dias</span>
@@ -576,7 +606,7 @@ export function ConsultoriaLPTemplate({
             um plano de ação inicial para impulsionar o seu crescimento — sem
             custo e sem compromisso.
           </p>
-          <p className="mx-auto mt-3 max-w-2xl text-sm text-gray">
+          <p className="mx-auto mt-3 max-w-2xl text-base text-gray">
             O acompanhamento é próximo e o número de empresas atendidas por vez
             é limitado, para manter a qualidade — quanto antes você fizer o
             diagnóstico, antes garante o seu lugar na agenda.
@@ -586,10 +616,7 @@ export function ConsultoriaLPTemplate({
               Começar agora — é grátis
             </ConversionCTA>
           </div>
-          <p className="mt-3 text-xs text-gray">
-            Abre em uma nova aba — esta página continua aberta.
-          </p>
-          <p className="mt-5 text-sm text-gray">
+          <p className="mt-5 text-base text-gray">
             Já sabe que precisa de ajuda?{" "}
             <a
               href={WHATSAPP_LEAD}

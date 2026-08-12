@@ -71,6 +71,16 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     { title: "Depoimentos", description: "Prova social exibida no site e na LP.", href: "/eahub/collections/testimonials" },
   ];
 
+  /** LPs dedicadas por palavra-chave do Google Ads (Frente 2, 12/08/2026) —
+   * as 3 páginas compartilham o mesmo template (ConsultoriaLPTemplate), só o
+   * topo muda por keyword. Cards abrem em nova aba (são páginas publicadas,
+   * não telas do admin). */
+  const landingPageCards: Card[] = [
+    { title: "LP · Consultoria PME (canônica)", description: "Página principal, usada como canonical das outras 2.", href: "/consultoria-pme", external: true },
+    { title: "LP · Consultoria de Gestão Empresarial", description: "Dedicada à keyword \"consultoria de gestão empresarial\".", href: "/consultoria-de-gestao-empresarial", external: true },
+    { title: "LP · Consultoria para Pequenas Empresas", description: "Dedicada à keyword \"consultoria empresarial para pequenas empresas\".", href: "/consultoria-empresarial-para-pequenas-empresas", external: true },
+  ];
+
   const emailCards: Card[] = [
     { title: "Campanhas de e-mail", description: "Disparos manuais para um segmento de leads.", href: "/eahub/collections/email-campaigns", stat: `${emailCampaigns.totalDocs} campanha(s)` },
     { title: "Segmentos", description: "Critérios de seleção de leads (origem, pilar, score).", href: "/eahub/collections/email-segments", stat: `${emailSegments.totalDocs} segmento(s)` },
@@ -118,6 +128,10 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
 
         <Section title="Conteúdo do site">
           <CardGrid cards={contentCards} />
+        </Section>
+
+        <Section title="Landing Pages (Ads)">
+          <CardGrid cards={landingPageCards} />
         </Section>
 
         <Section title="E-mail marketing e leads">

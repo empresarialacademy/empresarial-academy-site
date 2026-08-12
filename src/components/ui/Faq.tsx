@@ -28,7 +28,7 @@ export function Faq({ items }: { items: readonly Item[] }) {
               </span>
             </button>
             {isOpen && (
-              <div className="px-6 pb-5 text-sm text-gray">{item.a}</div>
+              <div className="px-6 pb-5 text-base leading-relaxed text-gray">{item.a}</div>
             )}
           </li>
         );
