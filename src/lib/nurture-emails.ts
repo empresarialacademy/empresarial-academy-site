@@ -58,75 +58,89 @@ type PillarCopy = {
 };
 
 const PILLAR_COPY: Record<PillarName, PillarCopy> = {
-  Comercial: {
+  "Fluxo de Alta Performance": {
     custo: [
-      "Vendas que oscilam mês a mês, sem previsibilidade para planejar.",
-      "Oportunidades que se perdem por falta de acompanhamento — cada venda depende de esforço, não de processo.",
-      "Crescimento limitado ao que passa pela sua mão.",
+      "O dia a dia é definido por quem está apagando o incêndio da vez, não por um plano.",
+      "A operação trava assim que você se ausenta — nenhum processo sobrevive sem você por perto.",
+      "O mesmo gargalo trava a empresa toda semana, e ninguém ataca a causa — só o sintoma.",
     ],
     acoes: [
-      "Desenhe as etapas do seu funil de vendas, do primeiro contato ao fechamento.",
-      "Defina uma meta semanal de propostas (não só de vendas) e acompanhe.",
-      "Registre todas as oportunidades em um único lugar — planilha ou CRM simples.",
+      "Mapeie em uma folha o processo que mais gera dor hoje, do início ao fim.",
+      "Defina por escrito o que cada pessoa pode decidir sozinha, sem te acionar.",
+      "Identifique o único gargalo que mais trava o fluxo esta semana e ataque só ele.",
     ],
     metodo:
-      "No pilar Comercial, a consultoria estrutura o funil de vendas com etapas e responsáveis, define metas desdobradas por período e implanta a rotina de acompanhamento. O objetivo é previsibilidade: saber quantas propostas geram quantas vendas — e o que fazer quando o número não vem.",
+      "No pilar Fluxo de Alta Performance, a consultoria mapeia os processos críticos, define alçadas de decisão e aplica análise de gargalo para atacar a real restrição do crescimento — não o sintoma que aparece por cima. O objetivo é uma operação que roda sem depender da sua presença o tempo todo.",
   },
-  Operações: {
+  "Arquitetura do Crescimento": {
     custo: [
-      "Retrabalho e qualidade oscilando conforme quem executa.",
-      "Tudo passa por você — a operação trava quando você não está.",
-      "Dificuldade de crescer sem aumentar o caos junto.",
+      "Contratação no feeling traz gente errada para o time, e ninguém percebe até custar caro.",
+      "Sem 1:1 nem feedback, problema de pessoas fica guardado até explodir.",
+      "\"Somos uma família\" vira desculpa para adiar decisões difíceis de gestão.",
     ],
     acoes: [
-      "Escolha o processo que mais gera problema hoje e mapeie as etapas em uma folha.",
-      "Transforme esse processo em um checklist simples, com um responsável definido.",
-      "Combine com a equipe: o padrão é o checklist — desvios viram conversa, não incêndio.",
+      "Desenhe um organograma simples com o principal responsável por cada área.",
+      "Marque um 1:1 de 30 minutos com cada pessoa-chave do time esta semana.",
+      "Defina um roteiro mínimo de entrevista para a próxima contratação.",
     ],
     metodo:
-      "No pilar de Operações, a consultoria mapeia e padroniza os processos críticos da sua entrega, define responsáveis e implanta rotina de gestão. O objetivo é uma operação que roda com qualidade constante — sem depender de heroísmo nem da sua presença o tempo todo.",
+      "No pilar Arquitetura do Crescimento, a consultoria estrutura organograma, recrutamento e rituais de gestão de pessoas (1:1, feedback, avaliação). O objetivo é uma estrutura que sustenta o crescimento — não uma que trava porque ninguém sabe seu papel.",
   },
-  "Gestão de Indicadores": {
+  "Objetivos Estratégicos": {
     custo: [
-      "Decisões tomadas no achismo, sem números para confirmar.",
-      "Problemas descobertos tarde — quando já viraram prejuízo.",
-      "Dificuldade de saber se a empresa está melhorando ou só se movimentando.",
+      "Cada área rema numa direção — o esforço não converte em resultado porque falta foco comum.",
+      "A empresa entra em toda oportunidade que aparece, e nenhuma delas anda de verdade.",
+      "Ninguém no time sabe repetir os objetivos da empresa — porque eles só existem na sua cabeça.",
     ],
     acoes: [
-      "Escolha de 3 a 5 indicadores que realmente mostram a saúde do negócio (venda, caixa, entrega).",
-      "Monte um painel simples — uma planilha basta para começar.",
-      "Marque uma reunião mensal de resultados com hora fixa. O ritual importa mais que a ferramenta.",
+      "Escreva os 3 objetivos mais importantes para os próximos 90 dias.",
+      "Desdobre um desses objetivos em uma meta clara para cada área.",
+      "Escolha uma iniciativa fora do foco atual e diga não a ela esta semana.",
     ],
     metodo:
-      "No pilar de Indicadores, a consultoria define com você o painel de KPIs do negócio, implanta a gestão à vista e conduz a rotina mensal de análise. O objetivo é decidir com base em número: ver o problema no indicador antes de ele aparecer no caixa.",
+      "No pilar Objetivos Estratégicos, a consultoria transforma a visão em metas desdobradas por área, com rituais de acompanhamento e critério claro para dizer não ao que não serve à estratégia. O objetivo é o time inteiro remando na mesma direção — com foco, não só esforço.",
   },
-  Liderança: {
+  "Métricas de Sucesso": {
     custo: [
-      "A equipe espera você decidir — e o seu dia afunda no operacional.",
-      "Pessoas boas sem clareza de responsabilidade rendem abaixo do que podem.",
-      "A empresa cresce até o limite da sua agenda, e para.",
+      "Faturamento sobe, mas ninguém sabe dizer se sobra dinheiro de verdade no fim do mês.",
+      "As decisões se apoiam em achismo, porque os números estão espalhados ou desatualizados.",
+      "O mesmo problema se repete porque a causa raiz nunca é investigada — só o sintoma é tratado.",
     ],
     acoes: [
-      "Escreva quem é responsável pelo quê nas 5 rotinas mais importantes da empresa.",
-      "Delegue uma rotina completa esta semana — com padrão de qualidade combinado, não só a tarefa.",
-      "Implante conversas individuais quinzenais de 30 minutos com cada pessoa-chave.",
+      "Liste de 5 a 8 métricas de sanidade (margem, caixa, retenção) — não só faturamento bruto.",
+      "Separe, mesmo que numa planilha, o resultado (DRE) do saldo em caixa.",
+      "Escolha o problema mais recorrente do negócio e investigue a causa raiz dele.",
     ],
     metodo:
-      "No pilar de Liderança, a consultoria trabalha a estrutura de responsabilidades, a delegação com padrão e os rituais de gestão (reuniões, acompanhamento, feedback). O objetivo é uma equipe que decide e executa dentro de combinados claros — e um dono que volta a ter tempo para pensar o crescimento.",
+      "No pilar Métricas de Sucesso, a consultoria implanta o painel de indicadores de sanidade, separa resultado de caixa e estrutura a rotina de decisão com dado — inclusive a investigação de causa raiz dos problemas recorrentes. O objetivo é decidir com número, não com ego nem com feeling.",
   },
-  Financeiro: {
+  "Gestão de Desafios": {
     custo: [
-      "Faturamento sobe, mas o dinheiro não sobra — e ninguém sabe dizer exatamente por quê.",
-      "Conta da empresa e conta pessoal se misturam, o que esconde o resultado real do negócio.",
-      "Preço definido no feeling ou copiado do concorrente, sem saber a margem real de cada produto ou serviço.",
+      "Todo imprevisto pega a empresa de surpresa, e o caixa sente na hora.",
+      "Numa situação grave, ninguém sabe exatamente quem decide o quê — e o tempo se perde na confusão.",
+      "O mesmo tipo de crise se repete, porque nada muda depois que ela passa.",
     ],
     acoes: [
-      "Separe hoje a conta da empresa da conta pessoal, se ainda não estiverem separadas.",
-      "Monte um fluxo de caixa simples projetado para as próximas 4 semanas — entradas e saídas.",
-      "Calcule a margem de pelo menos um produto ou serviço-chave: preço menos custo direto.",
+      "Liste os 5 principais riscos do negócio — o que pode dar errado e o tamanho do impacto.",
+      "Comece, ainda que pequeno, a separar um valor mensal para reserva de emergência.",
+      "Defina por escrito quem decide o quê numa situação grave — mesmo que seja só você e um sócio.",
     ],
     metodo:
-      "No pilar Financeiro, a consultoria estrutura o fluxo de caixa, calcula a margem real por produto ou serviço e implanta o acompanhamento de orçado x realizado. O objetivo é parar de confundir faturamento com lucro — e decidir preço e investimento com número, não com sensação.",
+      "No pilar Gestão de Desafios, a consultoria estrutura mapa de risco, reserva financeira, protocolo de decisão em crise e revisão pós-evento. O objetivo é uma empresa preparada para o imprevisto — não uma que reage no desespero cada vez que ele aparece.",
+  },
+  "Evolução Constante": {
+    custo: [
+      "Todo o tempo vai para manter a operação rodando — e não sobra espaço para pensar no que vem depois.",
+      "O erro é escondido ou punido, então o time para de testar coisas novas.",
+      "A empresa só percebe a mudança do mercado quando o impacto já chegou.",
+    ],
+    acoes: [
+      "Reserve algumas horas por mês só para pensar em melhoria, fora da operação do dia a dia.",
+      "Depois do próximo teste ou projeto, registre a lição aprendida — deu certo ou não.",
+      "Pergunte à liderança: o que faríamos diferente se fôssemos o concorrente?",
+    ],
+    metodo:
+      "No pilar Evolução Constante, a consultoria cria o hábito de questionar o próprio modelo de negócio, investir em capacitação contínua e tratar o erro como aprendizado, não como falha. O objetivo é uma empresa que se atualiza antes de ser obrigada pelo mercado.",
   },
 };
 

@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diagnóstico de Maturidade Empresarial Gratuito | Empresarial Academy</title>
-<meta name="description" content="Avaliação gratuita: descubra em poucos minutos o nível de maturidade da sua empresa em Comercial, Operações, Indicadores, Liderança e Financeiro — com plano de ação personalizado.">
+<meta name="description" content="Avaliação gratuita: descubra em poucos minutos o nível de maturidade da sua empresa nos 6 pilares do método Gestão 360 — com plano de ação personalizado.">
 <link rel="canonical" href="https://empresarialacademy.com/diagnostico-maturidade-empresarial.html">
 <link rel="icon" href="/icon.png">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Empresarial Academy">
 <meta property="og:title" content="Diagnóstico de Maturidade Empresarial Gratuito">
-<meta property="og:description" content="30 perguntas, resultado na hora: pontuação por pilar (Comercial, Operações, Indicadores, Liderança, Financeiro) e plano de melhoria com ações e prazos.">
+<meta property="og:description" content="36 perguntas, resultado na hora: pontuação pelos 6 pilares do método Gestão 360 e plano de melhoria com ações e prazos.">
 <meta property="og:url" content="https://empresarialacademy.com/diagnostico-maturidade-empresarial.html">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
@@ -21,7 +21,7 @@
   "name": "Diagnóstico de Maturidade Empresarial",
   "url": "https://empresarialacademy.com/diagnostico-maturidade-empresarial.html",
   "inLanguage": "pt-BR",
-  "description": "Avaliação gratuita e interativa da maturidade de gestão da empresa em 5 pilares: Comercial, Operações, Gestão de Indicadores, Liderança e Financeiro. 30 perguntas com resultado imediato e plano de melhoria.",
+  "description": "Avaliação gratuita e interativa da maturidade de gestão da empresa nos 6 pilares do método Gestão 360: Fluxo de Alta Performance, Arquitetura do Crescimento, Objetivos Estratégicos, Métricas de Sucesso, Gestão de Desafios e Evolução Constante. 36 perguntas com resultado imediato e plano de melhoria.",
   "isPartOf": { "@type": "WebSite", "name": "Empresarial Academy", "url": "https://empresarialacademy.com" },
   "provider": { "@type": "Organization", "name": "Empresarial Academy", "url": "https://empresarialacademy.com" },
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" }
@@ -487,7 +487,7 @@
   <br>
   <img src="/logo-empresarial-academy.png" alt="Empresarial Academy">
   <h1>Diagnóstico de Maturidade Empresarial</h1>
-  <p class="subtitle">Comercial · Operações · Gestão de Indicadores · Liderança · Financeiro</p>
+  <p class="subtitle">Fluxo de Alta Performance · Arquitetura do Crescimento · Objetivos Estratégicos · Métricas de Sucesso · Gestão de Desafios · Evolução Constante</p>
   <p class="slogan">Conhecimento que Impulsiona</p>
 </div>
 
@@ -495,7 +495,7 @@
 
   <div class="card gate-card" id="entryGate">
     <h2>Antes de começar: para onde enviamos o seu diagnóstico?</h2>
-    <p class="pillar-sub" style="margin-bottom:4px">30 perguntas rápidas, cerca de 8 minutos. Você vê o resultado completo — pontuação por pilar e plano de ação — assim que terminar.</p>
+    <p class="pillar-sub" style="margin-bottom:4px">36 perguntas rápidas, cerca de 10 minutos. Você vê o resultado completo — pontuação por pilar e plano de ação — assim que terminar.</p>
     <div class="promise">
       <span aria-hidden>⏱</span>
       <span>Mesmo que não termine agora, guardamos seu contato para você retomar depois — nada se perde.</span>
@@ -535,7 +535,7 @@
 
   <div class="card intro">
     <h2>Como funciona</h2>
-    <p>Em poucos minutos, você tem um retrato claro de como sua empresa está estruturada nas cinco áreas que mais pesam no crescimento: Comercial, Operações, Indicadores, Liderança e Financeiro. Responda com base na realidade atual — não no cenário ideal.</p>
+    <p>Em poucos minutos, você tem um retrato claro de como sua empresa está estruturada nos seis pilares do método Gestão 360: Fluxo de Alta Performance, Arquitetura do Crescimento, Objetivos Estratégicos, Métricas de Sucesso, Gestão de Desafios e Evolução Constante. Responda com base na realidade atual — não no cenário ideal.</p>
     <p>Ao final, você recebe a pontuação de cada área, o seu nível de maturidade e um plano de melhoria com ações, indicadores e prazos para aplicar na prática.</p>
     <p style="font-size:13.5px;color:var(--gray);margin-top:14px"><strong style="color:var(--navy)">Você vê o resultado agora mesmo, na tela.</strong> Se quiser, nossa equipe entra em contato em até 2 dias úteis para uma leitura estratégica do que encontramos.</p>
     <div class="legend" id="legend"></div>
@@ -665,68 +665,81 @@ const SCALE = [
 
 const PILLARS = [
   {
-    id:"comercial",
-    name:"Comercial",
-    color:"#C1A160",
-    questions:[
-      "Existe um processo de vendas formalizado e documentado, com etapas claras do funil?",
-      "A empresa possui metas de vendas claras, desdobradas por período e por vendedor?",
-      "Há um CRM ou ferramenta estruturada para gestão de leads e oportunidades?",
-      "O time comercial segue um script ou playbook de abordagem e negociação?",
-      "Existe acompanhamento da taxa de conversão em cada etapa do funil de vendas?",
-      "A empresa possui um plano de marketing e geração de demanda estruturado?"
-    ]
-  },
-  {
-    id:"operacoes",
-    name:"Operações",
+    id:"fluxo",
+    name:"Fluxo de Alta Performance",
     color:"#1D2B3C",
     questions:[
-      "Os processos operacionais estão mapeados e documentados (fluxogramas, SOPs)?",
-      "Há padronização na execução das atividades-chave, garantindo qualidade consistente?",
-      "Existe controle de capacidade operacional e gestão da demanda?",
-      "A empresa utiliza sistemas/ferramentas de gestão de processos (ERP ou similar)?",
-      "Existem rotinas estruturadas de melhoria contínua (PDCA, Kaizen, revisões periódicas)?",
-      "Prazos e níveis de serviço (SLAs) são monitorados e cumpridos de forma consistente?"
+      "Os processos-chave da empresa estão mapeados e documentados (ex.: do início ao fim de uma venda ou entrega), não só na cabeça de quem executa?",
+      "No dia a dia, a empresa segue uma rotina planejada, ou o normal é apagar incêndio e resolver o que aparece na hora?",
+      "Existem alçadas de decisão definidas — o time sabe o que pode decidir sozinho, sem precisar acionar o dono?",
+      "Quando um gargalo trava a operação, a empresa identifica a causa e ataca ela, ou o problema só muda de lugar?",
+      "Existe um ciclo de melhoria contínua rodando nos processos (revisar, ajustar, testar de novo)?",
+      "A empresa identifica e reduz desperdícios operacionais (retrabalho, espera, tarefa duplicada), ou eles são tratados como normais?"
     ]
   },
   {
-    id:"indicadores",
-    name:"Gestão de Indicadores",
-    color:"#2E7D5B",
-    questions:[
-      "A empresa possui um painel de indicadores (KPIs) definido e atualizado regularmente?",
-      "Os indicadores estão conectados aos objetivos estratégicos do negócio?",
-      "Há reuniões periódicas de acompanhamento de resultados com base em dados?",
-      "As decisões de gestão são tomadas com base em dados, não apenas em percepção?",
-      "Existem metas claras (atual → meta) definidas para os principais indicadores?",
-      "Os dados utilizados são confiáveis, atualizados e de fácil acesso para quem decide?"
-    ]
-  },
-  {
-    id:"lideranca",
-    name:"Liderança",
+    id:"arquitetura",
+    name:"Arquitetura do Crescimento",
     color:"#6B7280",
     questions:[
-      "Existe um organograma claro, com papéis e responsabilidades bem definidos?",
-      "Os líderes recebem treinamento e desenvolvimento de gestão de forma contínua?",
-      "Há um processo estruturado de delegação e desenvolvimento de pessoas?",
-      "A empresa realiza avaliação de desempenho e feedback estruturado com a equipe?",
-      "Existe plano de sucessão ou desenvolvimento de novas lideranças internas?",
-      "As lideranças comunicam visão, metas e prioridades de forma clara para o time?"
+      "Existe um organograma funcional com papéis e responsabilidades claros, ou \"todo mundo faz um pouco de tudo\"?",
+      "O recrutamento segue um processo estruturado (critérios definidos, roteiro de entrevista), ou depende de indicação e feeling?",
+      "Existem rituais regulares de 1:1 entre líderes e liderados, com pauta e frequência definidas?",
+      "A empresa tem cultura de feedback direto e construtivo, ou o problema fica guardado até explodir?",
+      "Existe alguma forma de avaliar desempenho e potencial da equipe, para orientar decisões de carreira?",
+      "Quando uma decisão de gestão de pessoas é difícil (ex.: desligamento, promoção), a cultura \"somos uma família\" trava a decisão, ou a empresa decide com profissionalismo?"
     ]
   },
   {
-    id:"financeiro",
-    name:"Financeiro",
+    id:"estrategia",
+    name:"Objetivos Estratégicos",
+    color:"#C1A160",
+    questions:[
+      "Existe uma análise estratégica formal do negócio (forças, fraquezas, oportunidades, ameaças), revisada periodicamente?",
+      "As metas da empresa têm formato claro de objetivo + resultado-chave, com prazo definido, ou são intenções vagas?",
+      "A estratégia da empresa está desdobrada em metas por área e por pessoa, ou só existe na cabeça do dono?",
+      "A empresa sabe dizer não a oportunidades fora do foco estratégico, ou entra em tudo que aparece?",
+      "Existem rituais de acompanhamento do progresso das metas (reunião de status, sinalização de risco), com frequência definida?",
+      "O time consegue repetir os objetivos estratégicos da empresa, ou cada área trabalha numa direção diferente?"
+    ]
+  },
+  {
+    id:"metricas",
+    name:"Métricas de Sucesso",
     color:"#2E7D5B",
     questions:[
-      "A empresa tem fluxo de caixa projetado e atualizado, não só o saldo do banco?",
-      "Existe separação clara entre o dinheiro da empresa e o dinheiro dos sócios?",
-      "Você sabe, produto a produto ou serviço a serviço, qual dá lucro de verdade e qual só gera faturamento?",
-      "Existe um orçamento anual formal, comparado com o realizado pelo menos uma vez por mês?",
-      "A precificação é calculada com base em custo e margem — não só copiada do concorrente?",
-      "Há uma reserva ou linha de crédito estruturada para os meses de sazonalidade mais fraca?"
+      "As decisões da empresa se baseiam mais em métricas de sanidade (margem líquida, fluxo de caixa, retenção) do que em métricas de vaidade (faturamento bruto, seguidores)?",
+      "Existe um painel com os indicadores-chave do negócio, atualizado e acessível para quem decide, ou os números estão espalhados em planilhas soltas?",
+      "A empresa acompanha separadamente o resultado (DRE) e a liquidez (fluxo de caixa), ou só olha o saldo da conta?",
+      "A empresa sabe onde concentrar esforço (produtos, clientes ou custos que mais pesam), usando algum tipo de análise de concentração (regra 80/20)?",
+      "Quando um problema se repete, a empresa investiga a causa raiz, ou trata o sintoma de novo a cada vez?",
+      "Existe rotina de reunião com números na mesa (gestão à vista) para decisão coletiva baseada em dado, não em opinião?"
+    ]
+  },
+  {
+    id:"desafios",
+    name:"Gestão de Desafios",
+    color:"#B23B3B",
+    questions:[
+      "A empresa mapeia riscos (o que pode dar errado e o tamanho do impacto) antes que eles virem crise, ou só reage quando o problema já explodiu?",
+      "Existe uma reserva financeira (fundo de reserva) para enfrentar um imprevisto sério sem desespero?",
+      "Em uma situação grave, existe clareza de quem decide o quê, ou todo mundo corre sem direção?",
+      "Existe um plano de comunicação para momentos de crise (com equipe, clientes, fornecedores), ou a comunicação é improvisada na hora?",
+      "O dono consegue diferenciar um problema do dia a dia de uma crise real, respondendo de forma proporcional — ou tudo é tratado como incêndio?",
+      "Depois de um problema grande, a empresa ajusta o processo para não repetir, ou o mesmo tipo de crise volta a acontecer?"
+    ]
+  },
+  {
+    id:"evolucao",
+    name:"Evolução Constante",
+    color:"#2E6B8C",
+    questions:[
+      "A empresa investe tempo ou recurso em inovação além de manter a operação rodando?",
+      "Existe o hábito de questionar o próprio modelo de negócio antes que a concorrência ou uma nova tecnologia o torne ultrapassado?",
+      "Existe investimento contínuo em capacitação da equipe, ou o treinamento acontece só na entrada da pessoa e depois para?",
+      "A empresa tem espaço para testar, errar e aprender rápido, ou o erro é escondido ou punido?",
+      "Existe algum processo interno de questionar as próprias decisões antes que o mercado ou o cliente questione primeiro?",
+      "A empresa acompanha tendências e tecnologia do setor de forma ativa, ou só percebe a mudança quando o impacto já chegou?"
     ]
   }
 ];
@@ -740,188 +753,225 @@ function levelInfo(pct){
 }
 
 const RECS = {
-  comercial:{
+  fluxo:{
     "Inicial":{
-      finding:"O processo comercial depende do esforço individual de cada vendedor, sem padrão, metas claras ou controle de funil.",
-      action:"Desenhe um processo de vendas com etapas definidas (prospecção, qualificação, proposta, fechamento) e implante metas individuais mensais.",
-      kpi:"Taxa de conversão geral do funil (atual → meta de +10 p.p. em 90 dias)",
-      owner:"Diretor(a) Comercial / Sócio responsável",
-      deadline:"30 dias"
-    },
-    "Em Desenvolvimento":{
-      finding:"Existem metas e alguma rotina comercial, mas sem ferramenta de CRM ou script padronizado de abordagem.",
-      action:"Implante um CRM simples para registrar leads e oportunidades, e crie um playbook de abordagem e objeções.",
-      kpi:"% de oportunidades registradas em CRM (meta: 100%)",
-      owner:"Coordenador(a) Comercial",
-      deadline:"45 dias"
-    },
-    "Estruturado":{
-      finding:"O time já usa CRM e segue um processo, mas o acompanhamento de conversão por etapa ainda é manual ou esporádico.",
-      action:"Implante relatório semanal de conversão por etapa do funil e revise o playbook com base nos gargalos identificados.",
-      kpi:"Taxa de conversão por etapa do funil (revisão quinzenal)",
-      owner:"Coordenador(a) Comercial",
-      deadline:"60 dias"
-    },
-    "Avançado":{
-      finding:"O processo comercial é estruturado e monitorado, com oportunidade de evoluir a geração de demanda e o marketing integrado.",
-      action:"Estruture um plano de marketing e geração de leads alinhado às metas comerciais, com previsibilidade de pipeline.",
-      kpi:"Custo de aquisição por cliente (CAC) e volume de leads qualificados/mês",
-      owner:"Diretor(a) Comercial / Marketing",
-      deadline:"90 dias"
-    },
-    "Referência":{
-      finding:"O pilar comercial é referência: processo, metas, CRM e marketing operam de forma integrada e previsível.",
-      action:"Foque em previsibilidade de receita (forecast) e expansão de novos canais ou mercados.",
-      kpi:"Acurácia do forecast de vendas (meta: desvio < 10%)",
-      owner:"Diretor(a) Comercial",
-      deadline:"Contínuo"
-    }
-  },
-  operacoes:{
-    "Inicial":{
-      finding:"Os processos operacionais não estão documentados e a execução varia de pessoa para pessoa.",
-      action:"Mapeie os processos-chave em fluxogramas simples (SOPs) e defina o padrão mínimo de execução.",
-      kpi:"% de processos críticos documentados (meta: 100% em 60 dias)",
-      owner:"Gerente de Operações",
-      deadline:"30 dias"
-    },
-    "Em Desenvolvimento":{
-      finding:"Há alguma padronização, mas falta controle de capacidade e ferramentas de gestão de processos.",
-      action:"Implante um sistema de gestão (ERP ou planilha estruturada) para controlar capacidade, demanda e prazos.",
-      kpi:"% de pedidos/entregas dentro do prazo (SLA)",
-      owner:"Gerente de Operações",
-      deadline:"45 dias"
-    },
-    "Estruturado":{
-      finding:"Processos e sistema de gestão existem, mas a melhoria contínua ainda não é uma rotina formal.",
-      action:"Implante reuniões periódicas de revisão de processo (PDCA) com plano de ação para os principais gargalos.",
-      kpi:"Número de melhorias implementadas por trimestre",
-      owner:"Gerente de Operações",
-      deadline:"60 dias"
-    },
-    "Avançado":{
-      finding:"A operação é monitorada e cumpre SLAs, com espaço para aprofundar a cultura de melhoria contínua.",
-      action:"Forme um comitê de melhoria contínua e estabeleça metas progressivas de eficiência operacional.",
-      kpi:"Índice de eficiência operacional (custo/unidade produzida ou entregue)",
-      owner:"Diretor(a) de Operações",
-      deadline:"90 dias"
-    },
-    "Referência":{
-      finding:"A operação é padronizada, monitorada e melhora continuamente — referência de eficiência.",
-      action:"Direcione esforços para escalabilidade: replicar o padrão operacional em novas unidades, equipes ou produtos.",
-      kpi:"Capacidade operacional disponível vs. utilizada",
-      owner:"Diretor(a) de Operações",
-      deadline:"Contínuo"
-    }
-  },
-  indicadores:{
-    "Inicial":{
-      finding:"A gestão é baseada em percepção, sem indicadores definidos ou rotina de acompanhamento de dados.",
-      action:"Defina de 5 a 8 KPIs essenciais para o negócio (financeiro, comercial, operacional) e estruture um painel simples.",
-      kpi:"Número de KPIs essenciais definidos e ativos (meta: mínimo 5)",
+      finding:"A operação depende da memória e do esforço individual de quem executa — sem processo documentado, o dia a dia é definido por quem está apagando o incêndio da vez.",
+      action:"Mapeie os 3 processos que mais geram dor hoje (ex.: do primeiro contato até a entrega) em um fluxograma simples, e defina o passo a passo mínimo de cada um.",
+      kpi:"Número de processos-chave documentados (meta: 3 em 30 dias)",
       owner:"Sócio(a) / Diretor(a) Geral",
       deadline:"30 dias"
     },
     "Em Desenvolvimento":{
-      finding:"Existem alguns indicadores, mas sem conexão clara com os objetivos estratégicos nem metas definidas.",
-      action:"Conecte cada KPI a um objetivo estratégico e defina metas no formato atual → meta para cada um.",
-      kpi:"% de KPIs com meta formal definida (meta: 100%)",
-      owner:"Diretor(a) Geral",
+      finding:"Alguns processos já estão no papel, mas a rotina segue reativa — o time resolve o que aparece, sem alçada clara de decisão.",
+      action:"Defina alçadas simples (o que cada função pode decidir sem escalar) para os processos já mapeados, e comunique por escrito.",
+      kpi:"% de decisões operacionais resolvidas sem escalar ao dono (meta: subir 30 p.p.)",
+      owner:"Diretor(a) de Operações",
       deadline:"45 dias"
     },
     "Estruturado":{
-      finding:"O painel de indicadores existe e tem metas, mas as reuniões de acompanhamento ainda não são uma rotina consistente.",
-      action:"Implante reunião quinzenal ou mensal de acompanhamento de resultados (Reunião de Gestão de Indicadores).",
-      kpi:"% de presença e cumprimento da agenda de reuniões de indicadores",
-      owner:"Diretor(a) Geral",
+      finding:"Processos e alçadas já existem, mas o mesmo gargalo aparece com frequência sem que a causa seja atacada de fato.",
+      action:"Aplique uma rodada de análise de gargalo (Teoria das Restrições): identifique a única restrição que mais limita o fluxo hoje e concentre o esforço nela.",
+      kpi:"Tempo de ciclo do processo mais crítico (meta: redução de 20%)",
+      owner:"Diretor(a) de Operações",
       deadline:"60 dias"
     },
     "Avançado":{
-      finding:"Os indicadores guiam a tomada de decisão, com espaço para aumentar a confiabilidade e a velocidade de acesso aos dados.",
-      action:"Automatize a coleta e atualização dos dados (dashboard em tempo real) para reduzir retrabalho manual.",
-      kpi:"Tempo médio de atualização do painel de indicadores",
-      owner:"Diretor(a) Geral / TI",
+      finding:"A operação já ataca gargalos e segue rotina planejada, com espaço para tornar a melhoria contínua um hábito formal, não uma ação pontual.",
+      action:"Implante um ciclo PDCA (planejar-fazer-checar-agir) recorrente para os processos críticos, com revisão mensal.",
+      kpi:"Número de ciclos de melhoria concluídos por trimestre",
+      owner:"Diretor(a) de Operações",
       deadline:"90 dias"
     },
     "Referência":{
-      finding:"A gestão por indicadores é madura: dados confiáveis, metas claras e decisões orientadas por dados.",
-      action:"Avance para indicadores preditivos e benchmarking externo de mercado.",
-      kpi:"% de metas estratégicas atingidas no período",
+      finding:"O fluxo operacional é referência: processos claros, alçadas respeitadas, gargalo sob controle e melhoria contínua rodando.",
+      action:"Direcione o próximo ciclo para eliminar desperdício residual (retrabalho, espera, tarefa duplicada) e elevar a capacidade sem aumentar custo fixo.",
+      kpi:"Índice de desperdício operacional (retrabalho/hora trabalhada)",
       owner:"Diretor(a) Geral",
       deadline:"Contínuo"
     }
   },
-  lideranca:{
+  arquitetura:{
     "Inicial":{
-      finding:"Papéis e responsabilidades não estão claros, e a liderança ainda não tem desenvolvimento estruturado.",
-      action:"Construa um organograma claro com papéis e responsabilidades, e inicie um plano básico de capacitação de líderes.",
-      kpi:"% de cargos de liderança com papel e responsabilidade documentados",
+      finding:"Não existe organograma nem critério de contratação — as pessoas acumulam funções conforme a necessidade do momento, sem clareza de papel.",
+      action:"Desenhe um organograma funcional simples com os papéis que existem hoje (mesmo que uma pessoa ocupe mais de um) e defina o principal responsável por cada área.",
+      kpi:"% de funções com responsável único definido (meta: 100%)",
       owner:"Sócio(a) / Diretor(a) Geral",
       deadline:"30 dias"
     },
     "Em Desenvolvimento":{
-      finding:"A estrutura de papéis existe, mas falta processo formal de delegação e desenvolvimento de pessoas.",
-      action:"Implante um processo de delegação com acompanhamento (1:1s periódicos) e plano individual de desenvolvimento.",
-      kpi:"% de líderes com plano de desenvolvimento ativo",
+      finding:"O organograma existe, mas a contratação ainda é no feeling e não há rotina de conversa individual com o time.",
+      action:"Defina um roteiro mínimo de entrevista (critérios de habilidade técnica e comportamental) e implante 1:1 mensal com cada liderado direto.",
+      kpi:"% de contratações usando o roteiro padrão (meta: 100%)",
       owner:"RH / Diretor(a) Geral",
       deadline:"45 dias"
     },
     "Estruturado":{
-      finding:"Há rotina de delegação e desenvolvimento, mas a avaliação de desempenho ainda não é formal e periódica.",
-      action:"Implante ciclo de avaliação de desempenho e feedback estruturado (ao menos semestral).",
-      kpi:"% de colaboradores avaliados no ciclo (meta: 100%)",
+      finding:"Recrutamento e 1:1s já rodam, mas o feedback ainda é informal e não há avaliação de desempenho.",
+      action:"Implante um ciclo simples de avaliação de desempenho (ao menos semestral) com feedback estruturado, documentado por escrito.",
+      kpi:"% de colaboradores com avaliação registrada (meta: 100%)",
       owner:"RH",
       deadline:"60 dias"
     },
     "Avançado":{
-      finding:"A liderança é avaliada e desenvolvida continuamente, com oportunidade de estruturar a sucessão.",
-      action:"Mapeie posições críticas e defina um plano de sucessão para as principais lideranças da empresa.",
-      kpi:"% de posições críticas com sucessor mapeado",
+      finding:"A gestão de pessoas já é estruturada, com espaço para usar a avaliação de desempenho em decisões de carreira (promoção, plano de desenvolvimento).",
+      action:"Cruze desempenho e potencial de cada pessoa-chave (matriz simples) para orientar decisões de promoção, plano de desenvolvimento ou desligamento.",
+      kpi:"% de posições-chave com plano de sucessão ou desenvolvimento definido",
       owner:"Diretor(a) Geral / RH",
       deadline:"90 dias"
     },
     "Referência":{
-      finding:"A liderança é madura, comunica visão com clareza e desenvolve continuamente novos líderes.",
-      action:"Invista em formação de liderança de próximo nível e cultura de autonomia com responsabilidade.",
-      kpi:"Índice de engajamento/clima organizacional",
+      finding:"A arquitetura de crescimento é madura: papéis claros, recrutamento estruturado, feedback contínuo e decisões de pessoas tomadas com critério, não só afeto.",
+      action:"Formalize um plano de sucessão para as posições mais críticas e invista em formação de novas lideranças internas.",
+      kpi:"% de posições críticas com sucessor mapeado internamente",
       owner:"Diretor(a) Geral",
       deadline:"Contínuo"
     }
   },
-  financeiro:{
+  estrategia:{
     "Inicial":{
-      finding:"Não há fluxo de caixa projetado nem separação entre o dinheiro da empresa e o dos sócios — a gestão financeira é o saldo do banco.",
-      action:"Separe as contas de empresa e sócio, e monte um fluxo de caixa simples (entradas e saídas) projetado para as próximas 4 semanas.",
-      kpi:"Fluxo de caixa projetado atualizado semanalmente (meta: 100% das semanas)",
-      owner:"Sócio(a) / Diretor(a) Financeiro",
+      finding:"A estratégia existe só na cabeça do dono — não há análise formal do negócio nem metas documentadas.",
+      action:"Faça uma análise simples de forças, fraquezas, oportunidades e ameaças do negócio, e escreva os 3 objetivos mais importantes para os próximos 90 dias.",
+      kpi:"Objetivos estratégicos documentados e comunicados ao time (meta: 3, em 30 dias)",
+      owner:"Sócio(a) / Diretor(a) Geral",
       deadline:"30 dias"
     },
     "Em Desenvolvimento":{
-      finding:"Existe algum controle de caixa, mas falta saber qual produto ou serviço realmente dá lucro.",
-      action:"Calcule a margem de contribuição dos principais produtos ou serviços e pare de precificar só olhando o concorrente.",
-      kpi:"% do faturamento com margem de contribuição calculada (meta: 100%)",
-      owner:"Sócio(a) / Diretor(a) Financeiro",
+      finding:"Os objetivos já estão escritos, mas não estão desdobrados em metas por área — cada time não sabe sua parte no resultado.",
+      action:"Desdobre cada objetivo em metas de área, no formato objetivo + resultado-chave, com prazo.",
+      kpi:"% de áreas com meta própria desdobrada do objetivo geral (meta: 100%)",
+      owner:"Diretor(a) Geral",
       deadline:"45 dias"
     },
     "Estruturado":{
-      finding:"O fluxo de caixa e a margem por produto já existem, mas o orçamento anual não é comparado com o realizado.",
-      action:"Monte o orçamento do próximo ciclo e implante a comparação orçado x realizado todo mês.",
-      kpi:"Desvio entre orçado e realizado (revisão mensal)",
-      owner:"Diretor(a) Financeiro",
+      finding:"Metas por área já existem, mas o acompanhamento é esporádico — ninguém sabe, no meio do caminho, se está no prumo.",
+      action:"Implante um ritual quinzenal de acompanhamento com sinalização simples de status (no prazo, em risco, atrasado) por meta.",
+      kpi:"% de metas com status atualizado a cada ciclo (meta: 100%)",
+      owner:"Diretor(a) Geral",
       deadline:"60 dias"
     },
     "Avançado":{
-      finding:"O financeiro é acompanhado com disciplina, com oportunidade de estruturar reserva para sazonalidade.",
-      action:"Defina o valor-alvo de reserva de caixa (meses de despesa fixa) e monte um plano de acúmulo até lá.",
-      kpi:"Meses de despesa fixa cobertos pela reserva",
-      owner:"Diretor(a) Financeiro / Sócio(a)",
+      finding:"O acompanhamento já é rotina, com espaço para fortalecer a disciplina de foco — dizer não ao que não serve à estratégia.",
+      action:"Formalize um critério de priorização (o que entra e o que não entra na agenda) e use-o para recusar iniciativas fora do foco.",
+      kpi:"% de novas iniciativas avaliadas pelo critério antes de entrar na agenda",
+      owner:"Diretor(a) Geral",
       deadline:"90 dias"
     },
     "Referência":{
-      finding:"A gestão financeira é madura: caixa projetado, margem conhecida por produto, orçamento comparado e reserva estruturada.",
-      action:"Avance para indicadores de rentabilidade por linha de negócio e cenários de investimento.",
-      kpi:"ROI por linha de negócio ou produto",
+      finding:"A estratégia é madura: objetivos claros, desdobrados, acompanhados e o time inteiro rema na mesma direção.",
+      action:"Avance para o desdobramento de longo prazo (12-24 meses) e revise o posicionamento competitivo com base no que já foi validado.",
+      kpi:"% de objetivos estratégicos atingidos no ciclo",
+      owner:"Diretor(a) Geral",
+      deadline:"Contínuo"
+    }
+  },
+  metricas:{
+    "Inicial":{
+      finding:"As decisões giram em torno de faturamento bruto e percepção — não há painel de indicadores nem separação entre resultado e caixa.",
+      action:"Defina de 5 a 8 métricas de sanidade (margem, caixa, retenção, ticket médio) e monte um painel simples, mesmo que em planilha.",
+      kpi:"Número de métricas de sanidade definidas e ativas (meta: mínimo 5)",
+      owner:"Sócio(a) / Diretor(a) Geral",
+      deadline:"30 dias"
+    },
+    "Em Desenvolvimento":{
+      finding:"O painel existe, mas resultado (DRE) e fluxo de caixa ainda são olhados juntos, misturando lucro com dinheiro em conta.",
+      action:"Separe o acompanhamento de DRE e fluxo de caixa, com atualização pelo menos mensal de cada um.",
+      kpi:"DRE e fluxo de caixa atualizados todo mês (meta: 100% dos meses)",
       owner:"Diretor(a) Financeiro",
+      deadline:"45 dias"
+    },
+    "Estruturado":{
+      finding:"DRE e caixa já estão separados e monitorados, mas a empresa ainda não sabe onde concentrar esforço com precisão.",
+      action:"Aplique uma análise de concentração (regra 80/20) em clientes, produtos ou custos, e direcione o esforço para o que mais pesa no resultado.",
+      kpi:"% do faturamento/custo mapeado por análise de concentração",
+      owner:"Diretor(a) Financeiro / Comercial",
+      deadline:"60 dias"
+    },
+    "Avançado":{
+      finding:"A empresa já decide com dado e sabe onde concentrar esforço, com espaço para formalizar a investigação de causa raiz dos problemas recorrentes.",
+      action:"Implante uma rotina de investigação de causa raiz (ex.: diagrama de causa e efeito) para os 2-3 problemas mais recorrentes do negócio.",
+      kpi:"Número de problemas recorrentes com causa raiz identificada e tratada",
+      owner:"Diretor(a) Geral",
+      deadline:"90 dias"
+    },
+    "Referência":{
+      finding:"A gestão por métricas é madura: sanidade acima de vaidade, painel confiável, causa raiz tratada e reunião de gestão à vista rodando.",
+      action:"Avance para métricas preditivas (o que vai acontecer, não só o que já aconteceu) e benchmarking externo de mercado.",
+      kpi:"% de decisões relevantes tomadas com dado documentado",
+      owner:"Diretor(a) Geral",
+      deadline:"Contínuo"
+    }
+  },
+  desafios:{
+    "Inicial":{
+      finding:"Não há mapeamento de risco nem reserva financeira — cada imprevisto pega a empresa de surpresa e o caixa sente na hora.",
+      action:"Liste os 5 principais riscos do negócio (o que pode dar errado) e comece a separar mensalmente um valor para reserva de emergência.",
+      kpi:"Riscos mapeados (meta: 5) e início de reserva (meta: 1º depósito em 30 dias)",
+      owner:"Sócio(a) / Diretor(a) Geral",
+      deadline:"30 dias"
+    },
+    "Em Desenvolvimento":{
+      finding:"Os riscos já estão listados e a reserva começou, mas não há clareza de quem decide o quê numa situação grave.",
+      action:"Defina por escrito quem decide o quê em uma crise (financeira, operacional, de imagem) — mesmo que seja só você e um sócio.",
+      kpi:"Protocolo de decisão em crise documentado (sim/não)",
+      owner:"Sócio(a) / Diretor(a) Geral",
+      deadline:"45 dias"
+    },
+    "Estruturado":{
+      finding:"Já existe protocolo de decisão, mas falta um plano de comunicação para crise — hoje se improvisa a mensagem na hora.",
+      action:"Escreva um roteiro básico de comunicação para os cenários de crise mais prováveis (com equipe, clientes e fornecedores).",
+      kpi:"Roteiros de comunicação de crise prontos (meta: 3 cenários principais)",
+      owner:"Diretor(a) Geral",
+      deadline:"60 dias"
+    },
+    "Avançado":{
+      finding:"A empresa já responde a crises com protocolo e comunicação, com espaço para aprender de forma sistemática após cada episódio.",
+      action:"Implante uma revisão pós-crise (o que funcionou, o que não funcionou, o que muda) depois de qualquer problema sério.",
+      kpi:"% de crises com revisão pós-evento documentada",
+      owner:"Diretor(a) Geral",
+      deadline:"90 dias"
+    },
+    "Referência":{
+      finding:"A gestão de desafios é madura: risco mapeado, reserva estruturada, protocolo claro e aprendizado sistemático após cada crise.",
+      action:"Avance para simulações preventivas (testar o protocolo antes que a crise real aconteça) com a liderança.",
+      kpi:"Número de simulações de crise realizadas por ano",
+      owner:"Diretor(a) Geral",
+      deadline:"Contínuo"
+    }
+  },
+  evolucao:{
+    "Inicial":{
+      finding:"Todo o tempo e recurso vão para manter a operação rodando — não sobra espaço para pensar no que vem depois, e o erro é evitado a qualquer custo.",
+      action:"Reserve um tempo fixo mensal (mesmo que poucas horas) só para pensar em melhorias e novidades, fora da operação do dia a dia.",
+      kpi:"Horas mensais dedicadas a inovação/melhoria (meta: mínimo definido e cumprido)",
+      owner:"Sócio(a) / Diretor(a) Geral",
+      deadline:"30 dias"
+    },
+    "Em Desenvolvimento":{
+      finding:"Já existe algum tempo dedicado a pensar no futuro, mas a capacitação da equipe para no onboarding.",
+      action:"Monte um plano simples de capacitação contínua para o time (mesmo que com conteúdo gratuito ou interno), com cadência definida.",
+      kpi:"% da equipe com pelo menos 1 capacitação no trimestre",
+      owner:"RH / Diretor(a) Geral",
+      deadline:"45 dias"
+    },
+    "Estruturado":{
+      finding:"Capacitação e tempo para inovar já existem, mas o erro ainda é mal recebido — isso trava o time de testar coisas novas.",
+      action:"Crie um ritual simples de \"lição aprendida\" após qualquer teste ou projeto (deu certo ou não), sem punição pelo erro em si.",
+      kpi:"Número de testes/projetos com lição aprendida documentada",
+      owner:"Diretor(a) Geral",
+      deadline:"60 dias"
+    },
+    "Avançado":{
+      finding:"A empresa já testa, aprende e capacita continuamente, com espaço para formalizar a checagem crítica das próprias decisões.",
+      action:"Implante uma rodada trimestral de questionamento interno (o que faríamos diferente se fôssemos concorrente) com a liderança.",
+      kpi:"Rodadas de questionamento interno realizadas por ano",
+      owner:"Diretor(a) Geral",
+      deadline:"90 dias"
+    },
+    "Referência":{
+      finding:"A evolução é constante e madura: inovação com tempo dedicado, equipe capacitada, erro tratado como aprendizado e leitura ativa de tendência.",
+      action:"Avance para testar novos modelos de negócio ou canais em paralelo à operação principal, sem comprometer o caixa.",
+      kpi:"Número de iniciativas de inovação testadas por ano",
+      owner:"Diretor(a) Geral",
       deadline:"Contínuo"
     }
   }

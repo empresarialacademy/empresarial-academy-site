@@ -45,29 +45,45 @@ const paraQuem = [
   "Você já pensou em contratar um braço direito ou estruturar uma diretoria, mas não sabe por onde começar.",
 ];
 
+/** As mesmas 6 áreas/ícones de `content.ts` (`pilares`), só que com sintoma
+ * (framing de dor) em vez de descrição — mantém os nomes idênticos ao resto
+ * do site (diagnóstico, home, llms.txt) de propósito. */
 const pilares = [
   {
-    icon: "chart",
-    area: "Comercial",
+    icon: "target",
+    area: "Fluxo de Alta Performance",
     sintoma:
-      "Vendas sem processo: cada mês é uma surpresa, o resultado não se repete.",
+      "O dia a dia é apagar incêndio — sem processo no papel, tudo depende de quem está por perto.",
   },
   {
-    icon: "tools",
-    area: "Operações",
+    icon: "building",
+    area: "Arquitetura do Crescimento",
     sintoma:
-      "Processos na cabeça das pessoas, não no papel — retrabalho e dependência.",
+      "Ninguém sabe exatamente quem decide o quê — a estrutura cresceu no impulso, não com propósito.",
+  },
+  {
+    icon: "compass",
+    area: "Objetivos Estratégicos",
+    sintoma:
+      "A visão existe só na cabeça do dono — o time trabalha duro, mas em direções diferentes.",
   },
   {
     icon: "trending-up",
-    area: "Indicadores",
+    area: "Métricas de Sucesso",
     sintoma:
-      "Decisões no escuro, sem número que mostre para onde o negócio vai.",
+      "Faturamento sobe e o dono não sabe dizer se a empresa está saudável de verdade.",
   },
   {
-    icon: "users",
-    area: "Liderança",
-    sintoma: "Time que não assume, porque tudo ainda depende do dono.",
+    icon: "tools",
+    area: "Gestão de Desafios",
+    sintoma:
+      "Todo imprevisto vira crise — sem plano, sem reserva, sem saber quem decide.",
+  },
+  {
+    icon: "rocket",
+    area: "Evolução Constante",
+    sintoma:
+      "A empresa só mantém o que já funciona — sem tempo ou hábito de repensar o próprio negócio.",
   },
 ];
 
@@ -94,9 +110,9 @@ const credenciais = [
   "Ex-Telefônica VIVO",
   "Ex-Atento",
   "Ex-AllCom Telecom",
-  "MBA · FGV",
+  "MBA Gerenciamento de Projetos · FGV",
   "Green Belt · Lean Six Sigma",
-  "Certificação CX · WCES (Utah)",
+  "Dupla Certificação Internacional em Cientista da Experiência do Cliente · WCES (Utah)",
 ];
 
 function LogoBar() {
@@ -253,7 +269,8 @@ export function ConsultoriaLPTemplate({
               , sem passar pelo questionário.
             </p>
             <p className="mt-3 text-base text-white/60">
-              Sócio-proprietário de uma PME por 7 anos · MBA pela FGV · Green
+              Sócio-proprietário de uma PME por 7 anos · MBA em Gerenciamento
+              de Projetos pela FGV · Green
               Belt em Lean Six Sigma · 19 anos estruturando operações
               comerciais na Telefônica VIVO, Atento e Grupo Allcom
             </p>
@@ -304,7 +321,7 @@ export function ConsultoriaLPTemplate({
             title="Quando a empresa cresce sem estrutura, o dono vira o gargalo"
             align="center"
           />
-          <ul className="mt-12 grid gap-6 sm:grid-cols-2">
+          <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {pilares.map((p) => (
               <li
                 key={p.area}
@@ -546,7 +563,7 @@ export function ConsultoriaLPTemplate({
               <p className="mt-5 text-white/80">
                 Um dia de imersão com Thiago Marchi, presencial ou online, com
                 você e a sua liderança. Em vez do questionário, uma conversa
-                aprofundada sobre os cinco pilares do Gestão 360 — com
+                aprofundada sobre os seis pilares do Gestão 360 — com
                 relatório executivo, prioridades claras e um plano de 90 dias
                 que a sua empresa já pode começar a aplicar sozinha.
               </p>
@@ -602,7 +619,7 @@ export function ConsultoriaLPTemplate({
           />
           <p className="mx-auto mt-4 max-w-2xl text-gray">
             Faça o diagnóstico gratuito de maturidade e receba uma leitura
-            clara das cinco áreas do seu negócio, com um feedback gratuito e
+            clara das seis áreas do seu negócio, com um feedback gratuito e
             um plano de ação inicial para impulsionar o seu crescimento — sem
             custo e sem compromisso.
           </p>

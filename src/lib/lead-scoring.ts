@@ -6,11 +6,12 @@
  */
 
 export const PILLAR_NAMES = [
-  "Comercial",
-  "Operações",
-  "Gestão de Indicadores",
-  "Liderança",
-  "Financeiro",
+  "Fluxo de Alta Performance",
+  "Arquitetura do Crescimento",
+  "Objetivos Estratégicos",
+  "Métricas de Sucesso",
+  "Gestão de Desafios",
+  "Evolução Constante",
 ] as const;
 
 export type PillarName = (typeof PILLAR_NAMES)[number];

@@ -47,10 +47,12 @@ export const EmailSegments: CollectionConfig = {
       defaultValue: "any",
       options: [
         { label: "Qualquer pilar", value: "any" },
-        { label: "Comercial", value: "Comercial" },
-        { label: "Operações", value: "Operações" },
-        { label: "Gestão de Indicadores", value: "Gestão de Indicadores" },
-        { label: "Liderança", value: "Liderança" },
+        { label: "Fluxo de Alta Performance", value: "Fluxo de Alta Performance" },
+        { label: "Arquitetura do Crescimento", value: "Arquitetura do Crescimento" },
+        { label: "Objetivos Estratégicos", value: "Objetivos Estratégicos" },
+        { label: "Métricas de Sucesso", value: "Métricas de Sucesso" },
+        { label: "Gestão de Desafios", value: "Gestão de Desafios" },
+        { label: "Evolução Constante", value: "Evolução Constante" },
       ],
     },
     {

@@ -27,25 +27,28 @@ const LINE = "#d9dce1";
 
 /** Ordem oficial dos pilares do diagnóstico. */
 const PILLAR_KEYS = [
-  "Comercial",
-  "Operações",
-  "Gestão de Indicadores",
-  "Liderança",
-  "Financeiro",
+  "Fluxo de Alta Performance",
+  "Arquitetura do Crescimento",
+  "Objetivos Estratégicos",
+  "Métricas de Sucesso",
+  "Gestão de Desafios",
+  "Evolução Constante",
 ] as const;
 
 /** "Por onde começar" por pilar — tom direto, alinhado ao Gestão 360. */
 const PILLAR_TIP: Record<string, string> = {
-  Comercial:
-    "Estruture um funil de vendas com etapas claras e acompanhe as metas em um CRM. Previsibilidade em vendas vem de processo, não de esforço.",
-  Operações:
-    "Mapeie e padronize os processos que mais pesam na sua entrega. Operação que depende de heroísmo não escala.",
-  "Gestão de Indicadores":
-    "Escolha de 3 a 5 indicadores-chave e implante uma reunião mensal de resultados. O que não se mede, não se gerencia.",
-  Liderança:
-    "Comece a delegar com clareza de responsabilidades e a desenvolver seus líderes. Empresa que só anda com o dono trava no dono.",
-  Financeiro:
-    "Separe a conta da empresa da conta pessoal e monte um fluxo de caixa projetado. Faturar bem não é o mesmo que sobrar dinheiro no fim do mês.",
+  "Fluxo de Alta Performance":
+    "Mapeie o processo que mais gera dor hoje e defina alçadas de decisão claras. Operação que depende só de você não escala.",
+  "Arquitetura do Crescimento":
+    "Desenhe um organograma simples e implante 1:1 regulares com o time. Estrutura clara sustenta o crescimento — a falta dela trava.",
+  "Objetivos Estratégicos":
+    "Escreva os 3 objetivos mais importantes dos próximos 90 dias e desdobre em meta por área. Time sem foco comum trabalha duro e anda pouco.",
+  "Métricas de Sucesso":
+    "Troque métrica de vaidade por métrica de sanidade (margem, caixa, retenção) e separe resultado de saldo em caixa. O que não se mede direito, engana.",
+  "Gestão de Desafios":
+    "Mapeie os principais riscos do negócio e comece uma reserva de emergência. Empresa sem plano de crise decide no desespero.",
+  "Evolução Constante":
+    "Reserve tempo fixo para pensar no que vem depois da operação. Quem não questiona o próprio modelo é questionado pelo mercado primeiro.",
 };
 
 type Pillar = { name: string; pct: number; label: string };
@@ -117,7 +120,7 @@ function buildHtml(opts: {
     <p style="margin:0 0 12px;font-size:16px">Olá, ${esc(firstName)},</p>
     <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:${INK}">
       Obrigado por concluir o diagnóstico${empresaTxt}. Este é o retrato da sua
-      gestão hoje, nos cinco pilares que mais pesam no crescimento.
+      gestão hoje, nos seis pilares que mais pesam no crescimento.
     </p>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${NAVY};border-radius:12px;margin:0 0 22px">
