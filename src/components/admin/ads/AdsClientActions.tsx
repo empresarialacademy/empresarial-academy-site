@@ -46,6 +46,7 @@ export function SyncAdsButton() {
 export function AIForecastButton({ campaignId, campaignName }: { campaignId: string; campaignName: string }) {
   const [loading, setLoading] = useState(false);
   const [insight, setInsight] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const handleForecast = async () => {
     setLoading(true);
@@ -69,27 +70,60 @@ export function AIForecastButton({ campaignId, campaignName }: { campaignId: str
     }
   };
 
+  const handleCopy = async () => {
+    if (!insight) return;
+    try {
+      await navigator.clipboard.writeText(`Análise e Forecast: ${campaignName}\n\n${insight}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err: unknown) {
+      alert('Falha ao copiar: ' + (err instanceof Error ? err.message : String(err)));
+    }
+  };
+
   return (
     <div style={{ marginTop: '1rem', marginBottom: '1.5rem' }}>
-      <button
-        onClick={handleForecast}
-        disabled={loading}
-        style={{
-          padding: '10px 20px',
-          backgroundColor: '#9333ea', // Roxo IA
-          color: '#fff',
-          border: 'none',
-          borderRadius: 6,
-          cursor: loading ? 'wait' : 'pointer',
-          fontWeight: 'bold',
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '8px',
-          boxShadow: '0 4px 6px -1px rgba(147, 51, 234, 0.4)',
-        }}
-      >
-        {loading ? '🪄 A IA está analisando...' : '🪄 Gerar Forecast com IA'}
-      </button>
+      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+        <button
+          onClick={handleForecast}
+          disabled={loading}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#9333ea', // Roxo IA
+            color: '#fff',
+            border: 'none',
+            borderRadius: 6,
+            cursor: loading ? 'wait' : 'pointer',
+            fontWeight: 'bold',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            boxShadow: '0 4px 6px -1px rgba(147, 51, 234, 0.4)',
+          }}
+        >
+          {loading ? '🪄 A IA está analisando...' : '🪄 Gerar Forecast com IA'}
+        </button>
+
+        <button
+          onClick={handleCopy}
+          disabled={!insight}
+          title={insight ? 'Copiar dados da análise' : 'Gere um forecast primeiro'}
+          style={{
+            padding: '10px 16px',
+            backgroundColor: '#fff',
+            color: insight ? '#9333ea' : '#aaa',
+            border: `1px solid ${insight ? '#9333ea' : '#ddd'}`,
+            borderRadius: 6,
+            cursor: insight ? 'pointer' : 'not-allowed',
+            fontWeight: 'bold',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          {copied ? '✅ Copiado!' : '📋 Copiar dados da análise'}
+        </button>
+      </div>
 
       {insight && (
         <div
