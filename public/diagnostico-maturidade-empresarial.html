@@ -27,22 +27,33 @@
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" }
 }
 </script>
-<!-- GA4 (LGPD): carrega apenas se o visitante consentiu no banner de cookies do site
-     (mesma chave localStorage do restante do site). Mantenha o ID em sincronia com
-     NEXT_PUBLIC_GA_ID (site React). Necessário para medir a conversão do diagnóstico. -->
+<!-- GA4 via Consent Mode v2 (LGPD): carrega SEMPRE, mas com consentimento padrão
+     negado (só ping agregado/sem cookie) a menos que a mesma chave localStorage
+     do site (ea_cookie_consent) já tenha "granted". Antes o script inteiro só
+     carregava com consentimento já dado — como esta página abre em nova aba a
+     partir do CTA da LP (antes de o visitante decidir no banner, na maioria das
+     vezes), o generate_lead nunca era medido para quem convertia primeiro.
+     Mantenha o ID em sincronia com NEXT_PUBLIC_GA_ID (site React). -->
 <script>
 (function(){
   try {
-    if (localStorage.getItem('ea_cookie_consent') !== 'granted') return;
     var GA_ID = 'G-GG7DL6VYJB';
+    var stored = null;
+    try { stored = localStorage.getItem('ea_cookie_consent'); } catch (e) {}
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('consent', 'default', {
+      analytics_storage: stored === 'granted' ? 'granted' : 'denied',
+      ad_storage: stored === 'granted' ? 'granted' : 'denied',
+      ad_user_data: stored === 'granted' ? 'granted' : 'denied',
+      ad_personalization: stored === 'granted' ? 'granted' : 'denied'
+    });
+    gtag('js', new Date());
+    gtag('config', GA_ID, { anonymize_ip: true });
     var s = document.createElement('script');
     s.async = true;
     s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
     document.head.appendChild(s);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function(){ dataLayer.push(arguments); };
-    gtag('js', new Date());
-    gtag('config', GA_ID, { anonymize_ip: true });
   } catch (e) { /* no-op */ }
 })();
 </script>

@@ -2,11 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Montserrat, Open_Sans, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/lib/site-config";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
-import { BackToTop } from "@/components/layout/BackToTop";
-import { CapturePopup } from "@/components/CapturePopup";
+import { SiteChrome } from "@/components/layout/SiteChrome";
 import { Analytics } from "@/components/Analytics";
 
 const montserrat = Montserrat({
@@ -150,12 +146,7 @@ export default function RootLayout({
         >
           Pular para o conteúdo
         </a>
-        <Header />
-        <div id="conteudo">{children}</div>
-        <Footer />
-        <WhatsAppButton />
-        <BackToTop />
-        <CapturePopup />
+        <SiteChrome>{children}</SiteChrome>
         <Analytics />
         <script
           type="application/ld+json"
