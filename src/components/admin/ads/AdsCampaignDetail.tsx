@@ -161,7 +161,7 @@ export function AdsCampaignDetail({
             gap: 6,
             padding: "0.3rem 0.7rem",
             borderRadius: 999,
-            fontSize: "0.8rem",
+            fontSize: "0.88rem",
             fontWeight: 600,
             background: "var(--theme-elevation-100)",
           }}
@@ -175,7 +175,7 @@ export function AdsCampaignDetail({
 
       <AIForecastButton campaignId={String(campaign.id)} campaignName={campaign.name} />
 
-      <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.03em", color: "var(--theme-elevation-500)", margin: "1.5rem 0 0.5rem" }}>
+      <div style={{ fontSize: "0.8rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.03em", color: "var(--theme-elevation-500)", margin: "1.5rem 0 0.5rem" }}>
         Tráfego e custo
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "0.75rem", marginBottom: "1.1rem" }}>
@@ -185,7 +185,7 @@ export function AdsCampaignDetail({
         <Kpi label="Gasto total" value={money(scorecard.totals.cost)} state="neutral" />
       </div>
 
-      <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.03em", color: "var(--theme-elevation-500)", margin: "1.5rem 0 0.5rem" }}>
+      <div style={{ fontSize: "0.8rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.03em", color: "var(--theme-elevation-500)", margin: "1.5rem 0 0.5rem" }}>
         Conversão e retorno
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "0.75rem", marginBottom: "1.25rem" }}>

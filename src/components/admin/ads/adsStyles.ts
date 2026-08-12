@@ -42,23 +42,23 @@ export const statusIcon: Record<ScorecardStatus, string> = {
 export const table: CSSProperties = {
   width: "100%",
   borderCollapse: "collapse",
-  fontSize: "0.85rem",
+  fontSize: "0.95rem",
 };
 
 export const th: CSSProperties = {
   textAlign: "left",
-  padding: "0.55rem 0.7rem",
+  padding: "0.6rem 0.75rem",
   borderBottom: "2px solid var(--theme-elevation-150)",
   background: "var(--theme-elevation-100)",
   color: "var(--theme-elevation-700)",
   fontWeight: 600,
-  fontSize: "0.75rem",
+  fontSize: "0.82rem",
   textTransform: "uppercase",
   letterSpacing: "0.03em",
 };
 
 export const td: CSSProperties = {
-  padding: "0.55rem 0.7rem",
+  padding: "0.6rem 0.75rem",
   borderBottom: "1px solid var(--theme-elevation-100)",
   verticalAlign: "top",
 };
@@ -82,7 +82,7 @@ export const sectionTitle: CSSProperties = {
   display: "flex",
   alignItems: "center",
   gap: "0.5rem",
-  fontSize: "1.05rem",
+  fontSize: "1.2rem",
   fontWeight: 700,
   margin: "2rem 0 1rem",
   paddingBottom: "0.5rem",
@@ -108,7 +108,7 @@ export const kpiCard = (state: KpiState = "neutral"): CSSProperties => ({
 });
 
 export const kpiLabel: CSSProperties = {
-  fontSize: "0.72rem",
+  fontSize: "0.8rem",
   color: "var(--theme-elevation-500)",
   textTransform: "uppercase",
   letterSpacing: "0.03em",
@@ -116,7 +116,7 @@ export const kpiLabel: CSSProperties = {
 };
 
 export const kpiValue: CSSProperties = {
-  fontSize: "1.4rem",
+  fontSize: "1.65rem",
   fontWeight: 700,
   marginTop: "0.15rem",
   lineHeight: 1.2,
@@ -124,7 +124,7 @@ export const kpiValue: CSSProperties = {
 
 /** Legenda pequena de contexto sob o valor do KPI (ex.: "meta: 3,0x"). */
 export const kpiHint: CSSProperties = {
-  fontSize: "0.72rem",
+  fontSize: "0.8rem",
   color: "var(--theme-elevation-500)",
   marginTop: "0.15rem",
 };
@@ -152,9 +152,9 @@ const FLAG_PILL_COLOR: Record<FlagSeverity, { bg: string; fg: string }> = {
 
 export const flagPill = (severity: FlagSeverity): CSSProperties => ({
   display: "inline-block",
-  padding: "0.2rem 0.55rem",
+  padding: "0.25rem 0.6rem",
   borderRadius: 999,
-  fontSize: "0.72rem",
+  fontSize: "0.8rem",
   fontWeight: 600,
   background: FLAG_PILL_COLOR[severity].bg,
   color: FLAG_PILL_COLOR[severity].fg,
@@ -166,8 +166,8 @@ export const callout: CSSProperties = {
   background: "var(--theme-elevation-50)",
   borderLeft: `3px solid ${EA_GOLD}`,
   borderRadius: "0 6px 6px 0",
-  padding: "0.75rem 1rem",
-  fontSize: "0.88rem",
+  padding: "0.8rem 1.1rem",
+  fontSize: "0.98rem",
 };
 
 export const money = (n: number) =>

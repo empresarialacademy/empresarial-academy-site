@@ -47,7 +47,7 @@ export function AdsForecastPanel({
       </div>
 
       <div style={sectionTitle}>📈 Projeção de resultados (cenários)</div>
-      <p style={{ fontSize: "0.85rem", color: "var(--theme-elevation-600)" }}>
+      <p style={{ fontSize: "0.95rem", color: "var(--theme-elevation-600)" }}>
         Premissas: {pct(FORECAST_ASSUMPTIONS.LEAD_CONVERSION.conservador)}–
         {pct(FORECAST_ASSUMPTIONS.LEAD_CONVERSION.otimista)} dos cliques viram lead (Diagnóstico);{" "}
         {pct(FORECAST_ASSUMPTIONS.CLOSE_RATE.conservador)}–{pct(FORECAST_ASSUMPTIONS.CLOSE_RATE.otimista)} dos
@@ -111,7 +111,7 @@ export function AdsForecastPanel({
           </div>
         ) : null}
         {forecast.notes ? (
-          <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--theme-elevation-600)" }}>{forecast.notes}</p>
+          <p style={{ margin: 0, fontSize: "0.95rem", color: "var(--theme-elevation-600)" }}>{forecast.notes}</p>
         ) : null}
       </div>
     </section>

@@ -21,7 +21,7 @@ function TypeBadge({ type }: { type: CompetitorRow["type"] }) {
         display: "inline-block",
         padding: "0.2rem 0.55rem",
         borderRadius: 999,
-        fontSize: "0.72rem",
+        fontSize: "0.8rem",
         fontWeight: 600,
         background: c.bg,
         color: c.fg,
@@ -92,7 +92,7 @@ export function AdsCompetitorsPanel({ rows }: { rows: CompetitorRow[] }) {
               <td style={td}>
                 <strong>{r.name}</strong>
                 {r.domain ? (
-                  <div style={{ fontSize: "0.75rem", color: "var(--theme-elevation-500)" }}>{r.domain}</div>
+                  <div style={{ fontSize: "0.83rem", color: "var(--theme-elevation-500)" }}>{r.domain}</div>
                 ) : null}
               </td>
               <td style={td}>

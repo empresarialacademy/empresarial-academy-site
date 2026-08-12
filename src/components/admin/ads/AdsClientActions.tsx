@@ -158,7 +158,7 @@ const SECTION_HEADING_STYLE: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   gap: '0.5rem',
-  fontSize: '1.05rem',
+  fontSize: '1.2rem',
   fontWeight: 700,
   margin: '1.75rem 0 0.85rem',
   paddingBottom: '0.4rem',
@@ -197,7 +197,7 @@ const MARKDOWN_COMPONENTS = {
   h3: ({ children }: { children?: React.ReactNode }) => (
     <h4
       style={{
-        fontSize: '0.92rem',
+        fontSize: '1.05rem',
         fontWeight: 700,
         margin: '1.1rem 0 0.4rem',
         paddingLeft: '0.6rem',
@@ -208,7 +208,7 @@ const MARKDOWN_COMPONENTS = {
     </h4>
   ),
   p: ({ children }: { children?: React.ReactNode }) => (
-    <p style={{ margin: '0 0 0.75rem', lineHeight: 1.65, fontSize: '0.92rem' }}>{children}</p>
+    <p style={{ margin: '0 0 0.75rem', lineHeight: 1.65, fontSize: '1rem' }}>{children}</p>
   ),
   ul: ({ children }: { children?: React.ReactNode }) => (
     <ul style={{ margin: '0 0 1rem', paddingLeft: '1.3rem', display: 'grid', gap: '0.35rem' }}>{children}</ul>
@@ -217,7 +217,7 @@ const MARKDOWN_COMPONENTS = {
     <ol style={{ margin: '0 0 1rem', paddingLeft: '1.3rem', display: 'grid', gap: '0.35rem' }}>{children}</ol>
   ),
   li: ({ children }: { children?: React.ReactNode }) => (
-    <li style={{ lineHeight: 1.55, fontSize: '0.92rem' }}>{children}</li>
+    <li style={{ lineHeight: 1.55, fontSize: '1rem' }}>{children}</li>
   ),
   strong: ({ children }: { children?: React.ReactNode }) => <strong style={{ fontWeight: 700 }}>{children}</strong>,
   hr: () => <hr style={{ border: 'none', borderTop: '1px solid var(--theme-elevation-150)', margin: '1.5rem 0' }} />,
@@ -229,7 +229,7 @@ const MARKDOWN_COMPONENTS = {
         borderRadius: '0 6px 6px 0',
         padding: '0.65rem 1rem',
         margin: '0 0 1rem',
-        fontSize: '0.88rem',
+        fontSize: '0.98rem',
       }}
     >
       {children}
@@ -237,7 +237,7 @@ const MARKDOWN_COMPONENTS = {
   ),
   table: ({ children }: { children?: React.ReactNode }) => (
     <div style={{ overflowX: 'auto', margin: '0.75rem 0 1.25rem' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>{children}</table>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.95rem' }}>{children}</table>
     </div>
   ),
   th: ({ children }: { children?: React.ReactNode }) => (
@@ -248,7 +248,7 @@ const MARKDOWN_COMPONENTS = {
         borderBottom: '2px solid var(--theme-elevation-150)',
         background: 'var(--theme-elevation-100)',
         fontWeight: 600,
-        fontSize: '0.72rem',
+        fontSize: '0.8rem',
         textTransform: 'uppercase',
         letterSpacing: '0.03em',
       }}

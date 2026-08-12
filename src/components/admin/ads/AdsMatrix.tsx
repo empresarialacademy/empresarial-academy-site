@@ -42,7 +42,7 @@ export function AdsMatrix({
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 5,
-                  fontSize: "0.75rem",
+                  fontSize: "0.83rem",
                   fontWeight: 600,
                   padding: "0.2rem 0.55rem",
                   borderRadius: 999,
@@ -67,14 +67,14 @@ export function AdsMatrix({
               />
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.4rem 0.8rem", fontSize: "0.85rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.4rem 0.8rem", fontSize: "0.95rem" }}>
               <span>CTR: {pct(s.ctr)}</span>
               <span>CPC: {money(s.avgCpc)}</span>
               <span>CAC: {s.cac !== null ? money(s.cac) : "—"}</span>
               <span>ROI: {s.roiMultiple !== null ? `${s.roiMultiple.toFixed(1)}x` : "—"}</span>
             </div>
 
-            <p style={{ marginTop: "0.6rem", marginBottom: 0, fontSize: "0.85rem", color: "var(--theme-elevation-700)" }}>
+            <p style={{ marginTop: "0.6rem", marginBottom: 0, fontSize: "0.95rem", color: "var(--theme-elevation-700)" }}>
               {s.recommendation}
             </p>
           </a>
