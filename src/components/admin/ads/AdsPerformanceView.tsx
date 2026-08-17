@@ -2,6 +2,7 @@ import type { AdminViewServerProps } from "payload";
 import { redirect } from "next/navigation";
 import {
   computeCampaignScorecard,
+  ADS_AUTO_SYNC_STALE_MINUTES,
   type AttributedDeal,
   type CampaignScorecard,
   type CompetitorRow,
@@ -14,7 +15,7 @@ import { AdsCampaignDetail } from "./AdsCampaignDetail";
 import { AdsForecastPanel } from "./AdsForecastPanel";
 import { AdsCompetitorsPanel } from "./AdsCompetitorsPanel";
 import { AdsBudgetCard, type AdsBudgetInfo } from "./AdsBudgetCard";
-import { SyncAdsButton } from "./AdsClientActions";
+import { SyncAdsButton, AdsAutoSync } from "./AdsClientActions";
 import { EaHubBackLink } from "@/components/admin/brand/EaHubBackLink";
 
 type CampaignDoc = {
@@ -104,6 +105,7 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
 
   const adsSettings = (await payload.findGlobal({ slug: "ads-settings" })) as unknown as {
     refreshToken?: string;
+    lastSync?: string | null;
     budgetStatus?: "com_limite" | "sem_limite" | "indisponivel" | null;
     budgetApprovedLimit?: number | null;
     budgetSpent?: number | null;
@@ -113,11 +115,20 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
   const isConnected = Boolean(adsSettings?.refreshToken);
   const oauthSuccess = searchParams?.oauth === "success";
 
+  // Convenience pedida pelo Thiago: sem sincronizar há mais de
+  // ADS_AUTO_SYNC_STALE_MINUTES, o painel sincroniza sozinho ao abrir
+  // (ver AdsAutoSync) — cobre tanto a 1ª configuração (sem campanha ainda)
+  // quanto o uso do dia a dia.
+  const isStale =
+    !adsSettings.lastSync ||
+    Date.now() - new Date(adsSettings.lastSync).getTime() > ADS_AUTO_SYNC_STALE_MINUTES * 60 * 1000;
+
   if (campaigns.length === 0) {
     return (
       <div style={{ padding: 24 }}>
         <EaHubBackLink />
         <h1>EA ADS Manager</h1>
+        <AdsAutoSync isStale={isStale} isConnected={isConnected} />
         {oauthSuccess && (
           <div style={{ padding: 12, backgroundColor: "#e6f4ea", color: "#137333", marginBottom: 16, borderRadius: 4 }}>
             Google Ads conectado com sucesso!
@@ -288,6 +299,8 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
         </a>
       </div>
 
+      <AdsAutoSync isStale={isStale} isConnected={isConnected} />
+
       {oauthSuccess && (
         <div style={{ padding: 12, backgroundColor: "#e6f4ea", color: "#137333", marginBottom: 16, borderRadius: 4 }}>
           Google Ads conectado com sucesso!
@@ -344,6 +357,7 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
         dailyMetrics={selectedDailyMetrics}
         adGroups={selectedGroups}
         keywordsByGroup={keywordsByGroup}
+        autoGenerateForecast={!isStale}
       />
 
       <AdsCompetitorsPanel rows={competitors} />

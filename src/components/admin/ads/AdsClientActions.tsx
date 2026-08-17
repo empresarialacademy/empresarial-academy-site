@@ -1,9 +1,82 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { EA_GOLD } from './adsStyles';
+
+/**
+ * Convenience pedida pelo Thiago: ao abrir o painel, se os dados estiverem
+ * desatualizados (ver `ADS_AUTO_SYNC_STALE_MINUTES`), sincroniza sozinho e
+ * recarrega — sem precisar clicar em "Sincronizar". `isStale` é calculado no
+ * server (AdsPerformanceView) a partir do `lastSync` gravado no Payload.
+ * O guard de `sessionStorage` evita 2 chamadas simultâneas (StrictMode/dev)
+ * e é limpo antes de recarregar, para não travar uma sincronização futura.
+ */
+export function AdsAutoSync({ isStale, isConnected }: { isStale: boolean; isConnected: boolean }) {
+  const [status, setStatus] = useState<'idle' | 'syncing' | 'error'>('idle');
+
+  useEffect(() => {
+    if (!isConnected || !isStale) return;
+
+    const key = 'ea-ads-auto-sync-inflight';
+    if (sessionStorage.getItem(key) === 'true') return;
+    sessionStorage.setItem(key, 'true');
+
+    setStatus('syncing');
+    fetch('/api/ads/sync-all', { method: 'POST' })
+      .then((res) => res.json())
+      .then((data) => {
+        sessionStorage.removeItem(key);
+        if (data.success) {
+          window.location.reload();
+        } else {
+          setStatus('error');
+        }
+      })
+      .catch(() => {
+        sessionStorage.removeItem(key);
+        setStatus('error');
+      });
+  }, [isStale, isConnected]);
+
+  if (status === 'syncing') {
+    return (
+      <div
+        style={{
+          padding: '8px 14px',
+          background: 'var(--theme-elevation-100)',
+          borderRadius: 4,
+          fontSize: '0.85rem',
+          marginBottom: '1rem',
+          display: 'inline-block',
+        }}
+      >
+        🔄 Sincronizando dados do Google Ads automaticamente…
+      </div>
+    );
+  }
+
+  if (status === 'error') {
+    return (
+      <div
+        style={{
+          padding: '8px 14px',
+          background: 'var(--theme-warning-100, #fef7e0)',
+          color: 'var(--theme-warning-800, #b06000)',
+          borderRadius: 4,
+          fontSize: '0.85rem',
+          marginBottom: '1rem',
+          display: 'inline-block',
+        }}
+      >
+        ⚠️ Sincronização automática falhou — use o botão &quot;Sincronizar&quot; abaixo.
+      </div>
+    );
+  }
+
+  return null;
+}
 
 export function SyncAdsButton() {
   const [loading, setLoading] = useState(false);
@@ -45,12 +118,21 @@ export function SyncAdsButton() {
   );
 }
 
-export function AIForecastButton({ campaignId, campaignName }: { campaignId: string; campaignName: string }) {
+export function AIForecastButton({
+  campaignId,
+  campaignName,
+  autoGenerate = false,
+}: {
+  campaignId: string;
+  campaignName: string;
+  /** Gera sozinho ao montar (1x por campanha/aba, via sessionStorage) — usado quando os dados já estão sincronizados. */
+  autoGenerate?: boolean;
+}) {
   const [loading, setLoading] = useState(false);
   const [insight, setInsight] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const handleForecast = async () => {
+  const handleForecast = useCallback(async () => {
     setLoading(true);
     setInsight(null);
     try {
@@ -62,6 +144,7 @@ export function AIForecastButton({ campaignId, campaignName }: { campaignId: str
       const data = await res.json();
       if (data.success) {
         setInsight(data.insight);
+        sessionStorage.setItem(`ea-ads-forecast-${campaignId}`, 'done');
       } else {
         alert('Erro na IA: ' + data.error);
       }
@@ -70,7 +153,13 @@ export function AIForecastButton({ campaignId, campaignName }: { campaignId: str
     } finally {
       setLoading(false);
     }
-  };
+  }, [campaignId]);
+
+  useEffect(() => {
+    if (!autoGenerate) return;
+    if (sessionStorage.getItem(`ea-ads-forecast-${campaignId}`) === 'done') return;
+    handleForecast();
+  }, [autoGenerate, campaignId, handleForecast]);
 
   const handleCopy = async () => {
     if (!insight) return;

@@ -130,12 +130,14 @@ export function AdsCampaignDetail({
   dailyMetrics,
   adGroups,
   keywordsByGroup,
+  autoGenerateForecast = false,
 }: {
   campaign: CampaignDoc;
   scorecard: CampaignScorecard;
   dailyMetrics: DailyMetric[];
   adGroups: AdGroupDoc[];
   keywordsByGroup: Map<string, KeywordDoc[]>;
+  autoGenerateForecast?: boolean;
 }) {
   const T = ADS_INSIGHTS_THRESHOLDS;
   const isColletando = scorecard.status === "coletando";
@@ -173,7 +175,7 @@ export function AdsCampaignDetail({
 
       <p style={{ margin: "0 0 1.1rem", color: "var(--theme-elevation-700)" }}>{scorecard.recommendation}</p>
 
-      <AIForecastButton campaignId={String(campaign.id)} campaignName={campaign.name} />
+      <AIForecastButton campaignId={String(campaign.id)} campaignName={campaign.name} autoGenerate={autoGenerateForecast} />
 
       <div style={{ fontSize: "0.8rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.03em", color: "var(--theme-elevation-500)", margin: "1.5rem 0 0.5rem" }}>
         Tráfego e custo

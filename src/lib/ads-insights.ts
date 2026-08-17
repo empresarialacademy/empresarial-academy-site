@@ -30,6 +30,9 @@ export const ADS_INSIGHTS_THRESHOLDS = {
   ROI_GOOD_MULTIPLE: 3,
 } as const;
 
+/** Minutos sem sincronizar antes do painel disparar sync automático ao abrir a tela. */
+export const ADS_AUTO_SYNC_STALE_MINUTES = 20;
+
 export type DealPackage = "nenhum" | "essencial" | "implementacao" | "outro";
 export type DealStatus = "em_andamento" | "ganho" | "perdido";
 
