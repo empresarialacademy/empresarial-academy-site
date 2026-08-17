@@ -439,6 +439,29 @@ pra não pausar/ativar a campanha de verdade sem o Thiago pedir).
   (por aba) evita repetir sync/forecast a cada revisita — só recomeça em aba
   nova ou depois que os 20 min passarem de novo. Botão "Sincronizar" manual
   continua funcionando igual, para forçar fora da janela de 20 min.
+- **🔴 INCIDENTE E CORREÇÃO (mesma sessão, logo após o deploy):** o painel
+  inteiro (`/eahub/*`, quase todas as rotas) começou a dar "Application error"
+  em produção, digest `1254053825`. Causa: os campos novos do global
+  `ads-settings` foram adicionados no schema do Payload e o `payload-types.ts`
+  foi corrigido à mão (ver nota do `generate:types` acima), mas **a tabela real
+  no Postgres/Neon de produção nunca recebeu as colunas** — `push: true` do
+  adapter (`src/payload.config.ts`) não roda em produção (só em dev), e não
+  existe pipeline de migration configurado neste projeto. Toda query em
+  `ads-settings` quebrava com `column "budget_status" does not exist`.
+  **Corrigido** com `ALTER TABLE` aditivo direto no Neon de produção (script
+  temporário com `pg`, apagado depois de rodar — não versionado): criou o enum
+  `enum_ads_settings_budget_status` e as 5 colunas que faltavam, com os
+  mesmos tipos que o Payload já usa nas tabelas irmãs (conferido via
+  `information_schema.columns`/`pg_enum` antes de escrever o SQL, para não
+  divergir do que o Payload esperaria gerar). Validado: `/`, `/eahub`,
+  `/eahub/ads-performance` voltaram a 200.
+  **Lição para qualquer sessão futura:** editar um campo em `src/collections/*`
+  ou `src/globals/*` deste projeto NUNCA é só código — sem migration
+  automática, é preciso ALTERAR a tabela em produção manualmente (ou achar um
+  jeito confiável de rodar `payload migrate` apesar do Node 24/tsx quebrado,
+  ver §15.3) antes ou junto do deploy. Corrigir só o `payload-types.ts` engana:
+  o TypeScript compila limpo, mas o banco real não bate — só estoura em
+  runtime, em produção, exatamente como aconteceu aqui.
 - **⚠️ Achado operacional (não é bug de código): workspace git compartilhado.**
   No meio desta sessão, `C:\dev\empresarial-academy-site` foi trocado de
   `master` para uma branch `feature/contratos-assinatura-eletronica` que eu
