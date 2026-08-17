@@ -45,6 +45,8 @@ export type CertificateData = {
   contractHash: string;
   mismatchAcknowledged: boolean;
   eaHubUrl: string;
+  /** Contatos além do titular do contrato para quem o link de assinatura foi reenviado (api/contracts/[token]/resend-to). */
+  additionalRecipients?: { nome?: string; email?: string; telefone?: string; sentAtLabel: string }[];
 };
 
 function Field({ label, value }: { label: string; value: string }) {
@@ -95,6 +97,20 @@ function ContractCertificatePdf({ data, contractHtml }: { data: CertificateData;
         <Field label="Data e hora (Brasília)" value={data.signedAtLabel} />
         <Field label="Endereço IP" value={data.signerIp} />
         <Field label="Hash SHA-256 do contrato" value={data.contractHash} />
+
+        {data.additionalRecipients && data.additionalRecipients.length > 0 && (
+          <>
+            <View style={styles.divider} />
+            <Text style={styles.sectionTitle}>Link de assinatura reenviado para contato(s) adicional(is)</Text>
+            {data.additionalRecipients.map((r, i) => (
+              <Field
+                key={i}
+                label={r.sentAtLabel}
+                value={[r.nome, r.email, r.telefone].filter(Boolean).join(" · ") || "(sem dados)"}
+              />
+            ))}
+          </>
+        )}
 
         {data.mismatchAcknowledged && (
           <View style={styles.warnBox}>

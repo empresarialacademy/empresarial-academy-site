@@ -107,6 +107,16 @@ export async function POST(req: Request, { params }: { params: Promise<{ token: 
     const documentLabel: "CPF" | "CNPJ" = doc.tipoPessoa === "PJ" ? "CNPJ" : "CPF";
     const clientDocumentOnFile = doc.tipoPessoa === "PJ" ? String(doc.pjCnpj || "") : String(doc.pfCpf || "");
     const eaHubUrl = `${siteConfig.url}/eahub/collections/contracts/${doc.id}`;
+    const additionalRecipients = (
+      (doc.additionalRecipients as { nome?: string; email?: string; telefone?: string; sentAt?: string }[]) || []
+    ).map((r) => ({
+      nome: r.nome,
+      email: r.email,
+      telefone: r.telefone,
+      sentAtLabel: r.sentAt
+        ? new Date(r.sentAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })
+        : "(data não registrada)",
+    }));
 
     // Certificado em PDF (certificado + contrato integral) — gerado ANTES de
     // gravar a assinatura, para que a transição "enviado" → "assinado" seja
@@ -132,6 +142,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ token: 
           contractHash: recomputedHash,
           mismatchAcknowledged,
           eaHubUrl,
+          additionalRecipients,
         },
         storedHtml,
       );

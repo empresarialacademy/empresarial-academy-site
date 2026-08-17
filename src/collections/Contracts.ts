@@ -248,6 +248,28 @@ export const Contracts: CollectionConfig = {
       access: { update: () => false },
     },
 
+    // ─── Reenvios para contato alternativo (append-only, só o servidor
+    // grava, via api/contracts/[token]/resend-to) — registrado aqui e
+    // impresso no certificado em PDF (contract-pdf.tsx) porque o link de
+    // assinatura pode ter sido reenviado para alguém além do titular do
+    // contrato (ex.: contador, advogado do cliente).
+    {
+      name: "additionalRecipients",
+      type: "array",
+      label: "Reenviado para contato(s) adicional(is)",
+      admin: {
+        readOnly: true,
+        description: "Gravado automaticamente a cada reenvio para um contato diferente do cadastrado no contrato.",
+      },
+      access: { update: () => false },
+      fields: [
+        { name: "nome", type: "text", label: "Nome" },
+        { name: "email", type: "text", label: "E-mail" },
+        { name: "telefone", type: "text", label: "Telefone" },
+        { name: "sentAt", type: "date", label: "Reenviado em", admin: { date: { pickerAppearance: "dayAndTime" } } },
+      ],
+    },
+
     // ─── Evidência de assinatura (append-only, só o servidor grava) ───
     {
       type: "collapsible",

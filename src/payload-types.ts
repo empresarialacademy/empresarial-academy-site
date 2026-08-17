@@ -616,6 +616,18 @@ export interface Contract {
   contractHtml?: string | null;
   contractHash?: string | null;
   signToken?: string | null;
+  /**
+   * Gravado automaticamente a cada reenvio para um contato diferente do cadastrado no contrato.
+   */
+  additionalRecipients?:
+    | {
+        nome?: string | null;
+        email?: string | null;
+        telefone?: string | null;
+        sentAt?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   signedAt?: string | null;
   signerIp?: string | null;
   signerNameConfirmed?: string | null;
@@ -1200,6 +1212,15 @@ export interface ContractsSelect<T extends boolean = true> {
   contractHtml?: T;
   contractHash?: T;
   signToken?: T;
+  additionalRecipients?:
+    | T
+    | {
+        nome?: T;
+        email?: T;
+        telefone?: T;
+        sentAt?: T;
+        id?: T;
+      };
   signedAt?: T;
   signerIp?: T;
   signerNameConfirmed?: T;
