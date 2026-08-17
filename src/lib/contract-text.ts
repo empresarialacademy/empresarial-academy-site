@@ -442,6 +442,24 @@ export function documentsMatch(a: string, b: string): boolean {
   return digits(a) === digits(b) && digits(a).length > 0;
 }
 
+/**
+ * Monta o link https://wa.me/... para enviar o link de assinatura por
+ * WhatsApp. Sempre um clique manual (abre o WhatsApp Web/app com a
+ * mensagem pronta) — a EA não tem WhatsApp Business API, não existe envio
+ * automático. Usado tanto no envio inicial (ContractGeneratorForm.tsx)
+ * quanto no reenvio (ContractSaveButton.tsx).
+ */
+export function buildWhatsAppSignUrl(opts: {
+  clientPhone: string;
+  clientName?: string;
+  planoNome: string;
+  signUrl: string;
+}): string {
+  const digits = (opts.clientPhone || "").replace(/\D/g, "");
+  const msg = `Olá${opts.clientName ? ", " + opts.clientName : ""}! Segue o contrato de ${opts.planoNome} da Empresarial Academy para leitura e assinatura eletrônica: ${opts.signUrl}`;
+  return `https://wa.me/55${digits}?text=${encodeURIComponent(msg)}`;
+}
+
 // ───────────────────── Etapas (projeto) ─────────────────────
 
 function textoEtapas(etapas: Etapa[] | undefined): string {

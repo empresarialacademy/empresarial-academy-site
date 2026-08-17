@@ -13,6 +13,7 @@ import {
   moeda,
   hojeISO,
   PLANOS,
+  buildWhatsAppSignUrl,
   type ContractInput,
   type ContractType,
   type Etapa,
@@ -30,11 +31,13 @@ import {
  */
 
 function whatsAppShareUrl(form: ContractInput, signUrl: string): string {
-  const digits = (form.clienteTelefone || "").replace(/\D/g, "");
   const nome = form.tipoPessoa === "PJ" ? form.pjRazao : form.pfNome;
-  const plano = PLANOS[form.contractType].nome;
-  const msg = `Olá${nome ? ", " + nome : ""}! Segue o contrato de ${plano} da Empresarial Academy para leitura e assinatura eletrônica: ${signUrl}`;
-  return `https://wa.me/55${digits}?text=${encodeURIComponent(msg)}`;
+  return buildWhatsAppSignUrl({
+    clientPhone: form.clienteTelefone || "",
+    clientName: nome,
+    planoNome: PLANOS[form.contractType].nome,
+    signUrl,
+  });
 }
 
 const card: React.CSSProperties = {

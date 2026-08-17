@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { FormSubmit, useForm } from "@payloadcms/ui";
 import { useRouter } from "next/navigation";
+import { buildWhatsAppSignUrl } from "@/lib/contract-text";
 
 /**
  * Substitui o "Salvar" nativo na coleção Contracts (mesmo padrão de
@@ -12,6 +13,11 @@ import { useRouter } from "next/navigation";
  * camada de UI). Em vez de Salvar, oferece "Duplicar contrato": cria um
  * novo rascunho com os mesmos dados (cliente, plano, valores, bônus etc.),
  * sem nenhum campo de assinatura/evidência, e leva para a edição dele.
+ *
+ * Contrato com status "enviado" (ainda não assinado) ganha um botão
+ * "Reenviar link" ao lado do Salvar: reenvia o e-mail automaticamente e
+ * abre o WhatsApp com a mensagem pronta (clique manual — sem WhatsApp
+ * Business API, não existe envio automático).
  */
 
 const FIELDS_TO_STRIP = new Set([
@@ -36,9 +42,58 @@ export function ContractSaveButton() {
   const { getData, submit } = useForm();
   const router = useRouter();
   const [working, setWorking] = useState(false);
+  const [resendMsg, setResendMsg] = useState("");
 
   const data = getData();
   const isSigned = data?.status === "assinado";
+  const isSent = data?.status === "enviado";
+
+  async function handleResend() {
+    const id = (data as { id?: string | number })?.id;
+    if (!id) return;
+    setWorking(true);
+    setResendMsg("Reenviando...");
+    try {
+      const res = await fetch(`/api/contracts/${id}/resend`, { method: "POST" });
+      const json = await res.json();
+      if (!res.ok || json.error) {
+        setResendMsg(json.error || "Não foi possível reenviar.");
+        setWorking(false);
+        return;
+      }
+      setResendMsg(json.email?.ok ? "E-mail reenviado." : "Contrato ok, mas o e-mail pode não ter saído.");
+      const clientPhone = String((data as { clienteTelefone?: string })?.clienteTelefone || "");
+      if (clientPhone) {
+        const waUrl = buildWhatsAppSignUrl({
+          clientPhone,
+          clientName: json.clientName,
+          planoNome: json.planoNome,
+          signUrl: json.signUrl,
+        });
+        window.open(waUrl, "_blank");
+      }
+    } catch (e) {
+      setResendMsg("Erro de rede ao reenviar.");
+      console.error("[ContractSaveButton] exceção ao reenviar:", e);
+    }
+    setWorking(false);
+  }
+
+  if (isSent) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 4, alignItems: "flex-end" }}>
+        <div style={{ display: "flex", gap: 8 }}>
+          <FormSubmit buttonId="action-save" buttonStyle="primary" size="medium" type="button" onClick={() => submit()}>
+            Salvar
+          </FormSubmit>
+          <FormSubmit buttonId="action-resend" buttonStyle="secondary" size="medium" type="button" onClick={handleResend} disabled={working}>
+            {working ? "Reenviando..." : "Reenviar link"}
+          </FormSubmit>
+        </div>
+        {resendMsg && <span style={{ fontSize: 11, color: "var(--theme-elevation-500)" }}>{resendMsg}</span>}
+      </div>
+    );
+  }
 
   if (!isSigned) {
     return (
