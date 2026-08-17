@@ -6,6 +6,102 @@ import remarkGfm from 'remark-gfm';
 import { EA_GOLD } from './adsStyles';
 
 /**
+ * Popup de resumo do pipeline automático (conectar → sincronizar → coletar
+ * dados → gerar forecast), pedido pelo Thiago para saber exatamente o que
+ * rodou sozinho e quando. `AdsAutoSync` guarda o resultado do sync no
+ * sessionStorage antes de recarregar a página (o reload é necessário pra
+ * pegar dado fresco do server); `AIForecastButton` (no modo `autoGenerate`,
+ * já rodando na página recarregada) consome esse resumo e junta com o
+ * resultado do forecast num popup só, com data/hora de conclusão.
+ */
+const PIPELINE_SYNC_SUMMARY_KEY = 'ea-ads-pipeline-sync-summary';
+
+type PipelineSyncSummary = { added: number; updated: number };
+
+function stashPipelineSyncSummary(summary: PipelineSyncSummary) {
+  sessionStorage.setItem(PIPELINE_SYNC_SUMMARY_KEY, JSON.stringify(summary));
+}
+
+function consumePipelineSyncSummary(): PipelineSyncSummary | null {
+  const raw = sessionStorage.getItem(PIPELINE_SYNC_SUMMARY_KEY);
+  if (!raw) return null;
+  sessionStorage.removeItem(PIPELINE_SYNC_SUMMARY_KEY);
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+function formatDateTime(iso: string) {
+  return new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'medium' });
+}
+
+function PipelineSummaryModal({ at, lines, onClose }: { at: string; lines: string[]; onClose: () => void }) {
+  useEffect(() => {
+    const timer = setTimeout(onClose, 15000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        background: 'rgba(0,0,0,0.45)',
+        zIndex: 9999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '1rem',
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: 'var(--theme-elevation-0, #fff)',
+          borderRadius: 8,
+          padding: '1.5rem 1.75rem',
+          maxWidth: 440,
+          width: '100%',
+          borderTop: `3px solid ${EA_GOLD}`,
+          boxShadow: '0 10px 40px rgba(0,0,0,0.35)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.75rem' }}>
+          <span style={{ fontSize: '1.3rem' }}>✅</span>
+          <h3 style={{ margin: 0, fontSize: '1.05rem' }}>Atualização automática do EA ADS concluída</h3>
+        </div>
+        <ul style={{ margin: '0 0 1rem', paddingLeft: '1.2rem', display: 'grid', gap: '0.4rem', fontSize: '0.92rem', color: 'var(--theme-elevation-800)' }}>
+          {lines.map((line, i) => (
+            <li key={i}>{line}</li>
+          ))}
+        </ul>
+        <p style={{ margin: '0 0 1.1rem', fontSize: '0.82rem', color: 'var(--theme-elevation-500)' }}>
+          Concluído em {formatDateTime(at)}
+        </p>
+        <button
+          onClick={onClose}
+          style={{
+            padding: '7px 16px',
+            background: EA_GOLD,
+            color: '#1D2B3C',
+            border: 'none',
+            borderRadius: 4,
+            fontWeight: 700,
+            cursor: 'pointer',
+            fontSize: '0.85rem',
+          }}
+        >
+          Fechar
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/**
  * Convenience pedida pelo Thiago: ao abrir o painel, se os dados estiverem
  * desatualizados (ver `ADS_AUTO_SYNC_STALE_MINUTES`), sincroniza sozinho e
  * recarrega — sem precisar clicar em "Sincronizar". `isStale` é calculado no
@@ -29,6 +125,7 @@ export function AdsAutoSync({ isStale, isConnected }: { isStale: boolean; isConn
       .then((data) => {
         sessionStorage.removeItem(key);
         if (data.success) {
+          stashPipelineSyncSummary({ added: data.added ?? 0, updated: data.updated ?? 0 });
           window.location.reload();
         } else {
           setStatus('error');
@@ -131,34 +228,49 @@ export function AIForecastButton({
   const [loading, setLoading] = useState(false);
   const [insight, setInsight] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [pipelineSummary, setPipelineSummary] = useState<{ at: string; lines: string[] } | null>(null);
 
-  const handleForecast = useCallback(async () => {
-    setLoading(true);
-    setInsight(null);
-    try {
-      const res = await fetch('/api/ads/forecast', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ campaignId, analysisType: 'forecast' }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setInsight(data.insight);
-        sessionStorage.setItem(`ea-ads-forecast-${campaignId}`, 'done');
-      } else {
-        alert('Erro na IA: ' + data.error);
+  const handleForecast = useCallback(
+    async (silent = false) => {
+      setLoading(true);
+      setInsight(null);
+      try {
+        const res = await fetch('/api/ads/forecast', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ campaignId, analysisType: 'forecast' }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          setInsight(data.insight);
+          sessionStorage.setItem(`ea-ads-forecast-${campaignId}`, 'done');
+          if (silent) {
+            const syncSummary = consumePipelineSyncSummary();
+            const lines: string[] = [];
+            if (syncSummary) {
+              lines.push(
+                `Sincronizado com o Google Ads: ${syncSummary.added} campanha(s) nova(s), ${syncSummary.updated} atualizada(s).`,
+              );
+            }
+            lines.push(`Dados de desempenho coletados e forecast de IA gerado para "${campaignName}".`);
+            setPipelineSummary({ at: new Date().toISOString(), lines });
+          }
+        } else if (!silent) {
+          alert('Erro na IA: ' + data.error);
+        }
+      } catch (err: unknown) {
+        if (!silent) alert('Falha ao gerar forecast: ' + (err instanceof Error ? err.message : String(err)));
+      } finally {
+        setLoading(false);
       }
-    } catch (err: unknown) {
-      alert('Falha ao gerar forecast: ' + (err instanceof Error ? err.message : String(err)));
-    } finally {
-      setLoading(false);
-    }
-  }, [campaignId]);
+    },
+    [campaignId, campaignName],
+  );
 
   useEffect(() => {
     if (!autoGenerate) return;
     if (sessionStorage.getItem(`ea-ads-forecast-${campaignId}`) === 'done') return;
-    handleForecast();
+    handleForecast(true);
   }, [autoGenerate, campaignId, handleForecast]);
 
   const handleCopy = async () => {
@@ -176,7 +288,7 @@ export function AIForecastButton({
     <div style={{ marginTop: '1rem', marginBottom: '1.5rem' }}>
       <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
         <button
-          onClick={handleForecast}
+          onClick={() => handleForecast(false)}
           disabled={loading}
           style={{
             padding: '10px 20px',
@@ -238,6 +350,14 @@ export function AIForecastButton({
           </ReactMarkdown>
           <style>{MARKDOWN_CSS}</style>
         </div>
+      )}
+
+      {pipelineSummary && (
+        <PipelineSummaryModal
+          at={pipelineSummary.at}
+          lines={pipelineSummary.lines}
+          onClose={() => setPipelineSummary(null)}
+        />
       )}
     </div>
   );
