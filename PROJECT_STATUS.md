@@ -390,10 +390,12 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
-### Sessão 2026-08-17 (EA ADS — crédito/orçamento da conta + iniciar/pausar campanhas em lote)
+### Sessão 2026-08-17 (EA ADS — crédito/orçamento, iniciar/pausar em lote, sync+forecast automáticos)
 Pedido do Thiago: ver quanto tem de crédito no Google Ads e poder iniciar/pausar
-uma ou várias campanhas direto do painel. Ainda não deployado (só local, tsc +
-eslint limpos) — falta o Thiago validar no preview e autorizar o `vercel --prod`.
+uma ou várias campanhas direto do painel. **Deployado em produção** — commits
+`da401f0` e `755420e`, `vercel --prod` READY, validado por HTTP (home 200,
+rota nova respondendo 400 nos guards de validação — não testei o mutate real
+pra não pausar/ativar a campanha de verdade sem o Thiago pedir).
 - **Achado importante (verificado antes de codar):** a API do Google Ads **não
   expõe o saldo real de contas pré-pagas self-serve** — o resource
   `account_budget` só tem dado quando existe um "limite de gastos" configurado
@@ -424,9 +426,31 @@ eslint limpos) — falta o Thiago validar no preview e autorizar o `vercel --pro
   esse comando continua quebrado no Node 24 deste ambiente, ver §15.3; só
   adicionei os campos novos do global `ads-settings` manualmente e validei com
   `tsc --noEmit` limpo).
-- **Pendente:** Thiago validar visualmente no preview (checkbox + botões +
-  card de crédito) e autorizar deploy; depois rodar "Sincronizar" uma vez para
-  o card de crédito parar de mostrar "ainda não sincronizado".
+- **Convenience pedida na mesma sessão: sync + forecast automáticos ao abrir
+  o painel.** Sem sincronizar há mais de `ADS_AUTO_SYNC_STALE_MINUTES` (20 min,
+  [ads-insights.ts](src/lib/ads-insights.ts)), o painel dispara `/api/ads/sync-all`
+  sozinho ao montar (`AdsAutoSync` em
+  [AdsClientActions.tsx](src/components/admin/ads/AdsClientActions.tsx), chip
+  discreto em vez do `alert()` do botão manual) e, só depois de confirmar que
+  os dados já estão frescos (`!isStale`), dispara o "🪄 Gerar Forecast com IA"
+  da campanha selecionada sozinho (`AIForecastButton` ganhou `autoGenerate`).
+  Sequência é proposital: se disparasse os dois em paralelo, o forecast saía
+  com dado desatualizado antes do reload do sync. Guard por `sessionStorage`
+  (por aba) evita repetir sync/forecast a cada revisita — só recomeça em aba
+  nova ou depois que os 20 min passarem de novo. Botão "Sincronizar" manual
+  continua funcionando igual, para forçar fora da janela de 20 min.
+- **⚠️ Achado operacional (não é bug de código): workspace git compartilhado.**
+  No meio desta sessão, `C:\dev\empresarial-academy-site` foi trocado de
+  `master` para uma branch `feature/contratos-assinatura-eletronica` que eu
+  não criei — reflog confirma um `checkout` de outra origem entre meus dois
+  commits desta sessão, ou seja **outra sessão/agente rodou `git checkout` na
+  mesma pasta enquanto eu trabalhava nela**. Sem dado perdido (a branch não
+  tinha nenhum commit próprio ainda — só o meu, que movi de volta pra `master`
+  com fast-forward; a branch foi mantida, não apagada). **Risco real:** duas
+  sessões de IA usando o mesmo working directory ao mesmo tempo podem se
+  pisar (checkout no meio de uma edição, commit na branch errada, etc.). Se
+  isso voltar a acontecer, rodar `git reflog` para reconstruir a sequência
+  antes de mexer em qualquer coisa.
 
 ### Sessão 2026-08-05 (LPs dedicadas por palavra-chave do Google Ads)
 Continuação da sessão anterior — item que tinha ficado registrado como "fora
