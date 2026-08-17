@@ -419,6 +419,29 @@ export function validarEmail(v: string | undefined): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((v || "").trim());
 }
 
+/**
+ * Compara nomes tolerando maiúsculas/minúsculas e acentos. Usado tanto no
+ * cliente (ContractSignForm.tsx, aviso visual) quanto no servidor
+ * (api/contracts/[token]/sign/route.ts, reverificação — o cliente não é
+ * confiável). Fica aqui, não em contract-token.ts, porque este módulo é
+ * seguro de importar do lado do navegador (sem `crypto` do Node).
+ */
+export function namesMatch(a: string, b: string): boolean {
+  const norm = (s: string) =>
+    s
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "");
+  return norm(a) === norm(b);
+}
+
+/** Compara CPF/CNPJ ignorando pontuação. Mesmo motivo de namesMatch acima. */
+export function documentsMatch(a: string, b: string): boolean {
+  const digits = (s: string) => s.replace(/\D/g, "");
+  return digits(a) === digits(b) && digits(a).length > 0;
+}
+
 // ───────────────────── Etapas (projeto) ─────────────────────
 
 function textoEtapas(etapas: Etapa[] | undefined): string {

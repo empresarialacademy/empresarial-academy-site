@@ -3,19 +3,9 @@ import { getPayloadClient } from "@/lib/payload";
 import { verifySignToken, hashContractText } from "@/lib/contract-token";
 import { sendContractSignedEmails } from "@/lib/contract-email";
 import { renderContractCertificatePdf } from "@/lib/contract-pdf";
-import { PLANOS } from "@/lib/contract-text";
+import { PLANOS, namesMatch, documentsMatch } from "@/lib/contract-text";
 import type { ContractType } from "@/lib/contract-text";
 import { siteConfig } from "@/lib/site-config";
-
-/** Mesma normalização usada em ContractSignForm.tsx — reverificada aqui porque o cliente não é confiável. */
-function namesMatch(a: string, b: string): boolean {
-  const norm = (s: string) => s.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
-  return norm(a) === norm(b);
-}
-function documentsMatch(a: string, b: string): boolean {
-  const digits = (s: string) => s.replace(/\D/g, "");
-  return digits(a) === digits(b) && digits(a).length > 0;
-}
 
 /**
  * Rota de assinatura eletrônica pública (chamada pela página /assinar/[token]).

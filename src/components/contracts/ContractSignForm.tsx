@@ -1,29 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { namesMatch, documentsMatch } from "@/lib/contract-text";
 
 const NAVY = "#1D2B3C";
 const GOLD = "#C1A160";
 const WARN_BG = "#FBEEE0";
 const WARN_TEXT = "#8A4B12";
 const LINE = "#D8D8D8";
-
-/** Compara nomes tolerando maiúsculas/minúsculas e acentos. */
-function namesMatch(a: string, b: string): boolean {
-  const norm = (s: string) =>
-    s
-      .trim()
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[̀-ͯ]/g, "");
-  return norm(a) === norm(b);
-}
-
-/** Compara CPF/CNPJ ignorando pontuação. */
-function documentsMatch(a: string, b: string): boolean {
-  const digits = (s: string) => s.replace(/\D/g, "");
-  return digits(a) === digits(b) && digits(a).length > 0;
-}
 
 type Props = {
   token: string;
@@ -45,8 +29,14 @@ export function ContractSignForm({ token, expectedName, expectedDocument, docume
   const [signedAt, setSignedAt] = useState<string | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
-  const nameMismatch = signerName.trim().length > 2 && !namesMatch(signerName, expectedName);
-  const documentMismatch = signerDocument.trim().length > 5 && !documentsMatch(signerDocument, expectedDocument);
+  // expectedName/expectedDocument checados como truthy antes de comparar
+  // (mesma regra do servidor, api/contracts/[token]/sign/route.ts) — um
+  // contrato criado sem nome/CPF preenchido não pode gerar uma divergência
+  // "contra nada" que trave o cliente numa declaração de representação sem
+  // sentido.
+  const nameMismatch = Boolean(expectedName) && signerName.trim().length > 2 && !namesMatch(signerName, expectedName);
+  const documentMismatch =
+    Boolean(expectedDocument) && signerDocument.trim().length > 5 && !documentsMatch(signerDocument, expectedDocument);
   const hasMismatch = nameMismatch || documentMismatch;
 
   const canSubmit = useMemo(

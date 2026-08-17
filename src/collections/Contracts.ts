@@ -341,9 +341,20 @@ export const Contracts: CollectionConfig = {
       // A própria rota de assinatura (api/contracts/[token]/sign) grava tudo
       // num único payload.update, então a transição "enviado" → "assinado"
       // nunca passa por aqui com originalDoc já assinado.
-      ({ operation, originalDoc }) => {
+      //
+      // Exceção estreita (achado na revisão de 17/08/2026): se a geração do
+      // certificado em PDF falhar no momento da assinatura, o contrato fica
+      // "assinado" sem `signedPdf` — sem essa exceção, não haveria NENHUMA
+      // forma de anexar o certificado depois. Só permite passar um update
+      // cujo ÚNICO campo alterado é `signedPdf` (nunca texto, valor ou
+      // qualquer evidência de assinatura).
+      ({ operation, originalDoc, data }) => {
         if (operation === "update" && originalDoc?.status === "assinado") {
-          throw new Error("Este contrato já foi assinado e não pode mais ser editado. Duplique para criar um novo.");
+          const changedKeys = Object.keys(data || {}).filter((k) => k !== "id");
+          const isSignedPdfOnly = changedKeys.length === 1 && changedKeys[0] === "signedPdf";
+          if (!isSignedPdfOnly) {
+            throw new Error("Este contrato já foi assinado e não pode mais ser editado. Duplique para criar um novo.");
+          }
         }
       },
     ],
