@@ -109,20 +109,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ token: 
 
     const signedAt = new Date();
     const ip = clientIp(req);
-
-    await payload.update({
-      collection: "contracts",
-      id: doc.id as string | number,
-      data: {
-        status: "assinado",
-        signedAt: signedAt.toISOString(),
-        signerIp: ip,
-        signerNameConfirmed: signerName,
-        signerDocumentConfirmed: signerDocument,
-        signatureHashAtSigning: recomputedHash,
-        signerMismatchAcknowledged: Boolean(hasMismatch && body.mismatchAcknowledged),
-      },
-    });
+    const mismatchAcknowledged = Boolean(hasMismatch && body.mismatchAcknowledged);
 
     const planoNome = PLANOS[doc.contractType as ContractType]?.nome || String(doc.contractType);
     const clientName = doc.tipoPessoa === "PJ" ? String(doc.pjRazao || "") : String(doc.pfNome || "");
@@ -131,10 +118,15 @@ export async function POST(req: Request, { params }: { params: Promise<{ token: 
     const clientDocumentOnFile = doc.tipoPessoa === "PJ" ? String(doc.pjCnpj || "") : String(doc.pfCpf || "");
     const eaHubUrl = `${siteConfig.url}/eahub/collections/contracts/${doc.id}`;
 
-    // Certificado em PDF (certificado + contrato integral) — gerado e anexado ao registro
-    // antes de responder, para já existir mesmo se o e-mail falhar depois.
+    // Certificado em PDF (certificado + contrato integral) — gerado ANTES de
+    // gravar a assinatura, para que a transição "enviado" → "assinado" seja
+    // um único payload.update com tudo junto (signedPdf incluído). Isso
+    // importa: a coleção Contracts bloqueia qualquer update posterior a um
+    // documento já "assinado" (ver Contracts.ts beforeChange) — duas
+    // escritas separadas fariam a segunda (anexar o PDF) se autobloquear.
     let pdfBuffer: Buffer | undefined;
     let pdfUrl: string | undefined;
+    let pdfDocId: number | undefined;
     try {
       pdfBuffer = await renderContractCertificatePdf(
         {
@@ -148,7 +140,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ token: 
           signerIp: ip,
           signedAtLabel,
           contractHash: recomputedHash,
-          mismatchAcknowledged: Boolean(hasMismatch && body.mismatchAcknowledged),
+          mismatchAcknowledged,
           eaHubUrl,
         },
         storedHtml,
@@ -164,14 +156,25 @@ export async function POST(req: Request, { params }: { params: Promise<{ token: 
         },
       });
       pdfUrl = (pdfDoc as { url?: string }).url;
-      await payload.update({
-        collection: "contracts",
-        id: doc.id as string | number,
-        data: { signedPdf: pdfDoc.id },
-      });
+      pdfDocId = pdfDoc.id;
     } catch (e) {
       console.error("[contracts/sign] falha ao gerar/anexar o certificado em PDF:", e);
     }
+
+    await payload.update({
+      collection: "contracts",
+      id: doc.id as string | number,
+      data: {
+        status: "assinado",
+        signedAt: signedAt.toISOString(),
+        signerIp: ip,
+        signerNameConfirmed: signerName,
+        signerDocumentConfirmed: signerDocument,
+        signatureHashAtSigning: recomputedHash,
+        signerMismatchAcknowledged: mismatchAcknowledged,
+        ...(pdfDocId ? { signedPdf: pdfDocId } : {}),
+      },
+    });
 
     sendContractSignedEmails({
       contractId: doc.id as string | number,

@@ -29,12 +29,21 @@ const CONTRACT_TYPE_OPTIONS: { label: string; value: ContractType }[] = [
 export const Contracts: CollectionConfig = {
   slug: "contracts",
   labels: { singular: "Contrato", plural: "Contratos" },
+  // Título já começa pelo nome do cliente ("Nome · Plano") de propósito:
+  // ordena a lista por cliente primeiro, data mais recente como critério de
+  // desempate (pedido do Thiago, 17/08/2026).
+  defaultSort: ["title", "-createdAt"],
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "contractType", "status", "clienteEmail", "createdAt"],
     group: "Contratos",
     description:
       "Contratos gerados a partir do Gerador de Contratos (EA HUB) e enviados para assinatura eletrônica pelo link /assinar/[token].",
+    components: {
+      edit: {
+        SaveButton: "@/components/admin/contracts/ContractSaveButton#ContractSaveButton",
+      },
+    },
   },
   access: {
     read: ({ req }) => Boolean(req.user),
@@ -307,12 +316,13 @@ export const Contracts: CollectionConfig = {
   ],
   hooks: {
     beforeChange: [
-      // Título automático (useAsTitle) — nome do plano + nome do cliente.
+      // Título automático (useAsTitle) — nome do cliente primeiro (pra ordenar
+      // a lista por cliente, ver admin.defaultSort acima), depois o plano.
       ({ data }) => {
         const tipo = data?.contractType as ContractType | undefined;
         const planoNome = tipo ? PLANOS[tipo]?.nome : undefined;
         const nome = data?.tipoPessoa === "PJ" ? data?.pjRazao : data?.pfNome;
-        data.title = [planoNome, nome].filter(Boolean).join(" · ") || "Contrato sem título";
+        data.title = [nome, planoNome].filter(Boolean).join(" · ") || "Contrato sem título";
         return data;
       },
       // Imutabilidade do texto gerado: uma vez que o contrato saiu de
@@ -324,6 +334,17 @@ export const Contracts: CollectionConfig = {
           if (typeof data.contractHash !== "undefined") data.contractHash = originalDoc.contractHash;
         }
         return data;
+      },
+      // Contrato assinado é definitivo: nenhum campo pode mudar depois disso
+      // (pedido do Thiago, 17/08/2026) — quem precisar de algo diferente
+      // duplica o contrato (ContractSaveButton.tsx) em vez de editar este.
+      // A própria rota de assinatura (api/contracts/[token]/sign) grava tudo
+      // num único payload.update, então a transição "enviado" → "assinado"
+      // nunca passa por aqui com originalDoc já assinado.
+      ({ operation, originalDoc }) => {
+        if (operation === "update" && originalDoc?.status === "assinado") {
+          throw new Error("Este contrato já foi assinado e não pode mais ser editado. Duplique para criar um novo.");
+        }
       },
     ],
     afterChange: [
