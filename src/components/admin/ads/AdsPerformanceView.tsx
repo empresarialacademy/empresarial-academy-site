@@ -9,10 +9,11 @@ import {
   type DealPackage,
   type DealStatus,
 } from "@/lib/ads-insights";
-import { AdsMatrix } from "./AdsMatrix";
+import { AdsMatrix, type CampaignControlMeta } from "./AdsMatrix";
 import { AdsCampaignDetail } from "./AdsCampaignDetail";
 import { AdsForecastPanel } from "./AdsForecastPanel";
 import { AdsCompetitorsPanel } from "./AdsCompetitorsPanel";
+import { AdsBudgetCard, type AdsBudgetInfo } from "./AdsBudgetCard";
 import { SyncAdsButton } from "./AdsClientActions";
 import { EaHubBackLink } from "@/components/admin/brand/EaHubBackLink";
 
@@ -20,6 +21,7 @@ type CampaignDoc = {
   id: string | number;
   name: string;
   status: string;
+  googleAdsCampaignId?: string | null;
   dailyBudgetTarget: number;
   monthlyBudgetTarget: number;
   cpcCeiling: number;
@@ -100,7 +102,14 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
   });
   const campaigns = campaignDocs as unknown as CampaignDoc[];
 
-  const adsSettings = (await payload.findGlobal({ slug: "ads-settings" })) as unknown as { refreshToken?: string };
+  const adsSettings = (await payload.findGlobal({ slug: "ads-settings" })) as unknown as {
+    refreshToken?: string;
+    budgetStatus?: "com_limite" | "sem_limite" | "indisponivel" | null;
+    budgetApprovedLimit?: number | null;
+    budgetSpent?: number | null;
+    budgetRemaining?: number | null;
+    budgetSyncedAt?: string | null;
+  };
   const isConnected = Boolean(adsSettings?.refreshToken);
   const oauthSuccess = searchParams?.oauth === "success";
 
@@ -208,6 +217,30 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
 
   const dailyBudgets = new Map(campaigns.map((c) => [String(c.id), c.dailyBudgetTarget]));
 
+  const controlMeta = new Map<string, CampaignControlMeta>(
+    campaigns.map((c) => [
+      String(c.id),
+      { googleAdsCampaignId: c.googleAdsCampaignId || null, googleStatus: c.status },
+    ]),
+  );
+
+  const totalDailyBudget = campaigns
+    .filter((c) => c.status === "ativa")
+    .reduce((sum, c) => sum + (c.dailyBudgetTarget ?? 0), 0);
+
+  const currentMonthPrefix = new Date().toISOString().slice(0, 7);
+  const monthSpend = dailyMetrics
+    .filter((m) => (typeof m.date === "string" ? m.date : String(m.date)).slice(0, 7) === currentMonthPrefix)
+    .reduce((sum, m) => sum + (m.cost ?? 0), 0);
+
+  const budgetInfo: AdsBudgetInfo = {
+    status: adsSettings.budgetStatus ?? null,
+    approvedLimit: adsSettings.budgetApprovedLimit,
+    spent: adsSettings.budgetSpent,
+    remaining: adsSettings.budgetRemaining,
+    syncedAt: adsSettings.budgetSyncedAt,
+  };
+
   const selectedParam = searchParams?.campaign;
   const selectedIdRaw = Array.isArray(selectedParam) ? selectedParam[0] : selectedParam;
   const selected =
@@ -272,6 +305,8 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
         </a>
       </div>
 
+      <AdsBudgetCard budget={budgetInfo} totalDailyBudget={totalDailyBudget} monthSpend={monthSpend} />
+
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
         <p style={{ color: "var(--theme-elevation-600)", margin: 0, maxWidth: '600px' }}>
           Visão rápida por campanha, com sugestões automáticas — clique num card para aprofundar.
@@ -279,7 +314,12 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
         <SyncAdsButton />
       </div>
 
-      <AdsMatrix scorecards={scorecards} dailyBudgets={dailyBudgets} selectedId={String(selected.id)} />
+      <AdsMatrix
+        scorecards={scorecards}
+        dailyBudgets={dailyBudgets}
+        selectedId={String(selected.id)}
+        controlMeta={controlMeta}
+      />
 
       {hasForecast ? (
         <AdsForecastPanel

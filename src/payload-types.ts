@@ -1249,6 +1249,14 @@ export interface AdsSetting {
    */
   refreshToken?: string | null;
   lastSync?: string | null;
+  /**
+   * A API do Google Ads só expõe limite de gastos quando ele foi explicitamente configurado — contas pré-pagas self-serve normalmente ficam "sem_limite".
+   */
+  budgetStatus?: ('com_limite' | 'sem_limite' | 'indisponivel') | null;
+  budgetApprovedLimit?: number | null;
+  budgetSpent?: number | null;
+  budgetRemaining?: number | null;
+  budgetSyncedAt?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1259,6 +1267,11 @@ export interface AdsSetting {
 export interface AdsSettingsSelect<T extends boolean = true> {
   refreshToken?: T;
   lastSync?: T;
+  budgetStatus?: T;
+  budgetApprovedLimit?: T;
+  budgetSpent?: T;
+  budgetRemaining?: T;
+  budgetSyncedAt?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

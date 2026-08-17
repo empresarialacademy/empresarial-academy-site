@@ -109,6 +109,102 @@ export async function fetchDailyCampaignMetrics(sinceDate: string): Promise<Fetc
   }
 }
 
+/**
+ * "Quanto tem de crédito no Google Ads": a API do Google Ads NÃO expõe o saldo
+ * real de contas pré-pagas self-serve (confirmado — não é um campo que existe
+ * no `account_budget`, esse resource só reflete um "limite de gastos" que
+ * normalmente só é configurado em contas faturadas/gerenciadas por agência).
+ * Para a conta do Thiago (pagamento manual/pré-pago, sem limite configurado),
+ * a query abaixo tende a devolver `hasLimit: false` — nesse caso o painel usa
+ * os números locais (orçamento diário somado + gasto sincronizado) como proxy
+ * e linka pro faturamento real do Google para o valor exato.
+ */
+export type AccountBudgetSummary =
+  | { ok: true; hasLimit: true; approvedLimit: number; spent: number; remaining: number }
+  | { ok: true; hasLimit: false }
+  | { ok: false; reason: string };
+
+export async function fetchAccountBudgetSummary(): Promise<AccountBudgetSummary> {
+  if (!isGoogleAdsConfigured()) return { ok: false, reason: "not-configured" };
+
+  try {
+    const { customer } = await getGoogleAdsClient();
+
+    const results = await customer.query(`
+      SELECT account_budget.approved_spending_limit_type,
+             account_budget.approved_spending_limit_micros,
+             account_budget.adjusted_spending_limit_micros,
+             account_budget.amount_served_micros
+      FROM account_budget
+      WHERE account_budget.status = 'APPROVED'
+    `);
+
+    const rows = results as Array<Record<string, Record<string, unknown>>>;
+    let approvedLimitMicros = 0;
+    let servedMicros = 0;
+    let anyFinite = false;
+
+    for (const r of rows) {
+      const type = Number(r.account_budget?.approved_spending_limit_type ?? 0);
+      const limitMicros = Number(
+        r.account_budget?.adjusted_spending_limit_micros ?? r.account_budget?.approved_spending_limit_micros ?? 0,
+      );
+      // SpendingLimitType.INFINITE (2) = sem teto — não entra na soma.
+      if (type !== enums.SpendingLimitType.INFINITE && limitMicros > 0) {
+        anyFinite = true;
+        approvedLimitMicros += limitMicros;
+      }
+      servedMicros += Number(r.account_budget?.amount_served_micros ?? 0);
+    }
+
+    if (!anyFinite) return { ok: true, hasLimit: false };
+
+    const approvedLimit = approvedLimitMicros / 1_000_000;
+    const spent = servedMicros / 1_000_000;
+    return { ok: true, hasLimit: true, approvedLimit, spent, remaining: Math.max(approvedLimit - spent, 0) };
+  } catch (e: unknown) {
+    const message = extractGoogleAdsErrorMessage(e);
+    if (message.includes("não está conectado")) {
+      return { ok: false, reason: "no-refresh-token" };
+    }
+    console.error("[google-ads] falha ao buscar account_budget:", message);
+    return { ok: false, reason: "exception" };
+  }
+}
+
+export type CampaignStatusAction = "enable" | "pause";
+
+/** Ativa (ENABLED) ou pausa (PAUSED) uma ou mais campanhas de uma vez via mutate em lote. */
+export async function setCampaignsStatus(
+  googleAdsCampaignIds: string[],
+  action: CampaignStatusAction,
+): Promise<{ ok: true } | { ok: false; reason: string }> {
+  if (!isGoogleAdsConfigured()) return { ok: false, reason: "not-configured" };
+  if (googleAdsCampaignIds.length === 0) return { ok: false, reason: "no-campaigns" };
+
+  try {
+    const { customer } = await getGoogleAdsClient();
+    const customerId = process.env.GOOGLE_CUSTOMER_ID || "";
+    const status = action === "enable" ? enums.CampaignStatus.ENABLED : enums.CampaignStatus.PAUSED;
+
+    await customer.campaigns.update(
+      googleAdsCampaignIds.map((id) => ({
+        resource_name: `customers/${customerId}/campaigns/${id}`,
+        status,
+      })),
+    );
+
+    return { ok: true };
+  } catch (e: unknown) {
+    const message = extractGoogleAdsErrorMessage(e);
+    if (message.includes("não está conectado")) {
+      return { ok: false, reason: "no-refresh-token" };
+    }
+    console.error("[google-ads] falha ao alterar status de campanhas:", message);
+    return { ok: false, reason: message };
+  }
+}
+
 export const OAUTH_CONFIG = {
   clientId: process.env.GOOGLE_ADS_CLIENT_ID || '',
   clientSecret: process.env.GOOGLE_ADS_CLIENT_SECRET || '',

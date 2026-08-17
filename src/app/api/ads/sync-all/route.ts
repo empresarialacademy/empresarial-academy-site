@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getPayloadClient } from '@/lib/payload';
-import { getGoogleAdsClient, isGoogleAdsConfigured, extractGoogleAdsErrorMessage } from '@/lib/google-ads';
+import { getGoogleAdsClient, isGoogleAdsConfigured, extractGoogleAdsErrorMessage, fetchAccountBudgetSummary } from '@/lib/google-ads';
 
 export async function POST(req: Request) {
   try {
@@ -44,6 +44,10 @@ export async function POST(req: Request) {
           data: {
             name,
             status: typedRow.campaign.status === 'ENABLED' ? 'ativa' : 'pausada',
+            // Reflete o orçamento diário real da campanha no Google Ads — sem isso,
+            // o card de crédito/orçamento do painel ficava desatualizado sempre que
+            // o orçamento fosse alterado direto no Google (só era gravado na criação).
+            dailyBudgetTarget: (typedRow.campaign_budget?.amount_micros ?? 0) / 1_000_000,
           },
         });
         updated++;
@@ -64,7 +68,25 @@ export async function POST(req: Request) {
       }
     }
 
-    // 3. Trigger metrics sync
+    // 3. Sincroniza o orçamento/crédito da conta (Faturamento no Google Ads).
+    const budgetSummary = await fetchAccountBudgetSummary();
+    const budgetData = budgetSummary.ok
+      ? budgetSummary.hasLimit
+        ? {
+            budgetStatus: 'com_limite' as const,
+            budgetApprovedLimit: budgetSummary.approvedLimit,
+            budgetSpent: budgetSummary.spent,
+            budgetRemaining: budgetSummary.remaining,
+          }
+        : { budgetStatus: 'sem_limite' as const, budgetApprovedLimit: null, budgetSpent: null, budgetRemaining: null }
+      : { budgetStatus: 'indisponivel' as const, budgetApprovedLimit: null, budgetSpent: null, budgetRemaining: null };
+
+    await payload.updateGlobal({
+      slug: 'ads-settings',
+      data: { ...budgetData, budgetSyncedAt: new Date().toISOString(), lastSync: new Date().toISOString() },
+    });
+
+    // 4. Trigger metrics sync
     const host = req.headers.get('host') || 'localhost:3000';
     const protocol = host.includes('localhost') ? 'http' : 'https';
     fetch(`${protocol}://${host}/api/cron/ads-sync`, { method: 'GET' }).catch(console.error);

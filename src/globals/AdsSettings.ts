@@ -32,5 +32,34 @@ export const AdsSettings: GlobalConfig = {
         readOnly: true,
       },
     },
+    {
+      name: 'budgetStatus',
+      type: 'select',
+      label: 'Status do orçamento (Google Ads)',
+      admin: {
+        readOnly: true,
+        description:
+          'A API do Google Ads só expõe limite de gastos quando ele foi explicitamente configurado — contas pré-pagas self-serve normalmente ficam "sem_limite".',
+      },
+      options: [
+        { label: 'Com limite de gastos configurado', value: 'com_limite' },
+        { label: 'Sem limite configurado (pré-pago)', value: 'sem_limite' },
+        { label: 'Indisponível', value: 'indisponivel' },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        { name: 'budgetApprovedLimit', type: 'number', label: 'Limite aprovado (R$)', admin: { readOnly: true } },
+        { name: 'budgetSpent', type: 'number', label: 'Consumido do limite (R$)', admin: { readOnly: true } },
+        { name: 'budgetRemaining', type: 'number', label: 'Restante do limite (R$)', admin: { readOnly: true } },
+      ],
+    },
+    {
+      name: 'budgetSyncedAt',
+      type: 'date',
+      label: 'Orçamento sincronizado em',
+      admin: { readOnly: true },
+    },
   ],
 };

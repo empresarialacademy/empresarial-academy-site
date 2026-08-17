@@ -390,6 +390,44 @@ Template em `.env.example`. Segredos reais em `.env` / `.env.local` (gitignored)
 
 ## 17. Última atualização
 
+### Sessão 2026-08-17 (EA ADS — crédito/orçamento da conta + iniciar/pausar campanhas em lote)
+Pedido do Thiago: ver quanto tem de crédito no Google Ads e poder iniciar/pausar
+uma ou várias campanhas direto do painel. Ainda não deployado (só local, tsc +
+eslint limpos) — falta o Thiago validar no preview e autorizar o `vercel --prod`.
+- **Achado importante (verificado antes de codar):** a API do Google Ads **não
+  expõe o saldo real de contas pré-pagas self-serve** — o resource
+  `account_budget` só tem dado quando existe um "limite de gastos" configurado
+  explicitamente (comum em conta faturada/gerenciada por agência), o que não é
+  o caso da conta do Thiago (pagamento manual/pré-pago, sem teto). Confirmado
+  via busca (grupos oficiais do Google Ads API). Por isso o card novo sempre
+  mostra também o que dá pra calcular localmente (orçamento diário somado +
+  gasto do mês já sincronizado) e linka direto pro Faturamento real do Google
+  (`ads.google.com/aw/billing/summary`) para o valor exato.
+- **`fetchAccountBudgetSummary()`** e **`setCampaignsStatus()`** novos em
+  [src/lib/google-ads.ts](src/lib/google-ads.ts) — a 1ª tenta o `account_budget`
+  GAQL e cai para "sem limite"/"indisponível" sem quebrar nada; a 2ª faz
+  `customer.campaigns.update([...])` em lote (`ENABLED`/`PAUSED`).
+- **Nova rota `POST /api/ads/campaigns/status`**
+  ([route.ts](src/app/api/ads/campaigns/status/route.ts)): recebe
+  `{campaignIds, action}`, filtra só campanhas com `googleAdsCampaignId`
+  vinculado, muda no Google Ads e já atualiza o `status` local no Payload
+  na mesma chamada (não espera o próximo sync completo).
+- **`/api/ads/sync-all` também sincroniza o orçamento agora** — grava
+  `budgetStatus`/`budgetApprovedLimit`/`budgetSpent`/`budgetRemaining`/
+  `budgetSyncedAt` no global `ads-settings` ([AdsSettings.ts](src/globals/AdsSettings.ts)).
+- **UI:** `AdsMatrix.tsx` virou client component — cada card com
+  `googleAdsCampaignId` ganha um checkbox; barra de ações acima da grade
+  ("▶ Iniciar selecionadas" / "⏸ Pausar selecionadas", com `confirm()` antes de
+  chamar a API) cobre tanto 1 campanha quanto várias de uma vez. Novo
+  `AdsBudgetCard.tsx` mostra o card de crédito/orçamento no topo do painel.
+- **`payload-types.ts` atualizado à mão** (não via `payload generate:types` —
+  esse comando continua quebrado no Node 24 deste ambiente, ver §15.3; só
+  adicionei os campos novos do global `ads-settings` manualmente e validei com
+  `tsc --noEmit` limpo).
+- **Pendente:** Thiago validar visualmente no preview (checkbox + botões +
+  card de crédito) e autorizar deploy; depois rodar "Sincronizar" uma vez para
+  o card de crédito parar de mostrar "ainda não sincronizado".
+
 ### Sessão 2026-08-05 (LPs dedicadas por palavra-chave do Google Ads)
 Continuação da sessão anterior — item que tinha ficado registrado como "fora
 desta rodada". Commit `955c8c5`, deploy em produção.
