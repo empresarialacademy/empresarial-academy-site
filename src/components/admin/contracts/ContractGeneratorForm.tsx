@@ -29,6 +29,14 @@ import {
  * hasheado ao enviar.
  */
 
+function whatsAppShareUrl(form: ContractInput, signUrl: string): string {
+  const digits = (form.clienteTelefone || "").replace(/\D/g, "");
+  const nome = form.tipoPessoa === "PJ" ? form.pjRazao : form.pfNome;
+  const plano = PLANOS[form.contractType].nome;
+  const msg = `Olá${nome ? ", " + nome : ""}! Segue o contrato de ${plano} da Empresarial Academy para leitura e assinatura eletrônica: ${signUrl}`;
+  return `https://wa.me/55${digits}?text=${encodeURIComponent(msg)}`;
+}
+
 const card: React.CSSProperties = {
   background: "var(--theme-elevation-50)",
   border: "1px solid var(--theme-elevation-150)",
@@ -503,9 +511,38 @@ export function ContractGeneratorForm() {
         </div>
         <p style={{ fontSize: 12, color: "var(--theme-elevation-500)", marginTop: 8 }}>{statusMsg}</p>
         {sentUrl && (
-          <p style={{ fontSize: 12 }}>
-            Link de assinatura: <a href={sentUrl} target="_blank" rel="noreferrer">{sentUrl}</a>
-          </p>
+          <div style={{ marginTop: 8 }}>
+            <p style={{ fontSize: 12, margin: "0 0 8px" }}>
+              Link de assinatura: <a href={sentUrl} target="_blank" rel="noreferrer">{sentUrl}</a>
+            </p>
+            {form.clienteTelefone && validarTelefone(form.clienteTelefone) ? (
+              <a
+                href={whatsAppShareUrl(form, sentUrl)}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: "inline-block",
+                  padding: "10px 16px",
+                  background: "#25D366",
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontSize: 13,
+                  borderRadius: 6,
+                  textDecoration: "none",
+                }}
+              >
+                Enviar por WhatsApp
+              </a>
+            ) : (
+              <p style={{ fontSize: 11, color: "var(--theme-elevation-500)" }}>
+                Preencha um telefone válido do cliente para habilitar o envio por WhatsApp.
+              </p>
+            )}
+            <p style={{ fontSize: 11, color: "var(--theme-elevation-500)", marginTop: 6 }}>
+              Abre o WhatsApp Web/app com a mensagem e o link já prontos — você confirma o envio. A EA ainda não tem
+              WhatsApp Business API conectada, então não existe envio automático sem esse clique.
+            </p>
+          </div>
         )}
       </div>
 

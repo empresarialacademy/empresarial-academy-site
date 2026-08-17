@@ -134,6 +134,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ token: 
     // Certificado em PDF (certificado + contrato integral) — gerado e anexado ao registro
     // antes de responder, para já existir mesmo se o e-mail falhar depois.
     let pdfBuffer: Buffer | undefined;
+    let pdfUrl: string | undefined;
     try {
       pdfBuffer = await renderContractCertificatePdf(
         {
@@ -162,6 +163,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ token: 
           size: pdfBuffer.length,
         },
       });
+      pdfUrl = (pdfDoc as { url?: string }).url;
       await payload.update({
         collection: "contracts",
         id: doc.id as string | number,
@@ -180,7 +182,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ token: 
       pdfBuffer,
     }).catch((e) => console.error("[contracts/sign] falha ao enviar e-mails de confirmação:", e));
 
-    return NextResponse.json({ ok: true, signedAt: signedAt.toISOString() });
+    return NextResponse.json({ ok: true, signedAt: signedAt.toISOString(), pdfUrl });
   } catch (e) {
     console.error("[contracts/sign] exceção:", e);
     return NextResponse.json({ error: "internal" }, { status: 500 });

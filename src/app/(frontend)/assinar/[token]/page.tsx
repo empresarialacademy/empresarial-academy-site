@@ -14,12 +14,40 @@ const PAPER_BG = "#F1F0EC";
 
 function ErrorScreen({ title, message }: { title: string; message: string }) {
   return (
-    <main style={{ background: PAPER_BG, minHeight: "60vh", padding: "48px 20px" }}>
-      <div style={{ maxWidth: 560, margin: "0 auto", background: "#fff", border: `1px solid ${LINE}`, borderRadius: 8, padding: "32px 28px" }}>
-        <h1 style={{ color: NAVY, fontSize: 20, margin: "0 0 12px" }}>{title}</h1>
+    <main style={{ background: PAPER_BG, minHeight: "60vh", padding: "clamp(24px, 8vw, 48px) clamp(12px, 4vw, 20px)" }}>
+      <div style={{ maxWidth: 560, margin: "0 auto", background: "#fff", border: `1px solid ${LINE}`, borderRadius: 8, padding: "clamp(20px, 5vw, 32px) clamp(16px, 5vw, 28px)" }}>
+        <h1 style={{ color: NAVY, fontSize: "clamp(18px, 5vw, 20px)", margin: "0 0 12px" }}>{title}</h1>
         <p style={{ color: "#444", fontSize: 14, lineHeight: 1.6 }}>{message}</p>
       </div>
     </main>
+  );
+}
+
+function DownloadPdfButton({ url }: { url: string }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        boxSizing: "border-box",
+        marginTop: 16,
+        padding: "14px 20px",
+        minHeight: 44,
+        background: NAVY,
+        color: "#fff",
+        fontWeight: 700,
+        fontSize: 14,
+        textDecoration: "none",
+        borderRadius: 6,
+      }}
+    >
+      Baixar certificado de assinatura (PDF)
+    </a>
   );
 }
 
@@ -60,14 +88,17 @@ export default async function AssinarPage({ params }: Props) {
     const signedAtLabel = doc.signedAt
       ? new Date(String(doc.signedAt)).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })
       : null;
+    const pdfUrl = (doc.signedPdf as { url?: string } | number | null | undefined);
+    const pdfHref = pdfUrl && typeof pdfUrl === "object" ? pdfUrl.url : undefined;
     return (
-      <main style={{ background: PAPER_BG, minHeight: "60vh", padding: "48px 20px" }}>
-        <div style={{ maxWidth: 560, margin: "0 auto", background: "#fff", border: `1px solid ${LINE}`, borderRadius: 8, padding: "32px 28px" }}>
-          <h1 style={{ color: NAVY, fontSize: 20, margin: "0 0 12px" }}>Contrato já assinado</h1>
+      <main style={{ background: PAPER_BG, minHeight: "60vh", padding: "clamp(24px, 8vw, 48px) clamp(12px, 4vw, 20px)" }}>
+        <div style={{ maxWidth: 560, margin: "0 auto", background: "#fff", border: `1px solid ${LINE}`, borderRadius: 8, padding: "clamp(20px, 5vw, 32px) clamp(16px, 5vw, 28px)" }}>
+          <h1 style={{ color: NAVY, fontSize: "clamp(18px, 5vw, 20px)", margin: "0 0 12px" }}>Contrato já assinado</h1>
           <p style={{ color: "#444", fontSize: 14, lineHeight: 1.6 }}>
             {planoTitulo} já foi assinado eletronicamente{signedAtLabel ? ` em ${signedAtLabel}` : ""}. Não é
             necessário assinar novamente. Uma cópia da confirmação foi enviada por e-mail.
           </p>
+          {pdfHref && <DownloadPdfButton url={pdfHref} />}
         </div>
       </main>
     );
@@ -91,10 +122,10 @@ export default async function AssinarPage({ params }: Props) {
   const expectedDocument = String((isPJ ? doc.pjRepCpf : doc.pfCpf) || "");
 
   return (
-    <main style={{ background: PAPER_BG, padding: "40px 16px 64px" }}>
+    <main style={{ background: PAPER_BG, padding: "clamp(20px, 6vw, 40px) clamp(12px, 4vw, 16px) 64px" }}>
       <div style={{ maxWidth: 780, margin: "0 auto" }}>
-        <h1 style={{ color: NAVY, fontSize: 20, margin: "0 0 4px" }}>Assinatura de contrato</h1>
-        <p style={{ color: "#666", fontSize: 13, margin: "0 0 24px" }}>
+        <h1 style={{ color: NAVY, fontSize: "clamp(18px, 5vw, 20px)", margin: "0 0 4px" }}>Assinatura de contrato</h1>
+        <p style={{ color: "#666", fontSize: 13, margin: "0 0 20px" }}>
           Leia o contrato abaixo com atenção antes de assinar. O texto exibido é exatamente o que foi enviado pela
           Empresarial Academy.
         </p>
@@ -104,12 +135,13 @@ export default async function AssinarPage({ params }: Props) {
             background: "#fff",
             border: `1px solid ${LINE}`,
             borderRadius: 8,
-            padding: "40px 44px",
+            padding: "clamp(18px, 6vw, 40px) clamp(16px, 6vw, 44px)",
             fontFamily: "Georgia, 'Times New Roman', serif",
-            fontSize: 13,
+            fontSize: "clamp(13px, 3.6vw, 14px)",
             lineHeight: 1.6,
             color: "#111",
-            marginBottom: 24,
+            marginBottom: 20,
+            overflowWrap: "break-word",
           }}
           // Texto gerado no servidor no momento do envio, armazenado imutável
           // (Contracts.contractHtml) — exibido exatamente como foi enviado,
@@ -121,7 +153,7 @@ export default async function AssinarPage({ params }: Props) {
           token={token}
           expectedName={expectedName}
           expectedDocument={expectedDocument}
-          documentLabel="CPF"
+          documentLabel={isPJ ? "CNPJ" : "CPF"}
         />
       </div>
     </main>
