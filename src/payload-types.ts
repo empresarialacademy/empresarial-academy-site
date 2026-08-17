@@ -74,6 +74,8 @@ export interface Config {
     'material-files': MaterialFile;
     testimonials: Testimonial;
     leads: Lead;
+    contracts: Contract;
+    'contract-documents': ContractDocument;
     'email-segments': EmailSegment;
     'email-campaigns': EmailCampaign;
     'email-logs': EmailLog;
@@ -83,6 +85,7 @@ export interface Config {
     'ad-metrics-daily': AdMetricsDaily;
     'ad-competitors': AdCompetitor;
     'system-links': SystemLink;
+    'content-calendar': ContentCalendar;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -99,6 +102,8 @@ export interface Config {
     'material-files': MaterialFilesSelect<false> | MaterialFilesSelect<true>;
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     leads: LeadsSelect<false> | LeadsSelect<true>;
+    contracts: ContractsSelect<false> | ContractsSelect<true>;
+    'contract-documents': ContractDocumentsSelect<false> | ContractDocumentsSelect<true>;
     'email-segments': EmailSegmentsSelect<false> | EmailSegmentsSelect<true>;
     'email-campaigns': EmailCampaignsSelect<false> | EmailCampaignsSelect<true>;
     'email-logs': EmailLogsSelect<false> | EmailLogsSelect<true>;
@@ -108,6 +113,7 @@ export interface Config {
     'ad-metrics-daily': AdMetricsDailySelect<false> | AdMetricsDailySelect<true>;
     'ad-competitors': AdCompetitorsSelect<false> | AdCompetitorsSelect<true>;
     'system-links': SystemLinksSelect<false> | SystemLinksSelect<true>;
+    'content-calendar': ContentCalendarSelect<false> | ContentCalendarSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -536,6 +542,119 @@ export interface AdKeyword {
   createdAt: string;
 }
 /**
+ * Contratos gerados a partir do Gerador de Contratos (EA HUB) e enviados para assinatura eletrônica pelo link /assinar/[token].
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contracts".
+ */
+export interface Contract {
+  id: number;
+  /**
+   * Gerado automaticamente a partir do tipo de contrato e do nome do cliente.
+   */
+  title?: string | null;
+  status: 'rascunho' | 'enviado' | 'assinado' | 'cancelado';
+  contractType: 'mentoria' | 'consultoria' | 'conselho' | 'diagnostico' | 'projeto';
+  /**
+   * Só para Mentoria e Consultoria.
+   */
+  horizonte?: ('trimestral' | 'semestral' | 'anual') | null;
+  /**
+   * Não se aplica ao Projeto Personalizado (usa projValorTotal).
+   */
+  valorMensal?: number | null;
+  projNome?: string | null;
+  projDescricao?: string | null;
+  etapas?:
+    | {
+        nome?: string | null;
+        prazo?: string | null;
+        descricao?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  projDuracao?: string | null;
+  projDataEntrega?: string | null;
+  projValorTotal?: number | null;
+  projParcelas?: number | null;
+  projValorParcela?: number | null;
+  tipoPessoa: 'PF' | 'PJ';
+  pfNome?: string | null;
+  pfCpf?: string | null;
+  pjRazao?: string | null;
+  pjFantasia?: string | null;
+  pjCnpj?: string | null;
+  pjRepNome?: string | null;
+  pjRepCpf?: string | null;
+  pjRepCargo?: string | null;
+  clienteEndereco?: string | null;
+  clienteEmail: string;
+  clienteTelefone?: string | null;
+  dataInicio?: string | null;
+  diaVencimento?: number | null;
+  formaPagamento?:
+    | ('PIX' | 'Boleto bancário' | 'Transferência bancária (TED/DOC)' | 'Cartão de crédito recorrente')
+    | null;
+  clausulaReajuste?: boolean | null;
+  temDiagnostico?: boolean | null;
+  diagValor?: number | null;
+  diagData?: string | null;
+  diagForaPrazo?: boolean | null;
+  bonusMesGratis?: boolean | null;
+  bonusVisitaExtra?: boolean | null;
+  bonusIndicacao?: boolean | null;
+  indicacaoPerc?: number | null;
+  bonusIsencaoMulta?: boolean | null;
+  bonusParcelamento?: boolean | null;
+  parcelamentoN?: number | null;
+  paragrafoLivre?: string | null;
+  localAssinatura?: string | null;
+  dataAssinatura?: string | null;
+  /**
+   * Gerado pelo servidor a partir dos campos acima. Não editável diretamente.
+   */
+  contractHtml?: string | null;
+  contractHash?: string | null;
+  signToken?: string | null;
+  signedAt?: string | null;
+  signerIp?: string | null;
+  signerNameConfirmed?: string | null;
+  signerDocumentConfirmed?: string | null;
+  /**
+   * Deve ser idêntico a contractHash. Se divergir, o texto foi alterado após o envio.
+   */
+  signatureHashAtSigning?: string | null;
+  /**
+   * Marcado quando o nome ou documento digitado na assinatura divergia do cadastrado e o signatário confirmou explicitamente ser representante legal ou pessoa autorizada.
+   */
+  signerMismatchAcknowledged?: boolean | null;
+  /**
+   * Gerado automaticamente ao assinar. Contém o certificado e o contrato integral.
+   */
+  signedPdf?: (number | null) | ContractDocument;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contract-documents".
+ */
+export interface ContractDocument {
+  id: number;
+  alt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
  * Critérios para selecionar leads por origem, pilar mais fraco e score do diagnóstico. Usado pelas Campanhas de e-mail.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -546,7 +665,17 @@ export interface EmailSegment {
   name: string;
   description?: string | null;
   source?: ('any' | 'diagnostic' | 'newsletter' | 'popup' | 'download' | 'contact') | null;
-  pillar?: ('any' | 'Comercial' | 'Operações' | 'Gestão de Indicadores' | 'Liderança') | null;
+  pillar?:
+    | (
+        | 'any'
+        | 'Fluxo de Alta Performance'
+        | 'Arquitetura do Crescimento'
+        | 'Objetivos Estratégicos'
+        | 'Métricas de Sucesso'
+        | 'Gestão de Desafios'
+        | 'Evolução Constante'
+      )
+    | null;
   scoreMin?: number | null;
   scoreMax?: number | null;
   createdFrom?: string | null;
@@ -601,7 +730,15 @@ export interface EmailCampaign {
  */
 export interface EmailLog {
   id: number;
-  type: 'diagnostic-result' | 'nurture-1' | 'nurture-2' | 'nurture-3' | 'campaign' | 'content-alert';
+  type:
+    | 'diagnostic-result'
+    | 'nurture-1'
+    | 'nurture-2'
+    | 'nurture-3'
+    | 'campaign'
+    | 'content-alert'
+    | 'contract-sent'
+    | 'contract-signed';
   status: 'sent' | 'failed';
   to: string;
   subject: string;
@@ -678,6 +815,36 @@ export interface SystemLink {
   createdAt: string;
 }
 /**
+ * Calendário de posts para Instagram, Facebook, YouTube e LinkedIn.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "content-calendar".
+ */
+export interface ContentCalendar {
+  id: number;
+  date: string;
+  phase: 'prep' | 'semana-1' | 'semana-2' | 'semana-3' | 'semana-4';
+  pillar: 'preparacao' | 'lancamento' | 'gestao' | 'vendas' | 'lideranca';
+  channels?:
+    | ('ig-feed' | 'ig-reels' | 'ig-stories' | 'facebook' | 'li-post' | 'li-artigo' | 'yt-shorts' | 'yt-video')[]
+    | null;
+  /**
+   * Ex.: Carrossel (4 lâminas), Vertical 20-30s
+   */
+  format?: string | null;
+  theme: string;
+  /**
+   * Blog/material de origem, quando houver.
+   */
+  sourceLabel?: string | null;
+  copyIdea?: string | null;
+  ctaOrAction?: string | null;
+  status: 'planejado' | 'em-producao' | 'concluido';
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -730,6 +897,14 @@ export interface PayloadLockedDocument {
         value: number | Lead;
       } | null)
     | ({
+        relationTo: 'contracts';
+        value: number | Contract;
+      } | null)
+    | ({
+        relationTo: 'contract-documents';
+        value: number | ContractDocument;
+      } | null)
+    | ({
         relationTo: 'email-segments';
         value: number | EmailSegment;
       } | null)
@@ -764,6 +939,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'system-links';
         value: number | SystemLink;
+      } | null)
+    | ({
+        relationTo: 'content-calendar';
+        value: number | ContentCalendar;
       } | null)
     | ({
         relationTo: 'media';
@@ -965,6 +1144,92 @@ export interface LeadsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contracts_select".
+ */
+export interface ContractsSelect<T extends boolean = true> {
+  title?: T;
+  status?: T;
+  contractType?: T;
+  horizonte?: T;
+  valorMensal?: T;
+  projNome?: T;
+  projDescricao?: T;
+  etapas?:
+    | T
+    | {
+        nome?: T;
+        prazo?: T;
+        descricao?: T;
+        id?: T;
+      };
+  projDuracao?: T;
+  projDataEntrega?: T;
+  projValorTotal?: T;
+  projParcelas?: T;
+  projValorParcela?: T;
+  tipoPessoa?: T;
+  pfNome?: T;
+  pfCpf?: T;
+  pjRazao?: T;
+  pjFantasia?: T;
+  pjCnpj?: T;
+  pjRepNome?: T;
+  pjRepCpf?: T;
+  pjRepCargo?: T;
+  clienteEndereco?: T;
+  clienteEmail?: T;
+  clienteTelefone?: T;
+  dataInicio?: T;
+  diaVencimento?: T;
+  formaPagamento?: T;
+  clausulaReajuste?: T;
+  temDiagnostico?: T;
+  diagValor?: T;
+  diagData?: T;
+  diagForaPrazo?: T;
+  bonusMesGratis?: T;
+  bonusVisitaExtra?: T;
+  bonusIndicacao?: T;
+  indicacaoPerc?: T;
+  bonusIsencaoMulta?: T;
+  bonusParcelamento?: T;
+  parcelamentoN?: T;
+  paragrafoLivre?: T;
+  localAssinatura?: T;
+  dataAssinatura?: T;
+  contractHtml?: T;
+  contractHash?: T;
+  signToken?: T;
+  signedAt?: T;
+  signerIp?: T;
+  signerNameConfirmed?: T;
+  signerDocumentConfirmed?: T;
+  signatureHashAtSigning?: T;
+  signerMismatchAcknowledged?: T;
+  signedPdf?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contract-documents_select".
+ */
+export interface ContractDocumentsSelect<T extends boolean = true> {
+  alt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "email-segments_select".
  */
 export interface EmailSegmentsSelect<T extends boolean = true> {
@@ -1125,6 +1390,25 @@ export interface SystemLinksSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "content-calendar_select".
+ */
+export interface ContentCalendarSelect<T extends boolean = true> {
+  date?: T;
+  phase?: T;
+  pillar?: T;
+  channels?: T;
+  format?: T;
+  theme?: T;
+  sourceLabel?: T;
+  copyIdea?: T;
+  ctaOrAction?: T;
+  status?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
@@ -1245,7 +1529,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface AdsSetting {
   id: number;
   /**
-   * Gerado automaticamente ao conectar com o Google no painel. Não edite manualmente a não ser que saiba o que está fazendo.
+   * Gerado automaticamente ao conectar com o Google no painel. Valor oculto por segurança — reconecte em "Conectar Google Ads" para gerar um novo.
    */
   refreshToken?: string | null;
   lastSync?: string | null;

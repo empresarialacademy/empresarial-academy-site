@@ -38,6 +38,8 @@ function buildText(subject: string, fields: Record<string, string | undefined>) 
   );
 }
 
+type Attachment = { filename: string; content: Buffer };
+
 type SendMailInput = {
   subject: string;
   html: string;
@@ -47,6 +49,7 @@ type SendMailInput = {
   /** Remetente. Padrão: LEADS_FROM_EMAIL. */
   from?: string;
   replyTo?: string;
+  attachments?: Attachment[];
 };
 
 /**
@@ -60,6 +63,7 @@ export async function sendMail({
   to,
   from,
   replyTo,
+  attachments,
 }: SendMailInput): Promise<{ ok: boolean; via: string }> {
   const recipient = to || process.env.LEADS_TO_EMAIL || siteConfig.contact.email;
 
@@ -78,6 +82,7 @@ export async function sendMail({
         html,
         text,
         replyTo,
+        attachments: attachments?.map((a) => ({ filename: a.filename, content: a.content })),
       });
       if (!error) return { ok: true, via: "resend" };
       console.error("[email] Resend:", error);
@@ -104,6 +109,7 @@ export async function sendMail({
         html,
         text,
         replyTo,
+        attachments: attachments?.map((a) => ({ filename: a.filename, content: a.content })),
       });
       return { ok: true, via: "smtp" };
     } catch (e) {
