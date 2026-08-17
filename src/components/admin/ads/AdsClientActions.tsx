@@ -219,16 +219,27 @@ export function AIForecastButton({
   campaignId,
   campaignName,
   autoGenerate = false,
+  dataVersion = null,
 }: {
   campaignId: string;
   campaignName: string;
-  /** Gera sozinho ao montar (1x por campanha/aba, via sessionStorage) — usado quando os dados já estão sincronizados. */
+  /** Gera sozinho ao montar — usado quando os dados já estão sincronizados. */
   autoGenerate?: boolean;
+  /**
+   * `lastSync` do `ads-settings` (ISO string) — entra na chave do guard de
+   * sessionStorage pra que uma sincronização NOVA sempre libere um forecast
+   * novo, mesmo que já tenha sido gerado 1x nesta aba antes. Sem isso, o
+   * guard "já gerei" ficava travado indefinidamente após a 1ª geração,
+   * mesmo depois de sincronizações reais seguintes (bug visto em produção:
+   * sync aconteceu de verdade, mas o forecast — e o popup — nunca disparavam).
+   */
+  dataVersion?: string | null;
 }) {
   const [loading, setLoading] = useState(false);
   const [insight, setInsight] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [pipelineSummary, setPipelineSummary] = useState<{ at: string; lines: string[] } | null>(null);
+  const forecastGuardKey = `ea-ads-forecast-${campaignId}-${dataVersion ?? 'never'}`;
 
   const handleForecast = useCallback(
     async (silent = false) => {
@@ -243,7 +254,7 @@ export function AIForecastButton({
         const data = await res.json();
         if (data.success) {
           setInsight(data.insight);
-          sessionStorage.setItem(`ea-ads-forecast-${campaignId}`, 'done');
+          sessionStorage.setItem(forecastGuardKey, 'done');
           if (silent) {
             const syncSummary = consumePipelineSyncSummary();
             const lines: string[] = [];
@@ -264,14 +275,14 @@ export function AIForecastButton({
         setLoading(false);
       }
     },
-    [campaignId, campaignName],
+    [campaignId, campaignName, forecastGuardKey],
   );
 
   useEffect(() => {
     if (!autoGenerate) return;
-    if (sessionStorage.getItem(`ea-ads-forecast-${campaignId}`) === 'done') return;
+    if (sessionStorage.getItem(forecastGuardKey) === 'done') return;
     handleForecast(true);
-  }, [autoGenerate, campaignId, handleForecast]);
+  }, [autoGenerate, forecastGuardKey, handleForecast]);
 
   const handleCopy = async () => {
     if (!insight) return;

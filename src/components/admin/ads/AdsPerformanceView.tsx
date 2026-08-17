@@ -358,6 +358,7 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
         adGroups={selectedGroups}
         keywordsByGroup={keywordsByGroup}
         autoGenerateForecast={!isStale}
+        lastSyncedAt={adsSettings.lastSync ?? null}
       />
 
       <AdsCompetitorsPanel rows={competitors} />

@@ -131,6 +131,7 @@ export function AdsCampaignDetail({
   adGroups,
   keywordsByGroup,
   autoGenerateForecast = false,
+  lastSyncedAt = null,
 }: {
   campaign: CampaignDoc;
   scorecard: CampaignScorecard;
@@ -138,6 +139,8 @@ export function AdsCampaignDetail({
   adGroups: AdGroupDoc[];
   keywordsByGroup: Map<string, KeywordDoc[]>;
   autoGenerateForecast?: boolean;
+  /** `lastSync` do ads-settings — usado só pra invalidar o guard de forecast automático quando um sync novo acontece. */
+  lastSyncedAt?: string | null;
 }) {
   const T = ADS_INSIGHTS_THRESHOLDS;
   const isColletando = scorecard.status === "coletando";
@@ -175,7 +178,12 @@ export function AdsCampaignDetail({
 
       <p style={{ margin: "0 0 1.1rem", color: "var(--theme-elevation-700)" }}>{scorecard.recommendation}</p>
 
-      <AIForecastButton campaignId={String(campaign.id)} campaignName={campaign.name} autoGenerate={autoGenerateForecast} />
+      <AIForecastButton
+        campaignId={String(campaign.id)}
+        campaignName={campaign.name}
+        autoGenerate={autoGenerateForecast}
+        dataVersion={lastSyncedAt}
+      />
 
       <div style={{ fontSize: "0.8rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.03em", color: "var(--theme-elevation-500)", margin: "1.5rem 0 0.5rem" }}>
         Tráfego e custo
