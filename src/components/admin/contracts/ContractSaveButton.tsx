@@ -42,8 +42,7 @@ function ResendToOtherModal({
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function handleSubmit() {
     if (!email.trim() && !telefone.trim()) {
       setError("Informe um e-mail e/ou telefone.");
       return;
@@ -75,8 +74,12 @@ function ResendToOtherModal({
       style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}
       onClick={onClose}
     >
-      <form
-        onSubmit={handleSubmit}
+      {/* div, não <form>: este popup já vive dentro do <form> principal do
+          Payload (a tela inteira de edição do contrato é um form) — um
+          <form> aninhado é HTML inválido e o navegador tratava o "Enviar"
+          como navegação de página real (por isso o aviso "Sair do site?" e
+          o WhatsApp nunca abria). */}
+      <div
         onClick={(e) => e.stopPropagation()}
         style={{ background: "#fff", borderRadius: 8, padding: "24px 26px", width: "100%", maxWidth: 420, boxSizing: "border-box" }}
       >
@@ -122,14 +125,15 @@ function ResendToOtherModal({
             Cancelar
           </button>
           <button
-            type="submit"
+            type="button"
+            onClick={handleSubmit}
             disabled={sending}
             style={{ padding: "9px 16px", border: `1px solid ${NAVY}`, borderRadius: 6, background: NAVY, color: "#fff", fontSize: 13, cursor: sending ? "not-allowed" : "pointer" }}
           >
             {sending ? "Enviando..." : "Enviar"}
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
