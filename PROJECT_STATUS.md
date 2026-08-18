@@ -2613,3 +2613,9 @@ deploy, site público intacto.
 - **Merge:** branch `feature/contratos-assinatura-eletronica` mesclada em `master` (sem conflitos, `git merge --no-edit`), testada (`tsc`/`build` limpos) e enviada para `origin/master`. Deploy final feito a partir de `master`.
 - **Deploy final:** `dpl_4jBV9x2w3jdAcvBSYNCTNwoRak9N`.
 - **WhatsApp automático (Meta Business API):** decisão do Thiago — não seguir por enquanto, manter clique manual.
+
+### Sessão 2026-08-17 (f) — Status editável na tela mascarava contrato já assinado
+- **Achado real (Thiago testou, contrato de teste id=1):** o contrato de teste já estava de fato "assinado" no banco (confirmado nos logs de produção: `PATCH /api/contracts/1` recusado com "Este contrato já foi assinado..."), mas o campo Status na tela do admin continuava um dropdown editável, e mostrava "Enviado para assinatura" — um valor trocado na tela mas nunca salvo (o servidor recusa salvar contrato assinado). A tela dos botões de reenvio reagia a esse valor não-salvo, então "Reenviar link"/"Reenviar para outro contato" apareciam, mas o servidor corretamente recusava porque o status real no banco é "assinado".
+- **Fix:** campo `status` em `Contracts.ts` virou `admin.readOnly: true` + `access.update: () => false` (mesmo padrão de `title`/`contractHtml`) — não dá mais pra mudar na tela, só pelo fluxo automático (criar rascunho → enviar → assinar). Local API (usada pelas próprias rotas do fluxo) continua escrevendo normalmente.
+- **Deploy:** `dpl_4Bfg91DMKF5pob1HvtA5wetHbo6W`.
+- **Nota pro próximo teste:** o contrato id=1 já está assinado de verdade e não serve mais pra testar reenvio — precisa gerar um contrato NOVO, enviá-lo, e só então testar "Reenviar link"/"Reenviar para outro contato" nesse novo.
