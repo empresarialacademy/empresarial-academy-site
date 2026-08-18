@@ -22,6 +22,7 @@ const INITIAL_LINKS = [
   { name: "LP Consultoria PME", url: "https://empresarialacademy.com/consultoria-pme", description: "Landing page de aquisição (destino do Google Ads).", order: 20 },
   { name: "EA Marketing Manager", url: "/eahub", description: "Hub das ferramentas de marketing (Ads, e-mail, leads) — é a home do EA HUB.", order: 30 },
   { name: "EA ADS", url: "/eahub/ads-performance", description: "Desempenho de campanhas do Google Ads, CAC e ROI.", order: 40 },
+  { name: "EA Post", url: "https://ea-social-engine.vercel.app/admin", description: "Motor de geração, aprovação e publicação de conteúdo social (Instagram, Facebook, YouTube, LinkedIn).", order: 45 },
   { name: "EA Impulsiona", url: "https://ea-impulsiona.web.app", description: "Plataforma EA Impulsiona.", order: 50 },
   { name: "EA Recovery", url: "https://recovery.empresarialacademy.com/", description: "CRM de Cobrança (Souza Ramos).", order: 60 },
   { name: "EA Recovery — Admin", url: "https://recovery.empresarialacademy.com/admin", description: "Painel administrativo do EA Recovery.", order: 70 },
