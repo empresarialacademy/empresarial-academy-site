@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { isContentEngineRequest } from "@/lib/content-engine-auth";
 
 /**
  * Calendário de conteúdo de redes sociais (Instagram, Facebook, YouTube,
@@ -24,7 +25,10 @@ export const ContentCalendarEntries: CollectionConfig = {
     },
   },
   access: {
-    read: ({ req }) => Boolean(req.user),
+    // Leitura também liberada pro motor de conteúdo social (repo separado
+    // ea-social-engine) via bearer token — ver src/lib/content-engine-auth.ts.
+    // Escrita continua só para usuário logado, de propósito.
+    read: ({ req }) => Boolean(req.user) || isContentEngineRequest(req),
     create: ({ req }) => Boolean(req.user),
     update: ({ req }) => Boolean(req.user),
     delete: ({ req }) => Boolean(req.user),
