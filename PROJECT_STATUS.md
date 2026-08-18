@@ -2607,3 +2607,9 @@ deploy, site público intacto.
 - **Fix:** trocado por `useFormFields(([fields]) => fields?.status?.value)` (inscrição reativa de verdade) pro status, e `useDocumentInfo()` pro id do documento (não depende do form). `getData()` continua em uso dentro dos handlers de clique (chamar fresco na hora do clique é seguro, o form já carregou).
 - **Deploy:** `dpl_7Ve1Hicdv5CssJKf7r4KhfsQL5xK`.
 - **Lição pra qualquer componente custom futuro em `admin.components`:** nunca usar `getData()` do `useForm()` pra decidir o que renderizar condicionalmente — só pra ações imperativas (dentro de onClick/onSubmit). Pra ler um campo reativamente, `useFormFields`; pro id do documento, `useDocumentInfo()`.
+
+### Sessão 2026-08-17 (e) — Merge para master + bug do popup "reenviar para outro contato"
+- **Bug real (não achei sozinho, o Thiago testou e mandou print):** o popup "Reenviar para outro contato" usava `<form onSubmit>`, mas já vive dentro do `<form>` principal do Payload (a tela de edição do contrato inteira é um form) — form aninhado é HTML inválido, o navegador tratava o "Enviar" como navegação real de página, disparando o aviso nativo "Sair do site?" e nunca chegando a abrir o WhatsApp. Corrigido: `<form>` → `<div>`, botão `type="submit"` → `type="button"` com `onClick` direto.
+- **Merge:** branch `feature/contratos-assinatura-eletronica` mesclada em `master` (sem conflitos, `git merge --no-edit`), testada (`tsc`/`build` limpos) e enviada para `origin/master`. Deploy final feito a partir de `master`.
+- **Deploy final:** `dpl_4jBV9x2w3jdAcvBSYNCTNwoRak9N`.
+- **WhatsApp automático (Meta Business API):** decisão do Thiago — não seguir por enquanto, manter clique manual.
