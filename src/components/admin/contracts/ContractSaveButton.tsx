@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { FormSubmit, useForm } from "@payloadcms/ui";
+import { FormSubmit, useForm, useFormFields, useDocumentInfo } from "@payloadcms/ui";
 import { useRouter } from "next/navigation";
 import { buildWhatsAppSignUrl } from "@/lib/contract-text";
 
@@ -159,12 +159,21 @@ export function ContractSaveButton() {
   const [resendMsg, setResendMsg] = useState("");
   const [showResendToModal, setShowResendToModal] = useState(false);
 
-  const data = getData();
-  const isSigned = data?.status === "assinado";
-  const isSent = data?.status === "enviado";
+  // useForm().getData() lê o estado do form no momento da chamada, mas NÃO é
+  // reativo (a própria Payload avisa isso nos tipos: "Form context fields
+  // may be outdated... prefer useFormFields"). Usado aqui pra decidir QUAL
+  // botão renderizar, getData() prendia esse componente no valor vazio do
+  // primeiríssimo render (antes do Payload terminar de carregar o
+  // documento) e nunca atualizava — os botões de reenvio nunca apareciam.
+  // useFormFields se inscreve de verdade nas mudanças do campo.
+  const status = useFormFields(([fields]) => fields?.status?.value) as string | undefined;
+  // id vem de useDocumentInfo (não de um campo do form) — é o jeito correto
+  // e estável de saber o ID do documento sendo editado no Payload.
+  const { id } = useDocumentInfo();
+  const isSigned = status === "assinado";
+  const isSent = status === "enviado";
 
   async function handleResend() {
-    const id = (data as { id?: string | number })?.id;
     if (!id) return;
     setWorking(true);
     setResendMsg("Reenviando...");
@@ -177,7 +186,7 @@ export function ContractSaveButton() {
         return;
       }
       setResendMsg(json.email?.ok ? "E-mail reenviado." : "Contrato ok, mas o e-mail pode não ter saído.");
-      const clientPhone = String((data as { clienteTelefone?: string })?.clienteTelefone || "");
+      const clientPhone = String((getData() as { clienteTelefone?: string })?.clienteTelefone || "");
       if (clientPhone) {
         const waUrl = buildWhatsAppSignUrl({
           clientPhone,
@@ -195,7 +204,6 @@ export function ContractSaveButton() {
   }
 
   if (isSent) {
-    const id = (data as { id?: string | number })?.id;
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 4, alignItems: "flex-end" }}>
         <div style={{ display: "flex", gap: 8 }}>
