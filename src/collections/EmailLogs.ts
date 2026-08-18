@@ -36,6 +36,8 @@ export const EmailLogs: CollectionConfig = {
         { label: "Nutrição — E3 (D+7)", value: "nurture-3" },
         { label: "Campanha manual", value: "campaign" },
         { label: "Alerta de novo conteúdo", value: "content-alert" },
+        { label: "Contrato enviado para assinatura", value: "contract-sent" },
+        { label: "Assinatura de contrato confirmada", value: "contract-signed" },
       ],
     },
     {

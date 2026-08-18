@@ -16,6 +16,8 @@ import { MaterialCategories } from "@/collections/MaterialCategories";
 import { MaterialFiles } from "@/collections/MaterialFiles";
 import { Testimonials } from "@/collections/Testimonials";
 import { Leads } from "@/collections/Leads";
+import { Contracts } from "@/collections/Contracts";
+import { ContractDocuments } from "@/collections/ContractDocuments";
 import { resendEmailAdapter } from "@/lib/payload-email-adapter";
 import { EmailLogs } from "@/collections/EmailLogs";
 import { EmailSegments } from "@/collections/EmailSegments";
@@ -26,6 +28,7 @@ import { AdKeywords } from "@/collections/AdKeywords";
 import { AdMetricsDaily } from "@/collections/AdMetricsDaily";
 import { AdCompetitors } from "@/collections/AdCompetitors";
 import { SystemLinks } from "@/collections/SystemLinks";
+import { ContentCalendarEntries } from "@/collections/ContentCalendarEntries";
 import { AdsSettings } from "@/globals/AdsSettings";
 import { siteConfig } from "@/lib/site-config";
 
@@ -48,6 +51,7 @@ if (process.env.S3_BUCKET && process.env.S3_ACCESS_KEY_ID) {
       collections: {
         media: true,
         "material-files": true,
+        "contract-documents": true,
       },
       bucket: process.env.S3_BUCKET,
       config: {
@@ -86,6 +90,7 @@ export default buildConfig({
     components: {
       afterNavLinks: [
         "@/components/admin/marketing/EaMarketingManagerNavLink#EaMarketingManagerNavLink",
+        "@/components/admin/contracts/ContractGeneratorNavLink#ContractGeneratorNavLink",
       ],
       graphics: {
         Logo: "@/components/admin/brand/EaLogo#EaLogo",
@@ -115,6 +120,11 @@ export default buildConfig({
           path: "/ads-performance",
           meta: { title: "EA ADS Manager" },
         },
+        contractGenerator: {
+          Component: "@/components/admin/contracts/ContractGeneratorView#ContractGeneratorView",
+          path: "/contratos/novo",
+          meta: { title: "Gerador de Contratos" },
+        },
       },
     },
   },
@@ -126,6 +136,8 @@ export default buildConfig({
     MaterialFiles,
     Testimonials,
     Leads,
+    Contracts,
+    ContractDocuments,
     EmailSegments,
     EmailCampaigns,
     EmailLogs,
@@ -135,6 +147,7 @@ export default buildConfig({
     AdMetricsDaily,
     AdCompetitors,
     SystemLinks,
+    ContentCalendarEntries,
     Media,
     Users,
   ],

@@ -39,7 +39,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     ?? (user as { email?: string }).email
     ?? "";
 
-  const [adCampaigns, emailCampaigns, emailSegments, leads, posts, materials, systemLinksRes] =
+  const [adCampaigns, emailCampaigns, emailSegments, leads, posts, materials, contentCalendar, contracts, systemLinksRes] =
     await Promise.all([
       payload.count({ collection: "ad-campaigns" }),
       payload.count({ collection: "email-campaigns" }),
@@ -47,6 +47,8 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
       payload.count({ collection: "leads" }),
       payload.count({ collection: "posts" }),
       payload.count({ collection: "materials" }),
+      payload.count({ collection: "content-calendar" }),
+      payload.count({ collection: "contracts" }),
       payload.find({ collection: "system-links", limit: 100, depth: 0, sort: "order" }),
     ]);
 
@@ -79,6 +81,29 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     { title: "LP · Consultoria PME (canônica)", description: "Página principal, usada como canonical das outras 2.", href: "/consultoria-pme", external: true },
     { title: "LP · Consultoria de Gestão Empresarial", description: "Dedicada à keyword \"consultoria de gestão empresarial\".", href: "/consultoria-de-gestao-empresarial", external: true },
     { title: "LP · Consultoria para Pequenas Empresas", description: "Dedicada à keyword \"consultoria empresarial para pequenas empresas\".", href: "/consultoria-empresarial-para-pequenas-empresas", external: true },
+  ];
+
+  const socialCards: Card[] = [
+    {
+      title: "Calendário de Conteúdo",
+      description: "Posts de Instagram, Facebook, YouTube e LinkedIn — lançamento do site e reaproveitamento de blog/materiais.",
+      href: "/eahub/collections/content-calendar",
+      stat: `${contentCalendar.totalDocs} item(ns)`,
+    },
+  ];
+
+  const contractCards: Card[] = [
+    {
+      title: "Gerador de Contratos",
+      description: "Monta o contrato (Mentoria, Consultoria, Conselho, Diagnóstico ou Projeto Personalizado) e envia para assinatura eletrônica.",
+      href: "/eahub/contratos/novo",
+    },
+    {
+      title: "Contratos",
+      description: "Todos os contratos gerados — rascunho, enviado para assinatura ou assinado, com o certificado eletrônico de cada um.",
+      href: "/eahub/collections/contracts",
+      stat: `${contracts.totalDocs} contrato(s)`,
+    },
   ];
 
   const emailCards: Card[] = [
@@ -163,6 +188,14 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
 
         <Section title="Landing Pages (Ads)">
           <CardGrid cards={landingPageCards} />
+        </Section>
+
+        <Section title="Redes sociais">
+          <CardGrid cards={socialCards} />
+        </Section>
+
+        <Section title="Contratos">
+          <CardGrid cards={contractCards} />
         </Section>
 
         <Section title="E-mail marketing e leads">

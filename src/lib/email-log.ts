@@ -6,7 +6,9 @@ export type EmailLogType =
   | "nurture-2"
   | "nurture-3"
   | "campaign"
-  | "content-alert";
+  | "content-alert"
+  | "contract-sent"
+  | "contract-signed";
 
 /**
  * Registra um envio (ou falha) na coleção `email-logs`, para o painel de
