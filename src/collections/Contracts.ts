@@ -68,7 +68,19 @@ export const Contracts: CollectionConfig = {
       required: true,
       defaultValue: "rascunho",
       label: "Status",
-      admin: { position: "sidebar" },
+      admin: {
+        position: "sidebar",
+        readOnly: true,
+        description: "Muda sozinho pelo fluxo (gerar rascunho, enviar, assinar) — nunca editável na mão.",
+      },
+      // Igual a title/contractHtml/etc.: bloqueia a UI/REST do admin, mas não
+      // a Local API usada pelos endpoints do servidor (overrideAccess:true
+      // por padrão). Achado na revisão de 17/08/2026: sem isso, dava pra
+      // trocar o dropdown na tela pra "Enviado" num contrato já assinado —
+      // o servidor recusava salvar (corretamente), mas a tela continuava
+      // mostrando os botões de reenvio com base nesse valor nunca salvo,
+      // confundindo com um erro "contrato não está enviado".
+      access: { update: () => false },
       options: [
         { label: "Rascunho", value: "rascunho" },
         { label: "Enviado para assinatura", value: "enviado" },
