@@ -4,6 +4,7 @@ import { sendNewMaterialAlert } from "@/lib/content-alerts";
 import { eaEditor } from "@/lib/editor";
 import { buildPreviewUrl } from "@/lib/preview";
 import { requiredToPublish, requiredToPublishRichText } from "@/lib/publish-validation";
+import { isContentEngineRequest } from "@/lib/content-engine-auth";
 
 export const Materials: CollectionConfig = {
   slug: "materials",
@@ -25,6 +26,9 @@ export const Materials: CollectionConfig = {
       if (req.user) return true;
       return { status: { equals: "published" } };
     },
+    // EA Post cria rascunho de material (Fase D do plano de conteúdo
+    // semanal, 19/08/2026) — sempre "draft" (ver hook abaixo).
+    create: ({ req }) => Boolean(req.user) || isContentEngineRequest(req),
   },
   fields: [
     {
@@ -182,7 +186,10 @@ export const Materials: CollectionConfig = {
   ],
   hooks: {
     beforeChange: [
-      ({ data }) => {
+      ({ data, req, operation }) => {
+        if (operation === "create" && !req.user && data?.status === "published") {
+          data.status = "draft";
+        }
         if (data?.status === "published" && !data?.publishedAt) {
           data.publishedAt = new Date().toISOString();
         }

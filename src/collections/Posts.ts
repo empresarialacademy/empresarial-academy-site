@@ -8,6 +8,7 @@ import {
   requiredToPublishArray,
   requiredToPublishRichText,
 } from "@/lib/publish-validation";
+import { isContentEngineRequest } from "@/lib/content-engine-auth";
 
 export const Posts: CollectionConfig = {
   slug: "posts",
@@ -32,6 +33,10 @@ export const Posts: CollectionConfig = {
       if (req.user) return true;
       return { status: { equals: "published" } };
     },
+    // EA Post cria rascunho de artigo (Fase B do plano de conteúdo semanal,
+    // 19/08/2026) — sempre "draft", nunca publica sozinho (ver validação no
+    // motor). Sessão de usuário continua funcionando normal pro admin.
+    create: ({ req }) => Boolean(req.user) || isContentEngineRequest(req),
   },
   fields: [
     {
@@ -164,7 +169,14 @@ export const Posts: CollectionConfig = {
   ],
   hooks: {
     beforeChange: [
-      ({ data }) => {
+      ({ data, req, operation }) => {
+        // Defesa em profundidade: o EA Post (token de serviço, sem sessão de
+        // usuário) NUNCA cria artigo já publicado, mesmo que o motor envie
+        // "published" por engano — a regra "sempre rascunho" fica garantida
+        // aqui, não só no código de quem chama a API.
+        if (operation === "create" && !req.user && data?.status === "published") {
+          data.status = "draft";
+        }
         // Define publishedAt automaticamente ao publicar sem data informada.
         if (data?.status === "published" && !data?.publishedAt) {
           data.publishedAt = new Date().toISOString();

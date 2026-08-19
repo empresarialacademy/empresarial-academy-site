@@ -1,12 +1,17 @@
 import type { CollectionConfig } from "payload";
 import { sanitizeUploadFilename } from "@/lib/slug";
+import { isContentEngineRequest } from "@/lib/content-engine-auth";
 
 /** Coleção de upload dedicada aos arquivos dos materiais (documentos, planilhas, vídeos, etc.). */
 export const MaterialFiles: CollectionConfig = {
   slug: "material-files",
   labels: { singular: "Arquivo", plural: "Arquivos" },
   admin: { group: "Materiais", useAsTitle: "filename" },
-  access: { read: () => true },
+  access: {
+    read: () => true,
+    // EA Post sobe o arquivo gerado (PDF do material) — Fase D do plano.
+    create: ({ req }) => Boolean(req.user) || isContentEngineRequest(req),
+  },
   hooks: {
     beforeOperation: [
       ({ req, operation }) => {

@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { sanitizeUploadFilename } from "@/lib/slug";
+import { isContentEngineRequest } from "@/lib/content-engine-auth";
 
 export const Media: CollectionConfig = {
   slug: "media",
@@ -8,7 +9,11 @@ export const Media: CollectionConfig = {
   // upload inline), não como uma coleção avulsa (decisão do Thiago, 2026-07-23).
   // A coleção continua existindo como destino dos uploads e das relações.
   admin: { hidden: true },
-  access: { read: () => true },
+  access: {
+    read: () => true,
+    // EA Post sobe a capa gerada de artigo/material — Fases B/D do plano.
+    create: ({ req }) => Boolean(req.user) || isContentEngineRequest(req),
+  },
   hooks: {
     beforeOperation: [
       ({ req, operation }) => {

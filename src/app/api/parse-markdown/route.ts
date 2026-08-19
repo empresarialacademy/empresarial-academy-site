@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import matter from "gray-matter";
 import { getPayloadClient } from "@/lib/payload";
 import { convertMarkdownToLexical, defaultEditorConfig, sanitizeServerEditorConfig } from "@payloadcms/richtext-lexical";
+import { isContentEngineRequest } from "@/lib/content-engine-auth";
 
 /**
  * Importador de conteúdo `.md` para o EA HUB. Recebe um arquivo Markdown com
@@ -18,9 +19,10 @@ export async function POST(req: Request) {
   try {
     const payload = await getPayloadClient();
 
-    // Só usuários autenticados do admin podem importar.
+    // Usuário autenticado do admin (botão de importar) OU o EA Post via
+    // bearer token (Fases B/D do plano de conteúdo semanal, 19/08/2026).
     const { user } = await payload.auth({ headers: req.headers });
-    if (!user) {
+    if (!user && !isContentEngineRequest({ headers: req.headers })) {
       return NextResponse.json({ error: "unauthorized" }, { status: 401 });
     }
 
