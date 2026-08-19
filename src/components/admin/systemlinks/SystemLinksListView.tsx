@@ -2,6 +2,7 @@ import type { ListViewServerProps } from "payload";
 import Link from "next/link";
 import Image from "next/image";
 import { DeleteLinkButton } from "./DeleteLinkButton";
+import { isBasicAuthProtectedPath } from "@/lib/basic-auth-protected-paths";
 
 const NAVY = "#1D2B3C";
 const GOLD = "#C1A160";
@@ -125,7 +126,11 @@ export async function SystemLinksListView(props: ListViewServerProps) {
                         Abrir ↗
                       </a>
                     ) : (
-                      <Link href={url} style={{ fontSize: "0.8rem", fontWeight: 600 }}>
+                      <Link
+                        href={url}
+                        style={{ fontSize: "0.8rem", fontWeight: 600 }}
+                        prefetch={isBasicAuthProtectedPath(url) ? false : undefined}
+                      >
                         Abrir
                       </Link>
                     )

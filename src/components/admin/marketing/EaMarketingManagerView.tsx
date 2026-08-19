@@ -1,6 +1,7 @@
 import type { AdminViewServerProps } from "payload";
 import Link from "next/link";
 import Image from "next/image";
+import { isBasicAuthProtectedPath } from "@/lib/basic-auth-protected-paths";
 
 const NAVY = "#1D2B3C";
 const GOLD = "#C1A160";
@@ -331,7 +332,12 @@ function CardGrid({ cards, highlight = false }: { cards: Card[]; highlight?: boo
           );
         }
         return (
-          <Link key={card.title} href={card.href} style={style}>
+          <Link
+            key={card.title}
+            href={card.href}
+            style={style}
+            prefetch={isBasicAuthProtectedPath(card.href) ? false : undefined}
+          >
             {content}
           </Link>
         );

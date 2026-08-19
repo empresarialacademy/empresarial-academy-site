@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { isBasicAuthProtectedPath } from "@/lib/basic-auth-protected-paths";
 
 /**
  * Protege por senha (HTTP Basic Auth) os materiais estáticos do cliente Souza
@@ -9,6 +10,8 @@ import type { NextRequest } from "next/server";
  * credencial já digitada para o mesmo domínio, sem precisar de tela própria.
  */
 export function middleware(req: NextRequest) {
+  if (!isBasicAuthProtectedPath(req.nextUrl.pathname)) return NextResponse.next();
+
   const user = process.env.SOUZA_RAMOS_BASIC_USER;
   const pass = process.env.SOUZA_RAMOS_BASIC_PASS;
   // Sem credencial configurada no ambiente, não bloqueia (evita lockout).
