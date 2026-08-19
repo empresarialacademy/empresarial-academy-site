@@ -40,7 +40,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     ?? (user as { email?: string }).email
     ?? "";
 
-  const [adCampaigns, emailCampaigns, emailSegments, leads, posts, materials, contentCalendar, contracts, systemLinksRes] =
+  const [adCampaigns, emailCampaigns, emailSegments, leads, posts, materials, contracts, systemLinksRes] =
     await Promise.all([
       payload.count({ collection: "ad-campaigns" }),
       payload.count({ collection: "email-campaigns" }),
@@ -48,7 +48,6 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
       payload.count({ collection: "leads" }),
       payload.count({ collection: "posts" }),
       payload.count({ collection: "materials" }),
-      payload.count({ collection: "content-calendar" }),
       payload.count({ collection: "contracts" }),
       payload.find({ collection: "system-links", limit: 100, depth: 0, sort: "order" }),
     ]);
@@ -86,10 +85,10 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
 
   const socialCards: Card[] = [
     {
-      title: "Calendário de Conteúdo",
-      description: "Posts de Instagram, Facebook, YouTube e LinkedIn — lançamento do site e reaproveitamento de blog/materiais.",
-      href: "/eahub/collections/content-calendar",
-      stat: `${contentCalendar.totalDocs} item(ns)`,
+      title: "EA Post",
+      description: "Planejamento, geração (texto + imagem/carrossel), aprovação e publicação de Instagram, Facebook, LinkedIn, YouTube e TikTok — tudo num sistema só.",
+      href: "https://ea-social-engine.vercel.app/admin",
+      external: true,
     },
   ];
 

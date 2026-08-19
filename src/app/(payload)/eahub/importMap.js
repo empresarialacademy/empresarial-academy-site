@@ -28,7 +28,6 @@ import { PublishButton as PublishButton_8557896026453f2a5ab4cb43fbd7feb6 } from 
 import { WhatsAppCell as WhatsAppCell_63fb46a0689b188d11067be38662e17c } from '@/components/admin/leads/WhatsAppCell'
 import { ContractSaveButton as ContractSaveButton_c92810823b2b1112461fdaa4f8a89231 } from '@/components/admin/contracts/ContractSaveButton'
 import { SystemLinksListView as SystemLinksListView_f3f53db7cac8408af5dd23679bdb80b5 } from '@/components/admin/systemlinks/SystemLinksListView'
-import { ContentCalendarListView as ContentCalendarListView_f28bda8549f383945dc95a040721c18b } from '@/components/admin/calendar/ContentCalendarListView'
 import { EaIcon as EaIcon_43d6ce6ddc2749468126c12f93037716 } from '@/components/admin/brand/EaIcon'
 import { EaLogo as EaLogo_2eb583f54280ad6defa4d457d78aeae4 } from '@/components/admin/brand/EaLogo'
 import { EaMarketingManagerNavLink as EaMarketingManagerNavLink_88a986796e4ee933b102bbfd5abb2aca } from '@/components/admin/marketing/EaMarketingManagerNavLink'
@@ -72,7 +71,6 @@ export const importMap = {
   "@/components/admin/leads/WhatsAppCell#WhatsAppCell": WhatsAppCell_63fb46a0689b188d11067be38662e17c,
   "@/components/admin/contracts/ContractSaveButton#ContractSaveButton": ContractSaveButton_c92810823b2b1112461fdaa4f8a89231,
   "@/components/admin/systemlinks/SystemLinksListView#SystemLinksListView": SystemLinksListView_f3f53db7cac8408af5dd23679bdb80b5,
-  "@/components/admin/calendar/ContentCalendarListView#ContentCalendarListView": ContentCalendarListView_f28bda8549f383945dc95a040721c18b,
   "@/components/admin/brand/EaIcon#EaIcon": EaIcon_43d6ce6ddc2749468126c12f93037716,
   "@/components/admin/brand/EaLogo#EaLogo": EaLogo_2eb583f54280ad6defa4d457d78aeae4,
   "@/components/admin/marketing/EaMarketingManagerNavLink#EaMarketingManagerNavLink": EaMarketingManagerNavLink_88a986796e4ee933b102bbfd5abb2aca,

@@ -28,7 +28,6 @@ import { AdKeywords } from "@/collections/AdKeywords";
 import { AdMetricsDaily } from "@/collections/AdMetricsDaily";
 import { AdCompetitors } from "@/collections/AdCompetitors";
 import { SystemLinks } from "@/collections/SystemLinks";
-import { ContentCalendarEntries } from "@/collections/ContentCalendarEntries";
 import { AdsSettings } from "@/globals/AdsSettings";
 import { siteConfig } from "@/lib/site-config";
 
@@ -147,7 +146,6 @@ export default buildConfig({
     AdMetricsDaily,
     AdCompetitors,
     SystemLinks,
-    ContentCalendarEntries,
     Media,
     Users,
   ],
