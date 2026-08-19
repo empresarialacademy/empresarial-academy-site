@@ -1,0 +1,13 @@
+# Segredos ficam só nas env vars da Vercel (vercel env add), nunca no bundle
+# de deploy — mesmo achado do ea-social-engine (18/08/2026): `vercel --prod`
+# envia o .env local mesmo estando no .gitignore. Toda env var que a
+# aplicação precisa em runtime tem que estar cadastrada de verdade na
+# Vercel — testar com `vercel env ls production` antes de assumir que algo
+# "já está configurado".
+# Este repo também tem .env.production(.local) com segredos (DATABASE_URI,
+# S3, CRON_SECRET) — cobertos explicitamente abaixo.
+.env
+.env.local
+.env.*.local
+.env.production
+.env.production.local
