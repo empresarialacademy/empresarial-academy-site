@@ -34,7 +34,7 @@ export async function InstagramFeed() {
         />
 
         {posts.length > 0 && (
-          <ul className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          <ul className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {posts.map((p) => (
               <li key={p.id}>
                 <a
