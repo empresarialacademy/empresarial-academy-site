@@ -77,7 +77,8 @@ export function AdsCompetitorsPanel({ rows }: { rows: CompetitorRow[] }) {
       ) : null}
 
       <div style={sectionTitle}>📋 Anúncios e resultados observados</div>
-      <table style={table}>
+      <div className="ea-table-scroll">
+        <table style={table}>
         <thead>
           <tr>
             <th style={th}>Concorrente</th>
@@ -103,7 +104,8 @@ export function AdsCompetitorsPanel({ rows }: { rows: CompetitorRow[] }) {
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
+      </div>
     </section>
   );
 }

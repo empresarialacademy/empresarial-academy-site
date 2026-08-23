@@ -286,7 +286,7 @@ export async function AdsPerformanceView({ payload, searchParams, initPageResult
   ).length;
 
   return (
-    <div style={{ padding: "var(--base, 24px)", maxWidth: 1100 }}>
+    <div className="ea-view" style={{ maxWidth: 1100 }}>
       <EaHubBackLink />
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1 style={{ margin: 0 }}>EA ADS Manager</h1>

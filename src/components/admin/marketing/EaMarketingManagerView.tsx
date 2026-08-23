@@ -158,13 +158,10 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
   return (
     <div>
       <header
+        className="ea-view-header"
         style={{
           background: NAVY,
           color: "#fff",
-          padding: "2rem",
-          display: "flex",
-          alignItems: "center",
-          gap: "1.25rem",
           borderBottom: `3px solid ${GOLD}`,
         }}
       >
@@ -177,7 +174,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
         </div>
       </header>
 
-      <div style={{ padding: "1.5rem 2rem", display: "grid", gap: "1.75rem" }}>
+      <div className="ea-view" style={{ display: "grid", gap: "1.75rem" }}>
         <Section title="Anúncios">
           <CardGrid cards={[adsCard]} highlight />
         </Section>
@@ -225,7 +222,7 @@ function Section({
 }) {
   return (
     <section>
-      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "0.6rem" }}>
+      <div className="ea-row" style={{ marginBottom: "0.6rem" }}>
         <h2 style={{ margin: 0, fontSize: "1.05rem" }}>{title}</h2>
         {action ? (
           <Link href={action.href} style={{ fontSize: "0.8rem" }}>
@@ -250,7 +247,7 @@ function RuleTable({
       <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--theme-elevation-700)", marginBottom: "0.5rem" }}>
         {title}
       </div>
-      <div style={{ overflowX: "auto", border: "1px solid var(--theme-elevation-150)", borderRadius: 6 }}>
+      <div className="ea-table-scroll" style={{ border: "1px solid var(--theme-elevation-150)", borderRadius: 6 }}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
           <thead>
             <tr style={{ background: "var(--theme-elevation-50)", borderBottom: `2px solid ${GOLD}` }}>
@@ -278,13 +275,7 @@ function RuleTable({
 
 function CardGrid({ cards, highlight = false }: { cards: Card[]; highlight?: boolean }) {
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: highlight ? "1fr" : "repeat(auto-fill, minmax(240px, 1fr))",
-        gap: "0.9rem",
-      }}
-    >
+    <div className={highlight ? undefined : "ea-card-grid"} style={highlight ? { display: "grid", gridTemplateColumns: "1fr", gap: "0.9rem" } : undefined}>
       {cards.map((card) => {
         const style: React.CSSProperties = {
           display: "block",

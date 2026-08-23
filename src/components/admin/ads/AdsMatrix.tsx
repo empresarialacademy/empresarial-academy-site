@@ -137,7 +137,7 @@ export function AdsMatrix({
         </div>
       )}
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem" }}>
+      <div className="ea-card-grid">
         {scorecards.map((s) => {
           const budget = dailyBudgets.get(String(s.campaignId)) || 1;
           const spendPct = Math.min(s.spendRatio, 1.5);

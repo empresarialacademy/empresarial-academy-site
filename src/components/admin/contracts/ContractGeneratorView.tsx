@@ -20,7 +20,7 @@ export async function ContractGeneratorView({ initPageResult }: AdminViewServerP
   }
 
   return (
-    <div style={{ padding: "2rem", maxWidth: 1400, margin: "0 auto" }}>
+    <div className="ea-view" style={{ maxWidth: 1400, margin: "0 auto" }}>
       <EaHubBackLink />
       <h1 style={{ marginBottom: 4 }}>Gerador de Contratos</h1>
       <p style={{ color: "var(--theme-elevation-600)", marginTop: 0, marginBottom: "1.5rem" }}>

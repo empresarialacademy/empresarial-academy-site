@@ -39,8 +39,12 @@ export const statusIcon: Record<ScorecardStatus, string> = {
   saudavel: "✅",
 };
 
+// `minWidth` é o que faz a rolagem horizontal do wrapper `.ea-table-scroll`
+// existir de fato: só com `width: 100%` a tabela encolhe até a largura do
+// celular e as colunas viram uma palavra por linha em vez de rolar.
 export const table: CSSProperties = {
   width: "100%",
+  minWidth: 560,
   borderCollapse: "collapse",
   fontSize: "0.95rem",
 };

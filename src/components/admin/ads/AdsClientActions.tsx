@@ -456,7 +456,7 @@ const MARKDOWN_COMPONENTS = {
     </div>
   ),
   table: ({ children }: { children?: React.ReactNode }) => (
-    <div style={{ overflowX: 'auto', margin: '0.75rem 0 1.25rem' }}>
+    <div className="ea-table-scroll" style={{ margin: '0.75rem 0 1.25rem' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.95rem' }}>{children}</table>
     </div>
   ),

@@ -208,7 +208,8 @@ export function AdsCampaignDetail({
       <DailyCostChart dailyMetrics={dailyMetrics} dailyBudget={campaign.dailyBudgetTarget} />
 
       <div style={sectionTitle}>📁 Grupos de anúncios</div>
-      <table style={table}>
+      <div className="ea-table-scroll">
+        <table style={table}>
         <thead>
           <tr>
             <th style={th}>Grupo</th>
@@ -234,10 +235,12 @@ export function AdsCampaignDetail({
             );
           })}
         </tbody>
-      </table>
+        </table>
+      </div>
 
       <div style={sectionTitle}>🔑 Palavras-chave</div>
-      <table style={table}>
+      <div className="ea-table-scroll">
+        <table style={table}>
         <thead>
           <tr>
             <th style={th}>Palavra-chave</th>
@@ -268,7 +271,8 @@ export function AdsCampaignDetail({
             );
           })}
         </tbody>
-      </table>
+        </table>
+      </div>
     </section>
   );
 }

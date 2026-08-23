@@ -57,7 +57,6 @@ const input: React.CSSProperties = {
 };
 const errStyle: React.CSSProperties = { fontSize: 11, color: "#A32626", margin: "3px 0 0" };
 const legend: React.CSSProperties = { fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em", margin: "0 0 8px" };
-const row2: React.CSSProperties = { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 };
 const inlineLabel: React.CSSProperties = { display: "flex", alignItems: "center", gap: 8, fontWeight: 600, fontSize: 13, margin: "8px 0" };
 
 const EMPTY_ETAPA: Etapa = { nome: "", prazo: "", descricao: "" };
@@ -174,7 +173,7 @@ export function ContractGeneratorForm() {
   const etapas = form.etapas && form.etapas.length ? form.etapas : [EMPTY_ETAPA];
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "440px 1fr", gap: "1.5rem", alignItems: "start" }}>
+    <div className="ea-form-preview">
       {/* ───────── Coluna de formulário ───────── */}
       <div>
         <fieldset style={card}>
@@ -225,7 +224,7 @@ export function ContractGeneratorForm() {
             <label style={label}>Etapas do projeto</label>
             {etapas.map((etapa, i) => (
               <div key={i} style={{ border: "1px solid var(--theme-elevation-150)", padding: 10, marginBottom: 8 }}>
-                <div style={row2}>
+                <div className="ea-form-2col">
                   <input
                     style={input}
                     placeholder="Nome da etapa"
@@ -270,7 +269,7 @@ export function ContractGeneratorForm() {
               + Adicionar etapa
             </button>
 
-            <div style={{ ...row2, marginTop: 14 }}>
+            <div className="ea-form-2col" style={{ marginTop: 14 }}>
               <div>
                 <label style={label}>Duração total</label>
                 <input style={input} type="text" placeholder="Ex: 12 semanas" value={form.projDuracao || ""} onChange={(e) => set("projDuracao", e.target.value)} />
@@ -280,7 +279,7 @@ export function ContractGeneratorForm() {
                 <input style={input} type="date" value={form.projDataEntrega || ""} onChange={(e) => set("projDataEntrega", e.target.value)} />
               </div>
             </div>
-            <div style={row2}>
+            <div className="ea-form-2col">
               <div>
                 <label style={label}>Valor total do projeto (R$)</label>
                 <input style={input} type="number" step="0.01" value={form.projValorTotal ?? ""} onChange={(e) => set("projValorTotal", Number(e.target.value))} />
@@ -337,7 +336,7 @@ export function ContractGeneratorForm() {
               {errors.pjCnpj && <p style={errStyle}>{errors.pjCnpj}</p>}
               <label style={label}>Nome do representante legal</label>
               <input style={input} type="text" value={form.pjRepNome || ""} onChange={(e) => set("pjRepNome", e.target.value)} />
-              <div style={row2}>
+              <div className="ea-form-2col">
                 <div>
                   <label style={label}>CPF do representante</label>
                   <input
@@ -359,7 +358,7 @@ export function ContractGeneratorForm() {
 
           <label style={label}>Endereço completo</label>
           <textarea style={{ ...input, minHeight: 50 }} value={form.clienteEndereco || ""} onChange={(e) => set("clienteEndereco", e.target.value)} />
-          <div style={row2}>
+          <div className="ea-form-2col">
             <div>
               <label style={label}>E-mail</label>
               <input style={input} type="text" value={form.clienteEmail || ""} onChange={(e) => set("clienteEmail", e.target.value)} />
@@ -381,7 +380,7 @@ export function ContractGeneratorForm() {
 
         <fieldset style={card}>
           <legend style={legend}>3. Datas e pagamento</legend>
-          <div style={row2}>
+          <div className="ea-form-2col">
             <div>
               <label style={label}>Data de início da vigência</label>
               <input style={input} type="date" value={form.dataInicio || ""} onChange={(e) => set("dataInicio", e.target.value)} />
@@ -414,7 +413,7 @@ export function ContractGeneratorForm() {
             </label>
             {form.temDiagnostico && (
               <>
-                <div style={row2}>
+                <div className="ea-form-2col">
                   <div>
                     <label style={label}>Valor pago no diagnóstico (R$)</label>
                     <input style={input} type="number" step="0.01" value={form.diagValor ?? 5900} onChange={(e) => set("diagValor", Number(e.target.value))} />
@@ -492,7 +491,7 @@ export function ContractGeneratorForm() {
             Este contrato é sempre firmado por assinatura eletrônica neste fluxo (o link enviado ao cliente leva à
             página /assinar com a Cláusula de Assinatura Eletrônica).
           </p>
-          <div style={row2}>
+          <div className="ea-form-2col">
             <div>
               <label style={label}>Local de assinatura</label>
               <input style={input} type="text" value={form.localAssinatura || ""} onChange={(e) => set("localAssinatura", e.target.value)} />

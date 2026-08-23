@@ -39,18 +39,15 @@ export async function SystemLinksListView(props: ListViewServerProps) {
   const createUrl = newDocumentURL || `${adminRoute}/collections/${collectionSlug}/create`;
 
   return (
-    <div style={{ padding: "1.5rem 2rem" }}>
+    <div className="ea-view">
       <header
+        className="ea-view-header"
         style={{
           background: NAVY,
           color: "#fff",
-          padding: "1.5rem 1.75rem",
           borderRadius: 8,
           borderBottom: `3px solid ${GOLD}`,
-          display: "flex",
-          alignItems: "center",
           justifyContent: "space-between",
-          gap: "1rem",
           marginBottom: "1.5rem",
         }}
       >
@@ -82,7 +79,7 @@ export async function SystemLinksListView(props: ListViewServerProps) {
       {links.length === 0 ? (
         <p>Nenhum sistema cadastrado ainda. Use &quot;Adicionar sistema&quot;.</p>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem" }}>
+        <div className="ea-card-grid">
           {links.map((link) => {
             const url = (link.url ?? "").trim();
             const isExternal = /^https?:\/\//.test(url);

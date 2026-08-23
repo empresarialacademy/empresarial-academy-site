@@ -53,7 +53,8 @@ export function AdsForecastPanel({
         {pct(FORECAST_ASSUMPTIONS.CLOSE_RATE.conservador)}–{pct(FORECAST_ASSUMPTIONS.CLOSE_RATE.otimista)} dos
         leads fecham; receita por cliente = Pacote Essencial em ciclo mínimo ({money(FORECAST_ASSUMPTIONS.REVENUE_PER_CLIENT)}).
       </p>
-      <table style={table}>
+      <div className="ea-table-scroll">
+        <table style={table}>
         <thead>
           <tr>
             <th style={th}>Cenário</th>
@@ -91,7 +92,8 @@ export function AdsForecastPanel({
             );
           })}
         </tbody>
-      </table>
+        </table>
+      </div>
 
       <div style={{ marginTop: "1rem", display: "grid", gap: "0.6rem" }}>
         {breakEven !== null ? (
