@@ -6,6 +6,7 @@ import {
   DIAGNOSTIC_ORIGIN,
   sendDiagnosticResultEmail,
 } from "@/lib/diagnostic-email";
+import { notifyEaFlowLead } from "@/lib/ea-flow-bridge";
 
 type Payload = {
   nome?: string;
@@ -108,6 +109,10 @@ export async function POST(request: Request) {
         leadId: leadId ?? undefined,
       }),
     );
+    // EA Flow (Fase 5) — dispara fluxo de automação de mensagens pelo evento
+    // "lead_diagnostico". No-op se o EA Flow ainda não estiver em produção
+    // (EA_FLOW_URL/EA_FLOW_API_KEY ausentes) — ver ea-flow-bridge.ts.
+    tasks.push(notifyEaFlowLead({ name: nome, email, whatsapp, instagram }));
   }
 
   await Promise.all(tasks);
