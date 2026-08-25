@@ -92,6 +92,14 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     },
   ];
 
+  const infraCards: Card[] = [
+    {
+      title: "Painel de APIs",
+      description: "Todas as APIs/credenciais dos sistemas da EA — provedor, sistema(s), vencimento e faturamento.",
+      href: "/eahub/apis",
+    },
+  ];
+
   const contractCards: Card[] = [
     {
       title: "Gerador de Contratos",
@@ -205,6 +213,10 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
           action={{ label: "Gerenciar links", href: "/eahub/collections/system-links" }}
         >
           <CardGrid cards={systemCards} />
+        </Section>
+
+        <Section title="Infraestrutura">
+          <CardGrid cards={infraCards} />
         </Section>
       </div>
     </div>

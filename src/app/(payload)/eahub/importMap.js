@@ -37,6 +37,7 @@ import { EaMarketingManagerView as EaMarketingManagerView_8800c28b6a62ca0cf96bd5
 import { CentralEaRedirect as CentralEaRedirect_559e0831624fc1ba8d14c4406d6e41e0 } from '@/components/admin/central/CentralEaRedirect'
 import { AdsPerformanceView as AdsPerformanceView_b0a2e4bac77edbfc8244bba00bb695a3 } from '@/components/admin/ads/AdsPerformanceView'
 import { ContractGeneratorView as ContractGeneratorView_c0bbf6b7735cc111ed13bb3b7aec5738 } from '@/components/admin/contracts/ContractGeneratorView'
+import { ApiInventoryView as ApiInventoryView_a1c2e4f6091d47b3ae5c7fda2b4e8901 } from '@/components/admin/apis/ApiInventoryView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -80,5 +81,6 @@ export const importMap = {
   "@/components/admin/central/CentralEaRedirect#CentralEaRedirect": CentralEaRedirect_559e0831624fc1ba8d14c4406d6e41e0,
   "@/components/admin/ads/AdsPerformanceView#AdsPerformanceView": AdsPerformanceView_b0a2e4bac77edbfc8244bba00bb695a3,
   "@/components/admin/contracts/ContractGeneratorView#ContractGeneratorView": ContractGeneratorView_c0bbf6b7735cc111ed13bb3b7aec5738,
+  "@/components/admin/apis/ApiInventoryView#ApiInventoryView": ApiInventoryView_a1c2e4f6091d47b3ae5c7fda2b4e8901,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

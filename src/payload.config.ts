@@ -28,6 +28,7 @@ import { AdKeywords } from "@/collections/AdKeywords";
 import { AdMetricsDaily } from "@/collections/AdMetricsDaily";
 import { AdCompetitors } from "@/collections/AdCompetitors";
 import { SystemLinks } from "@/collections/SystemLinks";
+import { ApiInventory } from "@/collections/ApiInventory";
 import { AdsSettings } from "@/globals/AdsSettings";
 import { siteConfig } from "@/lib/site-config";
 
@@ -124,6 +125,11 @@ export default buildConfig({
           path: "/contratos/novo",
           meta: { title: "Gerador de Contratos" },
         },
+        apiInventory: {
+          Component: "@/components/admin/apis/ApiInventoryView#ApiInventoryView",
+          path: "/apis",
+          meta: { title: "Painel de APIs" },
+        },
       },
     },
   },
@@ -146,6 +152,7 @@ export default buildConfig({
     AdMetricsDaily,
     AdCompetitors,
     SystemLinks,
+    ApiInventory,
     Media,
     Users,
   ],

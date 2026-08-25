@@ -85,6 +85,7 @@ export interface Config {
     'ad-metrics-daily': AdMetricsDaily;
     'ad-competitors': AdCompetitor;
     'system-links': SystemLink;
+    'api-inventory': ApiInventory;
     'content-calendar': ContentCalendar;
     media: Media;
     users: User;
@@ -113,6 +114,7 @@ export interface Config {
     'ad-metrics-daily': AdMetricsDailySelect<false> | AdMetricsDailySelect<true>;
     'ad-competitors': AdCompetitorsSelect<false> | AdCompetitorsSelect<true>;
     'system-links': SystemLinksSelect<false> | SystemLinksSelect<true>;
+    'api-inventory': ApiInventorySelect<false> | ApiInventorySelect<true>;
     'content-calendar': ContentCalendarSelect<false> | ContentCalendarSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -827,6 +829,39 @@ export interface SystemLink {
   createdAt: string;
 }
 /**
+ * Toda API/credencial externa usada por algum sistema da EA — provedor, sistema(s) consumidor(es), vencimento e faturamento.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "api-inventory".
+ */
+export interface ApiInventory {
+  id: number;
+  name: string;
+  provider: string;
+  category?: ('ia' | 'redes-sociais' | 'marketing' | 'email' | 'mensageria' | 'infra' | 'outro') | null;
+  systems?:
+    | {
+        system: string;
+        envVar?: string | null;
+        active?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  status?: ('ativo' | 'bloqueado' | 'pendente' | 'dormente' | 'cancelamento') | null;
+  expiresAt?: string | null;
+  renewalCycle?: string | null;
+  hasBilling?: boolean | null;
+  billingType?: ('gratuito' | 'pre-pago' | 'pos-pago' | 'assinatura' | 'a-confirmar') | null;
+  balanceOrCost?: string | null;
+  balanceCheckedAt?: string | null;
+  billingLink?: string | null;
+  credentialLocation?: string | null;
+  notes?: string | null;
+  lastVerified?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Calendário de posts para Instagram, Facebook, YouTube e LinkedIn.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1406,6 +1441,36 @@ export interface SystemLinksSelect<T extends boolean = true> {
   url?: T;
   description?: T;
   order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "api-inventory_select".
+ */
+export interface ApiInventorySelect<T extends boolean = true> {
+  name?: T;
+  provider?: T;
+  category?: T;
+  systems?:
+    | T
+    | {
+        system?: T;
+        envVar?: T;
+        active?: T;
+        id?: T;
+      };
+  status?: T;
+  expiresAt?: T;
+  renewalCycle?: T;
+  hasBilling?: T;
+  billingType?: T;
+  balanceOrCost?: T;
+  balanceCheckedAt?: T;
+  billingLink?: T;
+  credentialLocation?: T;
+  notes?: T;
+  lastVerified?: T;
   updatedAt?: T;
   createdAt?: T;
 }
