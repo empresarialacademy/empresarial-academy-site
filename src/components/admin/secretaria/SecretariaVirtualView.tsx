@@ -1,51 +1,38 @@
 import type { AdminViewServerProps } from "payload";
-import Link from "next/link";
+import { redirect } from "next/navigation";
+import { EaHubBackLink } from "@/components/admin/brand/EaHubBackLink";
 import { SecretariaClientPanel } from "./SecretariaClientPanel";
 
-const NAVY = "#1D2B3C";
-const GOLD = "#C1A160";
-
 /**
- * Painel Executivo da Secretária Virtual da Empresarial Academy.
+ * Painel Executivo do EA Assessor da Empresarial Academy.
  * Acesso pelo EA HUB em /eahub/secretaria.
  */
 export async function SecretariaVirtualView({ payload, initPageResult }: AdminViewServerProps) {
   const user = initPageResult?.req?.user;
   if (!user) {
-    return <div style={{ padding: 24, color: "#fff" }}>Acesso restrito ao administrador.</div>;
+    redirect("/eahub/login?redirect=%2Feahub%2Fsecretaria");
   }
 
-  const [postsCount, leadsCount] = await Promise.all([
-    payload.count({ collection: "posts" }),
-    payload.count({ collection: "leads" }),
-  ]);
+  let postsCount = 0;
+  let leadsCount = 0;
+  try {
+    const [p, l] = await Promise.all([
+      payload.count({ collection: "posts" }),
+      payload.count({ collection: "leads" }),
+    ]);
+    postsCount = p.totalDocs;
+    leadsCount = l.totalDocs;
+  } catch {
+    // fallback
+  }
 
   return (
-    <div
-      style={{
-        maxWidth: 1200,
-        margin: "0 auto",
-        padding: "24px 20px 60px",
-        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-        color: "#f8fafc",
-      }}
-    >
-      {/* Top Header */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: 16,
-          marginBottom: 24,
-        }}
-      >
+    <div className="ea-view" style={{ maxWidth: 1200 }}>
+      <EaHubBackLink />
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12, margin: "0 0 1.5rem" }}>
         <div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-            <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700, color: "#fff" }}>
-              EA Assessor (IA)
-            </h1>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <h1 style={{ margin: 0, fontSize: "1.75rem", fontWeight: 700 }}>EA Assessor</h1>
             <span
               style={{
                 display: "inline-flex",
@@ -53,53 +40,24 @@ export async function SecretariaVirtualView({ payload, initPageResult }: AdminVi
                 gap: 6,
                 padding: "3px 10px",
                 borderRadius: 999,
-                fontSize: 11,
+                fontSize: 12,
                 fontWeight: 600,
-                background: "rgba(16, 185, 129, 0.15)",
-                color: "#10b981",
-                border: "1px solid rgba(16, 185, 129, 0.3)",
+                background: "rgba(34, 197, 94, 0.15)",
+                color: "#15803d",
+                border: "1px solid rgba(34, 197, 94, 0.3)",
               }}
             >
-              <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  backgroundColor: "#10b981",
-                }}
-              />
-              Sessão WhatsApp Ativa (Contabo VPS)
+              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
+              WhatsApp Nuvem 24/7 Conectado
             </span>
           </div>
-          <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-            Torre de controle inteligente integrada ao Google, Microsoft, EA Post, EA Flow e Antigravity.
+          <p style={{ color: "var(--theme-elevation-600)", margin: "0.25rem 0 0" }}>
+            Torre de Controle Operacional e Inteligência Executiva de Thiago Marchi e da Empresarial Academy.
           </p>
-        </div>
-
-        <div style={{ display: "flex", gap: 10 }}>
-          <Link
-            href="/eahub"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "8px 14px",
-              borderRadius: 8,
-              fontSize: 13,
-              fontWeight: 600,
-              color: "#cbd5e1",
-              background: "#1e293b",
-              border: "1px solid #334155",
-              textDecoration: "none",
-            }}
-          >
-            ← Voltar ao EA HUB
-          </Link>
         </div>
       </div>
 
-      {/* Interactive Client Panel (Agents Grid, Quick Actions, Test Console) */}
-      <SecretariaClientPanel postsCount={postsCount.totalDocs} leadsCount={leadsCount.totalDocs} />
+      <SecretariaClientPanel postsCount={postsCount} leadsCount={leadsCount} />
     </div>
   );
 }
