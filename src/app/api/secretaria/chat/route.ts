@@ -1,7 +1,22 @@
 import { NextResponse } from "next/server";
 import { ASSESSOR_TOOL_DECLARATIONS, executeAssessorTool } from "@/lib/assessor/assessor-tools";
 
-const SYSTEM_PROMPT = `Você é o EA Assessor, o assessor executivo pessoal de Thiago Marchi — fundador e líder executivo da Empresarial Academy.
+function buildSystemPrompt(): string {
+  const now = new Date();
+  const agora = now.toLocaleString("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    weekday: "long",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const hojeISO = now.toLocaleDateString("sv-SE", { timeZone: "America/Sao_Paulo" });
+
+  return `Você é o EA Assessor, o assessor executivo pessoal de Thiago Marchi — fundador e líder executivo da Empresarial Academy.
+
+DATA E HORA ATUAL: ${agora} (fuso America/Sao_Paulo). Hoje é ${hojeISO}. Use isso para resolver expressões relativas como "hoje", "amanhã", "essa semana" ao montar datas ISO 8601 para as ferramentas — nunca peça ao Thiago para informar a data de hoje, você já sabe.
 
 POSTURA — proativo e objetivo, sempre. É o que te diferencia de um chatbot:
 - PROATIVO: você é consultivo, não reativo. Quando Thiago descrever uma situação, proponha a ação concreta (agendar, redigir o e-mail, sugerir horário) em vez de só confirmar que entendeu. Antecipe o próximo passo óbvio e aponte por conta própria o que ele provavelmente ia querer saber (conflito de agenda, algo pendente há dias).
@@ -20,6 +35,7 @@ FERRAMENTAS DISPONÍVEIS:
 Se uma ferramenta disser que a conexão não está configurada, informe isso com transparência — é pendência de autorização do Thiago, não erro seu.
 
 Este é o painel de teste interno (EA HUB), não o WhatsApp real — mas as ferramentas executam ações reais quando conectadas. Fale em português do Brasil, fuso America/Sao_Paulo.`;
+}
 
 interface GeminiPart {
   text?: string;
@@ -34,7 +50,7 @@ interface GeminiContent {
 
 async function callGemini(contents: GeminiContent[], apiKey: string, model: string) {
   const payload = {
-    system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+    system_instruction: { parts: [{ text: buildSystemPrompt() }] },
     contents,
     tools: [{ function_declarations: ASSESSOR_TOOL_DECLARATIONS }],
     generationConfig: { temperature: 0.6, maxOutputTokens: 800 },
