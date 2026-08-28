@@ -171,6 +171,15 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     };
   });
 
+  const hasSecretaria = systemLinks.some((l) => l.name.toLowerCase().includes("secretária") || l.name.toLowerCase().includes("secretaria"));
+  if (!hasSecretaria) {
+    systemCards.unshift({
+      title: "Secretária Virtual (IA)",
+      description: "Torre de controle inteligente — WhatsApp, agenda (Google/Outlook), e-mails, EA Post, EA Flow e Antigravity via Gemini AI.",
+      href: "/eahub/secretaria",
+    });
+  }
+
   return (
     <div>
       <header
@@ -192,7 +201,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
 
       <div className="ea-view" style={{ display: "grid", gap: "1.75rem" }}>
         <Section title="Inteligência Artificial">
-          <CardGrid cards={[secretariaCard]} highlight />
+          <CardGrid cards={[secretariaCard]} />
         </Section>
 
         <Section title="Anúncios">
