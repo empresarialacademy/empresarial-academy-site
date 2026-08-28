@@ -17,12 +17,16 @@ interface Props {
   leadsCount: number;
 }
 
+type SemaforoStatus = "verde" | "amber" | "vermelho";
+
 interface Agent {
   label: string;
   title: string;
   desc: string;
-  status: "conectado" | "pendente";
+  status: SemaforoStatus;
+  statusLabel: string;
   footer: string;
+  faltando?: string[];
 }
 
 const AGENTS: Agent[] = [
@@ -30,38 +34,50 @@ const AGENTS: Agent[] = [
     label: "01",
     title: "Calendário & E-mail",
     desc: "Google Calendar, Gmail, Outlook 365 e Teams.",
-    status: "pendente",
-    footer: "Aguardando autorização (OAuth)",
+    status: "amber",
+    statusLabel: "Parcial",
+    footer: "Google conectado",
+    faltando: ["Outlook 365 (e-mail)", "Microsoft Teams (reuniões)"],
   },
   {
     label: "02",
     title: "Social Engine",
     desc: "Fila de posts e aprovação rápida no EA Post.",
-    status: "conectado",
+    status: "verde",
+    statusLabel: "Conectado",
     footer: "",
   },
   {
     label: "03",
     title: "Atendimento & CRM",
     desc: "EA Flow, inbox de leads e automações de DM.",
-    status: "conectado",
+    status: "verde",
+    statusLabel: "Conectado",
     footer: "",
   },
   {
     label: "04",
     title: "Antigravity Dev",
     desc: "Fila de tarefas de código, deploys e testes.",
-    status: "conectado",
+    status: "verde",
+    statusLabel: "Pronto",
     footer: "Comandos via WhatsApp",
   },
   {
     label: "05",
     title: "Briefing Executivo",
-    desc: "Síntese diária (07:30 / 19:00) e transcrições.",
-    status: "conectado",
-    footer: "Modo proativo",
+    desc: "Resumo diário da agenda, todo dia às 7h.",
+    status: "verde",
+    statusLabel: "Automático",
+    footer: "WhatsApp às 7h",
   },
 ];
+
+const SEMAFORO_COLOR: Record<SemaforoStatus, string> = {
+  verde: "#2E7D5B",
+  amber: "#C7892B",
+  vermelho: "#B23B3B",
+};
 
 export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
   const [testInput, setTestInput] = useState("");
@@ -86,10 +102,14 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
     setLoading(true);
 
     try {
+      const history = chatLog.map((m) => ({
+        role: m.sender === "user" ? ("user" as const) : ("model" as const),
+        text: m.text,
+      }));
       const res = await fetch("/api/secretaria/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMsg }),
+        body: JSON.stringify({ message: userMsg, history }),
       });
       const data = await res.json();
       setChatLog((prev) => [
@@ -127,8 +147,9 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
             <div key={agent.label} style={cardStyle}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
                 <span style={cardLabel}>{agent.label}</span>
-                <span style={agent.status === "conectado" ? badgeActive : badgePending}>
-                  {agent.status === "conectado" ? "Conectado" : "Pendente"}
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase", color: SEMAFORO_COLOR[agent.status] }}>
+                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: SEMAFORO_COLOR[agent.status], display: "inline-block" }} />
+                  {agent.statusLabel}
                 </span>
               </div>
               <h3 style={cardTitle}>{agent.title}</h3>
@@ -136,6 +157,19 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
               {agent.footer && <div style={cardFooter}>{agent.footer}</div>}
               {agent.title === "Social Engine" && <div style={cardFooter}>{postsCount} posts no ecossistema</div>}
               {agent.title === "Atendimento & CRM" && <div style={cardFooter}>{leadsCount} leads cadastrados</div>}
+              {agent.faltando && agent.faltando.length > 0 && (
+                <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid #D9DCE1" }}>
+                  <div style={{ fontSize: 10, color: GRAY, marginBottom: 4, fontWeight: 700, letterSpacing: 0.3, textTransform: "uppercase" }}>
+                    Faltando conectar
+                  </div>
+                  {agent.faltando.map((item) => (
+                    <div key={item} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: AMBER, fontWeight: 600, marginTop: 3 }}>
+                      <span style={{ width: 6, height: 6, borderRadius: "50%", background: AMBER, display: "inline-block", flexShrink: 0 }} />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -224,21 +258,59 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
 
         {/* Coluna direita */}
         <div style={{ display: "flex", flexDirection: "column", gap: 1, background: LINE }}>
-          <div style={{ background: OFFWHITE, padding: 20 }}>
+          <div style={{ background: OFFWHITE, padding: 20, maxHeight: 420, overflowY: "auto" }}>
             <h3 style={panelTitle}>Instruções sugeridas</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <button onClick={() => setTestInput("Qual a minha agenda de amanhã?")} style={actionBtnStyle}>
-                Consultar agenda de amanhã
-              </button>
-              <button onClick={() => setTestInput("Verifique se há posts pendentes de aprovação no EA Post.")} style={actionBtnStyle}>
-                Checar fila do EA Post
-              </button>
-              <button onClick={() => setTestInput("Mostre as conversas recentes de clientes no EA Flow.")} style={actionBtnStyle}>
-                Puxar leads do EA Flow
-              </button>
-              <button onClick={() => setTestInput("Antigravity, crie uma tarefa para auditar as conexões de API.")} style={actionBtnStyle}>
-                Disparar ordem ao Antigravity
-              </button>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <div>
+                <div style={suggestionGroupLabel}>Agenda</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  <button onClick={() => setTestInput("Qual a minha agenda de hoje?")} style={actionBtnStyle}>
+                    Consultar agenda de hoje
+                  </button>
+                  <button onClick={() => setTestInput("Qual a minha agenda de amanhã?")} style={actionBtnStyle}>
+                    Consultar agenda de amanhã
+                  </button>
+                  <button onClick={() => setTestInput("Marque uma reunião de 30 minutos amanhã às 15h com o título Alinhamento comercial.")} style={actionBtnStyle}>
+                    Marcar reunião de 30min amanhã 15h
+                  </button>
+                  <button onClick={() => setTestInput("Crie um lembrete hoje às 18h para revisar o contrato do cliente X.")} style={actionBtnStyle}>
+                    Criar lembrete pessoal
+                  </button>
+                </div>
+              </div>
+              <div>
+                <div style={suggestionGroupLabel}>E-mail</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  <button onClick={() => setTestInput("Redija um e-mail de acompanhamento para um cliente que não respondeu há 3 dias.")} style={actionBtnStyle}>
+                    Redigir e-mail de follow-up
+                  </button>
+                  <button onClick={() => setTestInput("Envie um e-mail de confirmação de reunião para contato@exemplo.com, assunto Confirmação de reunião, dizendo que confirmo nosso encontro amanhã às 15h.")} style={actionBtnStyle}>
+                    Enviar e-mail de confirmação
+                  </button>
+                </div>
+              </div>
+              <div>
+                <div style={suggestionGroupLabel}>Ecossistema EA</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  <button onClick={() => setTestInput("Verifique se há posts pendentes de aprovação no EA Post.")} style={actionBtnStyle}>
+                    Checar fila do EA Post
+                  </button>
+                  <button onClick={() => setTestInput("Mostre as conversas recentes de clientes no EA Flow.")} style={actionBtnStyle}>
+                    Puxar leads do EA Flow
+                  </button>
+                  <button onClick={() => setTestInput("Antigravity, crie uma tarefa para auditar as conexões de API.")} style={actionBtnStyle}>
+                    Disparar ordem ao Antigravity
+                  </button>
+                </div>
+              </div>
+              <div>
+                <div style={suggestionGroupLabel}>Briefing</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  <button onClick={() => setTestInput("Me dê um resumo executivo do meu dia: agenda, pendências e o que precisa da minha atenção agora.")} style={actionBtnStyle}>
+                    Gerar briefing sob demanda
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -325,28 +397,21 @@ const cardFooter: React.CSSProperties = {
   paddingTop: 8,
 };
 
-const badgeActive: React.CSSProperties = {
-  fontSize: 10,
-  fontWeight: 700,
-  letterSpacing: 0.5,
-  textTransform: "uppercase",
-  color: GREEN,
-};
-
-const badgePending: React.CSSProperties = {
-  fontSize: 10,
-  fontWeight: 700,
-  letterSpacing: 0.5,
-  textTransform: "uppercase",
-  color: AMBER,
-};
-
 const panelTitle: React.CSSProperties = {
   fontFamily: "'Montserrat', Arial, sans-serif",
   fontSize: 13,
   fontWeight: 700,
   color: GRAPHITE,
   margin: "0 0 14px",
+};
+
+const suggestionGroupLabel: React.CSSProperties = {
+  fontSize: 10,
+  fontWeight: 700,
+  letterSpacing: 0.6,
+  textTransform: "uppercase",
+  color: GOLD,
+  marginBottom: 6,
 };
 
 const actionBtnStyle: React.CSSProperties = {

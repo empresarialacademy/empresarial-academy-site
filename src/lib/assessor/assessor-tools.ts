@@ -39,7 +39,7 @@ export const ASSESSOR_TOOL_DECLARATIONS = [
   {
     name: "criar_evento_agenda",
     description:
-      "Cria um compromisso na agenda do Thiago. Use SOMENTE depois que o Thiago confirmou explicitamente título, data, horário e participantes — nunca crie de primeira sem confirmação, a não ser que ele já tenha dado todos os detalhes e pedido para agendar diretamente.",
+      "Cria um compromisso na agenda do Thiago (reunião com participantes ou só um lembrete pessoal). Os únicos dados obrigatórios são título, data e horário — participantesEmail é OPCIONAL, não espere ter o e-mail de ninguém para criar o evento. Se ele já deu título/data/horário, isso já é confirmação suficiente para agendar direto.",
     parameters: {
       type: "OBJECT",
       properties: {
@@ -47,7 +47,11 @@ export const ASSESSOR_TOOL_DECLARATIONS = [
         descricao: { type: "STRING" },
         inicioISO: { type: "STRING", description: "ISO 8601 com fuso -03:00" },
         fimISO: { type: "STRING", description: "ISO 8601 com fuso -03:00" },
-        participantesEmail: { type: "ARRAY", items: { type: "STRING" } },
+        participantesEmail: {
+          type: "ARRAY",
+          items: { type: "STRING" },
+          description: "Opcional. Omita se não houver e-mail disponível — o evento é criado normalmente sem participantes.",
+        },
         criarLinkReuniao: { type: "BOOLEAN", description: "true para gerar Google Meet ou Teams" },
         plataforma: { type: "STRING", enum: ["google", "outlook", "ambos"] },
         confirmado: { type: "BOOLEAN", description: "true somente se o Thiago já confirmou explicitamente" },

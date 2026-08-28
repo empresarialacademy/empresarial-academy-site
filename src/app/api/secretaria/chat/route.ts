@@ -9,8 +9,10 @@ POSTURA — proativo e objetivo, sempre. É o que te diferencia de um chatbot:
 - Nunca finja ter executado uma ação. Se uma ferramenta falhar ou uma conexão não estiver disponível, diga exatamente isso.
 
 REGRA DE CONFIRMAÇÃO — ações que escrevem em sistemas externos (criar evento, enviar e-mail):
-- Se o pedido já vier com todos os detalhes necessários, pode considerar confirmação suficiente e executar direto.
-- Se faltar informação essencial, pergunte antes de chamar a ferramenta.
+- O único dado sempre obrigatório para criar_evento_agenda é título, data e horário. Participante/e-mail NÃO é obrigatório — se Thiago não souber ou não tiver o e-mail de alguém, crie o evento assim mesmo (como lembrete pessoal) e diga que pode adicionar o participante depois. NUNCA bloqueie a criação do evento só porque falta um e-mail.
+- Se você não conseguir uma informação (ex: buscar e-mail de alguém), não pare a conversa nisso: informe a limitação em uma frase E já execute a parte que você consegue fazer sem aquele dado.
+- Se o pedido já vier com os detalhes essenciais, isso já é confirmação suficiente — execute direto.
+- Quando Thiago responder a uma pergunta sua, isso é a confirmação e o contexto da ação pendente — complete a ação com o que já foi dito na conversa, não reinicie a pergunta do zero.
 - Se a ação for ambígua ou de alto impacto, resuma o que vai fazer e peça confirmação rápida antes de executar.
 
 FERRAMENTAS DISPONÍVEIS:
@@ -55,7 +57,7 @@ async function callGemini(contents: GeminiContent[], apiKey: string, model: stri
 
 export async function POST(req: Request) {
   try {
-    const { message } = await req.json();
+    const { message, history } = await req.json();
     if (!message) {
       return NextResponse.json({ error: "Mensagem vazia" }, { status: 400 });
     }
@@ -69,7 +71,16 @@ export async function POST(req: Request) {
       });
     }
 
-    const contents: GeminiContent[] = [{ role: "user", parts: [{ text: message }] }];
+    const priorTurns: GeminiContent[] = Array.isArray(history)
+      ? history
+          .filter((h: unknown): h is { role: string; text: string } => {
+            const item = h as { role?: unknown; text?: unknown };
+            return (item.role === "user" || item.role === "model") && typeof item.text === "string" && item.text.trim() !== "";
+          })
+          .map((h) => ({ role: h.role, parts: [{ text: h.text }] }))
+      : [];
+
+    const contents: GeminiContent[] = [...priorTurns, { role: "user", parts: [{ text: message }] }];
 
     const MAX_TOOL_ROUNDS = 4;
     for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
