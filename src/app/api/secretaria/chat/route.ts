@@ -93,7 +93,7 @@ export async function POST(req: Request) {
           functionResponse: { name: call.name, response: { ok: result.ok, summary: result.summary } },
         });
       }
-      contents.push({ role: "function", parts: functionResponseParts });
+      contents.push({ role: "user", parts: functionResponseParts });
     }
 
     return NextResponse.json({
