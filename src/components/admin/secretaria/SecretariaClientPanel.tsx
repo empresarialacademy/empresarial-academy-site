@@ -128,14 +128,15 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
     if (found?.connected) setQrCode(null);
   }, [whatsappInstances, qrCode]);
 
-  const handleConnect = async (instanceName: string) => {
+  const handleConnect = async (instanceName: string, forceRecreate = false) => {
     setConnectingInstance(instanceName);
     setQrCode(null);
+    setWhatsappError(null);
     try {
       const res = await fetch("/api/secretaria/whatsapp-connect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ instanceName }),
+        body: JSON.stringify({ instanceName, forceRecreate }),
       });
       const data = await res.json();
       if (data.ok && data.base64) {
@@ -404,22 +405,41 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
                     {inst.ownerNumber ? formatPhone(inst.ownerNumber) : inst.instanceName} · {inst.connected ? "online" : inst.connectionStatus}
                   </div>
                   {!inst.connected && (
-                    <button
-                      onClick={() => handleConnect(inst.instanceName)}
-                      disabled={connectingInstance === inst.instanceName}
-                      style={{
-                        background: GOLD,
-                        color: NAVY,
-                        border: "none",
-                        padding: "6px 12px",
-                        fontSize: 11,
-                        fontWeight: 700,
-                        cursor: "pointer",
-                        flexShrink: 0,
-                      }}
-                    >
-                      {connectingInstance === inst.instanceName ? "Gerando…" : "Conectar"}
-                    </button>
+                    <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                      <button
+                        onClick={() => handleConnect(inst.instanceName)}
+                        disabled={connectingInstance === inst.instanceName}
+                        style={{
+                          background: GOLD,
+                          color: NAVY,
+                          border: "none",
+                          padding: "6px 12px",
+                          fontSize: 11,
+                          fontWeight: 700,
+                          cursor: "pointer",
+                        }}
+                      >
+                        {connectingInstance === inst.instanceName ? "Gerando…" : "Conectar"}
+                      </button>
+                      {inst.connectionStatus === "connecting" && (
+                        <button
+                          onClick={() => handleConnect(inst.instanceName, true)}
+                          disabled={connectingInstance === inst.instanceName}
+                          title="A instância ficou travada em 'connecting' — apaga e recria do zero antes de gerar o QR."
+                          style={{
+                            background: "transparent",
+                            color: GRAY,
+                            border: `1px solid ${GRAY}`,
+                            padding: "6px 12px",
+                            fontSize: 11,
+                            fontWeight: 700,
+                            cursor: "pointer",
+                          }}
+                        >
+                          Recriar do zero
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
                 <div style={{ fontSize: 10, color: GRAY, marginTop: 3 }}>{inst.instanceName}</div>
