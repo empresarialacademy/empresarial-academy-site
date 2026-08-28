@@ -71,10 +71,10 @@ const AGENTS: Agent[] = [
   {
     label: "04",
     title: "Antigravity Dev",
-    desc: "Fila de tarefas de código, deploys e testes.",
-    status: "verde",
-    statusLabel: "Pronto",
-    footer: "Comandos via WhatsApp",
+    desc: "Fila de ordens para colar manualmente no Antigravity — sem execução automática.",
+    status: "amber",
+    statusLabel: "Manual",
+    footer: "Registrado via WhatsApp, executado por você",
   },
   {
     label: "05",
@@ -101,6 +101,9 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
   const [qrCode, setQrCode] = useState<{ instanceName: string; base64: string } | null>(null);
   const [forwardThirdParty, setForwardThirdParty] = useState<boolean | null>(null);
   const [togglingForward, setTogglingForward] = useState(false);
+  const [antigravityTasks, setAntigravityTasks] = useState<
+    Array<{ id: number; instruction: string; status: string; createdAt: string }> | null
+  >(null);
 
   useEffect(() => {
     fetch("/api/secretaria/whatsapp-forward-toggle")
@@ -110,6 +113,35 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
       })
       .catch(() => {});
   }, []);
+
+  const fetchAntigravityTasks = React.useCallback(async () => {
+    try {
+      const res = await fetch("/api/secretaria/antigravity-tasks");
+      const data = await res.json();
+      if (data.ok) setAntigravityTasks(data.tasks);
+    } catch {
+      // silencioso — o card mostra "sem pendências" nesse caso, não crítico
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchAntigravityTasks();
+    const interval = setInterval(fetchAntigravityTasks, 20000);
+    return () => clearInterval(interval);
+  }, [fetchAntigravityTasks]);
+
+  const markAntigravityTaskDone = async (id: number) => {
+    setAntigravityTasks((prev) => (prev ? prev.filter((t) => t.id !== id) : prev));
+    try {
+      await fetch("/api/secretaria/antigravity-tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status: "concluida" }),
+      });
+    } catch {
+      fetchAntigravityTasks();
+    }
+  };
 
   const handleToggleForward = async () => {
     if (forwardThirdParty === null || togglingForward) return;
@@ -256,6 +288,27 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
               {agent.footer && <div style={cardFooter}>{agent.footer}</div>}
               {agent.title === "Social Engine" && <div style={cardFooter}>{postsCount} posts no ecossistema</div>}
               {agent.title === "Atendimento & CRM" && <div style={cardFooter}>{leadsCount} leads cadastrados</div>}
+              {agent.title === "Antigravity Dev" && (
+                <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid #D9DCE1" }}>
+                  {!antigravityTasks || antigravityTasks.length === 0 ? (
+                    <div style={{ fontSize: 11, color: GRAY }}>Sem ordens pendentes.</div>
+                  ) : (
+                    antigravityTasks.map((task) => (
+                      <div key={task.id} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginTop: 6 }}>
+                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: AMBER, display: "inline-block", flexShrink: 0, marginTop: 5 }} />
+                        <div style={{ flex: 1, fontSize: 11.5, color: GRAPHITE, lineHeight: 1.4 }}>{task.instruction}</div>
+                        <button
+                          onClick={() => markAntigravityTaskDone(task.id)}
+                          title="Marcar como feita"
+                          style={{ background: "none", border: "none", color: GRAY, fontSize: 10, fontWeight: 700, cursor: "pointer", flexShrink: 0, textDecoration: "underline" }}
+                        >
+                          feita
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
               {agent.faltando && agent.faltando.length > 0 && (
                 <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid #D9DCE1" }}>
                   <div style={{ fontSize: 10, color: GRAY, marginBottom: 4, fontWeight: 700, letterSpacing: 0.3, textTransform: "uppercase" }}>
