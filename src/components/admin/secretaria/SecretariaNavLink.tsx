@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 /**
- * Link para a Secretária Virtual no menu lateral do EA HUB (/eahub).
+ * Link para o EA Assessor no menu lateral do EA HUB (/eahub).
  */
 export function SecretariaNavLink() {
   return (

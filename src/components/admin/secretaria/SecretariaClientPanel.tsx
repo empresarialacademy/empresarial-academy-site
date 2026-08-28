@@ -317,7 +317,7 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
           <div style={{ background: OFFWHITE, padding: 20, flex: 1 }}>
             <h3 style={panelTitle}>Canal WhatsApp</h3>
             <p style={{ fontSize: 12, color: GRAY, margin: "0 0 14px", lineHeight: 1.5 }}>
-              Instância <strong style={{ color: GRAPHITE }}>secretaria-ea</strong> ativa 24/7 na infraestrutura em nuvem
+              Instância <strong style={{ color: GRAPHITE }}>EA Assessor</strong> ativa 24/7 na infraestrutura em nuvem
               (Contabo VPS).
             </p>
             <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, color: GREEN }}>
