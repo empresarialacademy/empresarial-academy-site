@@ -7,7 +7,7 @@ export function SecretariaNavLink() {
   return (
     <div style={{ padding: "0 var(--base, 20px) calc(var(--base, 20px) / 2)" }}>
       <Link
-        href="/eahub/secretaria"
+        href="/assessor"
         className="nav__link"
         style={{ display: "flex", alignItems: "center", gap: 8 }}
       >

@@ -62,7 +62,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     title: "EA Assessor",
     description:
       "Assessoria executiva e torre de controle via WhatsApp — Google Calendar, Gmail, Outlook, EA Post, EA Flow e Antigravity integrados com Gemini AI.",
-    href: "/eahub/secretaria",
+    href: "/assessor",
     stat: "● Sessão WhatsApp Ativa (Nuvem 24/7)",
   };
 
@@ -176,7 +176,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     systemCards.unshift({
       title: "EA Assessor",
       description: "Assessoria executiva e torre de controle — WhatsApp, agenda (Google/Outlook), e-mails, EA Post, EA Flow e Antigravity via Gemini AI.",
-      href: "/eahub/secretaria",
+      href: "/assessor",
     });
   }
 
