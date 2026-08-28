@@ -8,7 +8,7 @@ export type LegalBlock =
 
 export type LegalSection = { title: string; blocks: LegalBlock[] };
 
-export const legalUpdatedAt = "Julho de 2026";
+export const legalUpdatedAt = "Agosto de 2026";
 
 export const privacidadeSections: LegalSection[] = [
   {
@@ -51,13 +51,46 @@ export const privacidadeSections: LegalSection[] = [
     ],
   },
   {
-    title: "3. Como Utilizamos suas Informações",
+    title: "3. Dados Coletados via Instagram, Messenger e WhatsApp",
+    blocks: [
+      {
+        type: "p",
+        text: "Quando você envia uma mensagem direta (DM) para o perfil comercial da Empresarial Academy no Instagram ou no Facebook, ou entra em contato pelo WhatsApp, coletamos e processamos os dados abaixo através de uma integração automatizada com a API da Meta (EA Flow), usada para responder mensagens, qualificar conversas e encaminhar o atendimento.",
+      },
+      { type: "p", text: "3.1 Dados coletados:" },
+      {
+        type: "list",
+        items: [
+          "Identificador da conta que enviou a mensagem (ID do Instagram ou do Messenger, fornecido pela Meta)",
+          "Nome de perfil público, quando disponível",
+          "Conteúdo das mensagens de texto trocadas na conversa",
+          "Metadados da mensagem (horário de envio e recebimento, canal de origem)",
+        ],
+      },
+      { type: "p", text: "3.2 Finalidade do tratamento:" },
+      {
+        type: "list",
+        items: [
+          "Responder automaticamente a mensagens recebidas, com base em fluxos de atendimento pré-configurados",
+          "Encaminhar a conversa para atendimento humano quando necessário",
+          "Manter histórico da conversa para dar continuidade ao atendimento",
+          "Melhorar a qualidade e a relevância das respostas automatizadas",
+        ],
+      },
+      {
+        type: "p",
+        text: "Não utilizamos os dados de mensagens do Instagram, Messenger ou WhatsApp para fins de publicidade, e não os compartilhamos com terceiros além dos prestadores de serviço estritamente necessários à operação técnica do atendimento (ver seção 6). Você pode solicitar a exclusão do histórico da sua conversa a qualquer momento pelos canais de contato listados na seção 14.",
+      },
+    ],
+  },
+  {
+    title: "4. Como Utilizamos suas Informações",
     blocks: [
       {
         type: "list",
         items: [
           "Fornecer nossos serviços de consultoria, mentoria e treinamento",
-          "Responder às suas solicitações e comunicações",
+          "Responder às suas solicitações e comunicações, inclusive por Instagram, Messenger e WhatsApp",
           "Enviar materiais educacionais e informativos",
           "Personalizar sua experiência em nosso site",
           "Melhorar nossos serviços e desenvolver novos produtos",
@@ -68,12 +101,12 @@ export const privacidadeSections: LegalSection[] = [
     ],
   },
   {
-    title: "4. Base Legal para o Tratamento",
+    title: "5. Base Legal para o Tratamento",
     blocks: [
       {
         type: "list",
         items: [
-          "Consentimento: quando você nos fornece consentimento explícito",
+          "Consentimento: quando você nos fornece consentimento explícito, inclusive ao iniciar uma conversa por Instagram, Messenger ou WhatsApp",
           "Execução de contrato: para cumprir obrigações contratuais",
           "Legítimo interesse: para melhorar nossos serviços e comunicação",
           "Cumprimento de obrigação legal: quando exigido por lei",
@@ -82,7 +115,7 @@ export const privacidadeSections: LegalSection[] = [
     ],
   },
   {
-    title: "5. Compartilhamento de Informações",
+    title: "6. Compartilhamento de Informações",
     blocks: [
       {
         type: "p",
@@ -91,7 +124,8 @@ export const privacidadeSections: LegalSection[] = [
       {
         type: "list",
         items: [
-          "Com prestadores de serviços que nos auxiliam na operação do negócio",
+          "Com prestadores de serviços que nos auxiliam na operação do negócio, incluindo a infraestrutura técnica (hospedagem e banco de dados) que processa as mensagens do Instagram, Messenger e WhatsApp",
+          "Com a Meta Platforms, na medida necessária para o funcionamento da integração de mensagens, conforme os Termos da Plataforma Meta",
           "Quando exigido por lei ou ordem judicial",
           "Para proteger nossos direitos, propriedade ou segurança",
           "Com seu consentimento explícito",
@@ -100,7 +134,7 @@ export const privacidadeSections: LegalSection[] = [
     ],
   },
   {
-    title: "6. Cookies e Tecnologias Similares",
+    title: "7. Cookies e Tecnologias Similares",
     blocks: [
       {
         type: "p",
@@ -109,7 +143,7 @@ export const privacidadeSections: LegalSection[] = [
     ],
   },
   {
-    title: "7. Segurança dos Dados",
+    title: "8. Segurança dos Dados",
     blocks: [
       {
         type: "p",
@@ -118,7 +152,7 @@ export const privacidadeSections: LegalSection[] = [
     ],
   },
   {
-    title: "8. Retenção de Dados",
+    title: "9. Retenção de Dados",
     blocks: [
       {
         type: "p",
@@ -127,7 +161,7 @@ export const privacidadeSections: LegalSection[] = [
     ],
   },
   {
-    title: "9. Seus Direitos (LGPD)",
+    title: "10. Seus Direitos (LGPD)",
     blocks: [
       {
         type: "list",
@@ -144,7 +178,7 @@ export const privacidadeSections: LegalSection[] = [
     ],
   },
   {
-    title: "10. Transferência Internacional",
+    title: "11. Transferência Internacional",
     blocks: [
       {
         type: "p",
@@ -153,7 +187,7 @@ export const privacidadeSections: LegalSection[] = [
     ],
   },
   {
-    title: "11. Menores de Idade",
+    title: "12. Menores de Idade",
     blocks: [
       {
         type: "p",
@@ -162,7 +196,7 @@ export const privacidadeSections: LegalSection[] = [
     ],
   },
   {
-    title: "12. Alterações nesta Política",
+    title: "13. Alterações nesta Política",
     blocks: [
       {
         type: "p",
@@ -171,7 +205,7 @@ export const privacidadeSections: LegalSection[] = [
     ],
   },
   {
-    title: "13. Contato e Encarregado (DPO)",
+    title: "14. Contato e Encarregado (DPO)",
     blocks: [
       {
         type: "p",
