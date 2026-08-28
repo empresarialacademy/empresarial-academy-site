@@ -58,6 +58,14 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     return url !== "/eahub" && !url.includes("/eahub/marketing-manager");
   });
 
+  const secretariaCard: Card = {
+    title: "Secretária Virtual Executiva (IA)",
+    description:
+      "Torre de controle operacional via WhatsApp — Google Calendar, Gmail, Outlook, EA Post, EA Flow e Antigravity integrados com o Gemini AI.",
+    href: "/eahub/secretaria",
+    stat: "● Sessão WhatsApp Ativa (Nuvem)",
+  };
+
   const adsCard: Card = {
     title: "EA ADS Manager",
     description:
@@ -183,6 +191,10 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
       </header>
 
       <div className="ea-view" style={{ display: "grid", gap: "1.75rem" }}>
+        <Section title="Inteligência Artificial">
+          <CardGrid cards={[secretariaCard]} highlight />
+        </Section>
+
         <Section title="Anúncios">
           <CardGrid cards={[adsCard]} highlight />
         </Section>

@@ -90,6 +90,7 @@ export default buildConfig({
     components: {
       afterNavLinks: [
         "@/components/admin/marketing/EaMarketingManagerNavLink#EaMarketingManagerNavLink",
+        "@/components/admin/secretaria/SecretariaNavLink#SecretariaNavLink",
         "@/components/admin/contracts/ContractGeneratorNavLink#ContractGeneratorNavLink",
       ],
       graphics: {
@@ -104,6 +105,11 @@ export default buildConfig({
         // e-mail, mídia, sistemas dinâmicos) virou a home.
         dashboard: {
           Component: "@/components/admin/marketing/EaMarketingManagerView#EaMarketingManagerView",
+        },
+        secretaria: {
+          Component: "@/components/admin/secretaria/SecretariaVirtualView#SecretariaVirtualView",
+          path: "/secretaria",
+          meta: { title: "Secretária Virtual (IA)" },
         },
         // Rotas antigas do hub redirecionam para a home /eahub (preserva
         // favoritos para /marketing-manager e /central-ea).
