@@ -39,6 +39,8 @@ import { AdsPerformanceView as AdsPerformanceView_b0a2e4bac77edbfc8244bba00bb695
 import { ContractGeneratorView as ContractGeneratorView_c0bbf6b7735cc111ed13bb3b7aec5738 } from '@/components/admin/contracts/ContractGeneratorView'
 import { ApiInventoryView as ApiInventoryView_a1c2e4f6091d47b3ae5c7fda2b4e8901 } from '@/components/admin/apis/ApiInventoryView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
+import { SecretariaNavLink as SecretariaNavLink_f7112026 } from '@/components/admin/secretaria/SecretariaNavLink'
+import { SecretariaVirtualView as SecretariaVirtualView_f7112026 } from '@/components/admin/secretaria/SecretariaVirtualView'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
@@ -82,5 +84,7 @@ export const importMap = {
   "@/components/admin/ads/AdsPerformanceView#AdsPerformanceView": AdsPerformanceView_b0a2e4bac77edbfc8244bba00bb695a3,
   "@/components/admin/contracts/ContractGeneratorView#ContractGeneratorView": ContractGeneratorView_c0bbf6b7735cc111ed13bb3b7aec5738,
   "@/components/admin/apis/ApiInventoryView#ApiInventoryView": ApiInventoryView_a1c2e4f6091d47b3ae5c7fda2b4e8901,
+  "@/components/admin/secretaria/SecretariaNavLink#SecretariaNavLink": SecretariaNavLink_f7112026,
+  "@/components/admin/secretaria/SecretariaVirtualView#SecretariaVirtualView": SecretariaVirtualView_f7112026,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }
