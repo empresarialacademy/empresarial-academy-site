@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const NAVY = "#1D2B3C";
 const NAVY_LIGHT = "#26364A";
@@ -15,6 +15,19 @@ const AMBER = "#C7892B";
 interface Props {
   postsCount: number;
   leadsCount: number;
+}
+
+interface WhatsappInstance {
+  instanceName: string;
+  ownerNumber: string | null;
+  connectionStatus: string;
+  connected: boolean;
+}
+
+function formatPhone(digits: string): string {
+  const m = digits.match(/^55(\d{2})(\d{4,5})(\d{4})$/);
+  if (!m) return digits;
+  return `+55 (${m[1]}) ${m[2]}-${m[3]}`;
 }
 
 type SemaforoStatus = "verde" | "amber" | "vermelho";
@@ -82,10 +95,64 @@ const SEMAFORO_COLOR: Record<SemaforoStatus, string> = {
 export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
   const [testInput, setTestInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [whatsappInstances, setWhatsappInstances] = useState<WhatsappInstance[] | null>(null);
+  const [whatsappError, setWhatsappError] = useState<string | null>(null);
+  const [connectingInstance, setConnectingInstance] = useState<string | null>(null);
+  const [qrCode, setQrCode] = useState<{ instanceName: string; base64: string } | null>(null);
+
+  const fetchWhatsappStatus = React.useCallback(async () => {
+    try {
+      const res = await fetch("/api/secretaria/whatsapp-status");
+      const data = await res.json();
+      if (data.ok) {
+        setWhatsappInstances(data.instances);
+        setWhatsappError(null);
+      } else {
+        setWhatsappError(data.error || "Falha ao consultar status.");
+      }
+    } catch {
+      setWhatsappError("Não foi possível consultar o status do WhatsApp agora.");
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchWhatsappStatus();
+    const interval = setInterval(fetchWhatsappStatus, 15000);
+    return () => clearInterval(interval);
+  }, [fetchWhatsappStatus]);
+
+  // Some com o QR assim que a instância que estava sendo pareada conecta.
+  useEffect(() => {
+    if (!qrCode) return;
+    const found = whatsappInstances?.find((i) => i.instanceName === qrCode.instanceName);
+    if (found?.connected) setQrCode(null);
+  }, [whatsappInstances, qrCode]);
+
+  const handleConnect = async (instanceName: string) => {
+    setConnectingInstance(instanceName);
+    setQrCode(null);
+    try {
+      const res = await fetch("/api/secretaria/whatsapp-connect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ instanceName }),
+      });
+      const data = await res.json();
+      if (data.ok && data.base64) {
+        setQrCode({ instanceName, base64: data.base64 });
+      } else {
+        setWhatsappError(data.error || "Falha ao gerar QR code.");
+      }
+    } catch {
+      setWhatsappError("Não foi possível gerar o QR code agora.");
+    } finally {
+      setConnectingInstance(null);
+    }
+  };
   const [chatLog, setChatLog] = useState<Array<{ sender: "user" | "secretaria"; text: string; time: string }>>([
     {
       sender: "secretaria",
-      text: "Thiago, estou conectada ao seu WhatsApp (+55 11 95661-9990), pronta para agenda, e-mail e o ecossistema EA. Como posso apoiar agora?",
+      text: "Thiago, estou pronta para agenda, e-mail e o ecossistema EA. Como posso apoiar agora?",
       time: "Agora",
     },
   ]);
@@ -317,14 +384,62 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
           <div style={{ background: OFFWHITE, padding: 20, flex: 1 }}>
             <h3 style={panelTitle}>Canal WhatsApp</h3>
             <p style={{ fontSize: 12, color: GRAY, margin: "0 0 14px", lineHeight: 1.5 }}>
-              Instância <strong style={{ color: GRAPHITE }}>EA Assessor</strong> ativa 24/7 na infraestrutura em nuvem
+              Instâncias <strong style={{ color: GRAPHITE }}>EA Assessor</strong> na infraestrutura em nuvem
               (Contabo VPS).
             </p>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, color: GREEN }}>
-              <span style={{ width: 7, height: 7, background: GREEN, display: "inline-block" }} />
-              +55 (11) 95661-9990 · online
-            </div>
-            <div style={{ marginTop: 16, paddingTop: 14, borderTop: `1px solid #D9DCE1` }}>
+
+            {whatsappError && (
+              <div style={{ fontSize: 11, color: "#B23B3B", marginBottom: 12 }}>{whatsappError}</div>
+            )}
+
+            {whatsappInstances === null && !whatsappError && (
+              <div style={{ fontSize: 12, color: GRAY }}>Consultando status…</div>
+            )}
+
+            {whatsappInstances?.map((inst) => (
+              <div key={inst.instanceName} style={{ marginBottom: 14, paddingBottom: 14, borderBottom: "1px solid #D9DCE1" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, color: inst.connected ? GREEN : "#B23B3B" }}>
+                    <span style={{ width: 7, height: 7, background: inst.connected ? GREEN : "#B23B3B", display: "inline-block" }} />
+                    {inst.ownerNumber ? formatPhone(inst.ownerNumber) : inst.instanceName} · {inst.connected ? "online" : inst.connectionStatus}
+                  </div>
+                  {!inst.connected && (
+                    <button
+                      onClick={() => handleConnect(inst.instanceName)}
+                      disabled={connectingInstance === inst.instanceName}
+                      style={{
+                        background: GOLD,
+                        color: NAVY,
+                        border: "none",
+                        padding: "6px 12px",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {connectingInstance === inst.instanceName ? "Gerando…" : "Conectar"}
+                    </button>
+                  )}
+                </div>
+                <div style={{ fontSize: 10, color: GRAY, marginTop: 3 }}>{inst.instanceName}</div>
+
+                {qrCode?.instanceName === inst.instanceName && (
+                  <div style={{ marginTop: 10, textAlign: "center" }}>
+                    <img
+                      src={`data:image/png;base64,${qrCode.base64}`}
+                      alt={`QR code para conectar ${inst.instanceName}`}
+                      style={{ width: 200, height: 200, border: `1px solid ${LINE}` }}
+                    />
+                    <div style={{ fontSize: 10, color: GRAY, marginTop: 6 }}>
+                      Escaneie rápido no WhatsApp (Aparelhos conectados) — expira em segundos.
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+
+            <div style={{ marginTop: 4, paddingTop: 14, borderTop: `1px solid #D9DCE1` }}>
               <div style={{ fontSize: 11, color: GRAY, marginBottom: 6 }}>Conexões pendentes de autorização</div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, color: AMBER }}>
                 <span style={{ width: 7, height: 7, background: AMBER, display: "inline-block" }} />
