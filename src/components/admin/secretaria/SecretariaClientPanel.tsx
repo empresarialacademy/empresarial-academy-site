@@ -3,12 +3,65 @@
 import React, { useState } from "react";
 
 const NAVY = "#1D2B3C";
+const NAVY_LIGHT = "#26364A";
 const GOLD = "#C1A160";
+const OFFWHITE = "#F6F5F1";
+const GRAPHITE = "#15191F";
+const GRAY = "#6B7280";
+const LINE = "#33445A";
+const GREEN = "#2E7D5B";
+const AMBER = "#C7892B";
 
 interface Props {
   postsCount: number;
   leadsCount: number;
 }
+
+interface Agent {
+  label: string;
+  title: string;
+  desc: string;
+  status: "conectado" | "pendente";
+  footer: string;
+}
+
+const AGENTS: Agent[] = [
+  {
+    label: "01",
+    title: "Calendário & E-mail",
+    desc: "Google Calendar, Gmail, Outlook 365 e Teams.",
+    status: "pendente",
+    footer: "Aguardando autorização (OAuth)",
+  },
+  {
+    label: "02",
+    title: "Social Engine",
+    desc: "Fila de posts e aprovação rápida no EA Post.",
+    status: "conectado",
+    footer: "",
+  },
+  {
+    label: "03",
+    title: "Atendimento & CRM",
+    desc: "EA Flow, inbox de leads e automações de DM.",
+    status: "conectado",
+    footer: "",
+  },
+  {
+    label: "04",
+    title: "Antigravity Dev",
+    desc: "Fila de tarefas de código, deploys e testes.",
+    status: "conectado",
+    footer: "Comandos via WhatsApp",
+  },
+  {
+    label: "05",
+    title: "Briefing Executivo",
+    desc: "Síntese diária (07:30 / 19:00) e transcrições.",
+    status: "conectado",
+    footer: "Modo proativo",
+  },
+];
 
 export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
   const [testInput, setTestInput] = useState("");
@@ -16,7 +69,7 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
   const [chatLog, setChatLog] = useState<Array<{ sender: "user" | "secretaria"; text: string; time: string }>>([
     {
       sender: "secretaria",
-      text: "Olá, Thiago! Estou conectada ao seu WhatsApp (+55 11 95661-9990) e pronta para gerenciar seus e-mails, calendários, posts no EA Post, conversas no EA Flow e ordens de código para o Antigravity. Como posso te apoiar agora?",
+      text: "Thiago, estou conectada ao seu WhatsApp (+55 11 95661-9990), pronta para agenda, e-mail e o ecossistema EA. Como posso apoiar agora?",
       time: "Agora",
     },
   ]);
@@ -33,7 +86,6 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
     setLoading(true);
 
     try {
-      // Chamada para a API do Gemini
       const res = await fetch("/api/secretaria/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -44,7 +96,7 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
         ...prev,
         {
           sender: "secretaria",
-          text: data.reply || "Mensagem processada com sucesso!",
+          text: data.reply || "Não consegui processar essa mensagem agora.",
           time: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
         },
       ]);
@@ -53,7 +105,7 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
         ...prev,
         {
           sender: "secretaria",
-          text: "Recebi seu comando. Ação registrada e sincronizada com o motor executivo da EA!",
+          text: "Tive um problema técnico ao processar isso. Pode repetir?",
           time: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
         },
       ]);
@@ -63,175 +115,88 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      {/* 5 Sub-Agents Grid */}
+    <div style={{ display: "flex", flexDirection: "column", gap: 28, fontFamily: "'Open Sans', Calibri, Arial, sans-serif" }}>
+      {/* Divisão de Agentes */}
       <div>
-        <h2 style={{ fontSize: 16, fontWeight: 600, color: "#cbd5e1", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
-          <span>🏛️</span> Divisão de Agentes Especializados
-        </h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-            gap: 16,
-          }}
-        >
-          {/* Agent 1 */}
-          <div style={cardStyle}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-              <span style={{ fontSize: 20 }}>📅</span>
-              <span style={badgeActive}>Ativo</span>
+        <div style={sectionHeader}>
+          <span style={sectionKicker}>Governança operacional</span>
+          <h2 style={sectionTitle}>Divisão de Agentes Especializados</h2>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 1, background: LINE, border: `1px solid ${LINE}` }}>
+          {AGENTS.map((agent) => (
+            <div key={agent.label} style={cardStyle}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
+                <span style={cardLabel}>{agent.label}</span>
+                <span style={agent.status === "conectado" ? badgeActive : badgePending}>
+                  {agent.status === "conectado" ? "Conectado" : "Pendente"}
+                </span>
+              </div>
+              <h3 style={cardTitle}>{agent.title}</h3>
+              <p style={cardDesc}>{agent.desc}</p>
+              {agent.footer && <div style={cardFooter}>{agent.footer}</div>}
+              {agent.title === "Social Engine" && <div style={cardFooter}>{postsCount} posts no ecossistema</div>}
+              {agent.title === "Atendimento & CRM" && <div style={cardFooter}>{leadsCount} leads cadastrados</div>}
             </div>
-            <h3 style={cardTitle}>Agente Calendar & E-mail</h3>
-            <p style={cardDesc}>Google Calendar, Gmail, Outlook e Microsoft 365.</p>
-            <div style={cardFooter}>Agenda sincronizada</div>
-          </div>
-
-          {/* Agent 2 */}
-          <div style={cardStyle}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-              <span style={{ fontSize: 20 }}>📱</span>
-              <span style={badgeActive}>Conectado</span>
-            </div>
-            <h3 style={cardTitle}>Agente Social Engine</h3>
-            <p style={cardDesc}>Fila de posts e aprovação rápida no EA Post.</p>
-            <div style={cardFooter}>{postsCount} posts no ecossistema</div>
-          </div>
-
-          {/* Agent 3 */}
-          <div style={cardStyle}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-              <span style={{ fontSize: 20 }}>💬</span>
-              <span style={badgeActive}>Em Nuvem</span>
-            </div>
-            <h3 style={cardTitle}>Agente Atendimento & CRM</h3>
-            <p style={cardDesc}>EA Flow, inbox de leads e automações de DM.</p>
-            <div style={cardFooter}>{leadsCount} leads cadastrados</div>
-          </div>
-
-          {/* Agent 4 */}
-          <div style={cardStyle}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-              <span style={{ fontSize: 20 }}>⚡</span>
-              <span style={badgeActive}>Pronto</span>
-            </div>
-            <h3 style={cardTitle}>Agente Antigravity Dev</h3>
-            <p style={cardDesc}>Fila de tarefas de código, deploys e testes.</p>
-            <div style={cardFooter}>Comandos via WhatsApp</div>
-          </div>
-
-          {/* Agent 5 */}
-          <div style={cardStyle}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-              <span style={{ fontSize: 20 }}>📝</span>
-              <span style={badgeActive}>Automático</span>
-            </div>
-            <h3 style={cardTitle}>Agente Briefing & Tactiq</h3>
-            <p style={cardDesc}>Síntese diária (07:30 / 19:00) e transcrições.</p>
-            <div style={cardFooter}>Modo Proativo</div>
-          </div>
+          ))}
         </div>
       </div>
 
-      {/* Main Two-Column Layout: Chat Console & Quick Actions */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 20 }}>
-        {/* Left: Chat Simulator Console */}
-        <div
-          style={{
-            background: "#1e293b",
-            border: "1px solid #334155",
-            borderRadius: 16,
-            display: "flex",
-            flexDirection: "column",
-            height: 480,
-            overflow: "hidden",
-          }}
-        >
+      {/* Console + Ações */}
+      <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 1, background: LINE, border: `1px solid ${LINE}` }}>
+        {/* Console */}
+        <div style={{ background: NAVY, display: "flex", flexDirection: "column", height: 500 }}>
           <div
             style={{
-              padding: "14px 18px",
-              background: "#0f172a",
-              borderBottom: "1px solid #334155",
+              padding: "16px 20px",
+              background: GRAPHITE,
+              borderBottom: `2px solid ${GOLD}`,
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontSize: 16 }}>🤖</span>
-              <span style={{ fontWeight: 600, fontSize: 13, color: "#f1f5f9" }}>Terminal Direto da Secretária (Gemini AI)</span>
+            <div>
+              <div style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 700, fontSize: 13, color: "#fff", letterSpacing: 0.3 }}>
+                TERMINAL EXECUTIVO
+              </div>
+              <div style={{ fontSize: 11, color: GRAY, marginTop: 2 }}>EA Assessor · Gemini</div>
             </div>
-            <span style={{ fontSize: 11, color: "#94a3b8" }}>gemini-flash-latest</span>
+            <span style={{ fontSize: 10, color: GOLD, fontWeight: 600, letterSpacing: 0.5 }}>PT-BR · GMT-3</span>
           </div>
 
-          {/* Messages Log */}
-          <div
-            style={{
-              flex: 1,
-              padding: 16,
-              overflowY: "auto",
-              display: "flex",
-              flexDirection: "column",
-              gap: 12,
-            }}
-          >
+          <div style={{ flex: 1, padding: 20, overflowY: "auto", display: "flex", flexDirection: "column", gap: 14 }}>
             {chatLog.map((msg, idx) => (
-              <div
-                key={idx}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: msg.sender === "user" ? "flex-end" : "flex-start",
-                }}
-              >
+              <div key={idx} style={{ display: "flex", flexDirection: "column", alignItems: msg.sender === "user" ? "flex-end" : "flex-start" }}>
                 <div
                   style={{
-                    maxWidth: "85%",
+                    maxWidth: "88%",
                     padding: "10px 14px",
-                    borderRadius: 12,
                     fontSize: 13,
-                    lineHeight: 1.5,
-                    background: msg.sender === "user" ? "#0284c7" : "#0f172a",
-                    color: "#f8fafc",
-                    border: msg.sender === "user" ? "none" : "1px solid #334155",
+                    lineHeight: 1.55,
+                    background: msg.sender === "user" ? GOLD : NAVY_LIGHT,
+                    color: msg.sender === "user" ? NAVY : "#F1F0EC",
+                    border: msg.sender === "user" ? "none" : `1px solid ${LINE}`,
                   }}
                 >
                   {msg.text}
                 </div>
-                <span style={{ fontSize: 10, color: "#64748b", marginTop: 4, padding: "0 4px" }}>
-                  {msg.time}
-                </span>
+                <span style={{ fontSize: 10, color: GRAY, marginTop: 4, padding: "0 4px" }}>{msg.time}</span>
               </div>
             ))}
-            {loading && (
-              <div style={{ color: "#38bdf8", fontSize: 12, fontStyle: "italic" }}>
-                Secretária digitando...
-              </div>
-            )}
+            {loading && <div style={{ color: GOLD, fontSize: 12, fontStyle: "italic" }}>processando…</div>}
           </div>
 
-          {/* Form Input */}
-          <form
-            onSubmit={handleSend}
-            style={{
-              padding: 12,
-              background: "#0f172a",
-              borderTop: "1px solid #334155",
-              display: "flex",
-              gap: 8,
-            }}
-          >
+          <form onSubmit={handleSend} style={{ padding: 14, background: GRAPHITE, borderTop: `1px solid ${LINE}`, display: "flex", gap: 8 }}>
             <input
               type="text"
               value={testInput}
               onChange={(e) => setTestInput(e.target.value)}
-              placeholder="Digite uma ordem ou pergunta para a Secretária..."
+              placeholder="Escreva uma instrução para o EA Assessor…"
               style={{
                 flex: 1,
-                background: "#1e293b",
-                border: "1px solid #334155",
-                borderRadius: 8,
-                padding: "8px 12px",
+                background: NAVY,
+                border: `1px solid ${LINE}`,
+                padding: "9px 12px",
                 color: "#fff",
                 fontSize: 13,
                 outline: "none",
@@ -244,62 +209,59 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
                 background: GOLD,
                 color: NAVY,
                 border: "none",
-                borderRadius: 8,
-                padding: "8px 16px",
+                padding: "9px 18px",
+                fontFamily: "'Montserrat', Arial, sans-serif",
                 fontWeight: 700,
-                fontSize: 13,
+                fontSize: 12,
+                letterSpacing: 0.3,
                 cursor: "pointer",
               }}
             >
-              Enviar
+              ENVIAR
             </button>
           </form>
         </div>
 
-        {/* Right: Quick Actions & Integrations Status */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {/* Quick Command Card */}
-          <div style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 16, padding: 18 }}>
-            <h3 style={{ fontSize: 14, fontWeight: 600, color: "#fff", margin: "0 0 12px" }}>⚡ Ações Rápidas de Teste</h3>
+        {/* Coluna direita */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 1, background: LINE }}>
+          <div style={{ background: OFFWHITE, padding: 20 }}>
+            <h3 style={panelTitle}>Instruções sugeridas</h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <button
-                onClick={() => setTestInput("Qual o resumo do meu briefing de hoje com reuniões e e-mails?")}
-                style={actionBtnStyle}
-              >
-                ☀️ Gerar Briefing Matinal
+              <button onClick={() => setTestInput("Qual a minha agenda de amanhã?")} style={actionBtnStyle}>
+                Consultar agenda de amanhã
               </button>
-              <button
-                onClick={() => setTestInput("Verifique se há posts pendentes de aprovação no EA Post.")}
-                style={actionBtnStyle}
-              >
-                📱 Checar Fila do EA Post
+              <button onClick={() => setTestInput("Verifique se há posts pendentes de aprovação no EA Post.")} style={actionBtnStyle}>
+                Checar fila do EA Post
               </button>
-              <button
-                onClick={() => setTestInput("Mostre as conversas recentes de clientes no EA Flow.")}
-                style={actionBtnStyle}
-              >
-                💬 Puxar Leads do EA Flow
+              <button onClick={() => setTestInput("Mostre as conversas recentes de clientes no EA Flow.")} style={actionBtnStyle}>
+                Puxar leads do EA Flow
               </button>
-              <button
-                onClick={() => setTestInput("Antigravity, crie uma tarefa para auditar as conexões de API.")}
-                style={actionBtnStyle}
-              >
-                ⚡ Disparar Ordem para o Antigravity
+              <button onClick={() => setTestInput("Antigravity, crie uma tarefa para auditar as conexões de API.")} style={actionBtnStyle}>
+                Disparar ordem ao Antigravity
               </button>
             </div>
           </div>
 
-          {/* WhatsApp Channel Card */}
-          <div style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 16, padding: 18 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-              <span style={{ fontSize: 18 }}>📲</span>
-              <h3 style={{ fontSize: 14, fontWeight: 600, color: "#fff", margin: 0 }}>Canal WhatsApp Oficial</h3>
-            </div>
-            <p style={{ fontSize: 12, color: "#94a3b8", margin: "0 0 10px", lineHeight: 1.4 }}>
-              Instância <strong>secretaria-ea</strong> ativa na VPS da Contabo (<code style={{ color: "#38bdf8" }}>217.216.52.208:8080</code>).
+          <div style={{ background: OFFWHITE, padding: 20, flex: 1 }}>
+            <h3 style={panelTitle}>Canal WhatsApp</h3>
+            <p style={{ fontSize: 12, color: GRAY, margin: "0 0 14px", lineHeight: 1.5 }}>
+              Instância <strong style={{ color: GRAPHITE }}>secretaria-ea</strong> ativa 24/7 na infraestrutura em nuvem
+              (Contabo VPS).
             </p>
-            <div style={{ fontSize: 12, color: "#10b981", fontWeight: 600 }}>
-              ✓ Conectado ao número +55 (11) 95661-9990
+            <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, color: GREEN }}>
+              <span style={{ width: 7, height: 7, background: GREEN, display: "inline-block" }} />
+              +55 (11) 95661-9990 · online
+            </div>
+            <div style={{ marginTop: 16, paddingTop: 14, borderTop: `1px solid #D9DCE1` }}>
+              <div style={{ fontSize: 11, color: GRAY, marginBottom: 6 }}>Conexões pendentes de autorização</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, color: AMBER }}>
+                <span style={{ width: 7, height: 7, background: AMBER, display: "inline-block" }} />
+                Google Calendar / Gmail
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, color: AMBER, marginTop: 6 }}>
+                <span style={{ width: 7, height: 7, background: AMBER, display: "inline-block" }} />
+                Outlook 365 / Teams
+              </div>
             </div>
           </div>
         </div>
@@ -308,56 +270,91 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
   );
 }
 
+const sectionHeader: React.CSSProperties = { marginBottom: 14 };
+const sectionKicker: React.CSSProperties = {
+  fontSize: 11,
+  fontWeight: 700,
+  color: GOLD,
+  letterSpacing: 1,
+  textTransform: "uppercase",
+};
+const sectionTitle: React.CSSProperties = {
+  fontFamily: "'Montserrat', Arial, sans-serif",
+  fontSize: 18,
+  fontWeight: 700,
+  color: GRAPHITE,
+  margin: "4px 0 0",
+};
+
 const cardStyle: React.CSSProperties = {
-  background: "#1e293b",
-  border: "1px solid #334155",
-  borderRadius: 12,
-  padding: 16,
+  background: OFFWHITE,
+  padding: 18,
   display: "flex",
   flexDirection: "column",
 };
 
-const cardTitle: React.CSSProperties = {
-  fontSize: 13,
+const cardLabel: React.CSSProperties = {
+  fontFamily: "'Montserrat', Arial, sans-serif",
+  fontSize: 11,
   fontWeight: 700,
-  color: "#f8fafc",
-  margin: "0 0 4px",
+  color: GOLD,
+  letterSpacing: 1,
+};
+
+const cardTitle: React.CSSProperties = {
+  fontFamily: "'Montserrat', Arial, sans-serif",
+  fontSize: 14,
+  fontWeight: 700,
+  color: GRAPHITE,
+  margin: "0 0 6px",
 };
 
 const cardDesc: React.CSSProperties = {
-  fontSize: 11,
-  color: "#94a3b8",
+  fontSize: 12,
+  color: GRAY,
   margin: "0 0 12px",
-  lineHeight: 1.4,
+  lineHeight: 1.5,
   flex: 1,
 };
 
 const cardFooter: React.CSSProperties = {
   fontSize: 11,
   fontWeight: 600,
-  color: "#38bdf8",
-  borderTop: "1px solid #334155",
+  color: NAVY,
+  borderTop: "1px solid #D9DCE1",
   paddingTop: 8,
 };
 
 const badgeActive: React.CSSProperties = {
-  background: "rgba(16, 185, 129, 0.15)",
-  color: "#10b981",
-  padding: "2px 8px",
-  borderRadius: 999,
   fontSize: 10,
   fontWeight: 700,
-  border: "1px solid rgba(16, 185, 129, 0.3)",
+  letterSpacing: 0.5,
+  textTransform: "uppercase",
+  color: GREEN,
+};
+
+const badgePending: React.CSSProperties = {
+  fontSize: 10,
+  fontWeight: 700,
+  letterSpacing: 0.5,
+  textTransform: "uppercase",
+  color: AMBER,
+};
+
+const panelTitle: React.CSSProperties = {
+  fontFamily: "'Montserrat', Arial, sans-serif",
+  fontSize: 13,
+  fontWeight: 700,
+  color: GRAPHITE,
+  margin: "0 0 14px",
 };
 
 const actionBtnStyle: React.CSSProperties = {
-  background: "#0f172a",
-  color: "#e2e8f0",
-  border: "1px solid #334155",
-  borderRadius: 8,
-  padding: "8px 12px",
+  background: "#fff",
+  color: GRAPHITE,
+  border: "1px solid #D9DCE1",
+  padding: "9px 12px",
   fontSize: 12,
   textAlign: "left",
   cursor: "pointer",
-  transition: "background 0.2s",
 };

@@ -29,31 +29,41 @@ export async function SecretariaVirtualView({ payload, initPageResult }: AdminVi
   return (
     <div className="ea-view" style={{ maxWidth: 1200 }}>
       <EaHubBackLink />
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12, margin: "0 0 1.5rem" }}>
+      <div
+        style={{
+          background: "#1D2B3C",
+          borderTop: "3px solid #C1A160",
+          padding: "1.5rem 1.75rem",
+          margin: "0 0 1.5rem",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: 12,
+        }}
+      >
         <div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <h1 style={{ margin: 0, fontSize: "1.75rem", fontWeight: 700 }}>EA Assessor</h1>
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "3px 10px",
-                borderRadius: 999,
-                fontSize: 12,
-                fontWeight: 600,
-                background: "rgba(34, 197, 94, 0.15)",
-                color: "#15803d",
-                border: "1px solid rgba(34, 197, 94, 0.3)",
-              }}
-            >
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
-              WhatsApp Nuvem 24/7 Conectado
-            </span>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#C1A160", letterSpacing: 1.5, textTransform: "uppercase" }}>
+            Empresarial Academy
           </div>
-          <p style={{ color: "var(--theme-elevation-600)", margin: "0.25rem 0 0" }}>
-            Torre de Controle Operacional e Inteligência Executiva de Thiago Marchi e da Empresarial Academy.
+          <h1
+            style={{
+              margin: "4px 0 0",
+              fontSize: "1.75rem",
+              fontWeight: 700,
+              fontFamily: "'Montserrat', Arial, sans-serif",
+              color: "#fff",
+            }}
+          >
+            EA Assessor
+          </h1>
+          <p style={{ color: "#B9C2CE", margin: "0.35rem 0 0", fontSize: 13 }}>
+            Assessoria executiva de Thiago Marchi — agenda, e-mail e ecossistema Empresarial Academy.
           </p>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, color: "#7DD3A8" }}>
+          <span style={{ width: 8, height: 8, background: "#7DD3A8", display: "inline-block" }} />
+          WhatsApp conectado 24/7
         </div>
       </div>
 
