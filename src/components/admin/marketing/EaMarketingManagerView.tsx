@@ -59,11 +59,11 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
   });
 
   const secretariaCard: Card = {
-    title: "Secretária Virtual Executiva (IA)",
+    title: "EA Assessor",
     description:
-      "Torre de controle operacional via WhatsApp — Google Calendar, Gmail, Outlook, EA Post, EA Flow e Antigravity integrados com o Gemini AI.",
+      "Assessoria executiva e torre de controle via WhatsApp — Google Calendar, Gmail, Outlook, EA Post, EA Flow e Antigravity integrados com Gemini AI.",
     href: "/eahub/secretaria",
-    stat: "● Sessão WhatsApp Ativa (Nuvem)",
+    stat: "● Sessão WhatsApp Ativa (Nuvem 24/7)",
   };
 
   const adsCard: Card = {
@@ -171,11 +171,11 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     };
   });
 
-  const hasSecretaria = systemLinks.some((l) => l.name.toLowerCase().includes("secretária") || l.name.toLowerCase().includes("secretaria"));
+  const hasSecretaria = systemLinks.some((l) => l.name.toLowerCase().includes("assessor") || l.name.toLowerCase().includes("secretaria"));
   if (!hasSecretaria) {
     systemCards.unshift({
-      title: "Secretária Virtual (IA)",
-      description: "Torre de controle inteligente — WhatsApp, agenda (Google/Outlook), e-mails, EA Post, EA Flow e Antigravity via Gemini AI.",
+      title: "EA Assessor",
+      description: "Assessoria executiva e torre de controle — WhatsApp, agenda (Google/Outlook), e-mails, EA Post, EA Flow e Antigravity via Gemini AI.",
       href: "/eahub/secretaria",
     });
   }

@@ -12,7 +12,7 @@ export function SecretariaNavLink() {
         style={{ display: "flex", alignItems: "center", gap: 8 }}
       >
         <span style={{ fontSize: "14px" }}>🤖</span>
-        <span>Secretária Virtual</span>
+        <span>EA Assessor</span>
       </Link>
     </div>
   );

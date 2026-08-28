@@ -109,7 +109,7 @@ export default buildConfig({
         secretaria: {
           Component: "@/components/admin/secretaria/SecretariaVirtualView#SecretariaVirtualView",
           path: "/secretaria",
-          meta: { title: "Secretária Virtual (IA)" },
+          meta: { title: "EA Assessor" },
         },
         // Rotas antigas do hub redirecionam para a home /eahub (preserva
         // favoritos para /marketing-manager e /central-ea).
