@@ -99,6 +99,37 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
   const [whatsappError, setWhatsappError] = useState<string | null>(null);
   const [connectingInstance, setConnectingInstance] = useState<string | null>(null);
   const [qrCode, setQrCode] = useState<{ instanceName: string; base64: string } | null>(null);
+  const [forwardThirdParty, setForwardThirdParty] = useState<boolean | null>(null);
+  const [togglingForward, setTogglingForward] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/secretaria/whatsapp-forward-toggle")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok) setForwardThirdParty(data.forwardThirdParty);
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleToggleForward = async () => {
+    if (forwardThirdParty === null || togglingForward) return;
+    const next = !forwardThirdParty;
+    setTogglingForward(true);
+    try {
+      const res = await fetch("/api/secretaria/whatsapp-forward-toggle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ forwardThirdParty: next }),
+      });
+      const data = await res.json();
+      if (data.ok) setForwardThirdParty(data.forwardThirdParty);
+      else setWhatsappError(data.error || "Falha ao alterar o encaminhamento.");
+    } catch {
+      setWhatsappError("Não foi possível alterar o encaminhamento agora.");
+    } finally {
+      setTogglingForward(false);
+    }
+  };
 
   const fetchWhatsappStatus = React.useCallback(async () => {
     try {
@@ -458,6 +489,46 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
                 )}
               </div>
             ))}
+
+            <div style={{ marginTop: 4, paddingTop: 14, borderTop: "1px solid #D9DCE1", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: GRAPHITE }}>Ler mensagens de terceiros</div>
+                <div style={{ fontSize: 10, color: GRAY, marginTop: 2 }}>
+                  {forwardThirdParty === false
+                    ? "Desativado: mensagens de quem não é você são ignoradas."
+                    : "Ativado: mensagens de terceiros são encaminhadas pra você."}
+                </div>
+              </div>
+              <button
+                onClick={handleToggleForward}
+                disabled={forwardThirdParty === null || togglingForward}
+                title="Liga/desliga o encaminhamento de mensagens de terceiros no WhatsApp do assessor"
+                style={{
+                  width: 44,
+                  height: 24,
+                  borderRadius: 999,
+                  border: "none",
+                  background: forwardThirdParty ? GREEN : "#C7CCD4",
+                  position: "relative",
+                  cursor: forwardThirdParty === null ? "default" : "pointer",
+                  flexShrink: 0,
+                  opacity: togglingForward ? 0.6 : 1,
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: 3,
+                    left: forwardThirdParty ? 23 : 3,
+                    width: 18,
+                    height: 18,
+                    borderRadius: "50%",
+                    background: "#fff",
+                    transition: "left 0.15s ease",
+                  }}
+                />
+              </button>
+            </div>
 
             <div style={{ marginTop: 4, paddingTop: 14, borderTop: `1px solid #D9DCE1` }}>
               <div style={{ fontSize: 11, color: GRAY, marginBottom: 6 }}>Conexões pendentes de autorização</div>
