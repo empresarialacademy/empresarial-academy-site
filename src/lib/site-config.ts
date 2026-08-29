@@ -82,4 +82,5 @@ export const servicosMenu = [
 export const legalNav = [
   { label: "Política de Privacidade", href: "/privacidade" },
   { label: "Termos de Uso", href: "/termos" },
+  { label: "Exclusão de Dados", href: "/exclusao-de-dados" },
 ] as const;

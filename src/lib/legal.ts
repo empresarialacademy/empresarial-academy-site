@@ -351,3 +351,81 @@ export const termosSections: LegalSection[] = [
     ],
   },
 ];
+
+/**
+ * Instruções de exclusão de dados. Página exigida pela Meta (campo "URL de
+ * instruções de exclusão de dados" nas configurações do app) para qualquer app
+ * que trate dados de usuário — no nosso caso, as mensagens recebidas por
+ * Instagram Direct, Messenger e WhatsApp através do EA Flow. Precisa ser uma
+ * URL pública, acessível sem login, descrevendo como a pessoa pede a exclusão.
+ */
+export const exclusaoDadosSections: LegalSection[] = [
+  {
+    title: "1. O que esta página explica",
+    blocks: [
+      {
+        type: "p",
+        text: "Esta página descreve como solicitar a exclusão dos dados pessoais que a Empresarial Academy tenha armazenado sobre você, incluindo o histórico de mensagens trocadas com nossos canais de atendimento no Instagram Direct, Messenger e WhatsApp. O procedimento é gratuito e vale para qualquer pessoa, seja cliente ou não.",
+      },
+    ],
+  },
+  {
+    title: "2. Quais dados podem ser excluídos",
+    blocks: [
+      { type: "p", text: "A pedido, excluímos:" },
+      {
+        type: "list",
+        items: [
+          "O histórico das mensagens que você trocou com nossos canais de atendimento automatizado",
+          "O identificador da sua conta fornecido pela Meta (ID do Instagram ou do Messenger) ou o número de telefone, no caso do WhatsApp",
+          "O nome de exibição e a foto de perfil, quando tiverem sido recebidos junto com a mensagem",
+          "Dados de contato que você tenha enviado por formulário no site (nome, e-mail, telefone, empresa)",
+        ],
+      },
+    ],
+  },
+  {
+    title: "3. Como solicitar",
+    blocks: [
+      {
+        type: "p",
+        text: "Envie um e-mail para privacidade@empresarialacademy.com com o assunto “Exclusão de dados”, informando o canal usado (Instagram, Messenger, WhatsApp ou site) e o nome de usuário, telefone ou e-mail que você utilizou no contato. Precisamos desse dado apenas para localizar seu registro — não pedimos senha, documento nem qualquer outra informação sensível.",
+      },
+      {
+        type: "p",
+        text: "Se preferir, você também pode fazer o pedido pelo telefone +55 (11) 93340-0264 ou respondendo diretamente na própria conversa em que falou conosco, com a frase “solicito a exclusão dos meus dados”.",
+      },
+    ],
+  },
+  {
+    title: "4. Prazo e confirmação",
+    blocks: [
+      {
+        type: "p",
+        text: "A exclusão é concluída em até 15 dias corridos a partir do recebimento do pedido, e enviamos uma confirmação pelo mesmo canal usado na solicitação. Esse prazo atende ao artigo 18 da Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018).",
+      },
+      {
+        type: "p",
+        text: "Podemos reter parte dos dados por prazo maior apenas quando houver obrigação legal ou regulatória que exija a guarda, como registros fiscais e contábeis de contratos já firmados. Nesse caso, informamos qual dado foi mantido e por qual motivo.",
+      },
+    ],
+  },
+  {
+    title: "5. Exclusão pelo próprio Instagram ou Facebook",
+    blocks: [
+      {
+        type: "p",
+        text: "Você também pode revogar o acesso do nosso aplicativo diretamente na Meta, sem falar conosco: no Instagram, em Configurações → Aplicativos e sites; no Facebook, em Configurações e privacidade → Configurações → Aplicativos e sites. Ao revogar, deixamos de receber novas mensagens suas — mas o histórico já armazenado só é apagado mediante a solicitação descrita na seção 3.",
+      },
+    ],
+  },
+  {
+    title: "6. Encarregado de Proteção de Dados",
+    blocks: [
+      {
+        type: "p",
+        text: "Dúvidas sobre este procedimento ou sobre o tratamento dos seus dados podem ser enviadas ao nosso Encarregado de Proteção de Dados (DPO) em dpo@empresarialacademy.com. Para o detalhamento completo de como tratamos dados pessoais, consulte a nossa Política de Privacidade.",
+      },
+    ],
+  },
+];
