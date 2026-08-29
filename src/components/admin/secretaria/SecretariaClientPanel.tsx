@@ -104,11 +104,12 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
   const [antigravityTasks, setAntigravityTasks] = useState<
     Array<{ id: number; instruction: string; status: string; createdAt: string }> | null
   >(null);
-  const [groupReadEnabled, setGroupReadEnabled] = useState<boolean | null>(null);
-  const [allowedGroups, setAllowedGroups] = useState<Array<{ groupId: string; label?: string }>>([]);
-  const [togglingGroupRead, setTogglingGroupRead] = useState(false);
-  const [newGroupId, setNewGroupId] = useState("");
-  const [newGroupLabel, setNewGroupLabel] = useState("");
+  type GroupSettings = { enabled: boolean; groups: Array<{ groupId: string; label?: string }> };
+  const [groupSettingsByInstance, setGroupSettingsByInstance] = useState<Record<string, GroupSettings>>({});
+  const [togglingGroupRead, setTogglingGroupRead] = useState<string | null>(null);
+  const [newGroupInput, setNewGroupInput] = useState<Record<string, { id: string; label: string }>>({});
+  const [availableGroups, setAvailableGroups] = useState<Record<string, Array<{ groupId: string; subject: string }>>>({});
+  const [loadingGroupList, setLoadingGroupList] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/secretaria/whatsapp-forward-toggle")
@@ -117,56 +118,85 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
         if (data.ok) setForwardThirdParty(data.forwardThirdParty);
       })
       .catch(() => {});
-    fetch("/api/secretaria/whatsapp-group-settings")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.ok) {
-          setGroupReadEnabled(data.enabled);
-          setAllowedGroups(data.groups || []);
-        }
-      })
-      .catch(() => {});
   }, []);
 
-  const saveGroupSettings = async (enabled: boolean, groups: Array<{ groupId: string; label?: string }>) => {
-    setTogglingGroupRead(true);
+  const fetchGroupSettings = React.useCallback(async (instanceName: string) => {
+    try {
+      const res = await fetch(`/api/secretaria/whatsapp-group-settings?instanceName=${instanceName}`);
+      const data = await res.json();
+      if (data.ok) {
+        setGroupSettingsByInstance((prev) => ({ ...prev, [instanceName]: { enabled: data.enabled, groups: data.groups || [] } }));
+      }
+    } catch {
+      // silencioso — o bloco de grupos fica vazio nesse caso, não é crítico
+    }
+  }, []);
+
+  const saveGroupSettings = async (instanceName: string, enabled: boolean, groups: Array<{ groupId: string; label?: string }>) => {
+    setTogglingGroupRead(instanceName);
     try {
       const res = await fetch("/api/secretaria/whatsapp-group-settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ enabled, groups }),
+        body: JSON.stringify({ instanceName, enabled, groups }),
       });
       const data = await res.json();
       if (data.ok) {
-        setGroupReadEnabled(data.enabled);
-        setAllowedGroups(data.groups || []);
+        setGroupSettingsByInstance((prev) => ({ ...prev, [instanceName]: { enabled: data.enabled, groups: data.groups || [] } }));
       } else {
         setWhatsappError(data.error || "Falha ao salvar configuração de grupos.");
       }
     } catch {
       setWhatsappError("Não foi possível salvar a configuração de grupos agora.");
     } finally {
-      setTogglingGroupRead(false);
+      setTogglingGroupRead(null);
     }
   };
 
-  const handleToggleGroupRead = () => {
-    if (groupReadEnabled === null || togglingGroupRead) return;
-    saveGroupSettings(!groupReadEnabled, allowedGroups);
+  const handleToggleGroupRead = (instanceName: string) => {
+    const current = groupSettingsByInstance[instanceName];
+    if (togglingGroupRead) return;
+    saveGroupSettings(instanceName, !(current?.enabled ?? false), current?.groups ?? []);
   };
 
-  const handleAddGroup = () => {
-    const groupId = newGroupId.trim();
+  const fetchAvailableGroups = async (instanceName: string) => {
+    setLoadingGroupList(instanceName);
+    try {
+      const res = await fetch(`/api/secretaria/whatsapp-list-groups?instanceName=${instanceName}`);
+      const data = await res.json();
+      if (data.ok) {
+        setAvailableGroups((prev) => ({ ...prev, [instanceName]: data.groups || [] }));
+      } else {
+        setWhatsappError(data.error || "Falha ao listar grupos.");
+      }
+    } catch {
+      setWhatsappError("Não foi possível listar os grupos agora (pode demorar se houver muitos grupos).");
+    } finally {
+      setLoadingGroupList(null);
+    }
+  };
+
+  const handleAddGroupFromList = (instanceName: string, groupId: string, subject: string) => {
+    const current = groupSettingsByInstance[instanceName];
+    const groups = current?.groups ?? [];
+    if (groups.some((g) => g.groupId === groupId)) return;
+    saveGroupSettings(instanceName, true, [...groups, { groupId, label: subject }]);
+  };
+
+  const handleAddGroupManual = (instanceName: string) => {
+    const input = newGroupInput[instanceName];
+    const groupId = input?.id.trim();
     if (!groupId) return;
-    const next = [...allowedGroups, { groupId, label: newGroupLabel.trim() || undefined }];
-    setNewGroupId("");
-    setNewGroupLabel("");
-    saveGroupSettings(true, next);
+    const current = groupSettingsByInstance[instanceName];
+    const groups = current?.groups ?? [];
+    saveGroupSettings(instanceName, true, [...groups, { groupId, label: input.label.trim() || undefined }]);
+    setNewGroupInput((prev) => ({ ...prev, [instanceName]: { id: "", label: "" } }));
   };
 
-  const handleRemoveGroup = (groupId: string) => {
-    const next = allowedGroups.filter((g) => g.groupId !== groupId);
-    saveGroupSettings(groupReadEnabled ?? true, next);
+  const handleRemoveGroup = (instanceName: string, groupId: string) => {
+    const current = groupSettingsByInstance[instanceName];
+    const groups = (current?.groups ?? []).filter((g) => g.groupId !== groupId);
+    saveGroupSettings(instanceName, current?.enabled ?? true, groups);
   };
 
   const fetchAntigravityTasks = React.useCallback(async () => {
@@ -238,6 +268,16 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
     const interval = setInterval(fetchWhatsappStatus, 15000);
     return () => clearInterval(interval);
   }, [fetchWhatsappStatus]);
+
+  // Carrega a config de grupos assim que cada instância aparece pela primeira vez.
+  useEffect(() => {
+    whatsappInstances?.forEach((inst) => {
+      if (!(inst.instanceName in groupSettingsByInstance)) {
+        fetchGroupSettings(inst.instanceName);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [whatsappInstances]);
 
   // Some com o QR assim que a instância que estava sendo pareada conecta.
   useEffect(() => {
@@ -595,6 +635,126 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
                     </div>
                   </div>
                 )}
+
+                {inst.connected && (
+                  <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid #EAEDF1" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                      <div style={{ fontSize: 11, color: GRAPHITE, fontWeight: 600 }}>Ler grupos deste número</div>
+                      <button
+                        onClick={() => handleToggleGroupRead(inst.instanceName)}
+                        disabled={togglingGroupRead === inst.instanceName}
+                        title="Liga/desliga a leitura de grupos específicos, mesmo sem @menção"
+                        style={{
+                          width: 36,
+                          height: 20,
+                          borderRadius: 999,
+                          border: "none",
+                          background: groupSettingsByInstance[inst.instanceName]?.enabled ? GREEN : "#C7CCD4",
+                          position: "relative",
+                          cursor: "pointer",
+                          flexShrink: 0,
+                          opacity: togglingGroupRead === inst.instanceName ? 0.6 : 1,
+                        }}
+                      >
+                        <span
+                          style={{
+                            position: "absolute",
+                            top: 2,
+                            left: groupSettingsByInstance[inst.instanceName]?.enabled ? 18 : 2,
+                            width: 16,
+                            height: 16,
+                            borderRadius: "50%",
+                            background: "#fff",
+                            transition: "left 0.15s ease",
+                          }}
+                        />
+                      </button>
+                    </div>
+
+                    {groupSettingsByInstance[inst.instanceName]?.enabled && (
+                      <div style={{ marginTop: 8 }}>
+                        {(groupSettingsByInstance[inst.instanceName]?.groups ?? []).map((g) => (
+                          <div key={g.groupId} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
+                            <div style={{ flex: 1, fontSize: 10.5, color: GRAPHITE }}>
+                              {g.label || g.groupId}
+                            </div>
+                            <button
+                              onClick={() => handleRemoveGroup(inst.instanceName, g.groupId)}
+                              style={{ background: "none", border: "none", color: "#B23B3B", fontSize: 10, fontWeight: 700, cursor: "pointer" }}
+                            >
+                              remover
+                            </button>
+                          </div>
+                        ))}
+
+                        <button
+                          onClick={() => fetchAvailableGroups(inst.instanceName)}
+                          disabled={loadingGroupList === inst.instanceName}
+                          style={{ fontSize: 10, color: GOLD, background: "none", border: "none", fontWeight: 700, cursor: "pointer", padding: 0, marginTop: 4 }}
+                        >
+                          {loadingGroupList === inst.instanceName ? "Buscando grupos…" : "Escolher da lista de grupos"}
+                        </button>
+
+                        {availableGroups[inst.instanceName] && (
+                          <div style={{ marginTop: 6, maxHeight: 140, overflowY: "auto", border: "1px solid #EAEDF1" }}>
+                            {availableGroups[inst.instanceName].length === 0 ? (
+                              <div style={{ fontSize: 10, color: GRAY, padding: 8 }}>Nenhum grupo encontrado.</div>
+                            ) : (
+                              availableGroups[inst.instanceName].map((g) => {
+                                const already = (groupSettingsByInstance[inst.instanceName]?.groups ?? []).some(
+                                  (x) => x.groupId === g.groupId
+                                );
+                                return (
+                                  <button
+                                    key={g.groupId}
+                                    onClick={() => handleAddGroupFromList(inst.instanceName, g.groupId, g.subject)}
+                                    disabled={already}
+                                    style={{
+                                      display: "block",
+                                      width: "100%",
+                                      textAlign: "left",
+                                      fontSize: 10.5,
+                                      padding: "6px 8px",
+                                      background: already ? "#F6F5F1" : "#fff",
+                                      color: already ? GRAY : GRAPHITE,
+                                      border: "none",
+                                      borderBottom: "1px solid #F0F0EE",
+                                      cursor: already ? "default" : "pointer",
+                                    }}
+                                  >
+                                    {g.subject} {already ? "· já adicionado" : ""}
+                                  </button>
+                                );
+                              })
+                            )}
+                          </div>
+                        )}
+
+                        <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
+                          <input
+                            type="text"
+                            value={newGroupInput[inst.instanceName]?.id || ""}
+                            onChange={(e) =>
+                              setNewGroupInput((prev) => ({
+                                ...prev,
+                                [inst.instanceName]: { id: e.target.value, label: prev[inst.instanceName]?.label || "" },
+                              }))
+                            }
+                            placeholder="ou cole o ID (ex: 12036...@g.us)"
+                            style={{ flex: 2, fontSize: 10.5, padding: "5px 7px", border: "1px solid #D9DCE1" }}
+                          />
+                          <button
+                            onClick={() => handleAddGroupManual(inst.instanceName)}
+                            disabled={!newGroupInput[inst.instanceName]?.id?.trim()}
+                            style={{ background: GOLD, color: NAVY, border: "none", padding: "5px 10px", fontSize: 10.5, fontWeight: 700, cursor: "pointer" }}
+                          >
+                            Add
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
 
@@ -636,91 +796,6 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
                   }}
                 />
               </button>
-            </div>
-
-            <div style={{ marginTop: 4, paddingTop: 14, borderTop: "1px solid #D9DCE1" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-                <div>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: GRAPHITE }}>Ler mensagens de grupos específicos</div>
-                  <div style={{ fontSize: 10, color: GRAY, marginTop: 2 }}>
-                    {groupReadEnabled
-                      ? `Ativado: ${allowedGroups.length} grupo(s) habilitado(s) — mensagens encaminhadas pra você, sem responder no grupo.`
-                      : "Desativado: grupos só respondem se o assessor for mencionado."}
-                  </div>
-                </div>
-                <button
-                  onClick={handleToggleGroupRead}
-                  disabled={groupReadEnabled === null || togglingGroupRead}
-                  title="Liga/desliga a leitura de grupos específicos, mesmo sem @menção"
-                  style={{
-                    width: 44,
-                    height: 24,
-                    borderRadius: 999,
-                    border: "none",
-                    background: groupReadEnabled ? GREEN : "#C7CCD4",
-                    position: "relative",
-                    cursor: groupReadEnabled === null ? "default" : "pointer",
-                    flexShrink: 0,
-                    opacity: togglingGroupRead ? 0.6 : 1,
-                  }}
-                >
-                  <span
-                    style={{
-                      position: "absolute",
-                      top: 3,
-                      left: groupReadEnabled ? 23 : 3,
-                      width: 18,
-                      height: 18,
-                      borderRadius: "50%",
-                      background: "#fff",
-                      transition: "left 0.15s ease",
-                    }}
-                  />
-                </button>
-              </div>
-
-              {groupReadEnabled && (
-                <div style={{ marginTop: 12 }}>
-                  {allowedGroups.map((g) => (
-                    <div key={g.groupId} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                      <div style={{ flex: 1, fontSize: 11, color: GRAPHITE }}>
-                        {g.label ? `${g.label} — ` : ""}
-                        <span style={{ fontFamily: "monospace", color: GRAY }}>{g.groupId}</span>
-                      </div>
-                      <button
-                        onClick={() => handleRemoveGroup(g.groupId)}
-                        title="Remover grupo"
-                        style={{ background: "none", border: "none", color: "#B23B3B", fontSize: 10, fontWeight: 700, cursor: "pointer" }}
-                      >
-                        remover
-                      </button>
-                    </div>
-                  ))}
-                  <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
-                    <input
-                      type="text"
-                      value={newGroupId}
-                      onChange={(e) => setNewGroupId(e.target.value)}
-                      placeholder="ID do grupo (ex: 12036...@g.us)"
-                      style={{ flex: 2, fontSize: 11, padding: "6px 8px", border: "1px solid #D9DCE1" }}
-                    />
-                    <input
-                      type="text"
-                      value={newGroupLabel}
-                      onChange={(e) => setNewGroupLabel(e.target.value)}
-                      placeholder="Apelido (opcional)"
-                      style={{ flex: 1, fontSize: 11, padding: "6px 8px", border: "1px solid #D9DCE1" }}
-                    />
-                    <button
-                      onClick={handleAddGroup}
-                      disabled={!newGroupId.trim() || togglingGroupRead}
-                      style={{ background: GOLD, color: NAVY, border: "none", padding: "6px 12px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}
-                    >
-                      Adicionar
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
 
             <div style={{ marginTop: 4, paddingTop: 14, borderTop: `1px solid #D9DCE1` }}>
