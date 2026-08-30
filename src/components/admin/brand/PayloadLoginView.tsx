@@ -16,7 +16,10 @@ import { PayloadLoginForm } from "./PayloadLoginForm";
  * `position: fixed; inset: 0` de propósito: o template "minimal" do
  * Payload envolve a view custom num container com padding/max-width
  * próprios — sem isso o fundo não cobre a tela inteira (bug visto em
- * produção em 30/08/2026, corrigido nesta mesma sessão).
+ * produção em 30/08/2026, corrigido nesta mesma sessão). O `<style>` que
+ * força `body { background: #fff }` é o mesmo tipo de fallback: garante um
+ * fundo neutro atrás do overlay em vez do branco/cinza padrão do navegador
+ * enquanto o CSS do gradiente carrega.
  */
 export function PayloadLoginView({ systemName, tagline }: { systemName: string; tagline: string }) {
   return function LoginViewForSystem({ initPageResult, searchParams }: AdminViewServerProps) {
@@ -49,6 +52,7 @@ export function PayloadLoginView({ systemName, tagline }: { systemName: string; 
           padding: "2rem 1.5rem",
         }}
       >
+        <style>{`body { background: #fff; }`}</style>
         <div
           style={{
             display: "flex",
