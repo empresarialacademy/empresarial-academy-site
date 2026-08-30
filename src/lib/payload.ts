@@ -100,6 +100,27 @@ export async function getMaterialCategories() {
   return docs;
 }
 
+/**
+ * Sistemas com URL cadastrada (portfólio "ao vivo"), pra página institucional
+ * /tecnologia — a mesma coleção `system-links` do EA HUB, mas só o que já
+ * está publicado (sem os cards "em breve" nem a entrada do próprio HUB).
+ */
+export async function getActiveSystemLinks() {
+  const payload = await getPayloadClient();
+  const { docs } = await payload.find({
+    collection: "system-links",
+    sort: "order",
+    limit: 100,
+    depth: 0,
+  });
+  return docs.filter((doc) => {
+    const url = ((doc as { url?: string | null }).url ?? "").trim();
+    if (!url) return false;
+    if (url === "/eahub" || url.includes("/eahub/")) return false;
+    return true;
+  });
+}
+
 /** Depoimentos publicados (opcionalmente só os destacados). */
 export async function getTestimonials(onlyFeatured = false, limit = 50) {
   const payload = await getPayloadClient();

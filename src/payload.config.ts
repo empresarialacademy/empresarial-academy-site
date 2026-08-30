@@ -98,6 +98,10 @@ export default buildConfig({
         Icon: "@/components/admin/brand/EaIcon#EaIcon",
       },
       views: {
+        login: {
+          Component: "@/components/admin/brand/SiteLoginView#SiteLoginView",
+          path: "/login",
+        },
         // Home do /eahub = EA Marketing Manager (a "entrada única" — definição do
         // Thiago). Como view `dashboard`, renderiza COM a nav lateral do Payload.
         // Unificado em 2026-07-23(b): antes havia um EaHubDashboard separado que
@@ -135,6 +139,11 @@ export default buildConfig({
           Component: "@/components/admin/apis/ApiInventoryView#ApiInventoryView",
           path: "/apis",
           meta: { title: "Painel de APIs" },
+        },
+        tvDashboard: {
+          Component: "@/components/admin/tv/TvDashboardView#TvDashboardView",
+          path: "/tv",
+          meta: { title: "Torre de Controle" },
         },
       },
     },

@@ -38,6 +38,8 @@ import { CentralEaRedirect as CentralEaRedirect_559e0831624fc1ba8d14c4406d6e41e0
 import { AdsPerformanceView as AdsPerformanceView_b0a2e4bac77edbfc8244bba00bb695a3 } from '@/components/admin/ads/AdsPerformanceView'
 import { ContractGeneratorView as ContractGeneratorView_c0bbf6b7735cc111ed13bb3b7aec5738 } from '@/components/admin/contracts/ContractGeneratorView'
 import { ApiInventoryView as ApiInventoryView_a1c2e4f6091d47b3ae5c7fda2b4e8901 } from '@/components/admin/apis/ApiInventoryView'
+import { TvDashboardView as TvDashboardView_b2d3f5a7182e58c4bf6d8feb3c5f9012 } from '@/components/admin/tv/TvDashboardView'
+import { SiteLoginView as SiteLoginView_84df03b1c2774fb01dd61689b858fab } from '@/components/admin/brand/SiteLoginView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { SecretariaNavLink as SecretariaNavLink_f7112026 } from '@/components/admin/secretaria/SecretariaNavLink'
 import { SecretariaVirtualView as SecretariaVirtualView_f7112026 } from '@/components/admin/secretaria/SecretariaVirtualView'
@@ -84,6 +86,8 @@ export const importMap = {
   "@/components/admin/ads/AdsPerformanceView#AdsPerformanceView": AdsPerformanceView_b0a2e4bac77edbfc8244bba00bb695a3,
   "@/components/admin/contracts/ContractGeneratorView#ContractGeneratorView": ContractGeneratorView_c0bbf6b7735cc111ed13bb3b7aec5738,
   "@/components/admin/apis/ApiInventoryView#ApiInventoryView": ApiInventoryView_a1c2e4f6091d47b3ae5c7fda2b4e8901,
+  "@/components/admin/tv/TvDashboardView#TvDashboardView": TvDashboardView_b2d3f5a7182e58c4bf6d8feb3c5f9012,
+  "@/components/admin/brand/SiteLoginView#SiteLoginView": SiteLoginView_84df03b1c2774fb01dd61689b858fab,
   "@/components/admin/secretaria/SecretariaNavLink#SecretariaNavLink": SecretariaNavLink_f7112026,
   "@/components/admin/secretaria/SecretariaVirtualView#SecretariaVirtualView": SecretariaVirtualView_f7112026,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1

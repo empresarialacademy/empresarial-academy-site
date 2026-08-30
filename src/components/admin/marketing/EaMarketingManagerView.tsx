@@ -40,14 +40,12 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     ?? (user as { email?: string }).email
     ?? "";
 
-  const [adCampaigns, emailCampaigns, emailSegments, leads, posts, materials, contracts, systemLinksRes] =
+  const [adCampaigns, emailCampaigns, emailSegments, leads, contracts, systemLinksRes] =
     await Promise.all([
       payload.count({ collection: "ad-campaigns" }),
       payload.count({ collection: "email-campaigns" }),
       payload.count({ collection: "email-segments" }),
       payload.count({ collection: "leads" }),
-      payload.count({ collection: "posts" }),
-      payload.count({ collection: "materials" }),
       payload.count({ collection: "contracts" }),
       payload.find({ collection: "system-links", limit: 100, depth: 0, sort: "order" }),
     ]);
@@ -74,9 +72,11 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     stat: `${adCampaigns.totalDocs} campanha(s)`,
   };
 
+  // Artigos e Materiais saíram daqui: planejamento/geração dos dois agora é
+  // comandado pelo EA Post (posting-rules + content-plan), que grava direto
+  // nestas mesmas collections do site via API — ver socialCards abaixo.
+  // Mídia/Depoimentos continuam aqui por não fazerem parte dessa esteira.
   const contentCards: Card[] = [
-    { title: "Artigos do blog", description: "Criar, editar e agendar publicações.", href: "/eahub/collections/posts", stat: `${posts.totalDocs} artigo(s)` },
-    { title: "Materiais ricos", description: "E-books e materiais para captação de leads.", href: "/eahub/collections/materials", stat: `${materials.totalDocs} material(is)` },
     { title: "Mídia", description: "Imagens e arquivos usados no site.", href: "/eahub/collections/media" },
     { title: "Depoimentos", description: "Prova social exibida no site e na LP.", href: "/eahub/collections/testimonials" },
   ];
@@ -94,7 +94,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
   const socialCards: Card[] = [
     {
       title: "EA Post",
-      description: "Planejamento, geração (texto + imagem/carrossel), aprovação e publicação de Instagram, Facebook, LinkedIn, YouTube e TikTok — tudo num sistema só.",
+      description: "Comando único de conteúdo: Blog, Materiais Gratuitos e redes sociais (Instagram, Facebook, LinkedIn, YouTube, TikTok) — planejamento, geração, aprovação e publicação, tudo num sistema só.",
       href: "https://ea-social-engine.vercel.app/admin",
       external: true,
     },
@@ -105,6 +105,11 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
       title: "Painel de APIs",
       description: "Todas as APIs/credenciais dos sistemas da EA — provedor, sistema(s), vencimento e faturamento.",
       href: "/eahub/apis",
+    },
+    {
+      title: "Dashboard de pendências (TV)",
+      description: "Visão consolidada para tela grande: aprovações pendentes, tokens vencendo e falhas de automação.",
+      href: "/eahub/tv",
     },
   ];
 
@@ -208,7 +213,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
           <CardGrid cards={[adsCard]} highlight />
         </Section>
 
-        <Section title="Conteúdo do site">
+        <Section title="Ativos do site">
           <CardGrid cards={contentCards} />
         </Section>
 
