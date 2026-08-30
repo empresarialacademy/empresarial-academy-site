@@ -28,9 +28,11 @@ export const Posts: CollectionConfig = {
     },
   },
   access: {
-    // Público lê apenas artigos publicados; usuários autenticados veem tudo.
+    // Público lê apenas artigos publicados; usuários autenticados e o EA Post
+    // (via chave própria) veem tudo — o cron check-site-publications precisa
+    // ler o próprio rascunho que criou pra saber quando foi publicado.
     read: ({ req }) => {
-      if (req.user) return true;
+      if (req.user || isContentEngineRequest(req)) return true;
       return { status: { equals: "published" } };
     },
     // EA Post cria rascunho de artigo (Fase B do plano de conteúdo semanal,
