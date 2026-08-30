@@ -17,10 +17,13 @@
 export function SystemLogo({
   systemName,
   size = 220,
+  glow = false,
 }: {
   /** Nome do sistema, ex.: "Post", "Recovery", "Flow", "Hub" — substitui "Empresarial Academy" por inteiro, mantendo só o monograma. */
   systemName: string;
   size?: number;
+  /** Sombra dourada difusa ao redor do badge — usado na tela de login (efeito pedido pelo Thiago), não no resto do produto. */
+  glow?: boolean;
 }) {
   const upper = systemName.toUpperCase();
   const scale = size / 220;
@@ -32,6 +35,8 @@ export function SystemLogo({
         height: size,
         borderRadius: 28 * scale,
         background: "linear-gradient(315deg, #26374C 0%, #161F2C 100%)",
+        border: glow ? "1px solid rgba(193,161,96,0.45)" : undefined,
+        boxShadow: glow ? "0 0 40px rgba(193,161,96,0.25), 0 8px 20px rgba(0,0,0,0.35)" : undefined,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
