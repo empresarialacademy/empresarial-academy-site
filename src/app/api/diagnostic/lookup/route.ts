@@ -62,18 +62,23 @@ export async function GET(request: Request) {
     if (listRecent) {
       const { docs } = await payload.find({
         collection: "leads",
-        where: {
-          or: [
-            { hasDiagnostic: { equals: true } },
-            { source: { equals: "Diagnóstico de Maturidade Empresarial" } },
-            { source: { equals: "Diagnóstico de Maturidade Empresarial — Início" } },
-          ],
-        },
         sort: "-createdAt",
-        limit: 25,
+        limit: 100,
       });
 
-      const items = docs.map((rawDoc) => {
+      const diagDocs = docs.filter((rawDoc) => {
+        const d = rawDoc as unknown as Record<string, unknown>;
+        const source = String(d.source || "");
+        const details = (d.details || {}) as Record<string, unknown>;
+        return (
+          d.hasDiagnostic === true ||
+          Boolean(d.diagnosticId) ||
+          source.includes("Diagnóstico") ||
+          Boolean(details["Maturidade Geral"])
+        );
+      });
+
+      const items = diagDocs.slice(0, 25).map((rawDoc) => {
         const d = rawDoc as unknown as {
           id: string | number;
           diagnosticId?: string;
@@ -100,19 +105,21 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Informe o ID do Diagnóstico (ex: EA-DIAG-2026-X8K2M) ou ID do Lead." }, { status: 400 });
     }
 
-    // Busca por diagnosticId ou id numérico ou e-mail
+    // Busca ampla resiliente
     const { docs } = await payload.find({
       collection: "leads",
-      where: {
-        or: [
-          { diagnosticId: { equals: id } },
-          { email: { equals: id } },
-        ],
-      },
-      limit: 1,
+      sort: "-createdAt",
+      limit: 100,
     });
 
-    let rawLead = docs[0];
+    const targetIdLower = id.toLowerCase();
+    let rawLead = docs.find((d) => {
+      const rec = d as unknown as Record<string, unknown>;
+      const diagId = String(rec.diagnosticId || "").toLowerCase();
+      const email = String(rec.email || "").toLowerCase();
+      const numId = String(rec.id || "");
+      return diagId === targetIdLower || email === targetIdLower || numId === id;
+    });
 
     // Fallback se id for o id numérico do payload
     if (!rawLead && !Number.isNaN(Number(id))) {
