@@ -13,7 +13,7 @@ export const Leads: CollectionConfig = {
   defaultSort: "-createdAt",
   admin: {
     useAsTitle: "email",
-    defaultColumns: ["name", "whatsapp", "email", "diagnosticId", "company", "source", "createdAt"],
+    defaultColumns: ["name", "whatsapp", "instagram", "email", "diagnosticId", "company", "source", "createdAt"],
     group: "Captação",
     description: "Base unificada de contatos e diagnósticos de maturidade empresarial captados pelo site.",
   },
@@ -50,7 +50,17 @@ export const Leads: CollectionConfig = {
         },
       },
     },
-    { name: "instagram", type: "text", label: "Instagram" },
+    {
+      name: "instagram",
+      type: "text",
+      label: "Instagram",
+      admin: {
+        description: "@ do Instagram do contato.",
+        components: {
+          Cell: "@/components/admin/leads/InstagramCell#InstagramCell",
+        },
+      },
+    },
     // ——— Identificação e status do Diagnóstico ———
     {
       name: "diagnosticId",

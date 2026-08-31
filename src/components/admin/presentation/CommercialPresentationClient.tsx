@@ -48,8 +48,65 @@ function getLevelColor(pct: number): string {
   return "#1D2B3C";
 }
 
-export function CommercialPresentationClient() {
-  const [searchId, setSearchId] = useState("");
+const DEFAULT_PILLARS: PillarData[] = [
+  {
+    key: "Fluxo de Alta Performance",
+    name: "Fluxo de Alta Performance",
+    desc: "Mapeamento de processos, rotinas, alçadas e melhoria contínua.",
+    tip: "Mapeie o processo que mais gera dor hoje e defina alçadas de decisão claras.",
+    pct: 60,
+    label: "Intermediário",
+    hasScore: true,
+  },
+  {
+    key: "Arquitetura do Crescimento",
+    name: "Arquitetura do Crescimento",
+    desc: "Organograma, recrutamento, rituais 1:1, feedback e avaliação.",
+    tip: "Desenhe um organograma funcional simples e implante 1:1 regulares com a equipe.",
+    pct: 50,
+    label: "Intermediário",
+    hasScore: true,
+  },
+  {
+    key: "Objetivos Estratégicos",
+    name: "Objetivos Estratégicos",
+    desc: "Análise estratégica, metas (OKRs), desdobramento e foco.",
+    tip: "Escreva os 3 objetivos mais importantes dos próximos 90 dias e desdobre em metas por área.",
+    pct: 70,
+    label: "Estruturado",
+    hasScore: true,
+  },
+  {
+    key: "Métricas de Sucesso",
+    name: "Métricas de Sucesso",
+    desc: "Métricas de sanidade (margem/caixa), DRE, Pareto e gestão à vista.",
+    tip: "Troque métrica de vaidade por métrica de sanidade (margem líquida, fluxo de caixa).",
+    pct: 55,
+    label: "Intermediário",
+    hasScore: true,
+  },
+  {
+    key: "Gestão de Desafios",
+    name: "Gestão de Desafios",
+    desc: "Mapeamento de riscos, reserva de emergência e gestão de crise.",
+    tip: "Mapeie os principais riscos do negócio e comece uma reserva financeira de emergência.",
+    pct: 40,
+    label: "Em Desenvolvimento",
+    hasScore: true,
+  },
+  {
+    key: "Evolução Constante",
+    name: "Evolução Constante",
+    desc: "Inovação, capacitação contínua, revisão de modelo e tendências.",
+    tip: "Reserve tempo na agenda para pensar no futuro do negócio.",
+    pct: 65,
+    label: "Estruturado",
+    hasScore: true,
+  },
+];
+
+export function CommercialPresentationClient({ initialId }: { initialId?: string }) {
+  const [searchId, setSearchId] = useState(initialId || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<DiagnosticData | null>(null);
@@ -80,14 +137,25 @@ export function CommercialPresentationClient() {
     }
   }, []);
 
-  // Carregar lista de diagnósticos recentes
+  // Carregar diagnóstico inicial ou listar recentes
   useEffect(() => {
+    let targetId = initialId?.trim();
+    if (!targetId && typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      targetId = urlParams.get("id")?.trim() || "";
+    }
+
+    if (targetId) {
+      setSearchId(targetId);
+      handleFetch(targetId);
+    }
+
     fetch("/api/diagnostic/lookup?list=recent")
       .then((res) => res.json())
       .then((res) => {
         if (res.ok && Array.isArray(res.items)) {
           setRecentItems(res.items);
-          if (res.items.length > 0) {
+          if (!targetId && res.items.length > 0) {
             handleFetch(res.items[0].diagnosticId || String(res.items[0].id));
           }
         }
@@ -95,7 +163,7 @@ export function CommercialPresentationClient() {
       .catch(() => {
         // no-op
       });
-  }, [handleFetch]);
+  }, [initialId, handleFetch]);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev < SLIDES_COUNT - 1 ? prev + 1 : prev));
@@ -139,12 +207,13 @@ export function CommercialPresentationClient() {
     ? new Date(data.createdAt).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })
     : new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
 
-  const clientName = data?.name || "Nome do Cliente";
+  const clientName = data?.name || "Empresarial Academy Demo";
   const clientCompany = data?.company || "Empresa Cliente";
   const diagCode = data?.diagnosticId || "EA-DIAG-2026-DEMO";
   const overallPct = data?.overall?.pct ?? 65;
   const overallLabel = data?.overall?.label || "Em Desenvolvimento";
-  const weakest = data?.weakestPillar;
+  const displayPillars = data?.pillars && data.pillars.length > 0 ? data.pillars : DEFAULT_PILLARS;
+  const weakest = data?.weakestPillar || displayPillars.find((p) => p.pct <= 40) || displayPillars[4];
 
   return (
     <div style={{ padding: isFullscreen ? "0" : "10px 0", maxWidth: 1300, margin: "0 auto", color: "#1D2B3C" }}>
@@ -548,7 +617,7 @@ export function CommercialPresentationClient() {
                 </div>
 
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
-                  {data?.pillars.map((p) => {
+                  {displayPillars.map((p) => {
                     const isWeak = weakest && weakest.name === p.name;
                     const color = getLevelColor(p.pct);
                     return (
@@ -895,3 +964,4 @@ export function CommercialPresentationClient() {
     </div>
   );
 }
+

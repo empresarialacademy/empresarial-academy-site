@@ -3,8 +3,8 @@ import React from "react";
 
 /**
  * Célula custom na tabela de Leads do EA HUB:
- * Mostra com clareza imediata se o contato realizou o Diagnóstico de Maturidade
- * Empresarial, exibindo o ID do Diagnóstico e a pontuação geral.
+ * Mostra o ID do Diagnóstico como link direto para abrir a Apresentação Comercial / Avaliação
+ * com o raio-x e pontuação do cliente.
  */
 export function DiagnosticBadgeCell({
   cellData,
@@ -13,43 +13,59 @@ export function DiagnosticBadgeCell({
   cellData?: unknown;
   rowData?: Record<string, unknown>;
 }) {
-  const rawVal = typeof cellData === "string" ? cellData : "";
-  const rowDiagId = typeof rowData?.diagnosticId === "string" ? rowData.diagnosticId : "";
-  const diagId = rawVal || rowDiagId;
+  const rawVal = typeof cellData === "string" ? cellData.trim() : "";
+  const rowDiagId = typeof rowData?.diagnosticId === "string" ? rowData.diagnosticId.trim() : "";
+  const rowId = rowData?.id !== undefined ? String(rowData.id) : "";
 
   const source = typeof rowData?.source === "string" ? rowData.source : "";
-  const hasDiag = Boolean(rowData?.hasDiagnostic || diagId || source.includes("Diagnóstico"));
-
   const details = (rowData?.details && typeof rowData.details === "object" ? rowData.details : null) as Record<string, unknown> | null;
   const generalScore = typeof details?.["Maturidade Geral"] === "string" ? details["Maturidade Geral"] : undefined;
 
-  if (hasDiag || diagId) {
+  const isDiag = Boolean(
+    rawVal ||
+    rowDiagId ||
+    rowData?.hasDiagnostic ||
+    source.includes("Diagnóstico") ||
+    generalScore
+  );
+
+  if (isDiag) {
+    const effectiveId = rawVal || rowDiagId || (rowId ? `EA-DIAG-${rowId}` : "DME");
+    const presentationUrl = `/eahub/apresentacao?id=${encodeURIComponent(effectiveId)}`;
+
     return (
-      <div style={{ display: "inline-flex", flexDirection: "column", gap: 2, padding: "2px 0" }}>
-        <span
+      <div style={{ display: "inline-flex", flexDirection: "column", gap: 3, padding: "2px 0" }}>
+        <a
+          href={presentationUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
           style={{
             display: "inline-flex",
             alignItems: "center",
             gap: 5,
-            padding: "2px 7px",
-            borderRadius: 5,
-            background: "rgba(193, 161, 96, 0.14)",
-            border: "1px solid rgba(193, 161, 96, 0.35)",
-            color: "#C1A160",
+            padding: "3px 8px",
+            borderRadius: 6,
+            background: "rgba(193, 161, 96, 0.16)",
+            border: "1px solid #C1A160",
+            color: "#1D2B3C",
             fontWeight: 700,
-            fontSize: "0.75rem",
-            letterSpacing: "0.02em",
+            fontSize: "0.76rem",
+            letterSpacing: "0.01em",
             whiteSpace: "nowrap",
-            width: "fit-content",
+            textDecoration: "none",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+            transition: "all 0.15s ease",
           }}
-          title={generalScore ? `Maturidade Geral: ${generalScore}` : "Diagnóstico concluído"}
+          title={`Abrir Apresentação Comercial / Avaliação (${effectiveId})`}
         >
-          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#C1A160" }} />
-          {diagId || "DIAGNÓSTICO 360"}
-        </span>
+          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#C1A160" }} />
+          <span>{effectiveId}</span>
+          <span style={{ color: "#C1A160", fontWeight: 800, fontSize: "0.75rem" }}>↗</span>
+        </a>
         {generalScore && (
           <span style={{ fontSize: "0.68rem", color: "var(--theme-elevation-600)", fontWeight: 600, paddingLeft: 2 }}>
-            {generalScore}
+            Score: {generalScore}
           </span>
         )}
       </div>
@@ -75,3 +91,4 @@ export function DiagnosticBadgeCell({
     </span>
   );
 }
+
