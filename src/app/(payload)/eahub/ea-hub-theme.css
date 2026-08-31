@@ -13,10 +13,33 @@
  * arriscar contraste/legibilidade em telas que não foram revisadas uma a uma.
  */
 :root {
+  --theme-elevation-800: #1D2B3C;
+  --theme-elevation-600: #26384E;
   --ea-navy-950: #0B1119;
   --ea-navy-900: #0F1722;
+  --ea-navy-800: #1D2B3C;
+  --ea-gold-500: #C99A3E;
+  --ea-gold-400: #D8B264;
+}
+
 /* Scrollbar refinada */
 ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 34, 0.05);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(201, 154, 62, 0.35);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 154, 62, 0.6);
+}
+
+/* =====================================================================
+ * Responsividade mobile-first das telas próprias do EA HUB
  * =====================================================================
  *
  * As views custom do hub (EA Marketing Manager, EA ADS, Gerador de
@@ -38,6 +61,7 @@
   align-items: flex-start;
   gap: 0.75rem;
   padding: 1.25rem 0.85rem;
+}
 
 .ea-view-header h1 {
   font-size: 1.25rem;
