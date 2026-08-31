@@ -3,18 +3,7 @@ import Link from "next/link";
 import { SystemLogo } from "@/components/admin/brand/SystemLogo";
 import { isBasicAuthProtectedPath } from "@/lib/basic-auth-protected-paths";
 
-const NAVY_900 = "#1D2B3C";
-const NAVY_700 = "#2E4059";
-const GOLD_500 = "#C99A3E";
-const GOLD_700 = "#A97F2E";
-const BG_500 = "#F7F5F1";
-const SURFACE = "#FFFFFF";
-const SURFACE_ALT = "#F3EFE8";
-const BORDER = "#E7E2D8";
-const TEXT = "#1D2B3C";
-const TEXT_MUTED = "#5B6472";
-const TEXT_SOFT = "#8A93A0";
-const GOLD = GOLD_500;
+const GOLD = "#C99A3E";
 
 type Card = {
   title: string;

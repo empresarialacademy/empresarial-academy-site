@@ -10,10 +10,10 @@ export function DiagnosticBadgeCell({
   rowData,
   cellData,
 }: {
-  rowData?: Record<string, any>;
+  rowData?: Record<string, unknown>;
   cellData?: unknown;
 }) {
-  const details = rowData?.details as Record<string, any> | undefined;
+  const details = rowData?.details as Record<string, unknown> | undefined;
   const diagId = (rowData?.diagnosticId || cellData) as string | undefined;
   const isDiag = Boolean(
     rowData?.hasDiagnostic ||

@@ -1,4 +1,5 @@
 import { getPayloadClient } from "@/lib/payload";
+import type { DataFromCollectionSlug } from "payload";
 
 export type LeadInput = {
   name: string;
@@ -47,7 +48,7 @@ export async function saveLead(lead: LeadInput): Promise<string | number | null>
         // não há opt-in granular separado por enquanto.
         wantsNewsletter: consent,
         wantsPromotions: consent,
-      } as any,
+      } as unknown as DataFromCollectionSlug<"leads">,
     });
     return doc.id;
   } catch (e) {

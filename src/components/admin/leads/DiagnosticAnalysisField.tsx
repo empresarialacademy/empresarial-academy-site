@@ -63,7 +63,7 @@ function getLevelColor(pct: number): string {
 export function DiagnosticAnalysisField() {
   const [copied, setCopied] = useState(false);
 
-  const rawDetails = useFormFields(([fields]) => fields?.details?.value) as Record<string, any> | undefined;
+  const rawDetails = useFormFields(([fields]) => fields?.details?.value) as Record<string, unknown> | undefined;
   const diagnosticId = useFormFields(([fields]) => fields?.diagnosticId?.value) as string | undefined;
   const hasDiagnostic = useFormFields(([fields]) => fields?.hasDiagnostic?.value) as boolean | undefined;
   const name = useFormFields(([fields]) => fields?.name?.value) as string | undefined;
