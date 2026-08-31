@@ -29,9 +29,10 @@ export const Materials: CollectionConfig = {
       if (req.user || isContentEngineRequest(req)) return true;
       return { status: { equals: "published" } };
     },
-    // EA Post cria rascunho de material (Fase D do plano de conteúdo
-    // semanal, 19/08/2026) — sempre "draft" (ver hook abaixo).
+    // EA Post cria rascunho de material e pode atualizar status para published ao aprovar/publicar.
     create: ({ req }) => Boolean(req.user) || isContentEngineRequest(req),
+    update: ({ req }) => Boolean(req.user) || isContentEngineRequest(req),
+    delete: ({ req }) => Boolean(req.user),
   },
   fields: [
     {

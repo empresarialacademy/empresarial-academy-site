@@ -35,10 +35,10 @@ export const Posts: CollectionConfig = {
       if (req.user || isContentEngineRequest(req)) return true;
       return { status: { equals: "published" } };
     },
-    // EA Post cria rascunho de artigo (Fase B do plano de conteúdo semanal,
-    // 19/08/2026) — sempre "draft", nunca publica sozinho (ver validação no
-    // motor). Sessão de usuário continua funcionando normal pro admin.
+    // EA Post cria rascunho de artigo e pode atualizar status para published ao aprovar/publicar.
     create: ({ req }) => Boolean(req.user) || isContentEngineRequest(req),
+    update: ({ req }) => Boolean(req.user) || isContentEngineRequest(req),
+    delete: ({ req }) => Boolean(req.user),
   },
   fields: [
     {
