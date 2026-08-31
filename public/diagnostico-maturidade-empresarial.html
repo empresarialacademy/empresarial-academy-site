@@ -601,6 +601,9 @@
   <div id="results">
 
     <div class="results-cover">
+      <div id="diagIdBadge" style="display:none;margin:0 auto 14px;max-width:max-content;padding:5px 14px;background:rgba(193,161,96,0.18);border:1px solid #C1A160;border-radius:20px;color:#fff;font-size:12px;font-weight:700;letter-spacing:.5px">
+        <span style="color:#C1A160;margin-right:4px">★</span> ID DO DIAGNÓSTICO: <span id="diagIdText" style="color:#C1A160;user-select:all"></span>
+      </div>
       <h2>Resultado do Diagnóstico</h2>
       <div class="score-circle">
         <svg width="160" height="160" viewBox="0 0 160 160">
@@ -1184,8 +1187,9 @@ document.getElementById('leadForm').addEventListener('submit', async (e)=>{
   btn.textContent = 'Enviando...';
   document.getElementById('errSubmit').style.display = 'none';
 
+  let returnedDiagnosticId = null;
   try {
-    await fetch('/api/newsletter', {
+    const res = await fetch('/api/newsletter', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
@@ -1194,9 +1198,24 @@ document.getElementById('leadForm').addEventListener('submit', async (e)=>{
         extra
       })
     });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.diagnosticId) {
+        returnedDiagnosticId = data.diagnosticId;
+      }
+    }
   } catch (err) {
     // Mesmo se o e-mail falhar, não bloqueia o lead de ver o próprio resultado.
     console.error('Falha ao enviar lead:', err);
+  }
+
+  if (returnedDiagnosticId) {
+    const badgeEl = document.getElementById('diagIdBadge');
+    const textEl = document.getElementById('diagIdText');
+    if (badgeEl && textEl) {
+      textEl.textContent = returnedDiagnosticId;
+      badgeEl.style.display = 'block';
+    }
   }
 
   // Conversão principal do funil: lead capturado no diagnóstico (GA4 → Google Ads).
@@ -1210,8 +1229,9 @@ document.getElementById('leadForm').addEventListener('submit', async (e)=>{
     }
   } catch (e) { /* no-op */ }
 
+  const idText = returnedDiagnosticId ? ` (ID: ${returnedDiagnosticId})` : '';
   const waMsg = encodeURIComponent(
-    `Olá! Fiz o Diagnóstico de Maturidade Empresarial (resultado: ${pendingOverallPct}% — ${lvl.name}) e gostaria de conversar sobre os próximos passos.`
+    `Olá! Fiz o Diagnóstico de Maturidade Empresarial${idText} (resultado: ${pendingOverallPct}% — ${lvl.name}) e gostaria de conversar sobre os próximos passos.`
   );
   document.getElementById('ctaWhatsapp').href = `https://wa.me/5511933400264?text=${waMsg}`;
 

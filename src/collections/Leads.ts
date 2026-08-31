@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { attributeLeadToAds } from "@/lib/ads-attribution";
+import { generateDiagnosticId } from "@/lib/diagnostic-id";
 
 /**
  * Leads captados pelo site (newsletter, pop-up, download de materiais,
@@ -9,10 +10,12 @@ import { attributeLeadToAds } from "@/lib/ads-attribution";
 export const Leads: CollectionConfig = {
   slug: "leads",
   labels: { singular: "Lead", plural: "Leads" },
+  defaultSort: "-createdAt",
   admin: {
     useAsTitle: "email",
-    defaultColumns: ["name", "whatsapp", "email", "source", "wantsNewsletter", "wantsPromotions", "createdAt"],
+    defaultColumns: ["name", "whatsapp", "email", "diagnosticBadge", "company", "source", "createdAt"],
     group: "Captação",
+    description: "Base unificada de contatos e diagnósticos de maturidade empresarial captados pelo site.",
   },
   access: {
     // Leitura/gestão só para usuários do admin. A captação pelo site cria via
@@ -23,6 +26,26 @@ export const Leads: CollectionConfig = {
     delete: ({ req }) => Boolean(req.user),
   },
   fields: [
+    {
+      name: "diagnosticBadge",
+      type: "ui",
+      label: "Diagnóstico",
+      admin: {
+        components: {
+          Cell: "@/components/admin/leads/DiagnosticBadgeCell#DiagnosticBadgeCell",
+        },
+      },
+    },
+    {
+      name: "diagnosticReport",
+      type: "ui",
+      label: "Relatório do Diagnóstico",
+      admin: {
+        components: {
+          Field: "@/components/admin/leads/DiagnosticAnalysisField#DiagnosticAnalysisField",
+        },
+      },
+    },
     { name: "name", type: "text", required: true, label: "Nome" },
     { name: "email", type: "email", required: true, label: "E-mail" },
     { name: "company", type: "text", label: "Empresa" },
@@ -38,6 +61,27 @@ export const Leads: CollectionConfig = {
       },
     },
     { name: "instagram", type: "text", label: "Instagram" },
+    // ——— Identificação e status do Diagnóstico ———
+    {
+      name: "diagnosticId",
+      type: "text",
+      label: "ID do Diagnóstico",
+      admin: {
+        position: "sidebar",
+        readOnly: true,
+        description: "Código único de identificação do diagnóstico (ex.: EA-DIAG-2026-X8K2M).",
+      },
+    },
+    {
+      name: "hasDiagnostic",
+      type: "checkbox",
+      label: "Fez Diagnóstico de Maturidade",
+      defaultValue: false,
+      admin: {
+        position: "sidebar",
+        description: "Marcado quando o lead respondeu às perguntas de maturidade empresarial.",
+      },
+    },
     // ——— Preferências de contato (flags) ———
     {
       name: "wantsNewsletter",
@@ -69,7 +113,7 @@ export const Leads: CollectionConfig = {
     {
       name: "details",
       type: "json",
-      label: "Dados extras (ex.: resultado do diagnóstico)",
+      label: "Dados brutos do diagnóstico / extras",
     },
     {
       name: "consent",
@@ -192,6 +236,20 @@ export const Leads: CollectionConfig = {
   hooks: {
     beforeChange: [
       async ({ data, operation, req }) => {
+        const isDiag = Boolean(
+          data.hasDiagnostic ||
+          data.diagnosticId ||
+          data.source === "Diagnóstico de Maturidade Empresarial" ||
+          (data.details && Boolean(data.details["Maturidade Geral"]))
+        );
+
+        if (isDiag) {
+          data.hasDiagnostic = true;
+          if (!data.diagnosticId) {
+            data.diagnosticId = generateDiagnosticId();
+          }
+        }
+
         if (operation !== "create") return data;
         try {
           const attribution = await attributeLeadToAds(data.details, req.payload);

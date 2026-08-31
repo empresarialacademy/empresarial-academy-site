@@ -93,8 +93,9 @@ function buildHtml(opts: {
   weakest: Pillar;
   whatsappUrl: string;
   mentoriaUrl: string;
+  diagnosticId?: string;
 }): string {
-  const { firstName, company, overall, pillars, weakest, whatsappUrl, mentoriaUrl } =
+  const { firstName, company, overall, pillars, weakest, whatsappUrl, mentoriaUrl, diagnosticId } =
     opts;
   const tip =
     PILLAR_TIP[weakest.name] ||
@@ -114,6 +115,7 @@ function buildHtml(opts: {
   <tr><td style="background:${NAVY};padding:24px 28px">
     <div style="color:${GOLD};font-weight:700;letter-spacing:.5px;font-size:13px">EMPRESARIAL ACADEMY</div>
     <div style="color:#ffffff;font-size:20px;font-weight:700;margin-top:6px">Diagnóstico de Maturidade Empresarial</div>
+    ${diagnosticId ? `<div style="display:inline-block;margin-top:10px;padding:4px 10px;border-radius:6px;background:rgba(193,161,96,0.2);border:1px solid ${GOLD};color:#ffffff;font-size:11.5px;font-weight:700;letter-spacing:.5px">ID: ${esc(diagnosticId)}</div>` : ""}
   </td></tr>
 
   <tr><td style="padding:26px 28px 8px">
@@ -212,6 +214,8 @@ type Input = {
   scores: Record<string, string>;
   /** Id do lead já gravado (para vincular no email-logs). */
   leadId?: string | number;
+  /** Identificador único do diagnóstico (ex: EA-DIAG-2026-X8K2M). */
+  diagnosticId?: string;
 };
 
 /**
@@ -221,7 +225,7 @@ type Input = {
 export function renderDiagnosticEmail(
   input: Input,
 ): { subject: string; html: string; text: string } | null {
-  const { name, company, scores } = input;
+  const { name, company, scores, diagnosticId } = input;
 
   const pillars: Pillar[] = PILLAR_KEYS.map((k) => ({
     name: k,
@@ -243,14 +247,19 @@ export function renderDiagnosticEmail(
   const weakest = pillars.reduce((min, p) => (p.pct < min.pct ? p : min), pillars[0]);
   const firstName = (name || "").trim().split(/\s+/)[0] || "empreendedor(a)";
 
-  const waText = `Olá! Fiz o Diagnóstico de Maturidade e quero destravar meu pilar de ${weakest.name} (${weakest.pct}%). Podemos conversar?`;
+  const diagRef = diagnosticId ? ` (ID: ${diagnosticId})` : "";
+  const waText = `Olá! Fiz o Diagnóstico de Maturidade${diagRef} e quero destravar meu pilar de ${weakest.name} (${weakest.pct}%). Podemos conversar?`;
   const whatsappUrl = `https://wa.me/${siteConfig.contact.phoneRaw}?text=${encodeURIComponent(
     waText,
   )}`;
   const mentoriaUrl = `${siteConfig.url}/servicos/mentorias`;
 
+  const subject = diagnosticId
+    ? `Seu resultado do Diagnóstico de Maturidade Empresarial [${diagnosticId}]`
+    : "Seu resultado do Diagnóstico de Maturidade Empresarial";
+
   return {
-    subject: "Seu resultado do Diagnóstico de Maturidade Empresarial",
+    subject,
     html: buildHtml({
       firstName,
       company: company || "",
@@ -259,6 +268,7 @@ export function renderDiagnosticEmail(
       weakest,
       whatsappUrl,
       mentoriaUrl,
+      diagnosticId,
     }),
     text: buildText({ firstName, overall, pillars, weakest, whatsappUrl }),
   };

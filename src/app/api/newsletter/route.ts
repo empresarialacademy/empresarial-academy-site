@@ -7,6 +7,7 @@ import {
   sendDiagnosticResultEmail,
 } from "@/lib/diagnostic-email";
 import { notifyEaFlowLead } from "@/lib/ea-flow-bridge";
+import { generateDiagnosticId } from "@/lib/diagnostic-id";
 
 type Payload = {
   nome?: string;
@@ -60,6 +61,10 @@ export async function POST(request: Request) {
     }
   }
 
+  const isDiagnostic =
+    origem === DIAGNOSTIC_ORIGIN || Boolean(extra["Maturidade Geral"]);
+  const diagnosticId = isDiagnostic ? generateDiagnosticId() : undefined;
+
   // Gravar o lead primeiro (sequencial) para termos o id disponível e
   // vincular o e-mail de resultado ao histórico em email-logs.
   const leadId = await saveLead({
@@ -71,21 +76,28 @@ export async function POST(request: Request) {
     source: origem,
     details: extra,
     consent: body.consentimento === true,
+    diagnosticId,
+    hasDiagnostic: isDiagnostic,
   });
+
+  const emailFields: Record<string, string | undefined> = {
+    Origem: origem,
+    ...(diagnosticId ? { "ID do Diagnóstico": diagnosticId } : {}),
+    Nome: nome,
+    Empresa: empresa,
+    "E-mail": email,
+    WhatsApp: whatsapp,
+    Instagram: instagram,
+    ...extra,
+  };
 
   const tasks: Promise<unknown>[] = [
     sendLeadEmail({
-      subject: `Nova captação — ${origem}`,
+      subject: diagnosticId
+        ? `Novo Diagnóstico de Maturidade [${diagnosticId}] — ${nome}${empresa ? ` (${empresa})` : ""}`
+        : `Nova captação — ${origem}`,
       replyTo: email,
-      fields: {
-        Origem: origem,
-        Nome: nome,
-        Empresa: empresa,
-        "E-mail": email,
-        WhatsApp: whatsapp,
-        Instagram: instagram,
-        ...extra,
-      },
+      fields: emailFields,
     }),
     sendRdConversion({
       conversionIdentifier: origem,
@@ -97,8 +109,8 @@ export async function POST(request: Request) {
   ];
 
   // Follow-up automático: o próprio lead recebe o resultado + próximo passo
-  // personalizado pelo pilar mais frágil (só na origem do diagnóstico).
-  if (origem === DIAGNOSTIC_ORIGIN) {
+  // personalizado pelo pilar mais frágil (só na conclusão do diagnóstico).
+  if (isDiagnostic) {
     tasks.push(
       sendDiagnosticResultEmail({
         name: nome,
@@ -107,6 +119,7 @@ export async function POST(request: Request) {
         whatsapp,
         scores: extra,
         leadId: leadId ?? undefined,
+        diagnosticId,
       }),
     );
     // EA Flow (Fase 5) — dispara fluxo de automação de mensagens pelo evento
@@ -117,5 +130,5 @@ export async function POST(request: Request) {
 
   await Promise.all(tasks);
 
-  return NextResponse.json({ ok: true }, { status: 200 });
+  return NextResponse.json({ ok: true, diagnosticId }, { status: 200 });
 }

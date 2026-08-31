@@ -122,9 +122,9 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     {
       title: "Diagnósticos Realizados",
       description:
-        "Histórico completo de diagnósticos preenchidos pelos clientes — pontuação geral, notas por pilar, faturamento, cargo e dados de contato para consultoria.",
+        "Base de diagnósticos concluídos pelos clientes com ID único, pontuação geral, notas por pilar, faturamento, cargo e dados para consultoria.",
       href: "/eahub/collections/leads",
-      stat: `${diagnosticLeads.totalDocs} diagnóstico(s) realizado(s)`,
+      stat: `${diagnosticLeads.totalDocs} diagnóstico(s) (${leads.totalDocs} leads no total)`,
     },
   ];
 
@@ -168,7 +168,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     { title: "Campanhas de e-mail", description: "Disparos manuais para um segmento de leads.", href: "/eahub/collections/email-campaigns", stat: `${emailCampaigns.totalDocs} campanha(s)` },
     { title: "Segmentos", description: "Critérios de seleção de leads (origem, pilar, score).", href: "/eahub/collections/email-segments", stat: `${emailSegments.totalDocs} segmento(s)` },
     { title: "Envios", description: "Histórico de e-mails enviados (nutrição, alertas, campanhas).", href: "/eahub/collections/email-logs" },
-    { title: "Leads", description: "Base de contatos — origem, consentimento, atribuição de campanha e resultado comercial.", href: "/eahub/collections/leads", stat: `${leads.totalDocs} lead(s)` },
+    { title: "Base de Leads", description: "Base unificada de contatos — origem, diagnóstico, consentimento e resultado comercial.", href: "/eahub/collections/leads", stat: `${leads.totalDocs} lead(s)` },
   ];
 
   /** Regras automáticas ativas (12/08/2026) — vivem no código
@@ -239,7 +239,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
           background: `
             radial-gradient(900px 500px at 12% 0%, rgba(193,161,96,0.10) 0%, rgba(193,161,96,0) 55%),
             radial-gradient(700px 500px at 92% 15%, rgba(61,92,128,0.22) 0%, rgba(61,92,128,0) 55%),
-            linear-gradient(180deg, #1D2B3C 0%, #17212E 420px, #F6F5F1 420px, #F6F5F1 100%)
+            linear-gradient(180deg, #1D2B3C 0%, #17212E 420px, #FFFFFF 420px, #FFFFFF 100%)
           `,
         }}
       />
