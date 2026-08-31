@@ -71,9 +71,20 @@ export function PayloadLoginView({ systemName, tagline }: { systemName: string; 
             maxWidth: 400,
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.85rem" }}>
-            <SystemLogo systemName={systemName} size={135} glow />
-            <p style={{ margin: 0, fontSize: "0.88rem", color: "#4A5568", textAlign: "center", fontWeight: 500, letterSpacing: "0.01em" }}>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
+            <SystemLogo systemName={systemName} size={130} glow={false} />
+            <p
+              style={{
+                margin: "0.2rem 0 0",
+                fontSize: "1.08rem",
+                color: "#1D2B3C",
+                textAlign: "center",
+                fontWeight: 700,
+                fontFamily: "'Sora', 'Inter', sans-serif",
+                letterSpacing: "-0.01em",
+                lineHeight: 1.35,
+              }}
+            >
               {tagline}
             </p>
           </div>
