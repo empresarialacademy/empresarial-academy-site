@@ -51,6 +51,21 @@ function parseScore(val: unknown): { pct: number; label: string } | null {
   };
 }
 
+async function ensureLeadsColumns(payload: unknown) {
+  try {
+    const pool = (payload as { db?: { pool?: { query: (sql: string) => Promise<unknown> } } })?.db?.pool;
+    if (pool) {
+      await pool.query(`
+        ALTER TABLE "leads" ADD COLUMN IF NOT EXISTS "instagram" text;
+        ALTER TABLE "leads" ADD COLUMN IF NOT EXISTS "diagnostic_id" text;
+        ALTER TABLE "leads" ADD COLUMN IF NOT EXISTS "has_diagnostic" boolean DEFAULT false;
+      `);
+    }
+  } catch (e) {
+    console.warn("[ensureLeadsColumns] aviso:", e);
+  }
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -58,6 +73,7 @@ export async function GET(request: Request) {
     const listRecent = searchParams.get("list") === "recent";
 
     const payload = await getPayloadClient();
+    await ensureLeadsColumns(payload);
 
     if (listRecent) {
       const { docs } = await payload.find({

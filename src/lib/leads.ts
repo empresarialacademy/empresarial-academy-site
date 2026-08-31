@@ -19,9 +19,25 @@ export type LeadInput = {
  * Nunca lança — a captação não pode falhar por causa do banco.
  * Retorna o id do lead criado (para vincular envios ao log), ou null se falhou.
  */
+async function ensureLeadsColumns(payload: unknown) {
+  try {
+    const pool = (payload as { db?: { pool?: { query: (sql: string) => Promise<unknown> } } })?.db?.pool;
+    if (pool) {
+      await pool.query(`
+        ALTER TABLE "leads" ADD COLUMN IF NOT EXISTS "instagram" text;
+        ALTER TABLE "leads" ADD COLUMN IF NOT EXISTS "diagnostic_id" text;
+        ALTER TABLE "leads" ADD COLUMN IF NOT EXISTS "has_diagnostic" boolean DEFAULT false;
+      `);
+    }
+  } catch (e) {
+    console.warn("[ensureLeadsColumns] aviso:", e);
+  }
+}
+
 export async function saveLead(lead: LeadInput): Promise<string | number | null> {
   try {
     const payload = await getPayloadClient();
+    await ensureLeadsColumns(payload);
     const consent = lead.consent ?? false;
     const isDiag = Boolean(
       lead.hasDiagnostic ||
