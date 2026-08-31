@@ -15,6 +15,7 @@ type Payload = {
   email?: string;
   whatsapp?: string;
   instagram?: string;
+  diagnosticId?: string;
   consentimento?: boolean;
   origem?: string;
   website?: string; // honeypot
@@ -40,6 +41,7 @@ export async function POST(request: Request) {
   const email = sanitize(body.email, 160);
   const whatsapp = sanitize(body.whatsapp, 40);
   const instagram = sanitize(body.instagram, 80);
+  const clientDiagId = sanitize(body.diagnosticId, 40);
   const origem = sanitize(body.origem, 60) || "Newsletter";
 
   const errors: Record<string, string> = {};
@@ -67,7 +69,7 @@ export async function POST(request: Request) {
     Boolean(extra["Maturidade Geral"]);
   const hasFinishedDiagnostic =
     origem === DIAGNOSTIC_ORIGIN || Boolean(extra["Maturidade Geral"]);
-  const diagnosticId = isDiagnostic ? generateDiagnosticId() : undefined;
+  const diagnosticId = isDiagnostic ? (clientDiagId || generateDiagnosticId()) : undefined;
 
   // Gravar o lead primeiro (sequencial) para termos o id disponível e
   // vincular o e-mail de resultado ao histórico em email-logs.

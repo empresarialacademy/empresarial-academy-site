@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { SystemLogo } from "@/components/admin/brand/SystemLogo";
 
 type PillarData = {
   key: string;
@@ -404,7 +403,12 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <SystemLogo systemName="Empresarial Academy" size={24} />
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ color: "#C1A160", fontWeight: 800, fontSize: "0.95rem" }}>◆</span>
+                <span style={{ fontWeight: 800, fontSize: "0.82rem", letterSpacing: "0.04em", color: currentSlide === 0 ? "#FFFFFF" : "#1D2B3C" }}>
+                  EMPRESARIAL ACADEMY
+                </span>
+              </div>
               <span
                 style={{
                   fontSize: "0.72rem",

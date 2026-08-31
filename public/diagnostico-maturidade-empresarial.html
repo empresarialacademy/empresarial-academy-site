@@ -181,6 +181,15 @@
   .question{
     padding:16px 0;
     border-top:1px solid var(--gray-light);
+    transition:all .2s ease;
+  }
+  .question-unanswered{
+    border:2px solid var(--red) !important;
+    background:rgba(178,59,59,0.06) !important;
+    border-radius:10px !important;
+    padding:14px 12px !important;
+    box-shadow:0 0 14px rgba(178,59,59,0.25) !important;
+    margin:8px 0 !important;
   }
   .question:first-of-type{border-top:none;}
   .question p{
@@ -1071,6 +1080,8 @@ form.addEventListener('change', e=>{
     const name = e.target.name;
     document.querySelectorAll(`label[data-name="${name}"]`).forEach(l=>l.classList.remove('checked'));
     e.target.closest('label').classList.add('checked');
+    const qEl = e.target.closest('.question');
+    if (qEl) qEl.classList.remove('question-unanswered');
     updateProgress();
   }
 });
@@ -1100,7 +1111,7 @@ document.getElementById('entryForm').addEventListener('submit', async (e)=>{
   if(!consentimento) ok = false;
   if(!ok) return;
 
-  entryData = { nome, email, whatsapp, instagram, consentimento };
+  entryData = { nome, email, whatsapp, instagram, consentimento, diagnosticId: null };
 
   const btn = document.getElementById('btnEntrySubmit');
   btn.disabled = true;
@@ -1117,7 +1128,7 @@ document.getElementById('entryForm').addEventListener('submit', async (e)=>{
   } catch (e) { /* no-op */ }
 
   try {
-    await fetch('/api/newsletter', {
+    const res = await fetch('/api/newsletter', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
@@ -1126,6 +1137,12 @@ document.getElementById('entryForm').addEventListener('submit', async (e)=>{
         extra: entryExtra
       })
     });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.diagnosticId) {
+        entryData.diagnosticId = data.diagnosticId;
+      }
+    }
   } catch (err) {
     // Não bloqueia o início do diagnóstico se a captura leve falhar.
     console.error('Falha ao registrar início do diagnóstico:', err);
@@ -1144,13 +1161,25 @@ let pendingOverallPct = null;
 document.getElementById('btnCalc').addEventListener('click', ()=>{
   const formData = new FormData(form);
   let allAnswered = true;
+  let firstUnansweredEl = null;
   const pillarScores = {};
+
+  // Limpar destaques anteriores
+  document.querySelectorAll('.question').forEach(q => q.classList.remove('question-unanswered'));
 
   PILLARS.forEach(pillar=>{
     let sum = 0, count = 0;
     pillar.questions.forEach((q,i)=>{
-      const val = formData.get(`${pillar.id}_${i}`);
-      if(!val){ allAnswered = false; }
+      const name = `${pillar.id}_${i}`;
+      const val = formData.get(name);
+      if(!val){
+        allAnswered = false;
+        const qEl = document.querySelector(`label[data-name="${name}"]`)?.closest('.question');
+        if (qEl) {
+          qEl.classList.add('question-unanswered');
+          if (!firstUnansweredEl) firstUnansweredEl = qEl;
+        }
+      }
       else { sum += parseInt(val,10); count++; }
     });
     const avg = count ? sum/count : 0;
@@ -1161,6 +1190,11 @@ document.getElementById('btnCalc').addEventListener('click', ()=>{
   const hint = document.getElementById('hint');
   if(!allAnswered){
     hint.style.display = 'block';
+    if (firstUnansweredEl) {
+      firstUnansweredEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      hint.scrollIntoView({ behavior: 'smooth' });
+    }
     return;
   }
   hint.style.display = 'none';
@@ -1186,7 +1220,7 @@ document.getElementById('leadForm').addEventListener('submit', async (e)=>{
   e.preventDefault();
   if(!pendingPillarScores || !entryData) return;
 
-  const { nome, email, whatsapp, instagram, consentimento } = entryData;
+  const { nome, email, whatsapp, instagram, consentimento, diagnosticId: existingDiagId } = entryData;
   const empresa = document.getElementById('leadEmpresa').value.trim();
   const cargo = document.getElementById('leadCargo').value;
   const faturamento = document.getElementById('leadFaturamento').value;
@@ -1226,7 +1260,7 @@ document.getElementById('leadForm').addEventListener('submit', async (e)=>{
   btn.textContent = 'Enviando...';
   document.getElementById('errSubmit').style.display = 'none';
 
-  let returnedDiagnosticId = null;
+  let returnedDiagnosticId = existingDiagId || null;
   try {
     const res = await fetch('/api/newsletter', {
       method: 'POST',
@@ -1234,6 +1268,7 @@ document.getElementById('leadForm').addEventListener('submit', async (e)=>{
       body: JSON.stringify({
         nome, empresa, email, whatsapp, instagram, consentimento,
         origem: 'Diagnóstico de Maturidade Empresarial',
+        diagnosticId: existingDiagId || undefined,
         extra
       })
     });

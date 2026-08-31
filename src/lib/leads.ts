@@ -46,6 +46,59 @@ export async function saveLead(lead: LeadInput): Promise<string | number | null>
       (lead.details && Boolean(lead.details["Maturidade Geral"]))
     );
 
+    // Se temos diagnosticId ou email, verificar se o lead já foi registrado no início
+    if (lead.diagnosticId || lead.email) {
+      try {
+        const { docs } = await payload.find({
+          collection: "leads",
+          where: lead.diagnosticId
+            ? { diagnosticId: { equals: lead.diagnosticId } }
+            : { email: { equals: lead.email } },
+          limit: 1,
+          overrideAccess: true,
+        });
+
+        if (docs.length > 0) {
+          const existing = docs[0] as unknown as {
+            id: string | number;
+            name?: string;
+            company?: string;
+            whatsapp?: string;
+            instagram?: string;
+            diagnosticId?: string;
+            details?: Record<string, string>;
+          };
+
+          const mergedDetails = {
+            ...(existing.details || {}),
+            ...(lead.details || {}),
+          };
+
+          const updatedDoc = await payload.update({
+            collection: "leads",
+            id: existing.id,
+            data: {
+              name: lead.name || existing.name,
+              email: lead.email,
+              company: lead.company || existing.company || undefined,
+              whatsapp: lead.whatsapp || existing.whatsapp || undefined,
+              instagram: lead.instagram || existing.instagram || undefined,
+              source: lead.source,
+              details: Object.keys(mergedDetails).length > 0 ? mergedDetails : undefined,
+              diagnosticId: lead.diagnosticId || existing.diagnosticId || undefined,
+              hasDiagnostic: isDiag,
+              wantsNewsletter: consent,
+              wantsPromotions: consent,
+            } as unknown as DataFromCollectionSlug<"leads">,
+            overrideAccess: true,
+          });
+          return updatedDoc.id;
+        }
+      } catch (findErr) {
+        console.warn("[saveLead] aviso ao buscar lead existente:", findErr);
+      }
+    }
+
     const doc = await payload.create({
       collection: "leads",
       data: {
@@ -65,6 +118,7 @@ export async function saveLead(lead: LeadInput): Promise<string | number | null>
         wantsNewsletter: consent,
         wantsPromotions: consent,
       } as unknown as DataFromCollectionSlug<"leads">,
+      overrideAccess: true,
     });
     return doc.id;
   } catch (e) {

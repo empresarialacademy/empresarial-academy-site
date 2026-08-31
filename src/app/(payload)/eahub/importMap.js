@@ -43,6 +43,10 @@ import { SiteLoginView as SiteLoginView_84df03b1c2774fb01dd61689b858fab } from '
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { SecretariaNavLink as SecretariaNavLink_f7112026 } from '@/components/admin/secretaria/SecretariaNavLink'
 import { SecretariaVirtualView as SecretariaVirtualView_f7112026 } from '@/components/admin/secretaria/SecretariaVirtualView'
+import { CommercialPresentationView as CommercialPresentationView_f7112026 } from '@/components/admin/presentation/CommercialPresentationView'
+import { DiagnosticBadgeCell as DiagnosticBadgeCell_f7112026 } from '@/components/admin/leads/DiagnosticBadgeCell'
+import { InstagramCell as InstagramCell_f7112026 } from '@/components/admin/leads/InstagramCell'
+import { DiagnosticAnalysisField as DiagnosticAnalysisField_f7112026 } from '@/components/admin/leads/DiagnosticAnalysisField'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
@@ -90,5 +94,9 @@ export const importMap = {
   "@/components/admin/brand/SiteLoginView#SiteLoginView": SiteLoginView_84df03b1c2774fb01dd61689b858fab,
   "@/components/admin/secretaria/SecretariaNavLink#SecretariaNavLink": SecretariaNavLink_f7112026,
   "@/components/admin/secretaria/SecretariaVirtualView#SecretariaVirtualView": SecretariaVirtualView_f7112026,
+  "@/components/admin/presentation/CommercialPresentationView#CommercialPresentationView": CommercialPresentationView_f7112026,
+  "@/components/admin/leads/DiagnosticBadgeCell#DiagnosticBadgeCell": DiagnosticBadgeCell_f7112026,
+  "@/components/admin/leads/InstagramCell#InstagramCell": InstagramCell_f7112026,
+  "@/components/admin/leads/DiagnosticAnalysisField#DiagnosticAnalysisField": DiagnosticAnalysisField_f7112026,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }
