@@ -71,7 +71,6 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
   const [diagId, setDiagId] = useState(initialId || "");
   const [loading, setLoading] = useState(false);
   const [recents, setRecents] = useState<RecentItem[]>([]);
-  const [leadData, setLeadData] = useState<DiagnosticData | null>(null);
 
   const [clienteNome, setClienteNome] = useState("");
   const [empresaNome, setEmpresaNome] = useState("");
@@ -104,19 +103,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
       .catch((e) => console.warn("Erro ao buscar recentes:", e));
   }, []);
 
-  useEffect(() => {
-    let idToLoad = initialId;
-    if (!idToLoad && typeof window !== "undefined") {
-      const qp = new URLSearchParams(window.location.search);
-      idToLoad = qp.get("id") || "";
-    }
-    if (idToLoad) {
-      setDiagId(idToLoad);
-      fetchDiagnostic(idToLoad);
-    }
-  }, [initialId]);
-
-  const fetchDiagnostic = async (id: string) => {
+  const fetchDiagnostic = useCallback(async (id: string) => {
     const cleanId = id.trim();
     if (!cleanId) return;
     setLoading(true);
@@ -125,7 +112,6 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
       const data = await res.json();
       if (data.ok && data.data) {
         const d: DiagnosticData = data.data;
-        setLeadData(d);
         setClienteNome(d.name || "");
         setEmpresaNome(d.company || "");
         setClienteCargo(d.cargo || "");
@@ -134,7 +120,14 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
         setClienteWhatsapp(d.whatsapp || "");
         setClienteInstagram(d.instagram || "");
 
-        const newScores: Record<string, number> = { ...scores };
+        const newScores: Record<string, number> = {
+          fluxo: 60,
+          arquitetura: 50,
+          objetivos: 55,
+          metricas: 40,
+          desafios: 45,
+          evolucao: 50,
+        };
         if (Array.isArray(d.pillars)) {
           d.pillars.forEach((p) => {
             const keyLower = p.key.toLowerCase();
@@ -153,7 +146,19 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    let idToLoad = initialId;
+    if (!idToLoad && typeof window !== "undefined") {
+      const qp = new URLSearchParams(window.location.search);
+      idToLoad = qp.get("id") || "";
+    }
+    if (idToLoad) {
+      setDiagId(idToLoad);
+      fetchDiagnostic(idToLoad);
+    }
+  }, [initialId, fetchDiagnostic]);
 
   const overallPct = useMemo(() => {
     const vals = Object.values(scores);
@@ -572,6 +577,11 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                       Faturamento: <strong style={{ color: "#D7C089" }}>{clienteFaturamento}</strong>
                     </div>
                   ) : null}
+                  {clienteInstagram ? (
+                    <div>
+                      Instagram: <strong style={{ color: "#D7C089" }}>{clienteInstagram}</strong>
+                    </div>
+                  ) : null}
                   <div>
                     Método: <strong style={{ color: "#D7C089" }}>Gestão 360</strong>
                   </div>
@@ -624,7 +634,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                         lineHeight: 1.5,
                       }}
                     >
-                      "Conheço os dois lados: a rotina apertada de quem toca uma PME sozinho, e o método das grandes empresas para organizar isso."
+                      &ldquo;Conheço os dois lados: a rotina apertada de quem toca uma PME sozinho, e o método das grandes empresas para organizar isso.&rdquo;
                     </div>
                     <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 8, padding: 0 }}>
                       <li style={{ fontSize: "clamp(12px, 1vw, 14.5px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
