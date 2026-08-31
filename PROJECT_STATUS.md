@@ -2644,3 +2644,145 @@ deploy, site público intacto.
 - **Achado à parte, sem relação com esta tarefa:** durante a sessão, outra sessão concorrente rodou `vercel --prod` neste mesmo repositório (git status confirmou que não tinha nenhuma mudança não commitada além das minhas — o deploy dela não incluiu nem foi afetado por este trabalho). Nenhuma ação tomada sobre isso, só registrado como reforço do risco de workspace compartilhado já documentado acima (Sessão 2026-08-17(e) em diante e o `CLAUDE.md` da raiz).
 - **Deploy final:** `dpl_HND1guRTiVgQcTaT3eyh3U1JWgru`. `GET /eahub/apis` confirmado 200 em produção (tela de login/admin, não dá pra validar o conteúdo renderizado sem o Thiago logar — ver regra de não digitar senha).
 - **Pendente (decisão do Thiago, não técnica):** valores de saldo/faturamento reais (Resend, Featurable, Behold, Vercel, Neon, R2, TikTok, RD Station) ficaram marcados `billingType: "a-confirmar"` — nenhum é localizável por evidência de código, mesma lacuna já registrada na Auditoria de Infraestrutura de 06/08. Preencher direto pelo admin (`/eahub/apis` ou `/eahub/collections/api-inventory`) quando o Thiago tiver os valores.
+
+### Sessão 2026-08-30/31 — Cron `check-site-publications` falhando (blog/33 → 404)
+
+**Pedido do Thiago:** analisar o erro do cron `check-site-publications`
+(`blog/33: Falha ao ler artigo no site (404)`) e deixar 100% funcional.
+
+**Causa raiz real, em duas camadas (a primeira encontrada não era a
+definitiva):**
+
+1. **Bug de código, real e corrigido:** `access.read` de `Posts.ts` e
+   `Materials.ts` só liberava leitura de rascunho pra sessão de usuário
+   logada (`req.user`), nunca pra chamada de serviço do EA Post
+   (`isContentEngineRequest(req)`), embora `access.create` já aceitasse essa
+   mesma chave. Resultado: o EA Post cria o próprio rascunho normalmente,
+   mas nunca conseguia relê-lo depois pra saber se o Thiago publicou —
+   sempre 404, mesmo o post existindo. Corrigido em ambas as collections
+   (`if (req.user || isContentEngineRequest(req)) return true`).
+2. **Causa raiz que ainda causava 404 depois do fix de código, achada só
+   depois de uma investigação extensa (rota de debug temporária comparando
+   hash SHA256 do valor, nunca o valor bruto):** a env var
+   `CONTENT_ENGINE_API_KEY` estava **dessincronizada em 3 lugares** — o
+   `.env` local do `ea-social-engine`, o Vercel de produção deste site, e o
+   Vercel de produção do próprio `ea-social-engine`. As duas cópias em
+   produção tinham um valor diferente do `.env` local (rotacionada num
+   lugar, nunca propagada pros outros). Sincronizadas as 3 com o valor do
+   `.env` local do `ea-social-engine` (fonte da verdade escolhida pelo
+   Thiago, por ser quem faz as chamadas ativamente no cron diário).
+
+**Validação real, não suposição:**
+- `curl` direto em produção: `GET /api/posts/52?depth=0` com a chave do EA
+  Post — antes 404, depois do fix completo **200**, corpo com
+  `status: "draft"` correto.
+- Cron real (não simulado): `GET
+  https://ea-social-engine.vercel.app/api/cron/check-site-publications?dry=1`
+  — antes `ok:false` com o 404 do enunciado; depois **`ok:true,
+  "ainda em rascunho no site, aguardando."`** — confirmado 2x, inclusive
+  depois dos deploys seguintes de outra sessão no mesmo repo.
+- Nenhum dado real do banco foi alterado por engano (ver bloqueio abaixo).
+
+**Arquivos alterados neste repositório** (commits `cf4ca17` → `75e095f`,
+todos com push e deploy confirmados; a rota de debug foi criada, usada e
+**já removida** dentro da própria sessão):
+- `src/collections/Posts.ts` — `access.read` aceita `isContentEngineRequest`.
+- `src/collections/Materials.ts` — idem.
+- `src/app/api/dev/debug-content-engine-auth/route.ts` — criada, usada pra
+  comparar hash da chave, **removida** (commit `75e095f`). Não sobrou no
+  repositório.
+
+**Variáveis de ambiente alteradas (nomes apenas, sem valor):**
+- `CONTENT_ENGINE_API_KEY` — recriada na Vercel de produção **deste site**
+  e na Vercel de produção do **`ea-social-engine`**, com o mesmo valor do
+  `.env` local do `ea-social-engine`. Se um dos dois lados for rotacionado
+  de novo no futuro, replicar nos outros dois pontos (ambos os Vercel +
+  `.env` local) ou o mesmo 404 volta.
+
+**⚠️ Risco real encontrado no caminho, sem relação com o pedido original —
+já era conhecido, não é achado novo:** ao rodar `npm run dev` local pra
+testar o fix, o Payload (Drizzle push de schema) travou pedindo confirmação
+interativa (y/N) pra um push **destrutivo**: apagaria a tabela
+`content_calendar` (23 itens), `content_calendar_channels` (42 itens) e a
+coluna `api_inventory_id` em `payload_preferences_rels` (21 itens). Isso é
+a mesma órfã já documentada na Sessão 2026-08-24 acima (§ Painel de APIs) —
+tabelas/enums de uma collection removida do código em 19/08, nunca
+dropadas do banco. **O processo foi encerrado sem responder ao prompt —
+confirmado depois, via `psql`, que os 23+42+1 itens continuam intactos.**
+Isso significa que **qualquer sessão que rode `next dev` neste repo vai
+levar o mesmo prompt de novo** — nunca responder "y" sem antes confirmar
+com o Thiago que esses dados podem ser descartados.
+
+**Decisões e motivos:**
+- Investigação usou uma rota de debug temporária só pra comparar **hash**
+  da chave (nunca caracteres reais) — pedido de exibir prefixo/sufixo bruto
+  foi bloqueado pelo classificador de segurança do Claude Code, corretamente
+  (evita vazar fragmento de credencial numa rota, mesmo que temporária).
+- `vercel --prod` foi rodado 4 vezes nesta sessão (fix de código, debug v1,
+  debug v2 com hash, remoção do debug + env var corrigida), cada uma com
+  autorização explícita do Thiago — deploy de produção nunca rodado sem
+  perguntar antes, mesmo already tendo autorização de uma vez anterior.
+- Workspace compartilhado confirmado de novo nesta sessão: duas outras
+  sessões (`projeto-ia-be`, `projeto-ia-18`) mexiam neste mesmo repositório
+  em paralelo (efeito visual do login, home do EA HUB) — coordenado via
+  `SendMessage` entre sessões antes de cada deploy, sem colisão desta vez.
+
+**Skills/agentes/MCPs:** nenhum subagente usado. MCP `neon` tentado no
+início (`list_projects` pediu `org_id`, não disponível) — contornado com
+`psql` direto via `DATABASE_URI` dos `.env.production.local`/`.env` dos
+dois repositórios envolvidos, mesmo padrão já em uso em sessões anteriores.
+
+**Bloqueios:**
+- MCP `neon` continua exigindo `org_id` não disponível nesta sessão — não
+  diagnosticado, mesmo tipo de falha já registrada em sessões do `ea-flow`.
+- Nenhum bloqueio ativo relacionado à tarefa em si ao final.
+
+### Próximo passo exato
+
+1. **Nenhuma ação de código pendente** — o cron está funcionando,
+   confirmado por chamada real, e o fix já está em produção (sobrevive aos
+   deploys seguintes de outras sessões, por ser commit ancestral).
+2. **Ação do Thiago, não técnica:** publicar manualmente os posts `id=51`
+   ("Ciclo de vendas da PME...") e `id=52` ("3 indicadores de gestão...")
+   no admin (`/eahub/collections/posts`) quando estiverem prontos — o EA
+   Post nunca publica sozinho, por desenho. Assim que publicados, o cron
+   diário detecta e gera as peças de redes sociais (Central de Aprovação
+   do EA Post), sem precisar reprocessar nada manualmente.
+3. **Pendência separada, não bloqueante, que qualquer sessão deve saber
+   antes de rodar `next dev` neste repo:** decidir com o Thiago se
+   `content_calendar`/`content_calendar_channels`/`api_inventory_id`
+   (tabelas órfãs desde 19/08) podem ser descartadas de vez do Postgres —
+   enquanto isso não for decidido, o prompt destrutivo do Drizzle vai
+   continuar aparecendo em todo `next dev` local, e **nunca deve ser
+   aceito ("y") sem essa confirmação prévia**.
+
+### Sessão 2026-08-31 — Fusão EA HUB/EA Post, dashboard de TV, página /tecnologia, login novo nos 4 sistemas, redesign da home do HUB (item final NÃO validado)
+
+**Pedido do Thiago, em partes ao longo da sessão:** (1) revisar o EA HUB depois da fusão com o EA Post; (2) dashboard de pendências pra tela de TV; (3) página pública institucional listando os sistemas da EA; (4) unificar visualmente as 4 telas de login (este site/EA HUB, EA Post, EA Flow, EA Recovery) com o monograma EA real; depois, pedido explícito de efeito visual mais sofisticado ("bordas suavizadas, sombreado, seja criativo, utilize o Figma"); (5) redesenhar a home do EA HUB "totalmente diferente" do padrão anterior, mesmo tratamento do login.
+
+**Itens 1-4: concluídos e validados em produção. Item 5: implementado e deployado, mas sem confirmação visual do Thiago até o fim da sessão** (a sessão não tinha credencial de login pra ver a home autenticada).
+
+- **Fusão EA HUB × EA Post confirmada sem trabalho de código pendente** — Blog/Materiais já eram gerados de verdade pelo EA Post; só um comentário desatualizado em `PostingRules.ts` (repo `ea-social-engine`) dizia o contrário, corrigido lá. Removidos os cards "Artigos do blog"/"Materiais ricos" da home do hub (redundantes); seção renomeada de "Conteúdo do site" para "Ativos do site". Duplicata da linha "EA Marketing Manager" removida da collection `system-links` no Neon de produção (`DELETE FROM system_links WHERE id=10`, confirmado com o Thiago antes).
+- **`/eahub/tv` (novo, `src/components/admin/tv/TvDashboardView.tsx`)** — dashboard consolidado pra tela de TV: fila de aprovação pendente + tokens sociais vencendo + falhas de cron (via nova rota `GET /api/content-engine/pending-status` no `ea-social-engine`, autenticada por `CONTENT_ENGINE_API_KEY`) + contratos aguardando assinatura + credenciais vencendo em 30 dias (direto do banco deste site). Auto-refresh a cada 2 min. **Nunca testado ao vivo** — mas a sessão seguinte (ver seção acima, "Cron check-site-publications") recriou/sincronizou `CONTENT_ENGINE_API_KEY` nas duas Vercels, então a pendência que bloqueava esse teste provavelmente já foi resolvida — falta só confirmar visualmente.
+- **`/tecnologia` (novo, `src/app/(frontend)/tecnologia/page.tsx`)** — página pública, sem login, portfólio de sistemas ativos da EA (puxado de `system-links`), pra apresentação institucional a clientes. Testada localmente (200) antes do deploy; não re-testada em produção depois.
+- **Telas de login das 4 sistemas unificadas** (site/EA HUB, `ea-social-engine`, `ea-flow`, `cicj`/EA Recovery) — monograma "EA" recortado do PNG oficial do logo (fundo removido, upscale Lanczos), salvo como `ea-monogram.png`, copiado nos 4 repositórios. Depois de aprovado, o Thiago pediu efeito visual mais forte: protótipo desenhado num arquivo Figma próprio ("EA Login Screens", `fileKey=Dmj7U52PQq5sAPMqiiduPV`, no plano dele — **limite do plano Starter esgotado no meio, ainda bloqueado no fim da sessão**), traduzido pra CSS: glow atmosférico radial no fundo, cards em glassmorphism (`backdrop-filter: blur`, borda dourada translúcida, sombra dupla), badge do monograma com brilho próprio, inputs com cantos suavizados e glow no foco, botão com gradiente/sombra.
+  - Componentes novos neste repo: `src/components/admin/brand/{PayloadLoginForm,PayloadLoginView,SiteLoginView,SystemLogo}.tsx`. `PayloadLoginView` registrado em `admin.components.views.login` (path `/login`), substitui a tela nativa do Payload inteira — o `LoginForm` nativo do framework não é export público do pacote, reescrito com fetch direto pra `POST /api/{userSlug}/login`.
+  - **Bug corrigido em produção:** o template "minimal" do Payload envolve a view custom num container com padding/max-width próprios — sem `position: fixed; inset: 0` na raiz, sobrava margem branca ao redor do overlay.
+  - **Segundo ajuste pedido pelo Thiago ("deixe o body branco"):** flash do tema escuro/cinza padrão do Payload (`data-theme`) antes do CSS do overlay carregar — corrigido forçando `body { background: #fff }` via `<style>` dentro do próprio componente.
+  - Confirmado visualmente em produção (screenshot Playwright).
+- **Home do EA HUB redesenhada (`EaMarketingManagerView.tsx`, reescrito 2x nesta sessão)** — mesmo tratamento visual do login (fundo com glow, cards em glassmorphism, hover com elevação). Nenhuma lógica de dados foi tocada, só a apresentação. Fundo implementado como `position: fixed; z-index: -1` atrás de tudo (não como margem negativa tentando cancelar o gutter interno do Payload — primeira tentativa nesse sentido foi frágil e corrigida no mesmo dia). **Não validado visualmente** — a sessão pediu ao Thiago pra conferir em `empresarialacademy.com/eahub` com hard refresh, sem resposta até o encerramento.
+
+**Deploy:** os 3 sistemas Next.js/Vercel (este site, `ea-social-engine`, `ea-flow`) precisaram de `vercel --prod --yes` manual repetidas vezes nesta sessão — **o auto-deploy GitHub→Vercel deste projeto está confirmado desconectado/inconsistente** (o domínio ficou até 19h atrasado do último push antes de alguém notar, em pelo menos um caso). EA Recovery (`cicj`) foi atualizado manualmente via `scp` + `systemctl restart` na VPS própria (Contabo, `217.216.52.208`), com autorização explícita do Thiago (servidor de cliente real, Souza Ramos).
+
+**HEAD deste repositório ao fim desta sessão:** `2a4cd0e` — mas outra sessão (`projeto-ia-f6`, ver seção "Cron check-site-publications" logo acima) também commitou/deployou no mesmo repositório em paralelo (commits `cf4ca17`, `8dc0de0`, `dc855fe`, `75e095f`), coordenado via mensagens entre sessões, sem colisão de arquivo.
+
+**Skills/MCPs usados:** `empresarial-academy-design` (tokens de marca) — nota: o checklist "anti-padrão IA" da skill (seção 10, proíbe `border-radius`>4px/sombra difusa/gradiente decorativo) foi conscientemente contrariado nesta tarefa por pedido explícito do Thiago (efeito/glow/vidro), que tem precedência sobre a heurística padrão. MCP Figma (arquivo "EA Login Screens" no plano do Thiago, ainda existente, retomável quando o limite resetar). MCP Neon (remoção da duplicata em `system-links`). Playwright MCP (validação visual em produção).
+
+**Bloqueios ao fim da sessão:**
+1. Home do `/eahub` redesenhada mas sem confirmação visual do Thiago.
+2. Limite do plano Figma Starter esgotado (não fazer upgrade sem o Thiago pedir).
+3. Tabelas órfãs no Postgres (`content_calendar`, `content_calendar_channels`, coluna `api_inventory_id`) seguem sem dropar — mesmo achado já registrado na sessão acima, reconfirmado por esta sessão também (não respondeu "y" ao prompt destrutivo do `next dev`).
+
+**Próximo passo exato:**
+1. Perguntar ao Thiago se o redesign da home do `/eahub` ficou como esperado (Ctrl+Shift+R pra evitar cache) — se não, ajustar `EaMarketingManagerView.tsx` com base no feedback específico.
+2. Testar `/eahub/tv` ao vivo, logado — a `CONTENT_ENGINE_API_KEY` foi sincronizada por outra sessão depois que este dashboard foi criado, então deve funcionar, mas ninguém confirmou ainda.
