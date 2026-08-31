@@ -126,23 +126,25 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
         setClienteWhatsapp(d.whatsapp || "");
         setClienteInstagram(d.instagram || "");
 
+        const fallbackPct = d.overall?.pct && d.overall.pct > 0 ? d.overall.pct : 50;
         const newScores: Record<string, number> = {
-          fluxo: 50,
-          arquitetura: 50,
-          objetivos: 50,
-          metricas: 50,
-          desafios: 50,
-          evolucao: 50,
+          fluxo: fallbackPct,
+          arquitetura: fallbackPct,
+          objetivos: fallbackPct,
+          metricas: fallbackPct,
+          desafios: fallbackPct,
+          evolucao: fallbackPct,
         };
         if (Array.isArray(d.pillars)) {
           d.pillars.forEach((p) => {
             const keyLower = p.key.toLowerCase();
-            if (keyLower.includes("fluxo")) newScores.fluxo = p.pct;
-            else if (keyLower.includes("arquitetura")) newScores.arquitetura = p.pct;
-            else if (keyLower.includes("objetivos") || keyLower.includes("estrategia")) newScores.objetivos = p.pct;
-            else if (keyLower.includes("métricas") || keyLower.includes("metricas")) newScores.metricas = p.pct;
-            else if (keyLower.includes("desafios")) newScores.desafios = p.pct;
-            else if (keyLower.includes("evolução") || keyLower.includes("evolucao")) newScores.evolucao = p.pct;
+            const val = p.hasScore ? p.pct : fallbackPct;
+            if (keyLower.includes("fluxo")) newScores.fluxo = val;
+            else if (keyLower.includes("arquitetura")) newScores.arquitetura = val;
+            else if (keyLower.includes("objetivos") || keyLower.includes("estrategia")) newScores.objetivos = val;
+            else if (keyLower.includes("métricas") || keyLower.includes("metricas")) newScores.metricas = val;
+            else if (keyLower.includes("desafios")) newScores.desafios = val;
+            else if (keyLower.includes("evolução") || keyLower.includes("evolucao")) newScores.evolucao = val;
           });
         }
         setScores(newScores);
@@ -369,21 +371,6 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
               >
                 ← HUB
               </Link>
-              <button
-                onClick={() => window.print()}
-                title="Salvar como PDF"
-                style={{
-                  background: "transparent",
-                  color: currentSlide === 1 || currentSlide === 16 ? "rgba(255,255,255,0.6)" : "#6B7280",
-                  border: "none",
-                  fontSize: "0.74rem",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  padding: "2px 6px",
-                }}
-              >
-                PDF
-              </button>
               <button
                 onClick={toggleFullscreen}
                 title="Modo Tela Cheia"
