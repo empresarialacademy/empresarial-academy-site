@@ -13,31 +13,37 @@
  * arriscar contraste/legibilidade em telas que não foram revisadas uma a uma.
  */
 :root {
+  --theme-elevation-800: #1D2B3C;
+  --theme-elevation-600: #26384E;
   --ea-navy-950: #0B1119;
   --ea-navy-900: #0F1722;
+  --ea-navy-800: #1D2B3C;
+  --ea-gold-500: #C99A3E;
+  --ea-gold-400: #D8B264;
+}
+
 /* Scrollbar refinada */
 ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 34, 0.05);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(201, 154, 62, 0.35);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 154, 62, 0.6);
+}
+
+/* =====================================================================
+ * Responsividade mobile-first das telas próprias do EA HUB
  * =====================================================================
  *
  * As views custom do hub (EA Marketing Manager, EA ADS, Gerador de
- * Contratos, Sistemas EA) são estilizadas com `style={{...}}`, e estilo
- * inline não aceita media query — não havia como a tela reagir à largura.
- * As propriedades que mudam entre celular e desktop (padding da página,
- * direção dos flex, nº de colunas) foram TIRADAS do inline e vivem só
- * aqui; o que não muda com a largura (cor, borda, fonte) segue inline.
- *
- * Mobile-first: a regra base é a do celular, o desktop entra como
- * progressive enhancement em `min-width`. O corte de 769px casa com o
- * `$breakpoint-s-width: 768px` do próprio Payload (que usa max-width), pra
- * as telas custom virarem "modo celular" junto com o chrome do admin.
- *
- * O chrome do Payload em si (nav, listas, formulários de collection) já é
- * responsivo nativamente — nada aqui mexe nele.
- *
- * Mesmo conjunto de classes existe no EA Post
- * (ea-social-engine/src/app/(payload)/admin/ea-admin-responsive.css). São
- * dois repositórios separados de propósito, então a duplicação é
- * deliberada: ao mudar uma regra aqui, checar se a de lá acompanha.
+ * Contratos, Sistemas EA) são estilizadas com classes dedicadas e flexbox/grid.
  */
 
 /* Wrapper de conteúdo de view custom: 2rem de padding lateral comem 1/3 de
