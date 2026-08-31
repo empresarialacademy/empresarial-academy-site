@@ -795,55 +795,127 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
             </div>
           )}
 
-          {/* SLIDE 4 · DETALHAMENTO DOS 6 PILARES (ESPAÇAMENTO AMPLO & PREENCHIMENTO COMPLETO) */}
+          {/* SLIDE 4 · DETALHAMENTO DOS 6 PILARES (OPÇÃO 3: INFOGRÁFICO CENTRALIZADO GESTÃO 360 COM 6 NÓS CONECTADOS) */}
           {currentSlide === 4 && (
-            <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
               <SlideHeader
                 eyebrow="Aprofundamento Metodológico"
                 title="Detalhamento dos 6 Pilares da Gestão 360"
-                subtitle="O que cada pilar transforma na prática para garantir sustentação e escala do seu negócio"
-                flag="Pilares em Detalhe"
+                subtitle="Um sistema integrado de governança onde cada pilar sustenta e impulsiona o outro"
+                flag="Sistema Integrado"
               />
               <div
                 style={{
                   flex: 1,
                   display: "grid",
-                  gridTemplateColumns: "repeat(3, 1fr)",
-                  gridTemplateRows: "repeat(2, 1fr)",
-                  gap: "2.2vh 1.8vw",
+                  gridTemplateColumns: "1fr 240px 1fr",
+                  gap: "1.4vw",
+                  alignItems: "center",
                   minHeight: 0,
+                  padding: "0.5vh 0",
                 }}
               >
-                <PillarDetailCard
-                  num="01"
-                  name="Fluxo de Alta Performance"
-                  desc="Mapeamento e padronização dos processos críticos da operação. Instalação de rituais semanais de alinhamento e redução sistemática da dependência da presença do dono."
-                />
-                <PillarDetailCard
-                  num="02"
-                  name="Arquitetura do Crescimento"
-                  desc="Estruturação de papéis, organograma inteligente e alçadas de decisão delegadas. Preparação da estrutura física e operacional para suportar escala sem estrangulamento."
-                />
-                <PillarDetailCard
-                  num="03"
-                  name="Objetivos Estratégicos"
-                  desc="A visão do fundador desdobrada em metas executáveis por setor (OKRs). Definição de donos claros, prazos tangíveis e acompanhamento sistemático de avanço."
-                />
-                <PillarDetailCard
-                  num="04"
-                  name="Métricas de Sucesso"
-                  desc="Painel de indicadores de sanidade: separação entre DRE e Fluxo de Caixa, análise de margem real, regra 80/20 de produtos/clientes e decisão orientada a dados."
-                />
-                <PillarDetailCard
-                  num="05"
-                  name="Gestão de Desafios"
-                  desc="Formação de liderança intermediária, protocolos de resolução de conflitos, gestão de pessoas sob pressão e desenho de contingência financeira/operacional para crises."
-                />
-                <PillarDetailCard
-                  num="06"
-                  name="Evolução Constante"
-                  desc="Rituais contínuos de inovação, capacitação técnica da equipe, leitura ativa de movimentos da concorrência e testes rápidos de novos canais sem risco desnecessário."
-                />
+                {/* COLUNA ESQUERDA (3 Pilares de Estruturação & Operação) */}
+                <div style={{ display: "flex", flexDirection: "column", gap: "1.4vh", height: "100%", justifyContent: "space-between" }}>
+                  <PillarNodeCard
+                    num="01"
+                    name="Fluxo de Alta Performance"
+                    tag="Processos & Rituais"
+                    desc="Mapeamento dos processos críticos, cadência semanal de alinhamento e autonomia para a operação rodar sem depender do dono."
+                    align="right"
+                  />
+                  <PillarNodeCard
+                    num="02"
+                    name="Arquitetura do Crescimento"
+                    tag="Pessoas & Organograma"
+                    desc="Organograma funcional inteligente, definição de papéis e alçadas claras para sustentar o crescimento sem sobrecarga."
+                    align="right"
+                  />
+                  <PillarNodeCard
+                    num="03"
+                    name="Objetivos Estratégicos"
+                    tag="Metas & OKRs"
+                    desc="Desdobramento da visão do sócio em metas executáveis por área, com donos definidos, indicadores e prazos de entrega."
+                    align="right"
+                  />
+                </div>
+
+                {/* CENTRO (Núcleo Gestão 360 com Conectores Radiais SVG) */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    position: "relative",
+                    height: "100%",
+                  }}
+                >
+                  <svg viewBox="0 0 240 320" style={{ width: "100%", height: "100%" }}>
+                    {/* Linhas conectoras da esquerda para o centro */}
+                    <line x1="0" y1="52" x2="65" y2="135" stroke="#C1A160" strokeWidth="2" strokeDasharray="4 3" />
+                    <circle cx="0" cy="52" r="4.5" fill="#C1A160" />
+
+                    <line x1="0" y1="160" x2="60" y2="160" stroke="#C1A160" strokeWidth="2" strokeDasharray="4 3" />
+                    <circle cx="0" cy="160" r="4.5" fill="#C1A160" />
+
+                    <line x1="0" y1="268" x2="65" y2="185" stroke="#C1A160" strokeWidth="2" strokeDasharray="4 3" />
+                    <circle cx="0" cy="268" r="4.5" fill="#C1A160" />
+
+                    {/* Linhas conectoras da direita para o centro */}
+                    <line x1="240" y1="52" x2="175" y2="135" stroke="#C1A160" strokeWidth="2" strokeDasharray="4 3" />
+                    <circle cx="240" cy="52" r="4.5" fill="#C1A160" />
+
+                    <line x1="240" y1="160" x2="180" y2="160" stroke="#C1A160" strokeWidth="2" strokeDasharray="4 3" />
+                    <circle cx="240" cy="160" r="4.5" fill="#C1A160" />
+
+                    <line x1="240" y1="268" x2="175" y2="185" stroke="#C1A160" strokeWidth="2" strokeDasharray="4 3" />
+                    <circle cx="240" cy="268" r="4.5" fill="#C1A160" />
+
+                    {/* Anel Externo Dourado com Glow */}
+                    <circle cx="120" cy="160" r="68" fill="#121D28" stroke="#C1A160" strokeWidth="3" />
+                    <circle cx="120" cy="160" r="61" fill="none" stroke="rgba(193,161,96,0.3)" strokeWidth="1" strokeDasharray="3 3" />
+
+                    {/* Conteúdo do Hub Central */}
+                    <text x="120" y="132" textAnchor="middle" fill="#D7C089" fontFamily="Montserrat, Arial, sans-serif" fontWeight="900" fontSize="15">
+                      ◆ EA ◆
+                    </text>
+                    <text x="120" y="153" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontWeight="800" fontSize="13" letterSpacing="0.8">
+                      MÉTODO
+                    </text>
+                    <text x="120" y="172" textAnchor="middle" fill="#C1A160" fontFamily="Montserrat, Arial, sans-serif" fontWeight="900" fontSize="15" letterSpacing="1">
+                      GESTÃO 360
+                    </text>
+                    <text x="120" y="193" textAnchor="middle" fill="#B9C2CC" fontFamily="Open Sans, Arial, sans-serif" fontWeight="600" fontSize="9.5">
+                      Governança Integrada
+                    </text>
+                  </svg>
+                </div>
+
+                {/* COLUNA DIREITA (3 Pilares de Controle, Liderança & Inovação) */}
+                <div style={{ display: "flex", flexDirection: "column", gap: "1.4vh", height: "100%", justifyContent: "space-between" }}>
+                  <PillarNodeCard
+                    num="04"
+                    name="Métricas de Sucesso"
+                    tag="DRE & Margem Real"
+                    desc="Painel de indicadores de sanidade: fluxo de caixa separado de resultado contábil, margem real por produto e decisões por dados."
+                    align="left"
+                  />
+                  <PillarNodeCard
+                    num="05"
+                    name="Gestão de Desafios"
+                    tag="Liderança & Riscos"
+                    desc="Formação de liderança intermediária, protocolos de resolução de conflitos internos e desenho de planos de contingência."
+                    align="left"
+                  />
+                  <PillarNodeCard
+                    num="06"
+                    name="Evolução Constante"
+                    tag="Inovação & Futuro"
+                    desc="Rituais contínuos de inovação, capacitação técnica da equipe e testes rápidos de novos canais sem risco desnecessário."
+                    align="left"
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -1994,30 +2066,77 @@ function SlideHeader({
   );
 }
 
-function PillarDetailCard({ num, name, desc }: { num: string; name: string; desc: string }) {
+function PillarNodeCard({
+  num,
+  name,
+  tag,
+  desc,
+  align = "left",
+}: {
+  num: string;
+  name: string;
+  tag: string;
+  desc: string;
+  align?: "left" | "right";
+}) {
   return (
     <div
       style={{
         background: "#F6F5F1",
         border: "1px solid #D9DCE1",
-        borderTop: "3px solid #C1A160",
+        borderLeft: align === "left" ? "4px solid #C1A160" : "1px solid #D9DCE1",
+        borderRight: align === "right" ? "4px solid #C1A160" : "1px solid #D9DCE1",
         borderRadius: 6,
-        padding: "2vh 1.6vw",
+        padding: "1.3vh 1.2vw",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
-        gap: 8,
+        gap: 5,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+        transition: "transform 0.2s ease, box-shadow 0.2s ease",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <span style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "1.25rem", color: "#C1A160" }}>
-          {num}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span
+            style={{
+              fontFamily: "Montserrat, Arial, sans-serif",
+              fontWeight: 800,
+              fontSize: "0.85rem",
+              color: "#121D28",
+              background: "#C1A160",
+              padding: "2px 7px",
+              borderRadius: 3,
+            }}
+          >
+            {num}
+          </span>
+          <h4
+            style={{
+              fontFamily: "Montserrat, Arial, sans-serif",
+              fontSize: "clamp(12.5px, 1.05vw, 14.5px)",
+              fontWeight: 700,
+              color: "#1D2B3C",
+              margin: 0,
+            }}
+          >
+            {name}
+          </h4>
+        </div>
+        <span
+          style={{
+            fontSize: "0.72rem",
+            fontWeight: 700,
+            color: "#6B7280",
+            background: "rgba(0,0,0,0.05)",
+            padding: "2px 6px",
+            borderRadius: 3,
+            whiteSpace: "nowrap",
+          }}
+        >
+          {tag}
         </span>
-        <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(13.5px, 1.1vw, 15.5px)", fontWeight: 700, color: "#1D2B3C", margin: 0 }}>
-          {name}
-        </h4>
       </div>
-      <p style={{ fontSize: "clamp(12px, 0.95vw, 13.5px)", color: "#4B5563", lineHeight: 1.55, margin: "6px 0 0" }}>
+      <p style={{ fontSize: "clamp(11px, 0.88vw, 12.5px)", color: "#4B5563", lineHeight: 1.45, margin: 0 }}>
         {desc}
       </p>
     </div>

@@ -1118,6 +1118,7 @@ document.getElementById('entryForm').addEventListener('submit', async (e)=>{
   try {
     const res = await fetch('/api/newsletter', {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         nome, email, whatsapp, instagram, consentimento,
         origem: 'Diagnóstico de Maturidade Empresarial — Início',
@@ -1126,6 +1127,11 @@ document.getElementById('entryForm').addEventListener('submit', async (e)=>{
     });
     if (res.ok) {
       const data = await res.json();
+      if (data.diagnosticId) {
+        entryData.diagnosticId = data.diagnosticId;
+      }
+    }
+  } catch (err) {
     console.error('Falha ao registrar início do diagnóstico:', err);
   }
 
@@ -1144,25 +1150,48 @@ document.getElementById('btnCalc').addEventListener('click', ()=>{
   let allAnswered = true;
   let firstUnansweredEl = null;
   const pillarScores = {};
+  
   // Limpar destaques anteriores
   document.querySelectorAll('.question').forEach(q => q.classList.remove('question-unanswered'));
-    pillar.questions.forEach((q,i)=>{
+
+  PILLARS.forEach(pillar => {
+    let sum = 0;
+    let count = 0;
+    pillar.questions.forEach((q, i) => {
       const name = `${pillar.id}_${i}`;
       const val = formData.get(name);
-      if(!val){
+      if (!val) {
         allAnswered = false;
-    pillarScores[pillar.id] = {pct: Math.max(pct,0), name: pillar.name, color: pillar.color};
+        const qEl = document.querySelector(`input[name="${name}"]`)?.closest('.question');
+        if (qEl) {
+          qEl.classList.add('question-unanswered');
+          if (!firstUnansweredEl) firstUnansweredEl = qEl;
+        }
+      } else {
+        sum += parseInt(val, 10);
+        count++;
+      }
+    });
+    const maxScore = pillar.questions.length * 5;
+    const minScore = pillar.questions.length * 1;
+    const pct = Math.round(((sum - minScore) / (maxScore - minScore)) * 100);
+    pillarScores[pillar.id] = { pct: Math.max(pct, 0), name: pillar.name, color: pillar.color };
   });
 
   const hint = document.getElementById('hint');
-  if(!allAnswered){
+  if (!allAnswered) {
     hint.style.display = 'block';
     if (firstUnansweredEl) {
       firstUnansweredEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else {
       hint.scrollIntoView({ behavior: 'smooth' });
+    }
+    return;
+  }
+  hint.style.display = 'none';
+
   const overallPct = Math.round(
-    Object.values(pillarScores).reduce((a,b)=>a+b.pct,0) / PILLARS.length
+    Object.values(pillarScores).reduce((a, b) => a + b.pct, 0) / PILLARS.length
   );
 
   pendingPillarScores = pillarScores;
