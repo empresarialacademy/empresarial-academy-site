@@ -190,17 +190,26 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
   }
 
   return (
-    <div
-      style={{
-        margin: "calc(var(--gutter-h, 60px) * -1) calc(var(--gutter-h, 60px) * -1) calc(var(--base, 20px) * -1)",
-        minHeight: "calc(100vh - 60px)",
-        background: `
-          radial-gradient(900px 500px at 12% 0%, rgba(193,161,96,0.10) 0%, rgba(193,161,96,0) 55%),
-          radial-gradient(700px 500px at 92% 15%, rgba(61,92,128,0.22) 0%, rgba(61,92,128,0) 55%),
-          linear-gradient(180deg, #1D2B3C 0%, #17212E 420px, #F6F5F1 420px, #F6F5F1 100%)
-        `,
-      }}
-    >
+    <div>
+      {/* Fundo decorativo — fixed + z-index negativo, de propósito: não dá
+          pra saber em código o padding exato ("gutter") que o template
+          default do Payload aplica ao redor da view (varia por breakpoint,
+          via variável CSS interna --gutter-h), então em vez de tentar
+          cancelar esse padding com margem negativa (frágil, quebra em
+          telas diferentes), o fundo cobre a viewport inteira por trás de
+          tudo e o conteúdo flui normalmente dentro do espaço do Payload. */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: -1,
+          background: `
+            radial-gradient(900px 500px at 12% 0%, rgba(193,161,96,0.10) 0%, rgba(193,161,96,0) 55%),
+            radial-gradient(700px 500px at 92% 15%, rgba(61,92,128,0.22) 0%, rgba(61,92,128,0) 55%),
+            linear-gradient(180deg, #1D2B3C 0%, #17212E 420px, #F6F5F1 420px, #F6F5F1 100%)
+          `,
+        }}
+      />
       <style>{`
         .ea-hub-card {
           display: block; text-decoration: none; color: inherit;
@@ -223,7 +232,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
         .ea-hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
       `}</style>
 
-      <header style={{ padding: "2.75rem 2.5rem 2.5rem", display: "flex", alignItems: "center", gap: "1.5rem" }}>
+      <header style={{ padding: "0.5rem 0 2rem", display: "flex", alignItems: "center", gap: "1.5rem" }}>
         <SystemLogo systemName="Hub" size={84} glow />
         <div>
           <h1 style={{ margin: 0, color: "#fff", fontFamily: "Montserrat, Arial, sans-serif", fontSize: "1.6rem" }}>
@@ -235,7 +244,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
         </div>
       </header>
 
-      <div style={{ padding: "0 2.5rem 3rem", display: "grid", gap: "2.25rem" }}>
+      <div style={{ display: "grid", gap: "2.25rem", paddingBottom: "1.5rem" }}>
         <Section title="Inteligência Artificial">
           <CardGrid cards={[secretariaCard]} />
         </Section>
