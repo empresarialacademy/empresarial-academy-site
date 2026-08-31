@@ -44,16 +44,12 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     ?? (user as { email?: string }).email
     ?? "";
 
-  const [adCampaigns, emailCampaigns, emailSegments, leads, diagnosticLeads, contracts, systemLinksRes] =
+  const [adCampaigns, emailCampaigns, emailSegments, leads, contracts, systemLinksRes] =
     await Promise.all([
       payload.count({ collection: "ad-campaigns" }),
       payload.count({ collection: "email-campaigns" }),
       payload.count({ collection: "email-segments" }),
       payload.count({ collection: "leads" }),
-      payload.count({
-        collection: "leads",
-        where: { source: { equals: "Diagnóstico de Maturidade Empresarial" } },
-      }),
       payload.count({ collection: "contracts" }),
       payload.find({ collection: "system-links", limit: 100, depth: 0, sort: "order" }),
     ]);
@@ -109,14 +105,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
       stat: "Abrir ferramenta pública ↗",
     },
     {
-      title: "Diagnósticos Realizados",
-      description:
-        "Base de diagnósticos concluídos pelos clientes com ID único, pontuação geral, notas por pilar, faturamento, cargo e dados para consultoria.",
-      href: "/eahub/collections/leads",
-      stat: `${diagnosticLeads.totalDocs} diagnóstico(s) (${leads.totalDocs} leads no total)`,
-    },
-    {
-      title: "Apresentação Comercial DME",
+      title: "Apresentação Comercial Gestão 360",
       description:
         "Deck interativo 16:9 personalizado para reuniões de fechamento — basta digitar o ID do DME para carregar os dados e o plano de ação do cliente.",
       href: "/eahub/apresentacao",
@@ -161,10 +150,10 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
   ];
 
   const emailCards: Card[] = [
+    { title: "EA Leads", description: "Base unificada de todos os leads captados por DME, WhatsApp, formulários, e-mail e materiais.", href: "/eahub/collections/leads", stat: `${leads.totalDocs} lead(s)` },
     { title: "Campanhas de e-mail", description: "Disparos manuais para um segmento de leads.", href: "/eahub/collections/email-campaigns", stat: `${emailCampaigns.totalDocs} campanha(s)` },
     { title: "Segmentos", description: "Critérios de seleção de leads (origem, pilar, score).", href: "/eahub/collections/email-segments", stat: `${emailSegments.totalDocs} segmento(s)` },
     { title: "Envios", description: "Histórico de e-mails enviados (nutrição, alertas, campanhas).", href: "/eahub/collections/email-logs" },
-    { title: "Base de Leads", description: "Base unificada de contatos — origem, diagnóstico, consentimento e resultado comercial.", href: "/eahub/collections/leads", stat: `${leads.totalDocs} lead(s)` },
   ];
 
   /** Regras automáticas ativas (12/08/2026) — vivem no código

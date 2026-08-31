@@ -9,13 +9,13 @@ import { generateDiagnosticId } from "@/lib/diagnostic-id";
  */
 export const Leads: CollectionConfig = {
   slug: "leads",
-  labels: { singular: "Lead", plural: "Leads" },
+  labels: { singular: "EA Lead", plural: "EA Leads" },
   defaultSort: "-createdAt",
   admin: {
     useAsTitle: "email",
     defaultColumns: ["name", "whatsapp", "instagram", "email", "diagnosticId", "company", "source", "createdAt"],
     group: "Captação",
-    description: "Base unificada de contatos e diagnósticos de maturidade empresarial captados pelo site.",
+    description: "Base unificada de todos os leads e diagnósticos de maturidade empresarial captados por DME, WhatsApp, formulários, e-mail e demais canais.",
   },
   access: {
     // Leitura/gestão só para usuários do admin. A captação pelo site cria via
