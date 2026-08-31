@@ -2,8 +2,9 @@ import type { AdminViewServerProps } from "payload";
 import Link from "next/link";
 import { SystemLogo } from "@/components/admin/brand/SystemLogo";
 import { isBasicAuthProtectedPath } from "@/lib/basic-auth-protected-paths";
-
-const GOLD = "#C99A3E";
+import { EaHubThemeWrapper } from "./EaHubThemeWrapper";
+import { EaHubKpiOverview } from "./EaHubKpiOverview";
+import { EaHubAlertsBanner } from "./EaHubAlertsBanner";
 
 type Card = {
   title: string;
@@ -22,18 +23,6 @@ type SystemLinkDoc = {
   order?: number | null;
 };
 
-/**
- * "EA Marketing Manager" — HUB de sistemas da EA (definição do Thiago,
- * 2026-07-23): links de todos os sistemas criados + gestão de conteúdo do
- * site + e-mail marketing. O EA ADS Manager é apartado, mas a origem dele é
- * este hub. Os cards de "Sistemas EA" vêm da coleção `system-links` — o
- * Thiago adiciona sistemas novos por lá, sem código.
- *
- * Visual redesenhado em 31/08/2026 — pedido explícito do Thiago: mesmo
- * tratamento de efeito da tela de login (fundo navy com glow atmosférico,
- * cards em glassmorphism, sombra dourada), "totalmente diferente" do
- * padrão flat anterior. Nenhuma consulta de dados mudou, só a apresentação.
- */
 export async function EaMarketingManagerView({ payload, initPageResult }: AdminViewServerProps) {
   const user = initPageResult?.req?.user;
   if (!user) {
@@ -44,15 +33,36 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     ?? (user as { email?: string }).email
     ?? "";
 
-  const [adCampaigns, emailCampaigns, emailSegments, leads, contracts, systemLinksRes] =
-    await Promise.all([
-      payload.count({ collection: "ad-campaigns" }),
-      payload.count({ collection: "email-campaigns" }),
-      payload.count({ collection: "email-segments" }),
-      payload.count({ collection: "leads" }),
-      payload.count({ collection: "contracts" }),
-      payload.find({ collection: "system-links", limit: 100, depth: 0, sort: "order" }),
-    ]);
+  const [
+    adCampaigns,
+    emailCampaigns,
+    emailSegments,
+    leads,
+    dmeLeads,
+    contracts,
+    signedContracts,
+    pendingContracts,
+    systemLinksRes,
+  ] = await Promise.all([
+    payload.count({ collection: "ad-campaigns" }).catch(() => ({ totalDocs: 0 })),
+    payload.count({ collection: "email-campaigns" }).catch(() => ({ totalDocs: 0 })),
+    payload.count({ collection: "email-segments" }).catch(() => ({ totalDocs: 0 })),
+    payload.count({ collection: "leads" }).catch(() => ({ totalDocs: 0 })),
+    payload.count({
+      collection: "leads",
+      where: { origin: { equals: "diagnostico-maturidade" } },
+    }).catch(() => ({ totalDocs: 0 })),
+    payload.count({ collection: "contracts" }).catch(() => ({ totalDocs: 0 })),
+    payload.count({
+      collection: "contracts",
+      where: { status: { equals: "signed" } },
+    }).catch(() => ({ totalDocs: 0 })),
+    payload.count({
+      collection: "contracts",
+      where: { status: { equals: "sent" } },
+    }).catch(() => ({ totalDocs: 0 })),
+    payload.find({ collection: "system-links", limit: 100, depth: 0, sort: "order" }).catch(() => ({ docs: [] })),
+  ]);
 
   // O hub não lista a si mesmo (home /eahub nem a rota antiga /marketing-manager).
   const systemLinks = (systemLinksRes.docs as unknown as SystemLinkDoc[]).filter((l) => {
@@ -169,171 +179,93 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
   }
 
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif", color: "#1D2B3C", padding: "0 0 3rem" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap');
-
-        .ea-hub-shell {
-          max-width: 1400px;
-          margin: 0 auto;
-        }
-        .ea-hub-header {
-          background: #1D2B3C;
-          color: #FFFFFF;
-          border-radius: 14px;
-          border-bottom: 3px solid #C99A3E;
-          padding: 1.5rem 1.75rem;
-          margin-bottom: 2.25rem;
-          display: flex;
-          align-items: center;
-          gap: 1.4rem;
-          box-shadow: 0 4px 16px rgba(29, 43, 60, 0.08);
-        }
-        .ea-hub-header__copy {
-          display: grid;
-          gap: 0.25rem;
-        }
-        .ea-hub-header__eyebrow {
-          margin: 0;
-          color: #C99A3E;
-          font-size: 0.72rem;
-          font-weight: 700;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          font-family: 'Sora', sans-serif;
-        }
-        .ea-hub-header__title {
-          margin: 0;
-          color: #FFFFFF;
-          font-family: 'Sora', sans-serif;
-          font-size: clamp(1.4rem, 2vw, 1.9rem);
-          font-weight: 700;
-          line-height: 1.2;
-          letter-spacing: -0.02em;
-        }
-        .ea-hub-header__subtitle {
-          margin: 0;
-          color: #D7C089;
-          font-size: 0.9rem;
-          line-height: 1.5;
-        }
-        .ea-hub-card {
-          display: flex;
-          flex-direction: column;
-          text-decoration: none;
-          color: inherit;
-          background: #FFFFFF;
-          border: 1px solid #E2DCD0;
-          border-radius: 14px;
-          padding: 1.3rem 1.4rem 1.15rem;
-          box-shadow: 0 2px 6px rgba(29, 43, 60, 0.04);
-          transition: all 0.2s ease-in-out;
-          min-height: 100%;
-        }
-        .ea-hub-card:hover {
-          transform: translateY(-2px);
-          border-color: #C99A3E;
-          box-shadow: 0 8px 24px rgba(29, 43, 60, 0.08);
-        }
-        .ea-hub-card--disabled { opacity: 0.55; cursor: default; }
-        .ea-hub-card--disabled:hover { transform: none; box-shadow: 0 2px 6px rgba(29, 43, 60, 0.04); border-color: #E2DCD0; }
-        .ea-hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.15rem; }
-        .ea-hub-section-title {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 0.95rem;
-          gap: 1rem;
-        }
-        .ea-hub-section-link {
-          font-size: 0.8rem;
-          font-weight: 700;
-          color: #C99A3E;
-          text-decoration: none;
-          transition: all 0.18s ease;
-          display: inline-flex;
-          align-items: center;
-          gap: 0.3rem;
-        }
-        .ea-hub-section-link:hover {
-          color: #A97F2E;
-          text-decoration: underline;
-        }
-        .ea-pulse-dot {
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background: #3F7D58;
-          box-shadow: 0 0 0 0 rgba(63,125,88,0.7);
-          animation: eaPulse 2s infinite;
-        }
-        @keyframes eaPulse {
-          0% { box-shadow: 0 0 0 0 rgba(63,125,88,0.7); }
-          70% { box-shadow: 0 0 0 6px rgba(63,125,88,0); }
-          100% { box-shadow: 0 0 0 0 rgba(63,125,88,0); }
-        }
-      `}</style>
-
-      <div className="ea-hub-shell">
-        <header className="ea-hub-header">
-          <SystemLogo systemName="Hub" size={76} glow />
-          <div className="ea-hub-header__copy">
-            <p className="ea-hub-header__eyebrow">Empresarial Academy · Hub Central</p>
-            <h1 className="ea-hub-header__title">
-              {firstName ? `Olá, ${firstName}.` : "Painel Central EA HUB"}
-            </h1>
-            <p className="ea-hub-header__subtitle">
-              Centro de comando integrado da Empresarial Academy: inteligência artificial, tráfego, campanhas de e-mail, diagnósticos e ecossistema de gestão.
-            </p>
-          </div>
-        </header>
-
-        <div style={{ display: "grid", gap: "2.25rem" }}>
-          <Section title="⚡ Inteligência Artificial & Automação">
-            <CardGrid cards={[secretariaCard, ...socialCards]} />
-          </Section>
-
-          <Section title="🎯 Tráfego Pago & Performance">
-            <CardGrid cards={[adsCard]} />
-          </Section>
-
-          <Section title="✉️ Campanhas de E-mail & Base de Leads">
-            <CardGrid cards={emailCards} />
-          </Section>
-
-          <Section
-            title="📈 Diagnóstico de Maturidade Empresarial & Comercial"
-            action={{ label: "Ver todos os leads do diagnóstico ↗", href: "/eahub/collections/leads" }}
-          >
-            <CardGrid cards={diagnosticCards} />
-          </Section>
-
-          <Section title="🌐 Landing Pages Dedicadas (Google Ads)">
-            <CardGrid cards={landingPageCards} />
-          </Section>
-
-          <Section title="📑 Contratos & Formalização Jurídica">
-            <CardGrid cards={contractCards} />
-          </Section>
-
-          <Section title="🖼️ Ativos do Site Oficial">
-            <CardGrid cards={contentCards} />
-          </Section>
-
-          <Section
-            title="🔗 Sistemas Integrados do Ecossistema EA"
-            action={{ label: "Gerenciar links ⚙", href: "/eahub/collections/system-links" }}
-          >
-            <CardGrid cards={systemCards} />
-          </Section>
-
-          <Section title="🖥️ Torre de Controle & Governança">
-            <CardGrid cards={infraCards} />
-          </Section>
+    <EaHubThemeWrapper userName={firstName}>
+      <header
+        style={{
+          background: "#1D2B3C",
+          color: "#FFFFFF",
+          borderRadius: 16,
+          borderBottom: "3px solid #C99A3E",
+          padding: "1.6rem 1.85rem",
+          marginBottom: "2rem",
+          display: "flex",
+          alignItems: "center",
+          gap: "1.5rem",
+          boxShadow: "0 4px 20px rgba(29, 43, 60, 0.12)",
+        }}
+      >
+        <SystemLogo systemName="Hub" size={78} glow />
+        <div style={{ display: "grid", gap: "0.25rem" }}>
+          <p style={{ margin: 0, color: "#C99A3E", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "'Sora', sans-serif" }}>
+            Empresarial Academy · Hub Central
+          </p>
+          <h1 style={{ margin: 0, color: "#FFFFFF", fontFamily: "'Sora', sans-serif", fontSize: "clamp(1.4rem, 2vw, 1.9rem)", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.02em" }}>
+            {firstName ? `Olá, ${firstName}.` : "Painel Central EA HUB"}
+          </h1>
+          <p style={{ margin: 0, color: "#D7C089", fontSize: "0.9rem", lineHeight: 1.5 }}>
+            Centro de comando integrado da Empresarial Academy: inteligência artificial, tráfego, campanhas de e-mail, diagnósticos e ecossistema de gestão.
+          </p>
         </div>
+      </header>
+
+      {/* Quadro de Pendências & Notificações Urgentes */}
+      <EaHubAlertsBanner pendingContractsCount={pendingContracts.totalDocs} />
+
+      {/* Faixa de KPIs em Tempo Real & Gráfico de Maturidade DME */}
+      <EaHubKpiOverview
+        totalLeads={leads.totalDocs}
+        dmeLeads={dmeLeads.totalDocs}
+        totalEmails={emailCampaigns.totalDocs}
+        activeAds={adCampaigns.totalDocs}
+        totalContracts={contracts.totalDocs}
+        signedContracts={signedContracts.totalDocs}
+      />
+
+      {/* Seções Modulares com Micro-interações */}
+      <div style={{ display: "grid", gap: "2.25rem" }}>
+        <Section title="⚡ Inteligência Artificial & Automação">
+          <CardGrid cards={[secretariaCard, ...socialCards]} />
+        </Section>
+
+        <Section title="🎯 Tráfego Pago & Performance">
+          <CardGrid cards={[adsCard]} />
+        </Section>
+
+        <Section title="✉️ Campanhas de E-mail & Base de Leads">
+          <CardGrid cards={emailCards} />
+        </Section>
+
+        <Section
+          title="📈 Diagnóstico de Maturidade Empresarial & Comercial"
+          action={{ label: "Ver todos os leads do diagnóstico ↗", href: "/eahub/collections/leads" }}
+        >
+          <CardGrid cards={diagnosticCards} />
+        </Section>
+
+        <Section title="🌐 Landing Pages Dedicadas (Google Ads)">
+          <CardGrid cards={landingPageCards} />
+        </Section>
+
+        <Section title="📑 Contratos & Formalização Jurídica">
+          <CardGrid cards={contractCards} />
+        </Section>
+
+        <Section title="🖼️ Ativos do Site Oficial">
+          <CardGrid cards={contentCards} />
+        </Section>
+
+        <Section
+          title="🔗 Sistemas Integrados do Ecossistema EA"
+          action={{ label: "Gerenciar links ⚙", href: "/eahub/collections/system-links" }}
+        >
+          <CardGrid cards={systemCards} />
+        </Section>
+
+        <Section title="🖥️ Torre de Controle & Governança">
+          <CardGrid cards={infraCards} />
+        </Section>
       </div>
-    </div>
+    </EaHubThemeWrapper>
   );
 }
 
@@ -348,7 +280,7 @@ function Section({
 }) {
   return (
     <section>
-      <div className="ea-hub-section-title">
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.95rem", gap: "1rem" }}>
         <h2
           style={{
             margin: 0,
@@ -356,7 +288,7 @@ function Section({
             fontWeight: 800,
             letterSpacing: "0.06em",
             textTransform: "uppercase",
-            color: "#1D2B3C",
+            color: "var(--ea-text-primary, #1D2B3C)",
             fontFamily: "'Sora', sans-serif",
             display: "flex",
             alignItems: "center",
@@ -366,7 +298,18 @@ function Section({
           {title}
         </h2>
         {action ? (
-          <Link href={action.href} className="ea-hub-section-link">
+          <Link
+            href={action.href}
+            style={{
+              fontSize: "0.8rem",
+              fontWeight: 700,
+              color: "#C99A3E",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.3rem",
+            }}
+          >
             {action.label}
           </Link>
         ) : null}
@@ -384,11 +327,11 @@ function CardGrid({ cards }: { cards: Card[] }) {
         const hasLiveStat = card.stat?.includes("●");
         const content = (
           <>
-            <strong style={{ fontSize: "1.05rem", color: "#1D2B3C", fontFamily: "'Sora', sans-serif", fontWeight: 700, letterSpacing: "-0.01em" }}>
+            <strong style={{ fontSize: "1.05rem", fontFamily: "'Sora', sans-serif", fontWeight: 700, letterSpacing: "-0.01em" }}>
               {card.title}
             </strong>
             {card.description ? (
-              <p style={{ margin: "0.45rem 0 0.85rem", fontSize: "0.88rem", color: "#4A5568", lineHeight: 1.55, flexGrow: 1 }}>
+              <p style={{ margin: "0.45rem 0 0.85rem", fontSize: "0.88rem", lineHeight: 1.55, flexGrow: 1 }}>
                 {card.description}
               </p>
             ) : null}
@@ -403,9 +346,9 @@ function CardGrid({ cards }: { cards: Card[] }) {
                     fontWeight: 700,
                     padding: "0.25rem 0.65rem",
                     borderRadius: 20,
-                    background: hasLiveStat ? "rgba(63,125,88,0.12)" : "rgba(201,154,62,0.12)",
+                    background: hasLiveStat ? "rgba(63,125,88,0.14)" : "rgba(201,154,62,0.14)",
                     border: `1px solid ${hasLiveStat ? "rgba(63,125,88,0.35)" : "rgba(201,154,62,0.35)"}`,
-                    color: hasLiveStat ? "#2B6E44" : "#8C6518",
+                    color: hasLiveStat ? "#2E7D5B" : "#C99A3E",
                   }}
                 >
                   {hasLiveStat ? <span className="ea-pulse-dot" /> : null}
