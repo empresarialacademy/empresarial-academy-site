@@ -13,8 +13,42 @@
  * arriscar contraste/legibilidade em telas que não foram revisadas uma a uma.
  */
 :root {
-  --theme-elevation-800: #1d2b3c;
-  --theme-elevation-600: #2a3d54;
+  --ea-navy-950: #0B1119;
+  --ea-navy-900: #0F1722;
+  --ea-navy-800: #1D2B3C;
+  --ea-navy-700: #26384E;
+  --ea-navy-600: #334A66;
+  --ea-gold-500: #C99A3E;
+  --ea-gold-400: #D8B264;
+  --ea-gold-300: #E5CA8C;
+  --ea-gold-glow: rgba(201, 154, 62, 0.18);
+  --ea-gold-glow-subtle: rgba(201, 154, 62, 0.08);
+  --ea-surface-dark: rgba(255, 255, 255, 0.04);
+  --ea-surface-dark-hover: rgba(255, 255, 255, 0.075);
+  --ea-border-subtle: rgba(201, 154, 62, 0.18);
+  --ea-border-hover: rgba(201, 154, 62, 0.42);
+  --ea-success: #3F7D58;
+  --ea-warning: #B5482B;
+  --ea-info: #6B5CA5;
+
+  --theme-elevation-800: #1D2B3C;
+  --theme-elevation-600: #26384E;
+}
+
+/* Scrollbar refinada */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 34, 0.6);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(201, 154, 62, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 154, 62, 0.55);
 }
 
 /* =====================================================================

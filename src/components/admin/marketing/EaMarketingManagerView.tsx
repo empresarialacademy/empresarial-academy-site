@@ -177,39 +177,36 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
   }
 
   return (
-    <div>
-      {/* Fundo decorativo — fixed + z-index negativo, de propósito: não dá
-          pra saber em código o padding exato ("gutter") que o template
-          default do Payload aplica ao redor da view (varia por breakpoint,
-          via variável CSS interna --gutter-h), então em vez de tentar
-          cancelar esse padding com margem negativa (frágil, quebra em
-          telas diferentes), o fundo cobre a viewport inteira por trás de
-          tudo e o conteúdo flui normalmente dentro do espaço do Payload. */}
+    <div style={{ minHeight: "100vh", position: "relative", color: "#F4F1E9", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}>
+      {/* Fundo imersivo executivo com iluminação atmosférica dupla */}
       <div
         style={{
           position: "fixed",
           inset: 0,
           zIndex: -1,
           background: `
-            radial-gradient(900px 500px at 12% 0%, rgba(193,161,96,0.10) 0%, rgba(193,161,96,0) 55%),
-            radial-gradient(700px 500px at 92% 15%, rgba(61,92,128,0.22) 0%, rgba(61,92,128,0) 55%),
-            linear-gradient(180deg, #1D2B3C 0%, #17212E 420px, #FFFFFF 420px, #FFFFFF 100%)
+            radial-gradient(1100px 650px at 10% 0%, rgba(201,154,62,0.12) 0%, rgba(201,154,62,0) 60%),
+            radial-gradient(900px 600px at 90% 15%, rgba(38,56,78,0.35) 0%, rgba(38,56,78,0) 60%),
+            radial-gradient(1000px 800px at 50% 90%, rgba(201,154,62,0.06) 0%, rgba(201,154,62,0) 60%),
+            linear-gradient(180deg, #131E2B 0%, #0F1722 45%, #080D14 100%)
           `,
         }}
       />
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap');
+
         .ea-hub-shell {
-          max-width: 1380px;
+          max-width: 1400px;
           margin: 0 auto;
-          padding: 0 0 3rem;
+          padding: 0.5rem 0.5rem 4rem;
         }
         .ea-hub-header {
           display: flex;
           align-items: center;
-          gap: 1.4rem;
-          padding: 1.2rem 0 2.2rem;
-          border-bottom: 1px solid rgba(255,255,255,0.08);
-          margin-bottom: 2rem;
+          gap: 1.5rem;
+          padding: 1.5rem 0 2rem;
+          border-bottom: 1px solid rgba(201,154,62,0.18);
+          margin-bottom: 2.25rem;
         }
         .ea-hub-header__copy {
           display: grid;
@@ -217,132 +214,160 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
         }
         .ea-hub-header__eyebrow {
           margin: 0;
-          color: rgba(255,255,255,0.72);
+          color: #C99A3E;
           font-size: 0.72rem;
           font-weight: 700;
-          letter-spacing: 0.1em;
+          letter-spacing: 0.12em;
           text-transform: uppercase;
+          font-family: 'Sora', sans-serif;
         }
         .ea-hub-header__title {
           margin: 0;
-          color: #fff;
-          font-family: Montserrat, Arial, sans-serif;
-          font-size: clamp(1.5rem, 2vw, 2.2rem);
+          color: #FFFFFF;
+          font-family: 'Sora', sans-serif;
+          font-size: clamp(1.6rem, 2.2vw, 2.3rem);
+          font-weight: 700;
           line-height: 1.2;
           letter-spacing: -0.02em;
         }
         .ea-hub-header__subtitle {
           margin: 0;
-          color: rgba(217,220,225,0.9);
-          font-size: 0.96rem;
+          color: #A0ABC0;
+          font-size: 0.94rem;
           line-height: 1.55;
-          max-width: 760px;
+          max-width: 800px;
         }
         .ea-hub-card {
-          display: block; text-decoration: none; color: inherit;
-          background: linear-gradient(180deg, rgba(255,255,255,0.085) 0%, rgba(255,255,255,0.05) 100%);
-          border: 1px solid rgba(201,154,62,0.18);
+          display: flex;
+          flex-direction: column;
+          text-decoration: none;
+          color: inherit;
+          background: linear-gradient(180deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.025) 100%);
+          border: 1px solid rgba(201,154,62,0.16);
           border-radius: 16px;
-          padding: 1.15rem 1.3rem 1rem;
-          backdrop-filter: blur(18px);
-          -webkit-backdrop-filter: blur(18px);
-          box-shadow: 0 16px 32px -18px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08);
-          transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+          padding: 1.35rem 1.4rem 1.2rem;
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          box-shadow: 0 10px 28px -10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+          transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
           min-height: 100%;
+          position: relative;
+          overflow: hidden;
+        }
+        .ea-hub-card::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0; height: 2px;
+          background: linear-gradient(90deg, transparent, rgba(201,154,62,0.3), transparent);
+          opacity: 0;
+          transition: opacity 0.22s ease;
         }
         .ea-hub-card:hover {
-          transform: translateY(-2px);
-          border-color: rgba(201,154,62,0.42);
-          box-shadow: 0 18px 40px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,154,62,0.12), 0 0 18px rgba(201,154,62,0.08);
+          transform: translateY(-3px);
+          border-color: rgba(201,154,62,0.45);
+          background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.035) 100%);
+          box-shadow: 0 18px 40px -12px rgba(0,0,0,0.7), 0 0 24px rgba(201,154,62,0.12), inset 0 1px 0 rgba(255,255,255,0.14);
         }
-        .ea-hub-card--disabled { opacity: 0.62; cursor: default; }
-        .ea-hub-card--disabled:hover { transform: none; box-shadow: 0 16px 32px -18px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08); border-color: rgba(201,154,62,0.18); }
-        .ea-hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+        .ea-hub-card:hover::before {
+          opacity: 1;
+        }
+        .ea-hub-card--disabled { opacity: 0.55; cursor: default; }
+        .ea-hub-card--disabled:hover { transform: none; box-shadow: 0 10px 28px -10px rgba(0,0,0,0.5); border-color: rgba(201,154,62,0.16); }
+        .ea-hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.15rem; }
         .ea-hub-section-title {
           display: flex;
-          align-items: baseline;
+          align-items: center;
           justify-content: space-between;
-          margin-bottom: 0.9rem;
+          margin-bottom: 0.95rem;
           gap: 1rem;
         }
         .ea-hub-section-link {
           font-size: 0.8rem;
-          color: rgba(255,255,255,0.82);
+          font-weight: 600;
+          color: #C99A3E;
           text-decoration: none;
-          transition: opacity 0.18s ease;
+          transition: all 0.18s ease;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.3rem;
         }
-        .ea-hub-section-link:hover { opacity: 0.9; }
-        .ea-hub-rule-table {
-          overflow-x: auto;
-          border-radius: 16px;
-          border: 1px solid rgba(201,154,62,0.16);
-          background: rgba(255,255,255,0.045);
-          backdrop-filter: blur(18px);
-          -webkit-backdrop-filter: blur(18px);
+        .ea-hub-section-link:hover {
+          color: #E5CA8C;
+          text-decoration: underline;
+        }
+        .ea-pulse-dot {
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: #3F7D58;
+          box-shadow: 0 0 0 0 rgba(63,125,88,0.7);
+          animation: eaPulse 2s infinite;
+        }
+        @keyframes eaPulse {
+          0% { box-shadow: 0 0 0 0 rgba(63,125,88,0.7); }
+          70% { box-shadow: 0 0 0 6px rgba(63,125,88,0); }
+          100% { box-shadow: 0 0 0 0 rgba(63,125,88,0); }
         }
       `}</style>
 
       <div className="ea-hub-shell">
         <header className="ea-hub-header">
-          <SystemLogo systemName="Hub" size={84} glow />
+          <SystemLogo systemName="Hub" size={86} glow />
           <div className="ea-hub-header__copy">
-            <p className="ea-hub-header__eyebrow">Empresarial Academy</p>
+            <p className="ea-hub-header__eyebrow">Empresarial Academy · Hub Central</p>
             <h1 className="ea-hub-header__title">
-              {firstName ? `Olá, ${firstName}.` : "Hub de sistemas da EA"}
+              {firstName ? `Olá, ${firstName}.` : "Painel Central EA HUB"}
             </h1>
             <p className="ea-hub-header__subtitle">
-              Hub de sistemas da Empresarial Academy — conteúdo, e-mail marketing, anúncios, diagnósticos e todas as ferramentas num só lugar.
+              Centro de comando integrado da Empresarial Academy — inteligência artificial, tráfego, campanhas de e-mail, diagnósticos e ecossistema de gestão.
             </p>
           </div>
         </header>
 
-        <div style={{ display: "grid", gap: "2.25rem", paddingBottom: "1.5rem" }}>
-        <Section title="Inteligência Artificial">
-          <CardGrid cards={[secretariaCard]} />
-        </Section>
+        <div style={{ display: "grid", gap: "2.4rem", paddingBottom: "2rem" }}>
+          <Section title="⚡ Inteligência Artificial & Automação">
+            <CardGrid cards={[secretariaCard, ...socialCards]} />
+          </Section>
 
-        <Section title="Anúncios">
-          <CardGrid cards={[adsCard]} />
-        </Section>
+          <Section title="🎯 Tráfego Pago & Performance">
+            <CardGrid cards={[adsCard]} />
+          </Section>
 
-        <Section title="Ativos do site">
-          <CardGrid cards={contentCards} />
-        </Section>
+          <Section title="✉️ Campanhas de E-mail & Base de Leads">
+            <CardGrid cards={emailCards} />
+          </Section>
 
-        <Section title="Landing Pages (Ads)">
-          <CardGrid cards={landingPageCards} />
-        </Section>
+          <Section
+            title="📈 Diagnóstico de Maturidade Empresarial & Comercial"
+            action={{ label: "Ver todos os leads do diagnóstico ↗", href: "/eahub/collections/leads" }}
+          >
+            <CardGrid cards={diagnosticCards} />
+          </Section>
 
-        <Section
-          title="Diagnóstico de Maturidade Empresarial"
-          action={{ label: "Ver todos os diagnósticos", href: "/eahub/collections/leads" }}
-        >
-          <CardGrid cards={diagnosticCards} />
-        </Section>
+          <Section title="🌐 Landing Pages Dedicadas (Google Ads)">
+            <CardGrid cards={landingPageCards} />
+          </Section>
 
-        <Section title="Redes sociais">
-          <CardGrid cards={socialCards} />
-        </Section>
+          <Section title="📑 Contratos & Formalização Jurídica">
+            <CardGrid cards={contractCards} />
+          </Section>
 
-        <Section title="Contratos">
-          <CardGrid cards={contractCards} />
-        </Section>
+          <Section title="🖼️ Ativos do Site Oficial">
+            <CardGrid cards={contentCards} />
+          </Section>
 
-        <Section title="E-mail marketing e leads">
-          <CardGrid cards={emailCards} />
-        </Section>
+          <Section
+            title="🔗 Sistemas Integrados do Ecossistema EA"
+            action={{ label: "Gerenciar links ⚙", href: "/eahub/collections/system-links" }}
+          >
+            <CardGrid cards={systemCards} />
+          </Section>
 
-        <Section
-          title="Sistemas EA"
-          action={{ label: "Gerenciar links", href: "/eahub/collections/system-links" }}
-        >
-          <CardGrid cards={systemCards} />
-        </Section>
-
-        <Section title="Infraestrutura">
-          <CardGrid cards={infraCards} />
-        </Section>
-      </div>
+          <Section title="🖥️ Torre de Controle & Governança">
+            <CardGrid cards={infraCards} />
+          </Section>
+        </div>
       </div>
     </div>
   );
@@ -363,11 +388,15 @@ function Section({
         <h2
           style={{
             margin: 0,
-            fontSize: "0.78rem",
+            fontSize: "0.82rem",
             fontWeight: 700,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
-            color: GOLD,
+            color: "#C99A3E",
+            fontFamily: "'Sora', sans-serif",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.4rem",
           }}
         >
           {title}
@@ -388,19 +417,40 @@ function CardGrid({ cards }: { cards: Card[] }) {
     <div className="ea-hub-grid">
       {cards.map((card) => {
         const className = `ea-hub-card${card.disabled ? " ea-hub-card--disabled" : ""}`;
+        const hasLiveStat = card.stat?.includes("●");
         const content = (
           <>
-            <strong style={{ fontSize: "1rem" }}>{card.title}</strong>
+            <strong style={{ fontSize: "1.02rem", color: "#FFFFFF", fontFamily: "'Sora', sans-serif", fontWeight: 600 }}>
+              {card.title}
+            </strong>
             {card.description ? (
-              <p style={{ margin: "0.4rem 0 0.5rem", fontSize: "0.85rem", color: "#6B7280", lineHeight: 1.5 }}>
+              <p style={{ margin: "0.45rem 0 0.85rem", fontSize: "0.85rem", color: "#9EABC0", lineHeight: 1.55, flexGrow: 1 }}>
                 {card.description}
               </p>
             ) : null}
             {card.stat ? (
-              <span style={{ fontSize: "0.8rem", color: GOLD, fontWeight: 600 }}>{card.stat}</span>
+              <div style={{ marginTop: "auto" }}>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.35rem",
+                    fontSize: "0.74rem",
+                    fontWeight: 600,
+                    padding: "0.22rem 0.65rem",
+                    borderRadius: 20,
+                    background: hasLiveStat ? "rgba(63,125,88,0.18)" : "rgba(201,154,62,0.12)",
+                    border: `1px solid ${hasLiveStat ? "rgba(63,125,88,0.4)" : "rgba(201,154,62,0.28)"}`,
+                    color: hasLiveStat ? "#55BA7F" : "#E5CA8C",
+                  }}
+                >
+                  {hasLiveStat ? <span className="ea-pulse-dot" /> : null}
+                  <span>{card.stat.replace(/^●\s*/, "")}</span>
+                </span>
+              </div>
             ) : null}
             {card.disabled ? (
-              <span style={{ display: "inline-block", fontSize: "0.75rem", color: "#9AA3AF" }}>
+              <span style={{ display: "inline-block", fontSize: "0.75rem", color: "#64748B", marginTop: "auto" }}>
                 Em breve
               </span>
             ) : null}

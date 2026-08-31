@@ -40,39 +40,45 @@ export function PayloadLoginView({ systemName, tagline }: { systemName: string; 
           inset: 0,
           overflowY: "auto",
           background: `
-            radial-gradient(760px 620px at 50% 8%, rgba(193,161,96,0.18) 0%, rgba(193,161,96,0) 60%),
-            radial-gradient(600px 520px at 82% 68%, rgba(61,92,128,0.35) 0%, rgba(61,92,128,0) 60%),
-            radial-gradient(1200px 900px at 50% 0%, #26374C 0%, #1D2B3C 45%, #0E1420 100%)
+            radial-gradient(900px 680px at 50% 5%, rgba(201,154,62,0.14) 0%, rgba(201,154,62,0) 65%),
+            radial-gradient(800px 600px at 85% 75%, rgba(38,56,78,0.45) 0%, rgba(38,56,78,0) 65%),
+            linear-gradient(180deg, #172433 0%, #0F1722 50%, #080D14 100%)
           `,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: "1.75rem",
-          padding: "2rem 1.5rem",
+          gap: "1.5rem",
+          padding: "2.5rem 1.5rem",
+          fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
         }}
       >
-        <style>{`body { background: #fff; }`}</style>
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap');
+          body { background: #080D14; }
+        `}</style>
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             gap: "1.75rem",
-            padding: "3rem 2.75rem",
-            borderRadius: 24,
-            background: "rgba(255,255,255,0.045)",
-            border: "1px solid rgba(193,161,96,0.22)",
-            backdropFilter: "blur(28px)",
-            WebkitBackdropFilter: "blur(28px)",
-            boxShadow: "0 24px 60px -8px rgba(0,0,0,0.5), 0 0 50px rgba(193,161,96,0.08)",
+            padding: "2.75rem 2.5rem 2.25rem",
+            borderRadius: 20,
+            background: "linear-gradient(180deg, rgba(255,255,255,0.065) 0%, rgba(255,255,255,0.035) 100%)",
+            border: "1px solid rgba(201,154,62,0.24)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            boxShadow: "0 28px 64px -12px rgba(0,0,0,0.65), 0 0 40px rgba(201,154,62,0.06), inset 0 1px 0 rgba(255,255,255,0.12)",
             width: "100%",
-            maxWidth: 380,
+            maxWidth: 400,
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.9rem" }}>
-            <SystemLogo systemName={systemName} size={140} glow />
-            <p style={{ margin: 0, fontSize: "0.85rem", color: "#D9DCE1", textAlign: "center" }}>{tagline}</p>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.85rem" }}>
+            <SystemLogo systemName={systemName} size={135} glow />
+            <p style={{ margin: 0, fontSize: "0.85rem", color: "rgba(229,202,140,0.9)", textAlign: "center", fontWeight: 500, letterSpacing: "0.01em" }}>
+              {tagline}
+            </p>
           </div>
           <PayloadLoginForm
             userSlug={userSlug}
@@ -81,9 +87,18 @@ export function PayloadLoginView({ systemName, tagline }: { systemName: string; 
             forgotRoute={`${forgotRoute}${redirectParam}`}
           />
         </div>
-        <p style={{ fontSize: "0.75rem", color: "#6B7280", marginTop: "0.25rem" }}>
-          Empresarial Academy — Conhecimento que Impulsiona
-        </p>
+
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.35rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#8A93A0", fontSize: "0.72rem", fontWeight: 500 }}>
+            <span>🔒</span>
+            <span>Ambiente Seguro & Criptografado</span>
+            <span style={{ opacity: 0.4 }}>•</span>
+            <span style={{ color: "#C99A3E", fontWeight: 600 }}>Empresarial Academy</span>
+          </div>
+          <p style={{ margin: 0, fontSize: "0.7rem", color: "#5B6472" }}>
+            Conhecimento que Impulsiona
+          </p>
+        </div>
       </div>
     );
   };
