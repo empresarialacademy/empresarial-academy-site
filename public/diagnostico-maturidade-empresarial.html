@@ -473,7 +473,43 @@
     font-size:12.5px;
   }
   footer b{color:var(--gold);}
-  .print-row{text-align:center;margin-top:10px;}
+  /* Mobile-first enhancements & touch ergonomics */
+  @media(max-width:640px){
+    .cover{padding:32px 14px 40px;}
+    .cover h1{font-size:23px;line-height:1.25;}
+    .cover p.subtitle{font-size:13px;line-height:1.4;}
+    .wrap{padding:14px 10px 50px;}
+    .card{padding:16px 14px;border-radius:8px;margin-bottom:18px;}
+    .legend{padding:10px;gap:8px;}
+    .legend-item{font-size:11.5px;}
+    .scale{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+    }
+    .scale label{
+      min-height:44px;
+      padding:8px 10px;
+      font-size:12.5px;
+      justify-content:flex-start;
+    }
+    .btn-row button, .btn-row button.secondary{
+      width:100%;
+      margin:6px 0;
+      min-height:48px;
+      font-size:15px;
+    }
+    .gate-card input[type=text], .gate-card input[type=email], .gate-card input[type=tel], .gate-card select{
+      font-size:16px; /* Evita zoom automático em iPhones */
+      padding:11px 12px;
+    }
+    .results-cover{padding:22px 14px;}
+    .results-cover h2{font-size:19px;}
+    .cta-final{padding:22px 14px;}
+    .cta-final .actions{flex-direction:column;width:100%;}
+    .cta-final a.btn-agendar, .cta-final a.btn-whatsapp{width:100%;justify-content:center;min-height:48px;padding:12px 16px;}
+  }
+
   @media print{
     .btn-row, .print-row, button, .cta-final, .back-link{display:none !important;}
     .cover{background:var(--navy) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
@@ -518,6 +554,10 @@
         <label for="entryWhatsapp">WhatsApp *</label>
         <input type="tel" id="entryWhatsapp" name="whatsapp" placeholder="(11) 90000-0000" required>
         <p class="error" id="entryErrWhatsapp">Informe um WhatsApp com DDD.</p>
+      </div>
+      <div class="field">
+        <label for="entryInstagram">Instagram (opcional)</label>
+        <input type="text" id="entryInstagram" name="instagram" placeholder="@seuperfil" autocomplete="off">
       </div>
       <label class="consent">
         <input type="checkbox" id="entryConsent" name="consentimento" required style="margin-top:2px">
@@ -1046,8 +1086,9 @@ document.getElementById('entryForm').addEventListener('submit', async (e)=>{
   const nome = document.getElementById('entryNome').value.trim();
   const email = document.getElementById('entryEmail').value.trim();
   const whatsapp = document.getElementById('entryWhatsapp').value.trim();
+  const rawIg = document.getElementById('entryInstagram') ? document.getElementById('entryInstagram').value.trim() : '';
+  const instagram = rawIg ? (rawIg.startsWith('@') ? rawIg : `@${rawIg}`) : '';
   const consentimento = document.getElementById('entryConsent').checked;
-  const website = document.getElementById('entryWebsite').value.trim();
 
   let ok = true;
   document.getElementById('entryErrNome').style.display = nome.length < 2 ? 'block' : 'none';
@@ -1060,7 +1101,7 @@ document.getElementById('entryForm').addEventListener('submit', async (e)=>{
   if(!consentimento) ok = false;
   if(!ok) return;
 
-  entryData = { nome, email, whatsapp, consentimento };
+  entryData = { nome, email, whatsapp, instagram, consentimento };
 
   const btn = document.getElementById('btnEntrySubmit');
   btn.disabled = true;
@@ -1081,9 +1122,8 @@ document.getElementById('entryForm').addEventListener('submit', async (e)=>{
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        nome, email, whatsapp, consentimento,
+        nome, email, whatsapp, instagram, consentimento,
         origem: 'Diagnóstico de Maturidade Empresarial — Início',
-        website,
         extra: entryExtra
       })
     });
@@ -1147,7 +1187,7 @@ document.getElementById('leadForm').addEventListener('submit', async (e)=>{
   e.preventDefault();
   if(!pendingPillarScores || !entryData) return;
 
-  const { nome, email, whatsapp, consentimento } = entryData;
+  const { nome, email, whatsapp, instagram, consentimento } = entryData;
   const empresa = document.getElementById('leadEmpresa').value.trim();
   const cargo = document.getElementById('leadCargo').value;
   const faturamento = document.getElementById('leadFaturamento').value;
@@ -1193,7 +1233,7 @@ document.getElementById('leadForm').addEventListener('submit', async (e)=>{
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        nome, empresa, email, whatsapp, consentimento,
+        nome, empresa, email, whatsapp, instagram, consentimento,
         origem: 'Diagnóstico de Maturidade Empresarial',
         extra
       })

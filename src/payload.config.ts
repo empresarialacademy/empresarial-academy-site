@@ -145,6 +145,11 @@ export default buildConfig({
           path: "/tv",
           meta: { title: "Torre de Controle" },
         },
+        commercialPresentation: {
+          Component: "@/components/admin/presentation/CommercialPresentationView#CommercialPresentationView",
+          path: "/apresentacao",
+          meta: { title: "Apresentação Comercial DME" },
+        },
       },
     },
   },

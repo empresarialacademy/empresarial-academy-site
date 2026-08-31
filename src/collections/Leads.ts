@@ -13,7 +13,7 @@ export const Leads: CollectionConfig = {
   defaultSort: "-createdAt",
   admin: {
     useAsTitle: "email",
-    defaultColumns: ["name", "whatsapp", "email", "diagnosticBadge", "company", "source", "createdAt"],
+    defaultColumns: ["name", "whatsapp", "email", "diagnosticId", "company", "source", "createdAt"],
     group: "Captação",
     description: "Base unificada de contatos e diagnósticos de maturidade empresarial captados pelo site.",
   },
@@ -26,16 +26,6 @@ export const Leads: CollectionConfig = {
     delete: ({ req }) => Boolean(req.user),
   },
   fields: [
-    {
-      name: "diagnosticBadge",
-      type: "ui",
-      label: "Diagnóstico",
-      admin: {
-        components: {
-          Cell: "@/components/admin/leads/DiagnosticBadgeCell#DiagnosticBadgeCell",
-        },
-      },
-    },
     {
       name: "diagnosticReport",
       type: "ui",
@@ -70,6 +60,9 @@ export const Leads: CollectionConfig = {
         position: "sidebar",
         readOnly: true,
         description: "Código único de identificação do diagnóstico (ex.: EA-DIAG-2026-X8K2M).",
+        components: {
+          Cell: "@/components/admin/leads/DiagnosticBadgeCell#DiagnosticBadgeCell",
+        },
       },
     },
     {
@@ -79,7 +72,7 @@ export const Leads: CollectionConfig = {
       defaultValue: false,
       admin: {
         position: "sidebar",
-        description: "Marcado quando o lead respondeu às perguntas de maturidade empresarial.",
+        description: "Marcado quando o lead iniciou ou respondeu às perguntas de maturidade empresarial.",
       },
     },
     // ——— Preferências de contato (flags) ———
@@ -239,7 +232,7 @@ export const Leads: CollectionConfig = {
         const isDiag = Boolean(
           data.hasDiagnostic ||
           data.diagnosticId ||
-          data.source === "Diagnóstico de Maturidade Empresarial" ||
+          (typeof data.source === "string" && data.source.includes("Diagnóstico")) ||
           (data.details && Boolean(data.details["Maturidade Geral"]))
         );
 

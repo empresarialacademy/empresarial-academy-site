@@ -14,3 +14,4 @@ export function generateDiagnosticId(year?: number): string {
   }
   return `EA-DIAG-${currentYear}-${code}`;
 }
+

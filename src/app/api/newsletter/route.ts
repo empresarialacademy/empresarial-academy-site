@@ -62,6 +62,10 @@ export async function POST(request: Request) {
   }
 
   const isDiagnostic =
+    origem === DIAGNOSTIC_ORIGIN ||
+    origem.includes("Diagnóstico") ||
+    Boolean(extra["Maturidade Geral"]);
+  const hasFinishedDiagnostic =
     origem === DIAGNOSTIC_ORIGIN || Boolean(extra["Maturidade Geral"]);
   const diagnosticId = isDiagnostic ? generateDiagnosticId() : undefined;
 
@@ -93,7 +97,7 @@ export async function POST(request: Request) {
 
   const tasks: Promise<unknown>[] = [
     sendLeadEmail({
-      subject: diagnosticId
+      subject: diagnosticId && hasFinishedDiagnostic
         ? `Novo Diagnóstico de Maturidade [${diagnosticId}] — ${nome}${empresa ? ` (${empresa})` : ""}`
         : `Nova captação — ${origem}`,
       replyTo: email,
@@ -110,7 +114,7 @@ export async function POST(request: Request) {
 
   // Follow-up automático: o próprio lead recebe o resultado + próximo passo
   // personalizado pelo pilar mais frágil (só na conclusão do diagnóstico).
-  if (isDiagnostic) {
+  if (hasFinishedDiagnostic) {
     tasks.push(
       sendDiagnosticResultEmail({
         name: nome,

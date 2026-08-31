@@ -115,6 +115,13 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
       href: "/eahub/collections/leads",
       stat: `${diagnosticLeads.totalDocs} diagnóstico(s) (${leads.totalDocs} leads no total)`,
     },
+    {
+      title: "Apresentação Comercial DME",
+      description:
+        "Deck interativo 16:9 personalizado para reuniões de fechamento — basta digitar o ID do DME para carregar os dados e o plano de ação do cliente.",
+      href: "/eahub/apresentacao",
+      stat: "Abrir Apresentador ↗",
+    },
   ];
 
   const socialCards: Card[] = [
