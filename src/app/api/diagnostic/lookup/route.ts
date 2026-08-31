@@ -192,6 +192,9 @@ export async function GET(request: Request) {
     });
   } catch (err) {
     console.error("[diagnostic/lookup] erro:", err);
-    return NextResponse.json({ error: "Erro ao buscar dados do diagnóstico." }, { status: 500 });
+    return NextResponse.json({
+      error: "Erro ao buscar dados do diagnóstico.",
+      message: err instanceof Error ? err.message : String(err),
+    }, { status: 500 });
   }
 }
