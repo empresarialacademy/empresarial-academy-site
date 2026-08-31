@@ -56,8 +56,6 @@ const PILAR_ACOES: Record<string, string> = {
   evolucao: "Criamos rotina de leitura de mercado e inovação, para a empresa não perder competitividade no médio prazo.",
 };
 
-const TOTAL_SLIDES = 16;
-
 function levelInfo(pct: number) {
   if (pct <= 20) return { name: "Inicial", color: "#B23B3B" };
   if (pct <= 40) return { name: "Em Desenvolvimento", color: "#C7892B" };
@@ -68,6 +66,7 @@ function levelInfo(pct: number) {
 
 export function CommercialPresentationClient({ initialId }: { initialId?: string }) {
   const [currentSlide, setCurrentSlide] = useState(1);
+  const [branch, setBranch] = useState<"mentoria" | "consultoria" | "all">("mentoria");
   const [diagId, setDiagId] = useState(initialId || "");
   const [loading, setLoading] = useState(false);
   const [recents, setRecents] = useState<RecentItem[]>([]);
@@ -92,16 +91,23 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
   const [showPrepOverlay, setShowPrepOverlay] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  useEffect(() => {
-    fetch("/api/diagnostic/lookup?list=recent")
-      .then((r) => r.json())
-      .then((res) => {
-        if (res.ok && Array.isArray(res.items)) {
-          setRecents(res.items);
-        }
-      })
-      .catch((e) => console.warn("Erro ao buscar recentes:", e));
-  }, []);
+  // Lista de slides visíveis conforme o branch selecionado
+  const visibleSlides = useMemo(() => {
+    if (branch === "mentoria") {
+      // Pula 12 e 13 (Consultoria)
+      return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 15, 16];
+    }
+    if (branch === "consultoria") {
+      // Pula 10 e 11 (Mentoria)
+      return [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16];
+    }
+    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+  }, [branch]);
+
+  const currentVisibleIndex = useMemo(() => {
+    const idx = visibleSlides.indexOf(currentSlide);
+    return idx !== -1 ? idx : 0;
+  }, [visibleSlides, currentSlide]);
 
   const fetchDiagnostic = useCallback(async (id: string) => {
     const cleanId = id.trim();
@@ -121,11 +127,11 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
         setClienteInstagram(d.instagram || "");
 
         const newScores: Record<string, number> = {
-          fluxo: 60,
+          fluxo: 50,
           arquitetura: 50,
-          objetivos: 55,
-          metricas: 40,
-          desafios: 45,
+          objetivos: 50,
+          metricas: 50,
+          desafios: 50,
           evolucao: 50,
         };
         if (Array.isArray(d.pillars)) {
@@ -133,7 +139,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
             const keyLower = p.key.toLowerCase();
             if (keyLower.includes("fluxo")) newScores.fluxo = p.pct;
             else if (keyLower.includes("arquitetura")) newScores.arquitetura = p.pct;
-            else if (keyLower.includes("objetivos")) newScores.objetivos = p.pct;
+            else if (keyLower.includes("objetivos") || keyLower.includes("estrategia")) newScores.objetivos = p.pct;
             else if (keyLower.includes("métricas") || keyLower.includes("metricas")) newScores.metricas = p.pct;
             else if (keyLower.includes("desafios")) newScores.desafios = p.pct;
             else if (keyLower.includes("evolução") || keyLower.includes("evolucao")) newScores.evolucao = p.pct;
@@ -148,6 +154,24 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
     }
   }, []);
 
+  // Carregar lista de recentes
+  useEffect(() => {
+    fetch("/api/diagnostic/lookup?list=recent")
+      .then((r) => r.json())
+      .then((res) => {
+        if (res.ok && Array.isArray(res.items)) {
+          setRecents(res.items);
+          if (!diagId && res.items.length > 0) {
+            const first = res.items[0].diagnosticId;
+            setDiagId(first);
+            fetchDiagnostic(first);
+          }
+        }
+      })
+      .catch((e) => console.warn("Erro ao buscar recentes:", e));
+  }, [diagId, fetchDiagnostic]);
+
+  // Leitura de URL ou initialId
   useEffect(() => {
     let idToLoad = initialId;
     if (!idToLoad && typeof window !== "undefined") {
@@ -178,11 +202,22 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
     return arr.sort((a, b) => a.score - b.score).slice(0, 3);
   }, [scores]);
 
-  const goToSlide = useCallback((n: number) => {
-    let target = n;
-    if (target < 1) target = 1;
-    if (target > TOTAL_SLIDES) target = TOTAL_SLIDES;
-    setCurrentSlide(target);
+  const nextSlide = useCallback(() => {
+    const curIdx = visibleSlides.indexOf(currentSlide);
+    if (curIdx >= 0 && curIdx < visibleSlides.length - 1) {
+      setCurrentSlide(visibleSlides[curIdx + 1]);
+    }
+  }, [visibleSlides, currentSlide]);
+
+  const prevSlide = useCallback(() => {
+    const curIdx = visibleSlides.indexOf(currentSlide);
+    if (curIdx > 0) {
+      setCurrentSlide(visibleSlides[curIdx - 1]);
+    }
+  }, [visibleSlides, currentSlide]);
+
+  const goToSlideNumber = useCallback((slideNum: number) => {
+    setCurrentSlide(slideNum);
   }, []);
 
   useEffect(() => {
@@ -197,21 +232,21 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
       }
       if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
         e.preventDefault();
-        goToSlide(currentSlide + 1);
+        nextSlide();
       } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
         e.preventDefault();
-        goToSlide(currentSlide - 1);
+        prevSlide();
       } else if (e.key === "Home") {
         e.preventDefault();
-        goToSlide(1);
+        goToSlideNumber(visibleSlides[0]);
       } else if (e.key === "End") {
         e.preventDefault();
-        goToSlide(TOTAL_SLIDES);
+        goToSlideNumber(visibleSlides[visibleSlides.length - 1]);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentSlide, goToSlide]);
+  }, [nextSlide, prevSlide, goToSlideNumber, visibleSlides]);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -230,8 +265,10 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
     if (clienteEmail) params.set("email", clienteEmail);
     if (clienteWhatsapp) params.set("whatsapp", clienteWhatsapp);
     if (diagId) params.set("diagId", diagId);
+    if (branch === "mentoria") params.set("tipo", "mentoria");
+    else if (branch === "consultoria") params.set("tipo", "consultoria");
     return `/eahub/contratos/novo?${params.toString()}`;
-  }, [clienteNome, empresaNome, clienteEmail, clienteWhatsapp, diagId]);
+  }, [clienteNome, empresaNome, clienteEmail, clienteWhatsapp, diagId, branch]);
 
   return (
     <div
@@ -242,292 +279,180 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "16px 12px",
       }}
     >
-      <div
-        className="no-print"
-        style={{
-          background: "#162231",
-          borderBottom: "1px solid rgba(193, 161, 96, 0.35)",
-          padding: "10px 24px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: 12,
-          zIndex: 100,
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <Link
-            href="/eahub"
-            style={{
-              color: "#D7C089",
-              textDecoration: "none",
-              fontSize: "0.82rem",
-              fontWeight: 700,
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-            }}
-          >
-            ← Voltar ao HUB
-          </Link>
-          <span style={{ color: "rgba(255,255,255,0.2)" }}>|</span>
-          <span style={{ color: "#FFFFFF", fontWeight: 800, fontSize: "0.88rem", letterSpacing: "0.04em" }}>
-            Apresentador Comercial Gestão 360
-          </span>
-          {diagId ? (
-            <span
-              style={{
-                background: "rgba(193,161,96,0.2)",
-                border: "1px solid #C1A160",
-                color: "#D7C089",
-                padding: "2px 8px",
-                borderRadius: 4,
-                fontSize: "0.76rem",
-                fontWeight: 700,
-              }}
-            >
-              ID: {diagId}
-            </span>
-          ) : null}
-        </div>
-
-        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-          {recents.length > 0 && (
-            <select
-              style={{
-                background: "#0E1520",
-                color: "#FFFFFF",
-                border: "1px solid rgba(193,161,96,0.4)",
-                borderRadius: 4,
-                padding: "5px 8px",
-                fontSize: "0.8rem",
-              }}
-              onChange={(e) => {
-                if (e.target.value) {
-                  setDiagId(e.target.value);
-                  fetchDiagnostic(e.target.value);
-                }
-              }}
-              value={diagId}
-            >
-              <option value="">-- Diagnósticos Recentes --</option>
-              {recents.map((r) => (
-                <option key={r.diagnosticId} value={r.diagnosticId}>
-                  {r.name} {r.company ? `(${r.company})` : ""} · {r.diagnosticId}
-                </option>
-              ))}
-            </select>
-          )}
-
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <input
-              type="text"
-              placeholder="Buscar ID do DME..."
-              value={diagId}
-              onChange={(e) => setDiagId(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && fetchDiagnostic(diagId)}
-              style={{
-                background: "#0E1520",
-                color: "#FFFFFF",
-                border: "1px solid rgba(193,161,96,0.4)",
-                borderRadius: 4,
-                padding: "5px 8px",
-                fontSize: "0.8rem",
-                width: 170,
-              }}
-            />
-            <button
-              onClick={() => fetchDiagnostic(diagId)}
-              disabled={loading || !diagId}
-              style={{
-                background: "#C1A160",
-                color: "#121D28",
-                border: "none",
-                borderRadius: 4,
-                padding: "5px 10px",
-                fontSize: "0.8rem",
-                fontWeight: 700,
-                cursor: "pointer",
-              }}
-            >
-              {loading ? "..." : "Carregar"}
-            </button>
-          </div>
-
-          <button
-            onClick={() => setShowPrepOverlay(true)}
-            style={{
-              background: "transparent",
-              color: "#D7C089",
-              border: "1px solid rgba(193,161,96,0.5)",
-              borderRadius: 4,
-              padding: "5px 10px",
-              fontSize: "0.78rem",
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
-          >
-            ⚙️ Ajustar Dados
-          </button>
-
-          <button
-            onClick={() => window.print()}
-            style={{
-              background: "transparent",
-              color: "#FFFFFF",
-              border: "1px solid rgba(255,255,255,0.25)",
-              borderRadius: 4,
-              padding: "5px 10px",
-              fontSize: "0.78rem",
-              cursor: "pointer",
-            }}
-          >
-            🖨️ PDF
-          </button>
-
-          <button
-            onClick={toggleFullscreen}
-            style={{
-              background: "#1D2B3C",
-              color: "#C1A160",
-              border: "1px solid #C1A160",
-              borderRadius: 4,
-              padding: "5px 10px",
-              fontSize: "0.78rem",
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
-          >
-            {isFullscreen ? "Sair Tela Cheia" : "⛶ Tela Cheia (F11)"}
-          </button>
-        </div>
-      </div>
-
+      {/* PALCO PRINCIPAL DA APRESENTAÇÃO (16:9 Aspect Ratio) */}
       <div
         style={{
-          flex: 1,
+          width: "100%",
+          maxWidth: 1320,
+          aspectRatio: "16 / 9",
+          background: currentSlide === 1 || currentSlide === 16 ? "#121D28" : "#FFFFFF",
+          color: currentSlide === 1 || currentSlide === 16 ? "#FFFFFF" : "#15191F",
+          borderRadius: 10,
+          boxShadow: "0 20px 50px rgba(0,0,0,0.65), 0 0 0 1px rgba(193,161,96,0.3)",
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "20px 16px 28px",
+          flexDirection: "column",
+          overflow: "hidden",
+          position: "relative",
         }}
       >
+        {/* Header Superior Limpo Integrado ao Canvas */}
         <div
           style={{
-            width: "100%",
-            maxWidth: 1300,
-            aspectRatio: "16 / 9",
-            background: currentSlide === 1 || currentSlide === 16 ? "#121D28" : "#FFFFFF",
-            color: currentSlide === 1 || currentSlide === 16 ? "#FFFFFF" : "#15191F",
-            borderRadius: 12,
-            boxShadow: "0 20px 50px rgba(0,0,0,0.6), 0 0 0 1px rgba(193,161,96,0.3)",
+            padding: "12px 28px",
             display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-            position: "relative",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderBottom:
+              currentSlide === 1 || currentSlide === 16
+                ? "1px solid rgba(193,161,96,0.2)"
+                : "1px solid #D9DCE1",
+            background: currentSlide === 1 || currentSlide === 16 ? "rgba(0,0,0,0.18)" : "#FAFAFA",
           }}
         >
-          <div
-            style={{
-              padding: "16px 32px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              borderBottom:
-                currentSlide === 1 || currentSlide === 16
-                  ? "1px solid rgba(193,161,96,0.25)"
-                  : "1px solid #D9DCE1",
-              background: currentSlide === 1 || currentSlide === 16 ? "rgba(0,0,0,0.2)" : "#FAFAFA",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ color: "#C1A160", fontWeight: 900, fontSize: "1.05rem" }}>◆</span>
-                <span
-                  style={{
-                    fontFamily: "Montserrat, Arial, sans-serif",
-                    fontWeight: 800,
-                    fontSize: "0.85rem",
-                    letterSpacing: "0.05em",
-                    color: currentSlide === 1 || currentSlide === 16 ? "#FFFFFF" : "#1D2B3C",
-                  }}
-                >
-                  EMPRESARIAL ACADEMY
-                </span>
-              </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ color: "#C1A160", fontWeight: 900, fontSize: "0.95rem" }}>◆</span>
               <span
                 style={{
-                  fontSize: "0.72rem",
-                  fontWeight: 700,
-                  color: currentSlide === 1 || currentSlide === 16 ? "#D7C089" : "#6B7280",
-                  background: currentSlide === 1 || currentSlide === 16 ? "rgba(193,161,96,0.15)" : "#EFEFEF",
-                  padding: "2px 8px",
-                  borderRadius: 4,
+                  fontFamily: "Montserrat, Arial, sans-serif",
+                  fontWeight: 800,
+                  fontSize: "0.82rem",
+                  letterSpacing: "0.06em",
+                  color: currentSlide === 1 || currentSlide === 16 ? "#FFFFFF" : "#1D2B3C",
                 }}
               >
-                MÉTODO GESTÃO 360
+                EMPRESARIAL ACADEMY
               </span>
             </div>
-
-            <div
+            <span
               style={{
-                fontSize: "0.8rem",
-                fontWeight: 600,
-                color: currentSlide === 1 || currentSlide === 16 ? "#D7C089" : "#1D2B3C",
+                fontSize: "0.7rem",
+                fontWeight: 700,
+                color: currentSlide === 1 || currentSlide === 16 ? "#D7C089" : "#6B7280",
+                background: currentSlide === 1 || currentSlide === 16 ? "rgba(193,161,96,0.15)" : "#EFEFEF",
+                padding: "2px 8px",
+                borderRadius: 4,
               }}
             >
-              {clienteNome || empresaNome ? `${clienteNome} · ${empresaNome}` : "Apresentação de Fechamento"}
-            </div>
+              MÉTODO GESTÃO 360
+            </span>
           </div>
 
-          <div
-            style={{
-              flex: 1,
-              padding: "2.8vh 4vw 2.5vh",
-              display: "flex",
-              flexDirection: "column",
-              overflowY: "auto",
-            }}
-          >
-            {currentSlide === 1 && (
-              <div
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            {empresaNome ? (
+              <span
                 style={{
-                  flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  textAlign: "center",
-                  gap: "2vh",
+                  fontSize: "0.8rem",
+                  fontWeight: 700,
+                  color: currentSlide === 1 || currentSlide === 16 ? "#D7C089" : "#1D2B3C",
                 }}
               >
-                <div
-                  style={{
-                    fontFamily: "Montserrat, Arial, sans-serif",
-                    fontSize: "clamp(11px, 0.9vw, 13px)",
-                    fontWeight: 700,
-                    letterSpacing: "2px",
-                    textTransform: "uppercase",
-                    color: "#D7C089",
-                    border: "1px solid rgba(193,161,96,0.5)",
-                    padding: "6px 18px",
-                    borderRadius: 4,
-                  }}
-                >
-                  Reunião de Diagnóstico e Alinhamento
-                </div>
+                {clienteNome ? `${clienteNome} · ${empresaNome}` : empresaNome}
+              </span>
+            ) : null}
+
+            {/* Ações discretas no header */}
+            <div className="no-print" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <Link
+                href="/eahub"
+                style={{
+                  color: currentSlide === 1 || currentSlide === 16 ? "rgba(255,255,255,0.6)" : "#6B7280",
+                  textDecoration: "none",
+                  fontSize: "0.74rem",
+                  fontWeight: 600,
+                }}
+              >
+                ← HUB
+              </Link>
+              <button
+                onClick={() => window.print()}
+                title="Salvar como PDF"
+                style={{
+                  background: "transparent",
+                  color: currentSlide === 1 || currentSlide === 16 ? "rgba(255,255,255,0.6)" : "#6B7280",
+                  border: "none",
+                  fontSize: "0.74rem",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  padding: "2px 6px",
+                }}
+              >
+                PDF
+              </button>
+              <button
+                onClick={toggleFullscreen}
+                title="Modo Tela Cheia"
+                style={{
+                  background: "transparent",
+                  color: currentSlide === 1 || currentSlide === 16 ? "rgba(255,255,255,0.6)" : "#6B7280",
+                  border: "none",
+                  fontSize: "0.74rem",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  padding: "2px 6px",
+                }}
+              >
+                {isFullscreen ? "Sair Tela Cheia" : "Tela Cheia"}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* CONTEÚDO DO SLIDE ATIVO */}
+        <div
+          style={{
+            flex: 1,
+            padding: "2.6vh 4vw 2vh",
+            display: "flex",
+            flexDirection: "column",
+            overflowY: "auto",
+          }}
+        >
+          {/* SLIDE 1 · CAPA, ALINHAMENTO & SELEÇÃO DE DIAGNÓSTICO */}
+          {currentSlide === 1 && (
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "space-between",
+                textAlign: "center",
+                gap: "1.6vh",
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "Montserrat, Arial, sans-serif",
+                  fontSize: "clamp(11px, 0.85vw, 12.5px)",
+                  fontWeight: 700,
+                  letterSpacing: "2px",
+                  textTransform: "uppercase",
+                  color: "#D7C089",
+                  border: "1px solid rgba(193,161,96,0.5)",
+                  padding: "5px 16px",
+                  borderRadius: 4,
+                  marginTop: "0.5vh",
+                }}
+              >
+                Reunião de Diagnóstico e Alinhamento
+              </div>
+
+              <div>
                 <h1
                   style={{
                     fontFamily: "Montserrat, Arial, sans-serif",
-                    fontSize: "clamp(28px, 3.2vw, 46px)",
+                    fontSize: "clamp(26px, 3vw, 42px)",
                     fontWeight: 800,
                     color: "#FFFFFF",
-                    maxWidth: "70vw",
+                    maxWidth: "72vw",
                     lineHeight: 1.2,
-                    margin: "4px 0",
+                    margin: "0 auto 6px",
                   }}
                 >
                   Da gestão no impulso para a{" "}
@@ -535,1154 +460,1302 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                 </h1>
                 <p
                   style={{
-                    fontSize: "clamp(13.5px, 1.15vw, 17px)",
+                    fontSize: "clamp(13px, 1.1vw, 16px)",
                     color: "rgba(255,255,255,0.78)",
-                    maxWidth: "52vw",
-                    lineHeight: 1.55,
+                    maxWidth: "54vw",
+                    lineHeight: 1.5,
+                    margin: "0 auto",
                   }}
                 >
                   Retorno sobre o Diagnóstico de Maturidade Empresarial e o caminho prático para os próximos meses, com a metodologia Gestão 360.
                 </p>
+              </div>
 
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 28,
-                    fontSize: "clamp(11.5px, 0.95vw, 13.5px)",
-                    color: "rgba(255,255,255,0.65)",
-                    borderTop: "1px solid rgba(255,255,255,0.2)",
-                    paddingTop: "1.8vh",
-                    marginTop: "1vh",
-                    fontFamily: "Montserrat, Arial, sans-serif",
-                    flexWrap: "wrap",
-                    justifyContent: "center",
-                  }}
-                >
-                  <div>
-                    Conduz: <strong style={{ color: "#D7C089" }}>Thiago Marchi</strong>
+              {/* PAINEL DE IDENTIFICAÇÃO DIRETO NO CORPO DO SLIDE 1 */}
+              <div
+                className="no-print"
+                style={{
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(193,161,96,0.35)",
+                  borderRadius: 8,
+                  padding: "12px 18px",
+                  width: "100%",
+                  maxWidth: 780,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 10,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1, minWidth: 260 }}>
+                    <input
+                      type="text"
+                      placeholder="Código ID do DME (ex: EA-DIAG-2026-X8K2M)..."
+                      value={diagId}
+                      onChange={(e) => setDiagId(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && fetchDiagnostic(diagId)}
+                      style={{
+                        flex: 1,
+                        background: "#0E1520",
+                        color: "#FFFFFF",
+                        border: "1px solid rgba(193,161,96,0.5)",
+                        borderRadius: 4,
+                        padding: "7px 10px",
+                        fontSize: "0.82rem",
+                        fontFamily: "monospace",
+                      }}
+                    />
+                    <button
+                      onClick={() => fetchDiagnostic(diagId)}
+                      disabled={loading || !diagId}
+                      style={{
+                        background: "#C1A160",
+                        color: "#121D28",
+                        border: "none",
+                        borderRadius: 4,
+                        padding: "7px 14px",
+                        fontSize: "0.82rem",
+                        fontWeight: 800,
+                        cursor: "pointer",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {loading ? "Carregando..." : "Carregar DME"}
+                    </button>
                   </div>
-                  <div>
-                    Para:{" "}
-                    <strong style={{ color: "#D7C089" }}>
-                      {clienteNome || "[nome do cliente]"} · {empresaNome || "[empresa]"}
-                    </strong>
-                  </div>
-                  {clienteCargo ? (
-                    <div>
-                      Cargo: <strong style={{ color: "#D7C089" }}>{clienteCargo}</strong>
-                    </div>
-                  ) : null}
-                  {clienteFaturamento ? (
-                    <div>
-                      Faturamento: <strong style={{ color: "#D7C089" }}>{clienteFaturamento}</strong>
-                    </div>
-                  ) : null}
-                  {clienteInstagram ? (
-                    <div>
-                      Instagram: <strong style={{ color: "#D7C089" }}>{clienteInstagram}</strong>
-                    </div>
-                  ) : null}
-                  <div>
-                    Método: <strong style={{ color: "#D7C089" }}>Gestão 360</strong>
-                  </div>
-                </div>
 
-                <div style={{ marginTop: "1.5vh" }}>
+                  {recents.length > 0 && (
+                    <select
+                      style={{
+                        background: "#0E1520",
+                        color: "#FFFFFF",
+                        border: "1px solid rgba(193,161,96,0.4)",
+                        borderRadius: 4,
+                        padding: "7px 10px",
+                        fontSize: "0.8rem",
+                        maxWidth: 240,
+                      }}
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          setDiagId(e.target.value);
+                          fetchDiagnostic(e.target.value);
+                        }
+                      }}
+                      value={diagId}
+                    >
+                      <option value="">Recentes...</option>
+                      {recents.map((r) => (
+                        <option key={r.diagnosticId} value={r.diagnosticId}>
+                          {r.name} {r.company ? `(${r.company})` : ""}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+
                   <button
-                    onClick={() => goToSlide(2)}
+                    onClick={() => setShowPrepOverlay(true)}
                     style={{
-                      fontFamily: "Montserrat, Arial, sans-serif",
-                      fontSize: "clamp(12px, 1vw, 14px)",
-                      fontWeight: 700,
-                      color: "#121D28",
-                      background: "#C1A160",
-                      border: "none",
-                      padding: "10px 26px",
+                      background: "transparent",
+                      color: "#D7C089",
+                      border: "1px solid rgba(193,161,96,0.5)",
                       borderRadius: 4,
+                      padding: "6px 12px",
+                      fontSize: "0.78rem",
+                      fontWeight: 700,
                       cursor: "pointer",
-                      boxShadow: "0 4px 14px rgba(193,161,96,0.35)",
                     }}
                   >
-                    Iniciar Apresentação ➔
+                    Ajustar Dados
                   </button>
                 </div>
               </div>
-            )}
 
-            {currentSlide === 2 && (
+              {/* Metadados do Lead */}
+              <div
+                style={{
+                  display: "flex",
+                  gap: 22,
+                  fontSize: "clamp(11.5px, 0.9vw, 13px)",
+                  color: "rgba(255,255,255,0.65)",
+                  borderTop: "1px solid rgba(255,255,255,0.18)",
+                  paddingTop: "1.2vh",
+                  fontFamily: "Montserrat, Arial, sans-serif",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                }}
+              >
+                <div>
+                  Conduz: <strong style={{ color: "#D7C089" }}>Thiago Marchi</strong>
+                </div>
+                <div>
+                  Para:{" "}
+                  <strong style={{ color: "#D7C089" }}>
+                    {clienteNome || "[nome do cliente]"} · {empresaNome || "[empresa]"}
+                  </strong>
+                </div>
+                {clienteCargo ? (
+                  <div>
+                    Cargo: <strong style={{ color: "#D7C089" }}>{clienteCargo}</strong>
+                  </div>
+                ) : null}
+                {clienteFaturamento ? (
+                  <div>
+                    Faturamento: <strong style={{ color: "#D7C089" }}>{clienteFaturamento}</strong>
+                  </div>
+                ) : null}
+                {clienteInstagram ? (
+                  <div>
+                    Instagram: <strong style={{ color: "#D7C089" }}>{clienteInstagram}</strong>
+                  </div>
+                ) : null}
+                <div>
+                  Método: <strong style={{ color: "#D7C089" }}>Gestão 360</strong>
+                </div>
+                {diagId ? (
+                  <div>
+                    ID: <strong style={{ color: "#D7C089" }}>{diagId}</strong>
+                  </div>
+                ) : null}
+              </div>
+
               <div>
-                <SlideHeader
-                  eyebrow="Quem conduz esta conversa"
-                  title="Empresarial Academy & Thiago Marchi"
-                  subtitle="A vivência de dono de PME somada à governança de grandes operações"
-                  flag="Autoridade"
-                />
-                <div style={{ display: "flex", gap: "3vw", minHeight: 0 }}>
-                  <div style={{ flex: 1.5, display: "flex", flexDirection: "column", gap: "1.5vh" }}>
-                    <p style={{ fontSize: "clamp(13px, 1.1vw, 15.5px)", lineHeight: 1.6, color: "#15191F" }}>
-                      <strong>Sócio-proprietário de uma PME por 7 anos</strong> (Alujá Artigos Religiosos: varejo, e-commerce e fábrica), MBA em Gerenciamento de Projetos pela FGV, Green Belt em Lean Six Sigma, e 19 anos estruturando operações comerciais em Telefônica VIVO, Atento e AllCom Telecom.
-                    </p>
-                    <div
-                      style={{
-                        borderTop: "1px solid #C1A160",
-                        borderBottom: "1px solid #C1A160",
-                        padding: "1.2vh 0",
-                        fontSize: "clamp(13.5px, 1.15vw, 16.5px)",
-                        fontWeight: 600,
-                        color: "#1D2B3C",
-                        fontStyle: "italic",
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      &ldquo;Conheço os dois lados: a rotina apertada de quem toca uma PME sozinho, e o método das grandes empresas para organizar isso.&rdquo;
-                    </div>
-                    <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 8, padding: 0 }}>
-                      <li style={{ fontSize: "clamp(12px, 1vw, 14.5px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
-                        <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
-                        Sitallcom: receita adicional de R$ 1,2 milhão e conversão comercial de 20% para 55%
-                      </li>
-                      <li style={{ fontSize: "clamp(12px, 1vw, 14.5px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
-                        <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
-                        Alujá: saiu de MEI para ME sob sua sociedade, com valuation de R$ 300 mil
-                      </li>
-                      <li style={{ fontSize: "clamp(12px, 1vw, 14.5px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
-                        <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
-                        Telefônica VIVO: carteira de 120 clientes com +18% em receita recorrente
-                      </li>
-                    </ul>
-                  </div>
+                <button
+                  onClick={nextSlide}
+                  style={{
+                    fontFamily: "Montserrat, Arial, sans-serif",
+                    fontSize: "clamp(12.5px, 1vw, 14.5px)",
+                    fontWeight: 800,
+                    color: "#121D28",
+                    background: "#C1A160",
+                    border: "none",
+                    padding: "10px 28px",
+                    borderRadius: 4,
+                    cursor: "pointer",
+                    boxShadow: "0 4px 14px rgba(193,161,96,0.35)",
+                  }}
+                >
+                  Iniciar Apresentação →
+                </button>
+              </div>
+            </div>
+          )}
 
-                  <div style={{ flex: 1, borderLeft: "1px solid #D9DCE1", paddingLeft: "2.4vw", display: "flex", flexDirection: "column", gap: "1.4vh" }}>
-                    <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(14px, 1.15vw, 16px)", color: "#1D2B3C" }}>
-                      Empresarial Academy
-                    </h4>
-                    <p style={{ fontSize: "clamp(12.5px, 1.05vw, 14.5px)", lineHeight: 1.55, color: "#6B7280" }}>
-                      Consultoria e mentoria de gestão para PMEs. Metodologia própria, aplicada, sem fórmula pronta de curso genérico.
-                    </p>
-                    <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 8, padding: 0 }}>
-                      <li style={{ fontSize: "clamp(12px, 1vw, 14px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
-                        <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
-                        Foco em processo, indicador e execução, não em teoria solta
-                      </li>
-                      <li style={{ fontSize: "clamp(12px, 1vw, 14px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
-                        <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
-                        Acompanhamento direto com o sócio fundador
-                      </li>
-                      <li style={{ fontSize: "clamp(12px, 1vw, 14px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
-                        <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
-                        Entrega pensada para o porte e o caixa da PME brasileira
-                      </li>
-                    </ul>
+          {/* SLIDE 2 · THIAGO MARCHI & EMPRESARIAL ACADEMY (TÍTULO INVERTIDO) */}
+          {currentSlide === 2 && (
+            <div>
+              <SlideHeader
+                eyebrow="Quem conduz esta conversa"
+                title="Thiago Marchi & Empresarial Academy"
+                subtitle="A vivência de dono de PME somada à governança de grandes operações"
+                flag="Autoridade"
+              />
+              <div style={{ display: "flex", gap: "3vw", minHeight: 0 }}>
+                <div style={{ flex: 1.5, display: "flex", flexDirection: "column", gap: "1.5vh" }}>
+                  <p style={{ fontSize: "clamp(13px, 1.1vw, 15.5px)", lineHeight: 1.6, color: "#15191F" }}>
+                    <strong>Sócio-proprietário de uma PME por 7 anos</strong> (Alujá Artigos Religiosos: varejo, e-commerce e fábrica), MBA em Gerenciamento de Projetos pela FGV, Green Belt em Lean Six Sigma, e 19 anos estruturando operações comerciais em Telefônica VIVO, Atento e AllCom Telecom.
+                  </p>
+                  <div
+                    style={{
+                      borderTop: "1px solid #C1A160",
+                      borderBottom: "1px solid #C1A160",
+                      padding: "1.2vh 0",
+                      fontSize: "clamp(13.5px, 1.15vw, 16.5px)",
+                      fontWeight: 600,
+                      color: "#1D2B3C",
+                      fontStyle: "italic",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    &ldquo;Conheço os dois lados: a rotina apertada de quem toca uma PME sozinho, e o método das grandes empresas para organizar isso.&rdquo;
                   </div>
+                  <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 8, padding: 0 }}>
+                    <li style={{ fontSize: "clamp(12px, 1vw, 14.5px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
+                      <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
+                      Sitallcom: receita adicional de R$ 1,2 milhão e conversão comercial de 20% para 55%
+                    </li>
+                    <li style={{ fontSize: "clamp(12px, 1vw, 14.5px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
+                      <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
+                      Alujá: saiu de MEI para ME sob sua sociedade, com valuation de R$ 300 mil
+                    </li>
+                    <li style={{ fontSize: "clamp(12px, 1vw, 14.5px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
+                      <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
+                      Telefônica VIVO: carteira de 120 clientes com +18% em receita recorrente
+                    </li>
+                  </ul>
+                </div>
+
+                <div style={{ flex: 1, borderLeft: "1px solid #D9DCE1", paddingLeft: "2.4vw", display: "flex", flexDirection: "column", gap: "1.4vh" }}>
+                  <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(14px, 1.15vw, 16px)", color: "#1D2B3C" }}>
+                    Empresarial Academy
+                  </h4>
+                  <p style={{ fontSize: "clamp(12.5px, 1.05vw, 14.5px)", lineHeight: 1.55, color: "#6B7280" }}>
+                    Consultoria e mentoria de gestão para PMEs. Metodologia própria, aplicada, sem fórmula pronta de curso genérico.
+                  </p>
+                  <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 8, padding: 0 }}>
+                    <li style={{ fontSize: "clamp(12px, 1vw, 14px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
+                      <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
+                      Foco em processo, indicador e execução, não em teoria solta
+                    </li>
+                    <li style={{ fontSize: "clamp(12px, 1vw, 14px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
+                      <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
+                      Acompanhamento direto com o sócio fundador
+                    </li>
+                    <li style={{ fontSize: "clamp(12px, 1vw, 14px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
+                      <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
+                      Entrega pensada para o porte e o caixa da PME brasileira
+                    </li>
+                  </ul>
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-            {currentSlide === 3 && (
-              <div>
-                <SlideHeader
-                  eyebrow="O método por trás da conversa"
-                  title="Gestão 360: os 6 pilares"
-                  subtitle="As empresas não quebram por falta de vendas, quebram por falta de gestão"
-                  flag="Metodologia"
+          {/* SLIDE 3 · METODOLOGIA: OS 6 PILARES (ORIGEM) */}
+          {currentSlide === 3 && (
+            <div>
+              <SlideHeader
+                eyebrow="O método por trás da conversa"
+                title="Gestão 360: os 6 pilares"
+                subtitle="As empresas não quebram por falta de vendas, quebram por falta de gestão"
+                flag="Metodologia"
+              />
+              <div style={{ display: "flex", gap: "2.5vw", alignItems: "center" }}>
+                <div style={{ flex: 1.1, display: "flex", flexDirection: "column", gap: "1vh" }}>
+                  {PILARES_DEF.map((p, idx) => (
+                    <div
+                      key={p.key}
+                      style={{
+                        display: "flex",
+                        gap: 12,
+                        alignItems: "flex-start",
+                        padding: "0.8vh 0",
+                        borderBottom: idx < 5 ? "1px solid #D9DCE1" : "none",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontFamily: "Montserrat, Arial, sans-serif",
+                          fontWeight: 800,
+                          fontSize: "clamp(18px, 1.6vw, 24px)",
+                          color: "#C1A160",
+                          minWidth: 34,
+                        }}
+                      >
+                        0{idx + 1}
+                      </div>
+                      <div>
+                        <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(13.5px, 1.1vw, 15.5px)", fontWeight: 700, color: "#1D2B3C", margin: 0 }}>
+                          {p.nome}
+                        </h4>
+                        <p style={{ fontSize: "clamp(11.5px, 0.95vw, 13px)", color: "#6B7280", margin: "2px 0 0" }}>
+                          {PILAR_ACOES[p.key].split(",")[0]}.
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{ flex: 1.3, borderLeft: "1px solid #D9DCE1", paddingLeft: "2vw", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  <p style={{ fontSize: "clamp(12.5px, 1vw, 14.5px)", color: "#15191F", marginBottom: "1vh", textAlign: "center" }}>
+                    Esses 6 pilares nasceram como método aplicado em campo, viraram o livro <strong>Gestão 360</strong> e hoje sustentam tudo o que a Empresarial Academy entrega.
+                  </p>
+                  <svg viewBox="0 0 620 230" style={{ width: "100%", maxHeight: "35vh" }}>
+                    <rect x="200" y="8" width="220" height="52" fill="#1D2B3C" rx="4" />
+                    <rect x="200" y="8" width="220" height="4" fill="#C1A160" />
+                    <text x="310" y="32" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="13">Método Gestão 360</text>
+                    <text x="310" y="48" textAnchor="middle" fill="#B9C2CC" fontFamily="Open Sans, Arial, sans-serif" fontSize="10">6 pilares validados em campo</text>
+
+                    <line x1="310" y1="60" x2="310" y2="82" stroke="#C1A160" strokeWidth="2" />
+
+                    <rect x="200" y="82" width="220" height="48" fill="#1D2B3C" rx="4" />
+                    <rect x="200" y="82" width="220" height="4" fill="#C1A160" />
+                    <text x="310" y="104" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="13">Livro Gestão 360</text>
+                    <text x="310" y="120" textAnchor="middle" fill="#B9C2CC" fontFamily="Open Sans, Arial, sans-serif" fontSize="10">guia de aplicação prática</text>
+
+                    <line x1="310" y1="130" x2="310" y2="150" stroke="#C1A160" strokeWidth="2" />
+                    <line x1="70" y1="150" x2="550" y2="150" stroke="#C1A160" strokeWidth="2" />
+                    <line x1="70" y1="150" x2="70" y2="168" stroke="#C1A160" strokeWidth="2" />
+                    <line x1="310" y1="150" x2="310" y2="168" stroke="#C1A160" strokeWidth="2" />
+                    <line x1="550" y1="150" x2="550" y2="168" stroke="#C1A160" strokeWidth="2" />
+
+                    <rect x="10" y="168" width="120" height="54" fill="#F6F5F1" stroke="#D9DCE1" rx="4" />
+                    <text x="70" y="190" textAnchor="middle" fill="#1D2B3C" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="11">Mentoria</text>
+                    <text x="70" y="206" textAnchor="middle" fill="#6B7280" fontFamily="Open Sans, Arial, sans-serif" fontSize="9.5">Executiva</text>
+
+                    <rect x="250" y="168" width="120" height="54" fill="#F6F5F1" stroke="#D9DCE1" rx="4" />
+                    <text x="310" y="190" textAnchor="middle" fill="#1D2B3C" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="11">Consultoria</text>
+                    <text x="310" y="206" textAnchor="middle" fill="#6B7280" fontFamily="Open Sans, Arial, sans-serif" fontSize="9.5">Hands-On</text>
+
+                    <rect x="490" y="168" width="120" height="54" fill="#F6F5F1" stroke="#D9DCE1" rx="4" />
+                    <text x="550" y="190" textAnchor="middle" fill="#1D2B3C" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="11">Curso</text>
+                    <text x="550" y="206" textAnchor="middle" fill="#6B7280" fontFamily="Open Sans, Arial, sans-serif" fontSize="9.5">Gestão 360</text>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* SLIDE 4 · DETALHAMENTO DOS 6 PILARES (ESPAÇAMENTO AMPLO & PREENCHIMENTO COMPLETO) */}
+          {currentSlide === 4 && (
+            <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+              <SlideHeader
+                eyebrow="Aprofundamento Metodológico"
+                title="Detalhamento dos 6 Pilares da Gestão 360"
+                subtitle="O que cada pilar transforma na prática para garantir sustentação e escala do seu negócio"
+                flag="Pilares em Detalhe"
+              />
+              <div
+                style={{
+                  flex: 1,
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gridTemplateRows: "repeat(2, 1fr)",
+                  gap: "2.2vh 1.8vw",
+                  minHeight: 0,
+                }}
+              >
+                <PillarDetailCard
+                  num="01"
+                  name="Fluxo de Alta Performance"
+                  desc="Mapeamento e padronização dos processos críticos da operação. Instalação de rituais semanais de alinhamento e redução sistemática da dependência da presença do dono."
                 />
-                <div style={{ display: "flex", gap: "2.5vw", alignItems: "center" }}>
-                  <div style={{ flex: 1.1, display: "flex", flexDirection: "column", gap: "1vh" }}>
-                    {PILARES_DEF.map((p, idx) => (
+                <PillarDetailCard
+                  num="02"
+                  name="Arquitetura do Crescimento"
+                  desc="Estruturação de papéis, organograma inteligente e alçadas de decisão delegadas. Preparação da estrutura física e operacional para suportar escala sem estrangulamento."
+                />
+                <PillarDetailCard
+                  num="03"
+                  name="Objetivos Estratégicos"
+                  desc="A visão do fundador desdobrada em metas executáveis por setor (OKRs). Definição de donos claros, prazos tangíveis e acompanhamento sistemático de avanço."
+                />
+                <PillarDetailCard
+                  num="04"
+                  name="Métricas de Sucesso"
+                  desc="Painel de indicadores de sanidade: separação entre DRE e Fluxo de Caixa, análise de margem real, regra 80/20 de produtos/clientes e decisão orientada a dados."
+                />
+                <PillarDetailCard
+                  num="05"
+                  name="Gestão de Desafios"
+                  desc="Formação de liderança intermediária, protocolos de resolução de conflitos, gestão de pessoas sob pressão e desenho de contingência financeira/operacional para crises."
+                />
+                <PillarDetailCard
+                  num="06"
+                  name="Evolução Constante"
+                  desc="Rituais contínuos de inovação, capacitação técnica da equipe, leitura ativa de movimentos da concorrência e testes rápidos de novos canais sem risco desnecessário."
+                />
+              </div>
+            </div>
+          )}
+
+          {/* SLIDE 5 · DIAGNÓSTICO DE MATURIDADE EMPRESARIAL - [EMPRESA] (SEM PALAVRA ESPELHAMENTO) */}
+          {currentSlide === 5 && (
+            <div>
+              <SlideHeader
+                eyebrow="O retrato de hoje"
+                title={`Diagnóstico de Maturidade Empresarial${empresaNome ? ` - ${empresaNome}` : ""}`}
+                subtitle={`Avaliação dos 6 pilares do Método Gestão 360 · ${empresaNome || clienteNome || "Empresa Avaliada"}`}
+                flag="Raio-X"
+              />
+              <div style={{ display: "flex", gap: "2.5vw", alignItems: "center" }}>
+                <div style={{ flex: 1.1, display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  <RadarSvg scores={scores} overallPct={overallPct} overallLvl={overallLvl} />
+                  <div style={{ display: "flex", gap: 20, fontSize: "0.78rem", color: "#6B7280", fontWeight: 600, marginTop: 8 }}>
+                    <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <span style={{ width: 10, height: 10, background: "#C1A160", borderRadius: 2 }} />
+                      Sua empresa hoje
+                    </span>
+                    <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <span style={{ width: 10, height: 10, background: "rgba(199,137,43,0.25)", border: "1px solid #C7892B", borderRadius: 2 }} />
+                      Espaço até maturidade plena
+                    </span>
+                  </div>
+                </div>
+
+                <div style={{ flex: 1.1, borderLeft: "1px solid #D9DCE1", paddingLeft: "2vw", display: "flex", flexDirection: "column", gap: "1vh" }}>
+                  {PILARES_DEF.map((p) => {
+                    const sc = scores[p.key] ?? 50;
+                    const lvl = levelInfo(sc);
+                    return (
                       <div
                         key={p.key}
                         style={{
                           display: "flex",
-                          gap: 12,
-                          alignItems: "flex-start",
+                          alignItems: "center",
+                          gap: 14,
                           padding: "0.8vh 0",
-                          borderBottom: idx < 5 ? "1px solid #D9DCE1" : "none",
+                          borderBottom: "1px solid #EAEAEA",
                         }}
                       >
                         <div
                           style={{
                             fontFamily: "Montserrat, Arial, sans-serif",
                             fontWeight: 800,
-                            fontSize: "clamp(18px, 1.6vw, 24px)",
-                            color: "#C1A160",
-                            minWidth: 34,
+                            fontSize: "clamp(18px, 1.5vw, 22px)",
+                            color: lvl.color,
+                            minWidth: 55,
                           }}
                         >
-                          0{idx + 1}
+                          {sc}%
                         </div>
                         <div>
-                          <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(13.5px, 1.1vw, 15.5px)", fontWeight: 700, color: "#1D2B3C", margin: 0 }}>
+                          <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(13px, 1.05vw, 15px)", fontWeight: 700, color: "#1D2B3C", margin: 0 }}>
                             {p.nome}
                           </h4>
-                          <p style={{ fontSize: "clamp(11.5px, 0.95vw, 13px)", color: "#6B7280", margin: "2px 0 0" }}>
-                            {PILAR_ACOES[p.key].split(",")[0]}.
+                          <p style={{ fontSize: "clamp(11.5px, 0.9vw, 13px)", color: "#6B7280", margin: 0 }}>
+                            {lvl.name}
                           </p>
                         </div>
                       </div>
-                    ))}
-                  </div>
-
-                  <div style={{ flex: 1.3, borderLeft: "1px solid #D9DCE1", paddingLeft: "2vw", display: "flex", flexDirection: "column", alignItems: "center" }}>
-                    <p style={{ fontSize: "clamp(12.5px, 1vw, 14.5px)", color: "#15191F", marginBottom: "1vh", textAlign: "center" }}>
-                      Esses 6 pilares nasceram como método aplicado em campo, viraram o livro <strong>Gestão 360</strong> e hoje sustentam tudo o que a Empresarial Academy entrega.
-                    </p>
-                    <svg viewBox="0 0 620 230" style={{ width: "100%", maxHeight: "35vh" }}>
-                      <rect x="200" y="8" width="220" height="52" fill="#1D2B3C" rx="4" />
-                      <rect x="200" y="8" width="220" height="4" fill="#C1A160" />
-                      <text x="310" y="32" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="13">Método Gestão 360</text>
-                      <text x="310" y="48" textAnchor="middle" fill="#B9C2CC" fontFamily="Open Sans, Arial, sans-serif" fontSize="10">6 pilares validados em campo</text>
-
-                      <line x1="310" y1="60" x2="310" y2="82" stroke="#C1A160" strokeWidth="2" />
-
-                      <rect x="200" y="82" width="220" height="48" fill="#1D2B3C" rx="4" />
-                      <rect x="200" y="82" width="220" height="4" fill="#C1A160" />
-                      <text x="310" y="104" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="13">Livro Gestão 360</text>
-                      <text x="310" y="120" textAnchor="middle" fill="#B9C2CC" fontFamily="Open Sans, Arial, sans-serif" fontSize="10">guia de aplicação prática</text>
-
-                      <line x1="310" y1="130" x2="310" y2="150" stroke="#C1A160" strokeWidth="2" />
-                      <line x1="70" y1="150" x2="550" y2="150" stroke="#C1A160" strokeWidth="2" />
-                      <line x1="70" y1="150" x2="70" y2="168" stroke="#C1A160" strokeWidth="2" />
-                      <line x1="310" y1="150" x2="310" y2="168" stroke="#C1A160" strokeWidth="2" />
-                      <line x1="550" y1="150" x2="550" y2="168" stroke="#C1A160" strokeWidth="2" />
-
-                      <rect x="10" y="168" width="120" height="54" fill="#F6F5F1" stroke="#D9DCE1" rx="4" />
-                      <text x="70" y="190" textAnchor="middle" fill="#1D2B3C" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="11">Mentoria</text>
-                      <text x="70" y="206" textAnchor="middle" fill="#6B7280" fontFamily="Open Sans, Arial, sans-serif" fontSize="9.5">Executiva</text>
-
-                      <rect x="250" y="168" width="120" height="54" fill="#F6F5F1" stroke="#D9DCE1" rx="4" />
-                      <text x="310" y="190" textAnchor="middle" fill="#1D2B3C" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="11">Consultoria</text>
-                      <text x="310" y="206" textAnchor="middle" fill="#6B7280" fontFamily="Open Sans, Arial, sans-serif" fontSize="9.5">Hands-On</text>
-
-                      <rect x="490" y="168" width="120" height="54" fill="#F6F5F1" stroke="#D9DCE1" rx="4" />
-                      <text x="550" y="190" textAnchor="middle" fill="#1D2B3C" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="11">Curso</text>
-                      <text x="550" y="206" textAnchor="middle" fill="#6B7280" fontFamily="Open Sans, Arial, sans-serif" fontSize="9.5">Gestão 360</text>
-                    </svg>
-                  </div>
+                    );
+                  })}
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-            {currentSlide === 4 && (
-              <div>
-                <SlideHeader
-                  eyebrow="Aprofundamento Metodológico"
-                  title="Detalhamento dos 6 Pilares da Gestão 360"
-                  subtitle="O que cada pilar transforma na prática para garantir sustentação e escala do seu negócio"
-                  flag="Pilares em Detalhe"
-                />
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, 1fr)",
-                    gap: "1.8vh 1.6vw",
-                    minHeight: 0,
-                  }}
-                >
-                  <PillarDetailCard
-                    num="01"
-                    name="Fluxo de Alta Performance"
-                    desc="Mapeamento e padronização dos processos críticos da operação. Instalação de rituais semanais de alinhamento e redução sistemática da dependência da presença do dono."
-                  />
-                  <PillarDetailCard
-                    num="02"
-                    name="Arquitetura do Crescimento"
-                    desc="Estruturação de papéis, organograma inteligente e alçadas de decisão delegadas. Preparação da estrutura física e operacional para suportar escala sem estrangulamento."
-                  />
-                  <PillarDetailCard
-                    num="03"
-                    name="Objetivos Estratégicos"
-                    desc="A visão do fundador desdobrada em metas executáveis por setor (OKRs). Definição de donos claros, prazos tangíveis e acompanhamento sistemático de avanço."
-                  />
-                  <PillarDetailCard
-                    num="04"
-                    name="Métricas de Sucesso"
-                    desc="Painel de indicadores de sanidade: separação entre DRE e Fluxo de Caixa, análise de margem real, regra 80/20 de produtos/clientes e decisão orientada a dados."
-                  />
-                  <PillarDetailCard
-                    num="05"
-                    name="Gestão de Desafios"
-                    desc="Formação de liderança intermediária, protocolos de resolução de conflitos, gestão de pessoas sob pressão e desenho de contingência financeira/operacional para crises."
-                  />
-                  <PillarDetailCard
-                    num="06"
-                    name="Evolução Constante"
-                    desc="Rituais contínuos de inovação, capacitação técnica da equipe, leitura ativa de movimentos da concorrência e testes rápidos de novos canais sem risco desnecessário."
-                  />
-                </div>
-              </div>
-            )}
-
-            {currentSlide === 5 && (
-              <div>
-                <SlideHeader
-                  eyebrow="O retrato de hoje"
-                  title="Espelhamento do Diagnóstico de Maturidade"
-                  subtitle={`Resultado do Diagnóstico de Maturidade Empresarial · ${empresaNome || clienteNome || "Empresa Avaliada"}`}
-                  flag="Raio-X"
-                />
-                <div style={{ display: "flex", gap: "2.5vw", alignItems: "center" }}>
-                  <div style={{ flex: 1.1, display: "flex", flexDirection: "column", alignItems: "center" }}>
-                    <RadarSvg scores={scores} overallPct={overallPct} overallLvl={overallLvl} />
-                    <div style={{ display: "flex", gap: 20, fontSize: "0.78rem", color: "#6B7280", fontWeight: 600, marginTop: 8 }}>
-                      <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <span style={{ width: 10, height: 10, background: "#C1A160", borderRadius: 2 }} />
-                        Sua empresa hoje
-                      </span>
-                      <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <span style={{ width: 10, height: 10, background: "rgba(199,137,43,0.25)", border: "1px solid #C7892B", borderRadius: 2 }} />
-                        Espaço até maturidade plena
-                      </span>
-                    </div>
-                  </div>
-
-                  <div style={{ flex: 1.1, borderLeft: "1px solid #D9DCE1", paddingLeft: "2vw", display: "flex", flexDirection: "column", gap: "1vh" }}>
-                    {PILARES_DEF.map((p) => {
-                      const sc = scores[p.key] ?? 50;
-                      const lvl = levelInfo(sc);
-                      return (
+          {/* SLIDE 6 · VALIDAÇÃO DOS GARGALOS */}
+          {currentSlide === 6 && (
+            <div>
+              <SlideHeader
+                eyebrow="Confirmando o que pesa mais"
+                title="Validação dos Gargalos Operacionais e Comerciais"
+                subtitle="O que os três pilares mais baixos revelam, e como o Gestão 360 atua neles"
+                flag="Confirmação"
+              />
+              <div style={{ display: "flex", gap: "3vw" }}>
+                <div style={{ flex: 1.5, display: "flex", flexDirection: "column", gap: "1.4vh" }}>
+                  <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(13.5px, 1.1vw, 15.5px)", color: "#1D2B3C" }}>
+                    Onde o diagnóstico aponta o maior gargalo, e como o Gestão 360 atua
+                  </h4>
+                  {weakestPillars.map((p) => {
+                    const lvl = levelInfo(p.score);
+                    return (
+                      <div
+                        key={p.key}
+                        style={{
+                          display: "flex",
+                          gap: 16,
+                          alignItems: "flex-start",
+                          padding: "1.2vh 0",
+                          borderBottom: "1px solid #D9DCE1",
+                        }}
+                      >
                         <div
-                          key={p.key}
                           style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 14,
-                            padding: "0.8vh 0",
-                            borderBottom: "1px solid #EAEAEA",
+                            fontFamily: "Montserrat, Arial, sans-serif",
+                            fontWeight: 800,
+                            fontSize: "clamp(20px, 1.8vw, 26px)",
+                            color: lvl.color,
+                            minWidth: 55,
                           }}
                         >
-                          <div
-                            style={{
-                              fontFamily: "Montserrat, Arial, sans-serif",
-                              fontWeight: 800,
-                              fontSize: "clamp(18px, 1.5vw, 22px)",
-                              color: lvl.color,
-                              minWidth: 55,
-                            }}
-                          >
-                            {sc}%
-                          </div>
-                          <div>
-                            <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(13px, 1.05vw, 15px)", fontWeight: 700, color: "#1D2B3C", margin: 0 }}>
-                              {p.nome}
-                            </h4>
-                            <p style={{ fontSize: "clamp(11.5px, 0.9vw, 13px)", color: "#6B7280", margin: 0 }}>
-                              {lvl.name}
-                            </p>
-                          </div>
+                          {p.score}%
                         </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {currentSlide === 6 && (
-              <div>
-                <SlideHeader
-                  eyebrow="Confirmando o que pesa mais"
-                  title="Validação dos Gargalos Operacionais e Comerciais"
-                  subtitle="O que os três pilares mais baixos revelam, e como o Gestão 360 atua neles"
-                  flag="Confirmação"
-                />
-                <div style={{ display: "flex", gap: "3vw" }}>
-                  <div style={{ flex: 1.5, display: "flex", flexDirection: "column", gap: "1.4vh" }}>
-                    <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(13.5px, 1.1vw, 15.5px)", color: "#1D2B3C" }}>
-                      Onde o diagnóstico aponta o maior gargalo, e como o Gestão 360 atua
-                    </h4>
-                    {weakestPillars.map((p) => {
-                      const lvl = levelInfo(p.score);
-                      return (
-                        <div
-                          key={p.key}
-                          style={{
-                            display: "flex",
-                            gap: 16,
-                            alignItems: "flex-start",
-                            padding: "1.2vh 0",
-                            borderBottom: "1px solid #D9DCE1",
-                          }}
-                        >
-                          <div
-                            style={{
-                              fontFamily: "Montserrat, Arial, sans-serif",
-                              fontWeight: 800,
-                              fontSize: "clamp(20px, 1.8vw, 26px)",
-                              color: lvl.color,
-                              minWidth: 55,
-                            }}
-                          >
-                            {p.score}%
-                          </div>
-                          <div>
-                            <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(14px, 1.15vw, 16px)", fontWeight: 700, color: "#1D2B3C", margin: "0 0 3px" }}>
-                              {p.nome} · <span style={{ color: lvl.color }}>{lvl.name}</span>
-                            </h4>
-                            <p style={{ fontSize: "clamp(12px, 1vw, 14px)", color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
-                              {p.acao}
-                            </p>
-                          </div>
+                        <div>
+                          <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(14px, 1.15vw, 16px)", fontWeight: 700, color: "#1D2B3C", margin: "0 0 3px" }}>
+                            {p.nome} · <span style={{ color: lvl.color }}>{lvl.name}</span>
+                          </h4>
+                          <p style={{ fontSize: "clamp(12px, 1vw, 14px)", color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+                            {p.acao}
+                          </p>
                         </div>
-                      );
-                    })}
-                  </div>
-
-                  <div style={{ flex: 1, borderLeft: "1px solid #D9DCE1", paddingLeft: "2.4vw", display: "flex", flexDirection: "column", gap: "1.5vh" }}>
-                    <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(13px, 1.1vw, 15px)", color: "#1D2B3C" }}>
-                      O que o cliente relatou na sondagem inicial
-                    </h4>
-                    <p style={{ fontSize: "clamp(12.5px, 1.05vw, 14.5px)", color: "#15191F", fontStyle: "italic", lineHeight: 1.5 }}>
-                      {clienteNota || "[Relato do lead sobre os principais desafios da operação comercial ou gestão de equipe]"}
-                    </p>
-                    <div
-                      style={{
-                        borderTop: "1px solid #C1A160",
-                        borderBottom: "1px solid #C1A160",
-                        padding: "1.2vh 0",
-                        fontSize: "clamp(13.5px, 1.15vw, 16px)",
-                        fontWeight: 600,
-                        color: "#1D2B3C",
-                        fontStyle: "italic",
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      Essa fotografia ainda representa o que mais pesa hoje{clienteNome ? `, ${clienteNome}` : ""}?
-                    </div>
-                  </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              </div>
-            )}
 
-            {currentSlide === 7 && (
-              <div>
-                <SlideHeader
-                  eyebrow="Antes de decidir, vale calcular"
-                  title="O Preço de Não Agir"
-                  subtitle="Três perguntas que valem mais do que qualquer diagnóstico"
-                  flag="Reflexão"
-                />
-                <div style={{ display: "flex", flexDirection: "column", gap: "1.4vh" }}>
-                  <div style={{ display: "flex", gap: 18, alignItems: "flex-start", padding: "1.2vh 0", borderBottom: "1px solid #D9DCE1" }}>
-                    <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#B23B3B", minWidth: 42 }}>
-                      01
-                    </div>
-                    <div>
-                      <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(14px, 1.15vw, 16.5px)", fontWeight: 700, color: "#1D2B3C", margin: "0 0 3px" }}>
-                        Valor do negócio
-                      </h4>
-                      <p style={{ fontSize: "clamp(12.5px, 1.05vw, 14.5px)", color: "#15191F", lineHeight: 1.5, margin: 0 }}>
-                        Se você decidisse vender a empresa hoje, ela valeria o que você imagina, ou menos, porque tudo ainda depende de você estar presente todos os dias?
-                      </p>
-                      <p style={{ fontSize: "clamp(11.5px, 0.95vw, 13.5px)", color: "#6B7280", fontStyle: "italic", margin: "4px 0 0" }}>
-                        Uma empresa que só funciona com o dono presente vale menos no mercado e fica mais frágil a qualquer imprevisto.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div style={{ display: "flex", gap: 18, alignItems: "flex-start", padding: "1.2vh 0", borderBottom: "1px solid #D9DCE1" }}>
-                    <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#B23B3B", minWidth: 42 }}>
-                      02
-                    </div>
-                    <div>
-                      <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(14px, 1.15vw, 16.5px)", fontWeight: 700, color: "#1D2B3C", margin: "0 0 3px" }}>
-                        Margem
-                      </h4>
-                      <p style={{ fontSize: "clamp(12.5px, 1.05vw, 14.5px)", color: "#15191F", lineHeight: 1.5, margin: 0 }}>
-                        Quanto da sua margem está desaparecendo agora mesmo em retrabalho, desconto não planejado ou custo que ninguém está olhando de perto?
-                      </p>
-                      <p style={{ fontSize: "clamp(11.5px, 0.95vw, 13.5px)", color: "#6B7280", fontStyle: "italic", margin: "4px 0 0" }}>
-                        Faturar mais sem controle de custo é crescer no vermelho sem perceber.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div style={{ display: "flex", gap: 18, alignItems: "flex-start", padding: "1.2vh 0", borderBottom: "1px solid #D9DCE1" }}>
-                    <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#B23B3B", minWidth: 42 }}>
-                      03
-                    </div>
-                    <div>
-                      <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(14px, 1.15vw, 16.5px)", fontWeight: 700, color: "#1D2B3C", margin: "0 0 3px" }}>
-                        Rotina e saúde
-                      </h4>
-                      <p style={{ fontSize: "clamp(12.5px, 1.05vw, 14.5px)", color: "#15191F", lineHeight: 1.5, margin: 0 }}>
-                        No ritmo de hoje, daqui a 12 meses, quanto tempo sobra para decisão estratégica, para descansar, para estar presente fora da empresa?
-                      </p>
-                      <p style={{ fontSize: "clamp(11.5px, 0.95vw, 13.5px)", color: "#6B7280", fontStyle: "italic", margin: "4px 0 0" }}>
-                        Rotina de apagar incêndio cobra um preço pessoal que não aparece em nenhum balanço.
-                      </p>
-                    </div>
-                  </div>
-
+                <div style={{ flex: 1, borderLeft: "1px solid #D9DCE1", paddingLeft: "2.4vw", display: "flex", flexDirection: "column", gap: "1.5vh" }}>
+                  <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(13px, 1.1vw, 15px)", color: "#1D2B3C" }}>
+                    O que o cliente relatou na sondagem inicial
+                  </h4>
+                  <p style={{ fontSize: "clamp(12.5px, 1.05vw, 14.5px)", color: "#15191F", fontStyle: "italic", lineHeight: 1.5 }}>
+                    {clienteNota || "[Relato do lead sobre os principais desafios da operação comercial ou gestão de equipe]"}
+                  </p>
                   <div
                     style={{
-                      textAlign: "center",
                       borderTop: "1px solid #C1A160",
                       borderBottom: "1px solid #C1A160",
                       padding: "1.2vh 0",
                       fontSize: "clamp(13.5px, 1.15vw, 16px)",
-                      fontWeight: 700,
-                      color: "#1D2B3C",
-                      fontStyle: "italic",
-                      marginTop: "0.5vh",
-                    }}
-                  >
-                    Não decidir também é uma decisão: é escolher continuar pagando essa conta todo mês.
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {currentSlide === 8 && (
-              <div>
-                <SlideHeader
-                  eyebrow="Um momento de decisão, juntos"
-                  title="Bifurcação Estratégica"
-                  subtitle="Avaliando mão de obra e conhecimento de gestão disponíveis hoje na empresa"
-                  flag="Decisão"
-                />
-                <p style={{ textAlign: "center", maxWidth: 680, margin: "0 auto 1.5vh", fontSize: "clamp(12.5px, 1.05vw, 14.5px)", color: "#15191F", lineHeight: 1.5 }}>
-                  Antes de indicar um caminho, vale confirmar dois pontos com você: quem toca o operacional hoje, e se esse time já sabe aplicar método sozinho ou precisa de alguém construindo isso junto.
-                </p>
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                  <svg viewBox="0 0 900 290" style={{ width: "100%", maxHeight: "40vh" }}>
-                    <rect x="220" y="8" width="460" height="70" fill="#1D2B3C" rx="6" />
-                    <rect x="220" y="8" width="460" height="4" fill="#C1A160" />
-                    <text x="450" y="38" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="15">
-                      Hoje, quem executa o operacional
-                    </text>
-                    <text x="450" y="60" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="15">
-                      da empresa no dia a dia?
-                    </text>
-
-                    <line x1="450" y1="78" x2="450" y2="100" stroke="#C1A160" strokeWidth="2" />
-                    <line x1="150" y1="100" x2="750" y2="100" stroke="#C1A160" strokeWidth="2" />
-                    <line x1="150" y1="100" x2="150" y2="118" stroke="#C1A160" strokeWidth="2" />
-                    <line x1="750" y1="100" x2="750" y2="118" stroke="#C1A160" strokeWidth="2" />
-
-                    <rect x="50" y="118" width="200" height="4" fill="#F6F5F1" />
-                    <text x="150" y="140" textAnchor="middle" fill="#1D2B3C" fontFamily="Open Sans, Arial, sans-serif" fontSize="13.5" fontWeight="700">
-                      Já tem equipe própria,
-                    </text>
-                    <text x="150" y="158" textAnchor="middle" fill="#1D2B3C" fontFamily="Open Sans, Arial, sans-serif" fontSize="13.5" fontWeight="700">
-                      falta direção
-                    </text>
-                    <text x="750" y="140" textAnchor="middle" fill="#1D2B3C" fontFamily="Open Sans, Arial, sans-serif" fontSize="13.5" fontWeight="700">
-                      Ainda faz sozinho,
-                    </text>
-                    <text x="750" y="158" textAnchor="middle" fill="#1D2B3C" fontFamily="Open Sans, Arial, sans-serif" fontSize="13.5" fontWeight="700">
-                      sobrecarregado
-                    </text>
-
-                    <line x1="150" y1="168" x2="150" y2="192" stroke="#C1A160" strokeWidth="2" />
-                    <line x1="750" y1="168" x2="750" y2="192" stroke="#C1A160" strokeWidth="2" />
-
-                    <rect x="20" y="192" width="260" height="98" fill="#1D2B3C" rx="6" />
-                    <rect x="20" y="192" width="260" height="4" fill="#C1A160" />
-                    <text x="150" y="221" textAnchor="middle" fill="#D7C089" fontFamily="Montserrat, Arial, sans-serif" fontSize="10.5" fontWeight="700" letterSpacing="0.5">
-                      PERFIL ESTRATÉGICO / TEM BRAÇO
-                    </text>
-                    <text x="150" y="250" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontSize="17" fontWeight="800">
-                      Mentoria Executiva
-                    </text>
-                    <text x="150" y="272" textAnchor="middle" fill="#B9C2CC" fontFamily="Open Sans, Arial, sans-serif" fontSize="12">
-                      Direção, método e cobrança
-                    </text>
-
-                    <rect x="620" y="192" width="260" height="98" fill="#1D2B3C" rx="6" />
-                    <rect x="620" y="192" width="260" height="4" fill="#C1A160" />
-                    <text x="750" y="221" textAnchor="middle" fill="#D7C089" fontFamily="Montserrat, Arial, sans-serif" fontSize="10.5" fontWeight="700" letterSpacing="0.5">
-                      SOBRECARGA / QUER IMPLEMENTAÇÃO
-                    </text>
-                    <text x="750" y="250" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontSize="17" fontWeight="800">
-                      Consultoria Hands-On
-                    </text>
-                    <text x="750" y="272" textAnchor="middle" fill="#B9C2CC" fontFamily="Open Sans, Arial, sans-serif" fontSize="12">
-                      EA implementa junto
-                    </text>
-                  </svg>
-                </div>
-              </div>
-            )}
-
-            {currentSlide === 9 && (
-              <div>
-                <SlideHeader
-                  eyebrow="Comparando alternativas"
-                  title="Investimento: Consultoria ou Executivo CLT?"
-                  subtitle="O que custa, de verdade, resolver isso com um cargo interno"
-                  flag="Investimento"
-                />
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "clamp(12px, 1vw, 14px)", marginBottom: "1.5vh" }}>
-                  <thead>
-                    <tr>
-                      <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "10px 14px", textAlign: "left", fontFamily: "Montserrat, Arial, sans-serif", fontSize: "0.78rem", textTransform: "uppercase" }}>Critério</th>
-                      <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "10px 14px", textAlign: "left", fontFamily: "Montserrat, Arial, sans-serif", fontSize: "0.78rem", textTransform: "uppercase" }}>Executivo Sênior CLT</th>
-                      <th style={{ background: "#C1A160", color: "#121D28", padding: "10px 14px", textAlign: "left", fontFamily: "Montserrat, Arial, sans-serif", fontSize: "0.78rem", textTransform: "uppercase" }}>Consultoria / Mentoria Gestão 360</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr style={{ background: "#FFFFFF" }}>
-                      <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Custo mensal aproximado</td>
-                      <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", color: "#B23B3B" }}>R$ 8.000 a R$ 15.000 de salário + encargos (FGTS, INSS patronal, 13º, férias): <strong>R$ 14.000 a R$ 27.000/mês</strong></td>
-                      <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)", color: "#1D2B3C", fontWeight: 700 }}>Fração desse investimento, sem nenhum encargo trabalhista</td>
-                    </tr>
-                    <tr style={{ background: "#F6F5F1" }}>
-                      <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Vínculo e risco</td>
-                      <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1" }}>CLT, com risco de rescisão, multa e passivo trabalhista</td>
-                      <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)", fontWeight: 600 }}>Contrato B2B de prestação de serviço, sem passivo</td>
-                    </tr>
-                    <tr style={{ background: "#FFFFFF" }}>
-                      <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Curva de aprendizado</td>
-                      <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1" }}>Meses para conhecer a empresa e testar métodos que podem falhar</td>
-                      <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)", fontWeight: 600 }}>Método já validado em campo, aplicado desde a primeira semana</td>
-                    </tr>
-                    <tr style={{ background: "#F6F5F1" }}>
-                      <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Comprometimento</td>
-                      <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1" }}>Depende de 1 único profissional contratado, com risco de rotatividade</td>
-                      <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)", fontWeight: 700 }}>Acompanhamento direto do sócio fundador da Empresarial Academy</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <div
-                  style={{
-                    borderTop: "1px solid #C1A160",
-                    borderBottom: "1px solid #C1A160",
-                    padding: "1.2vh 0",
-                    fontSize: "clamp(12.5px, 1.05vw, 14.5px)",
-                    fontWeight: 600,
-                    color: "#1D2B3C",
-                    fontStyle: "italic",
-                    textAlign: "center",
-                    marginBottom: "1.5vh",
-                  }}
-                >
-                  De R$ 6.500 a R$ 8.900 por mês, conforme o formato escolhido a seguir — sempre abaixo do custo de 1 executivo CLT. Uma ou duas contas fechadas a mais cobrem todo o programa.
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: 20,
-                    marginTop: "1vh",
-                  }}
-                >
-                  <button
-                    onClick={() => goToSlide(10)}
-                    style={{
-                      fontFamily: "Montserrat, Arial, sans-serif",
-                      fontSize: "clamp(13px, 1.1vw, 15px)",
-                      fontWeight: 800,
-                      color: "#121D28",
-                      background: "linear-gradient(135deg, #D7C089 0%, #C1A160 100%)",
-                      border: "2px solid #C1A160",
-                      borderRadius: 8,
-                      padding: "12px 28px",
-                      cursor: "pointer",
-                      boxShadow: "0 0 20px rgba(193,161,96,0.45), 0 4px 10px rgba(0,0,0,0.15)",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                      transition: "all 0.2s ease",
-                    }}
-                  >
-                    <span>🎯</span> Ver Opção A: Mentoria Executiva ➔
-                  </button>
-
-                  <button
-                    onClick={() => goToSlide(12)}
-                    style={{
-                      fontFamily: "Montserrat, Arial, sans-serif",
-                      fontSize: "clamp(13px, 1.1vw, 15px)",
-                      fontWeight: 800,
-                      color: "#FFFFFF",
-                      background: "linear-gradient(135deg, #26384D 0%, #1D2B3C 100%)",
-                      border: "2px solid #C1A160",
-                      borderRadius: 8,
-                      padding: "12px 28px",
-                      cursor: "pointer",
-                      boxShadow: "0 0 20px rgba(29,43,60,0.35), 0 4px 10px rgba(0,0,0,0.15)",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                      transition: "all 0.2s ease",
-                    }}
-                  >
-                    <span>🛠️</span> Ver Opção B: Consultoria Hands-On ➔
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {currentSlide === 10 && (
-              <div>
-                <SlideHeader
-                  eyebrow="Como funciona"
-                  title="Mentoria Executiva Gestão 360"
-                  subtitle="Para quem já tem equipe e precisa de direção, método e cobrança"
-                  flag="Perfil Estratégico / Tem Braço"
-                />
-                <p style={{ fontSize: "clamp(12.5px, 1.05vw, 14.5px)", lineHeight: 1.55, color: "#15191F", marginBottom: "1.5vh" }}>
-                  Encontros estratégicos quinzenais com Thiago Marchi, canal direto para validar decisões entre as sessões, e todas as ferramentas do método Gestão 360 aplicadas à realidade da empresa de forma personalizada. Você continua no comando, com o apoio que precisa através de método e orientações externas.
-                </p>
-                <div style={{ height: "20vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <FlowSvg
-                    steps={[
-                      { title: "Diagnóstico Validado", lines: ["Confirmação dos", "pilares prioritários"] },
-                      { title: "Direção Quinzenal", lines: ["Encontros com", "Thiago Marchi"] },
-                      { title: "Cobrança de Metas", lines: ["Acompanhamento", "indicador a indicador"] },
-                      { title: "Autonomia do Time", lines: ["Time executa com", "método instalado"] },
-                    ]}
-                  />
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginTop: "1.5vh" }}>
-                  <FlowCol num="01" title="Diagnóstico Validado" desc="Feito por meio de testes, avaliações e entrevistas com líderes e equipe para analisar rotina e comportamento." />
-                  <FlowCol num="02" title="Direção Quinzenal" desc="Plano apresentado e analisado, com acompanhamento, ajuste de rota, treinamento e orientação sobre processos e metas." />
-                  <FlowCol num="03" title="Cobrança de Metas" desc="Olhar analítico sobre indicadores e metas da empresa, acompanhando a evolução dos resultados com qualidade." />
-                  <FlowCol num="04" title="Autonomia do Time" desc="Dúvidas e contratempos da execução resolvidos, e novas rotas para o futuro consolidadas com a liderança." />
-                </div>
-              </div>
-            )}
-
-            {currentSlide === 11 && (
-              <div>
-                <SlideHeader
-                  eyebrow="Formatos de acompanhamento"
-                  title="Mentoria Executiva: 3, 6 ou 12 meses"
-                  subtitle="O horizonte ideal depende da complexidade da transformação. Os três formatos seguem a mesma metodologia."
-                  flag="3 Pacotes"
-                />
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "clamp(11.5px, 0.95vw, 13.5px)" }}>
-                  <thead>
-                    <tr>
-                      <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Critério</th>
-                      <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Trimestral (3M)</th>
-                      <th style={{ background: "#C1A160", color: "#121D28", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem", fontWeight: 800 }}>Semestral (6M) · Mais Escolhido</th>
-                      <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Anual (12M)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr style={{ background: "#FFFFFF" }}>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Cadência</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Quinzenal · 6 sessões de 90 min</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)", fontWeight: 600 }}>Quinzenal · 12 sessões de 90 min</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Quinzenal · 24 sessões de 90 min</td>
-                    </tr>
-                    <tr style={{ background: "#F6F5F1" }}>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Profundidade</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Atuação concentrada nas prioridades mais urgentes</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)" }}>Atuação em mais áreas e processos-chave com consistência</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Atuação ampla em todas as frentes da empresa</td>
-                    </tr>
-                    <tr style={{ background: "#FFFFFF" }}>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Entrega-chave</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Diagnóstico, plano e implantação das ações imediatas</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)", fontWeight: 600 }}>Rotinas de gestão implantadas e consolidadas no time</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Ciclo contínuo de transformação e governança instalada</td>
-                    </tr>
-                    <tr style={{ background: "#F6F5F1" }}>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Indicado para</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Desafios prioritários e avanços em curto prazo</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)" }}>Desenvolver novas rotinas e consolidar equipe</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Transformações complexas com governança contínua</td>
-                    </tr>
-                    <tr style={{ background: "#FFFFFF" }}>
-                      <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, color: "#1D2B3C" }}>Investimento</td>
-                      <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1rem", color: "#1D2B3C" }}>R$ 7.900/mês</td>
-                      <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1.05rem", color: "#C1A160", background: "rgba(193,161,96,0.15)" }}>R$ 6.900/mês</td>
-                      <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1rem", color: "#2E7D5B" }}>R$ 6.500/mês</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            {currentSlide === 12 && (
-              <div>
-                <SlideHeader
-                  eyebrow="Como funciona"
-                  title="Consultoria de Negócios Hands-On"
-                  subtitle="Para quem está sobrecarregado e precisa de implementação, não só orientação"
-                  flag="Sobrecarga / Quer Implementação"
-                />
-                <p style={{ fontSize: "clamp(12.5px, 1.05vw, 14.5px)", lineHeight: 1.55, color: "#15191F", marginBottom: "1.5vh" }}>
-                  A EA entra na operação: mapeia e desenha os processos-chave, redige playbooks e scripts, e treina a equipe para operar sem depender do dono em cada decisão.
-                </p>
-                <div style={{ height: "20vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <FlowSvg
-                    steps={[
-                      { title: "Diagnóstico Profundo", lines: ["Mapeamento dos", "processos críticos"] },
-                      { title: "Desenho de Processos", lines: ["Playbooks e", "scripts prontos"] },
-                      { title: "Treinamento da Equipe", lines: ["Time aplica junto", "com a EA"] },
-                      { title: "Transição da Gestão", lines: ["Operação roda sem", "depender do dono"] },
-                    ]}
-                  />
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginTop: "1.5vh" }}>
-                  <FlowCol num="01" title="Diagnóstico Profundo" desc="Mapeamento dos processos críticos direto na operação, com entrevistas à equipe e observação da rotina diária." />
-                  <FlowCol num="02" title="Desenho de Processos" desc="Construção dos playbooks e scripts junto com quem executa, definindo responsável e indicador para cada etapa." />
-                  <FlowCol num="03" title="Treinamento da Equipe" desc="Aplicação prática com o time em campo, ajustando o que não funcionar antes de validar o playbook oficial." />
-                  <FlowCol num="04" title="Transição da Gestão" desc="Passagem da operação para o time, com acompanhamento próximo até o processo rodar de forma independente." />
-                </div>
-              </div>
-            )}
-
-            {currentSlide === 13 && (
-              <div>
-                <SlideHeader
-                  eyebrow="Formatos de acompanhamento"
-                  title="Consultoria Hands-On: 3, 6 ou 12 meses"
-                  subtitle="O horizonte ideal depende de quantos processos a empresa precisa reconstruir."
-                  flag="3 Pacotes"
-                />
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "clamp(11.5px, 0.95vw, 13.5px)" }}>
-                  <thead>
-                    <tr>
-                      <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Critério</th>
-                      <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Trimestral (3M)</th>
-                      <th style={{ background: "#C1A160", color: "#121D28", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem", fontWeight: 800 }}>Semestral (6M) · Mais Escolhido</th>
-                      <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Anual (12M)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr style={{ background: "#FFFFFF" }}>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Cadência</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>2 encontros online + 2 visitas presenciais/mês</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)", fontWeight: 600 }}>2 encontros online + 2 a 3 visitas presenciais/mês</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Intensiva nos 4 primeiros meses, depois mensal</td>
-                    </tr>
-                    <tr style={{ background: "#F6F5F1" }}>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Profundidade</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Foco em 1 processo crítico até a equipe treinada</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)" }}>Foco em 2 a 3 processos, cobrindo mais de uma área</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Atuação nos 6 pilares, reconstruindo a gestão inteira</td>
-                    </tr>
-                    <tr style={{ background: "#FFFFFF" }}>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Entrega-chave</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Playbook implantado e equipe operando sem travar</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)", fontWeight: 600 }}>Múltiplas áreas com processos novos e indicadores</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Gestão reconstruída e sustentada em todas as áreas</td>
-                    </tr>
-                    <tr style={{ background: "#F6F5F1" }}>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Indicado para</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Resolver o gargalo mais urgente da operação</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)" }}>Reorganizar duas frentes da operação simultaneamente</td>
-                      <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Reconstruir a gestão completa da empresa</td>
-                    </tr>
-                    <tr style={{ background: "#FFFFFF" }}>
-                      <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, color: "#1D2B3C" }}>Investimento</td>
-                      <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1rem", color: "#1D2B3C" }}>R$ 8.900/mês</td>
-                      <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1.05rem", color: "#C1A160", background: "rgba(193,161,96,0.15)" }}>R$ 8.400/mês</td>
-                      <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1rem", color: "#2E7D5B" }}>R$ 7.970/mês médio</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            {currentSlide === 14 && (
-              <div>
-                <SlideHeader
-                  eyebrow="O que acontece depois do sim"
-                  title="Plano de Ação Mútuo (MAP) & Onboarding"
-                  subtitle="O que cada lado se compromete a entregar, e até quando"
-                  flag="MAP"
-                />
-                <p style={{ fontSize: "clamp(12.5px, 1.05vw, 14.5px)", lineHeight: 1.55, color: "#15191F", marginBottom: "1.5vh" }}>
-                  Da assinatura ao primeiro checkpoint de resultados, este é o compromisso mútuo entre a Empresarial Academy e a sua empresa, com responsável e prazo em cada etapa.
-                </p>
-                <div style={{ height: "19vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <FlowSvg
-                    steps={[
-                      { title: "Assinatura & Kickoff", lines: ["EA + Cliente"] },
-                      { title: "Diagnóstico Aprofundado", lines: ["Validação de metas", "por pilar · EA"] },
-                      { title: "Desenho do Plano", lines: ["Indicador e prazo", "por meta"] },
-                      { title: "Execução", lines: ["Programa escolhido", "rodando"] },
-                      { title: "Revisão de Indicadores", lines: ["Primeiro checkpoint", "Dia 30"] },
-                    ]}
-                  />
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12, marginTop: "1.5vh" }}>
-                  <FlowCol num="01" title="Assinatura & Kickoff" desc="Formalização do contrato e reunião de abertura com liderança alinhando prioridades." />
-                  <FlowCol num="02" title="Diagnóstico Aprofundado" desc="Validação das metas por pilar a partir do DME, com entrevistas complementares." />
-                  <FlowCol num="03" title="Desenho do Plano" desc="Cada meta ganha indicador, responsável e prazo, orientando os encontros." />
-                  <FlowCol num="04" title="Execução" desc="O programa escolhido roda na cadência combinada, com ajuste de rota ágil." />
-                  <FlowCol num="05" title="Revisão Dia 30" desc="Primeiro checkpoint formal comparando combinado com avanço real." />
-                </div>
-              </div>
-            )}
-
-            {currentSlide === 15 && (
-              <div>
-                <SlideHeader
-                  eyebrow="Antes de fechar, essa pergunta é sua"
-                  title="Qual é o horizonte certo pra você?"
-                  subtitle="Trimestral, semestral ou anual: qual dessas situações mais combina com a empresa agora"
-                  flag="Decisão"
-                />
-                <div style={{ display: "flex", flexDirection: "column", gap: "1.8vh" }}>
-                  <div style={{ display: "flex", gap: 18, alignItems: "flex-start", padding: "1.4vh 0", borderBottom: "1px solid #D9DCE1" }}>
-                    <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#C1A160", minWidth: 55 }}>
-                      3M
-                    </div>
-                    <div>
-                      <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(15px, 1.2vw, 17.5px)", fontWeight: 700, color: "#1D2B3C", margin: "0 0 3px" }}>
-                        Trimestral (90 dias)
-                      </h4>
-                      <p style={{ fontSize: "clamp(13px, 1.05vw, 15px)", color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
-                        Você tem 1 prioridade clara e urgente, e quer ver resultado concreto nela antes de pensar no resto?
-                      </p>
-                    </div>
-                  </div>
-
-                  <div style={{ display: "flex", gap: 18, alignItems: "flex-start", padding: "1.4vh 0", borderBottom: "1px solid #D9DCE1" }}>
-                    <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#C1A160", minWidth: 55 }}>
-                      6M
-                    </div>
-                    <div>
-                      <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(15px, 1.2vw, 17.5px)", fontWeight: 700, color: "#1D2B3C", margin: "0 0 3px" }}>
-                        Semestral (180 dias) · Recomendado
-                      </h4>
-                      <p style={{ fontSize: "clamp(13px, 1.05vw, 15px)", color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
-                        Você enxerga 2 ou 3 frentes que precisam mudar, e topa um ritmo mais longo para consolidar de verdade?
-                      </p>
-                    </div>
-                  </div>
-
-                  <div style={{ display: "flex", gap: 18, alignItems: "flex-start", padding: "1.4vh 0", borderBottom: "1px solid #D9DCE1" }}>
-                    <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#C1A160", minWidth: 55 }}>
-                      12M
-                    </div>
-                    <div>
-                      <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(15px, 1.2vw, 17.5px)", fontWeight: 700, color: "#1D2B3C", margin: "0 0 3px" }}>
-                        Anual (365 dias)
-                      </h4>
-                      <p style={{ fontSize: "clamp(13px, 1.05vw, 15px)", color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
-                        A gestão da empresa inteira precisa de reconstrução, com acompanhamento contínuo e governança o ano todo?
-                      </p>
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      textAlign: "center",
-                      borderTop: "1px solid #C1A160",
-                      borderBottom: "1px solid #C1A160",
-                      padding: "1.5vh 0",
-                      fontSize: "clamp(14px, 1.15vw, 16.5px)",
                       fontWeight: 600,
                       color: "#1D2B3C",
                       fontStyle: "italic",
-                      marginTop: "0.5vh",
+                      lineHeight: 1.5,
                     }}
                   >
-                    Qual dessas três opções te representa melhor agora{clienteNome ? `, ${clienteNome}` : ""}? Essa resposta já aponta o formato ideal para o seu plano.
+                    Essa fotografia ainda representa o que mais pesa hoje{clienteNome ? `, ${clienteNome}` : ""}?
                   </div>
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-            {currentSlide === 16 && (
-              <div
-                style={{
-                  flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  textAlign: "center",
-                  gap: "2.2vh",
-                }}
-              >
+          {/* SLIDE 7 · O PREÇO DE NÃO AGIR */}
+          {currentSlide === 7 && (
+            <div>
+              <SlideHeader
+                eyebrow="Antes de decidir, vale calcular"
+                title="O Preço de Não Agir"
+                subtitle="Três perguntas que valem mais do que qualquer diagnóstico"
+                flag="Reflexão"
+              />
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.4vh" }}>
+                <div style={{ display: "flex", gap: 18, alignItems: "flex-start", padding: "1.2vh 0", borderBottom: "1px solid #D9DCE1" }}>
+                  <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#B23B3B", minWidth: 42 }}>
+                    01
+                  </div>
+                  <div>
+                    <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(14px, 1.15vw, 16.5px)", fontWeight: 700, color: "#1D2B3C", margin: "0 0 3px" }}>
+                      Valor do negócio
+                    </h4>
+                    <p style={{ fontSize: "clamp(12.5px, 1.05vw, 14.5px)", color: "#15191F", lineHeight: 1.5, margin: 0 }}>
+                      Se você decidisse vender a empresa hoje, ela valeria o que você imagina, ou menos, porque tudo ainda depende de você estar presente todos os dias?
+                    </p>
+                    <p style={{ fontSize: "clamp(11.5px, 0.95vw, 13.5px)", color: "#6B7280", fontStyle: "italic", margin: "4px 0 0" }}>
+                      Uma empresa que só funciona com o dono presente vale menos no mercado e fica mais frágil a qualquer imprevisto.
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", gap: 18, alignItems: "flex-start", padding: "1.2vh 0", borderBottom: "1px solid #D9DCE1" }}>
+                  <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#B23B3B", minWidth: 42 }}>
+                    02
+                  </div>
+                  <div>
+                    <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(14px, 1.15vw, 16.5px)", fontWeight: 700, color: "#1D2B3C", margin: "0 0 3px" }}>
+                      Margem
+                    </h4>
+                    <p style={{ fontSize: "clamp(12.5px, 1.05vw, 14.5px)", color: "#15191F", lineHeight: 1.5, margin: 0 }}>
+                      Quanto da sua margem está desaparecendo agora mesmo em retrabalho, desconto não planejado ou custo que ninguém está olhando de perto?
+                    </p>
+                    <p style={{ fontSize: "clamp(11.5px, 0.95vw, 13.5px)", color: "#6B7280", fontStyle: "italic", margin: "4px 0 0" }}>
+                      Faturar mais sem controle de custo é crescer no vermelho sem perceber.
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", gap: 18, alignItems: "flex-start", padding: "1.2vh 0", borderBottom: "1px solid #D9DCE1" }}>
+                  <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#B23B3B", minWidth: 42 }}>
+                    03
+                  </div>
+                  <div>
+                    <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(14px, 1.15vw, 16.5px)", fontWeight: 700, color: "#1D2B3C", margin: "0 0 3px" }}>
+                      Rotina e saúde
+                    </h4>
+                    <p style={{ fontSize: "clamp(12.5px, 1.05vw, 14.5px)", color: "#15191F", lineHeight: 1.5, margin: 0 }}>
+                      No ritmo de hoje, daqui a 12 meses, quanto tempo sobra para decisão estratégica, para descansar, para estar presente fora da empresa?
+                    </p>
+                    <p style={{ fontSize: "clamp(11.5px, 0.95vw, 13.5px)", color: "#6B7280", fontStyle: "italic", margin: "4px 0 0" }}>
+                      Rotina de apagar incêndio cobra um preço pessoal que não aparece em nenhum balanço.
+                    </p>
+                  </div>
+                </div>
+
                 <div
                   style={{
-                    fontFamily: "Montserrat, Arial, sans-serif",
-                    fontSize: "clamp(11px, 0.9vw, 13px)",
+                    textAlign: "center",
+                    borderTop: "1px solid #C1A160",
+                    borderBottom: "1px solid #C1A160",
+                    padding: "1.2vh 0",
+                    fontSize: "clamp(13.5px, 1.15vw, 16px)",
                     fontWeight: 700,
-                    letterSpacing: "2px",
-                    textTransform: "uppercase",
-                    color: "#D7C089",
-                    border: "1px solid rgba(193,161,96,0.5)",
-                    padding: "6px 18px",
-                    borderRadius: 4,
+                    color: "#1D2B3C",
+                    fontStyle: "italic",
+                    marginTop: "0.5vh",
                   }}
                 >
-                  Fechamento &amp; Próximos Passos
+                  Não decidir também é uma decisão: é escolher continuar pagando essa conta todo mês.
                 </div>
+              </div>
+            </div>
+          )}
 
-                <h1
+          {/* SLIDE 8 · BIFURCAÇÃO ESTRATÉGICA */}
+          {currentSlide === 8 && (
+            <div>
+              <SlideHeader
+                eyebrow="Um momento de decisão, juntos"
+                title="Bifurcação Estratégica"
+                subtitle="Avaliando mão de obra e conhecimento de gestão disponíveis hoje na empresa"
+                flag="Decisão"
+              />
+              <p style={{ textAlign: "center", maxWidth: 680, margin: "0 auto 1.5vh", fontSize: "clamp(12.5px, 1.05vw, 14.5px)", color: "#15191F", lineHeight: 1.5 }}>
+                Antes de indicar um caminho, vale confirmar dois pontos com você: quem toca o operacional hoje, e se esse time já sabe aplicar método sozinho ou precisa de alguém construindo isso junto.
+              </p>
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <svg viewBox="0 0 900 290" style={{ width: "100%", maxHeight: "40vh" }}>
+                  <rect x="220" y="8" width="460" height="70" fill="#1D2B3C" rx="6" />
+                  <rect x="220" y="8" width="460" height="4" fill="#C1A160" />
+                  <text x="450" y="38" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="15">
+                    Hoje, quem executa o operacional
+                  </text>
+                  <text x="450" y="60" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="15">
+                    da empresa no dia a dia?
+                  </text>
+
+                  <line x1="450" y1="78" x2="450" y2="100" stroke="#C1A160" strokeWidth="2" />
+                  <line x1="150" y1="100" x2="750" y2="100" stroke="#C1A160" strokeWidth="2" />
+                  <line x1="150" y1="100" x2="150" y2="118" stroke="#C1A160" strokeWidth="2" />
+                  <line x1="750" y1="100" x2="750" y2="118" stroke="#C1A160" strokeWidth="2" />
+
+                  <rect x="50" y="118" width="200" height="4" fill="#F6F5F1" />
+                  <text x="150" y="140" textAnchor="middle" fill="#1D2B3C" fontFamily="Open Sans, Arial, sans-serif" fontSize="13.5" fontWeight="700">
+                    Já tem equipe própria,
+                  </text>
+                  <text x="150" y="158" textAnchor="middle" fill="#1D2B3C" fontFamily="Open Sans, Arial, sans-serif" fontSize="13.5" fontWeight="700">
+                    falta direção
+                  </text>
+                  <text x="750" y="140" textAnchor="middle" fill="#1D2B3C" fontFamily="Open Sans, Arial, sans-serif" fontSize="13.5" fontWeight="700">
+                    Ainda faz sozinho,
+                  </text>
+                  <text x="750" y="158" textAnchor="middle" fill="#1D2B3C" fontFamily="Open Sans, Arial, sans-serif" fontSize="13.5" fontWeight="700">
+                    sobrecarregado
+                  </text>
+
+                  <line x1="150" y1="168" x2="150" y2="192" stroke="#C1A160" strokeWidth="2" />
+                  <line x1="750" y1="168" x2="750" y2="192" stroke="#C1A160" strokeWidth="2" />
+
+                  <rect x="20" y="192" width="260" height="98" fill="#1D2B3C" rx="6" />
+                  <rect x="20" y="192" width="260" height="4" fill="#C1A160" />
+                  <text x="150" y="221" textAnchor="middle" fill="#D7C089" fontFamily="Montserrat, Arial, sans-serif" fontSize="10.5" fontWeight="700" letterSpacing="0.5">
+                    PERFIL ESTRATÉGICO / TEM BRAÇO
+                  </text>
+                  <text x="150" y="250" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontSize="17" fontWeight="800">
+                    Mentoria Executiva
+                  </text>
+                  <text x="150" y="272" textAnchor="middle" fill="#B9C2CC" fontFamily="Open Sans, Arial, sans-serif" fontSize="12">
+                    Direção, método e cobrança
+                  </text>
+
+                  <rect x="620" y="192" width="260" height="98" fill="#1D2B3C" rx="6" />
+                  <rect x="620" y="192" width="260" height="4" fill="#C1A160" />
+                  <text x="750" y="221" textAnchor="middle" fill="#D7C089" fontFamily="Montserrat, Arial, sans-serif" fontSize="10.5" fontWeight="700" letterSpacing="0.5">
+                    SOBRECARGA / QUER IMPLEMENTAÇÃO
+                  </text>
+                  <text x="750" y="250" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontSize="17" fontWeight="800">
+                    Consultoria Hands-On
+                  </text>
+                  <text x="750" y="272" textAnchor="middle" fill="#B9C2CC" fontFamily="Open Sans, Arial, sans-serif" fontSize="12">
+                    EA implementa junto
+                  </text>
+                </svg>
+              </div>
+            </div>
+          )}
+
+          {/* SLIDE 9 · INVESTIMENTO: CONSULTORIA OU EXECUTIVO CLT? (BIFURCAÇÃO SEM VOLTAR AO OUTRO) */}
+          {currentSlide === 9 && (
+            <div>
+              <SlideHeader
+                eyebrow="Comparando alternativas"
+                title="Investimento: Consultoria ou Executivo CLT?"
+                subtitle="O que custa, de verdade, resolver isso com um cargo interno"
+                flag="Investimento"
+              />
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "clamp(12px, 1vw, 14px)", marginBottom: "1.5vh" }}>
+                <thead>
+                  <tr>
+                    <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "10px 14px", textAlign: "left", fontFamily: "Montserrat, Arial, sans-serif", fontSize: "0.78rem", textTransform: "uppercase" }}>Critério</th>
+                    <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "10px 14px", textAlign: "left", fontFamily: "Montserrat, Arial, sans-serif", fontSize: "0.78rem", textTransform: "uppercase" }}>Executivo Sênior CLT</th>
+                    <th style={{ background: "#C1A160", color: "#121D28", padding: "10px 14px", textAlign: "left", fontFamily: "Montserrat, Arial, sans-serif", fontSize: "0.78rem", textTransform: "uppercase" }}>Consultoria / Mentoria Gestão 360</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style={{ background: "#FFFFFF" }}>
+                    <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Custo mensal aproximado</td>
+                    <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", color: "#B23B3B" }}>R$ 8.000 a R$ 15.000 de salário + encargos (FGTS, INSS patronal, 13º, férias): <strong>R$ 14.000 a R$ 27.000/mês</strong></td>
+                    <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)", color: "#1D2B3C", fontWeight: 700 }}>Fração desse investimento, sem nenhum encargo trabalhista</td>
+                  </tr>
+                  <tr style={{ background: "#F6F5F1" }}>
+                    <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Vínculo e risco</td>
+                    <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1" }}>CLT, com risco de rescisão, multa e passivo trabalhista</td>
+                    <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)", fontWeight: 600 }}>Contrato B2B de prestação de serviço, sem passivo</td>
+                  </tr>
+                  <tr style={{ background: "#FFFFFF" }}>
+                    <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Curva de aprendizado</td>
+                    <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1" }}>Meses para conhecer a empresa e testar métodos que podem falhar</td>
+                    <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)", fontWeight: 600 }}>Método já validado em campo, aplicado desde a primeira semana</td>
+                  </tr>
+                  <tr style={{ background: "#F6F5F1" }}>
+                    <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Comprometimento</td>
+                    <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1" }}>Depende de 1 único profissional contratado, com risco de rotatividade</td>
+                    <td style={{ padding: "10px 14px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)", fontWeight: 700 }}>Acompanhamento direto do sócio fundador da Empresarial Academy</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div
+                style={{
+                  borderTop: "1px solid #C1A160",
+                  borderBottom: "1px solid #C1A160",
+                  padding: "1.2vh 0",
+                  fontSize: "clamp(12.5px, 1.05vw, 14.5px)",
+                  fontWeight: 600,
+                  color: "#1D2B3C",
+                  fontStyle: "italic",
+                  textAlign: "center",
+                  marginBottom: "1.5vh",
+                }}
+              >
+                De R$ 6.500 a R$ 8.900 por mês, conforme o formato escolhido a seguir — sempre abaixo do custo de 1 executivo CLT. Uma ou duas contas fechadas a mais cobrem todo o programa.
+              </div>
+
+              {/* BOTÕES DESTACADOS COM BIFURCAÇÃO EXCLUSIVA */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: 20,
+                  marginTop: "1vh",
+                }}
+              >
+                <button
+                  onClick={() => {
+                    setBranch("mentoria");
+                    goToSlideNumber(10);
+                  }}
                   style={{
                     fontFamily: "Montserrat, Arial, sans-serif",
-                    fontSize: "clamp(26px, 3vw, 44px)",
+                    fontSize: "clamp(13px, 1.1vw, 15px)",
+                    fontWeight: 800,
+                    color: "#121D28",
+                    background: "linear-gradient(135deg, #D7C089 0%, #C1A160 100%)",
+                    border: "2px solid #C1A160",
+                    borderRadius: 6,
+                    padding: "12px 28px",
+                    cursor: "pointer",
+                    boxShadow: "0 0 20px rgba(193,161,96,0.45), 0 4px 10px rgba(0,0,0,0.15)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}
+                >
+                  Ver Mentoria Executiva →
+                </button>
+
+                <button
+                  onClick={() => {
+                    setBranch("consultoria");
+                    goToSlideNumber(12);
+                  }}
+                  style={{
+                    fontFamily: "Montserrat, Arial, sans-serif",
+                    fontSize: "clamp(13px, 1.1vw, 15px)",
                     fontWeight: 800,
                     color: "#FFFFFF",
-                    maxWidth: "68vw",
-                    lineHeight: 1.25,
-                    margin: 0,
+                    background: "linear-gradient(135deg, #26384D 0%, #1D2B3C 100%)",
+                    border: "2px solid #C1A160",
+                    borderRadius: 6,
+                    padding: "12px 28px",
+                    cursor: "pointer",
+                    boxShadow: "0 0 20px rgba(29,43,60,0.35), 0 4px 10px rgba(0,0,0,0.15)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
                   }}
                 >
-                  {clienteNome ? `${clienteNome}, vamos` : "Vamos"} seguir com o{" "}
-                  <span style={{ color: "#D7C089", fontStyle: "normal" }}>Plano de Ação</span>?
-                </h1>
+                  Ver Consultoria Hands-On →
+                </button>
+              </div>
+            </div>
+          )}
 
-                <p
-                  style={{
-                    fontSize: "clamp(13.5px, 1.15vw, 17px)",
-                    color: "rgba(255,255,255,0.78)",
-                    maxWidth: "52vw",
-                    lineHeight: 1.55,
-                    margin: 0,
-                  }}
-                >
-                  Formalização do contrato, sessão de Kick-off e início do Plano de Ação Mútuo. O primeiro passo é confirmar a data de início.
-                </p>
+          {/* SLIDE 10 · OPÇÃO A: MENTORIA EXECUTIVA (COMO FUNCIONA) */}
+          {currentSlide === 10 && (
+            <div>
+              <SlideHeader
+                eyebrow="Como funciona"
+                title="Mentoria Executiva Gestão 360"
+                subtitle="Para quem já tem equipe e precisa de direção, método e cobrança"
+                flag="Perfil Estratégico / Tem Braço"
+              />
+              <p style={{ fontSize: "clamp(12.5px, 1.05vw, 14.5px)", lineHeight: 1.55, color: "#15191F", marginBottom: "1.5vh" }}>
+                Encontros estratégicos quinzenais com Thiago Marchi, canal direto para validar decisões entre as sessões, e todas as ferramentas do método Gestão 360 aplicadas à realidade da empresa de forma personalizada. Você continua no comando, com o apoio que precisa através de método e orientações externas.
+              </p>
+              <div style={{ height: "20vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <FlowSvg
+                  steps={[
+                    { title: "Diagnóstico Validado", lines: ["Confirmação dos", "pilares prioritários"] },
+                    { title: "Direção Quinzenal", lines: ["Encontros com", "Thiago Marchi"] },
+                    { title: "Cobrança de Metas", lines: ["Acompanhamento", "indicador a indicador"] },
+                    { title: "Autonomia do Time", lines: ["Time executa com", "método instalado"] },
+                  ]}
+                />
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginTop: "1.5vh" }}>
+                <FlowCol num="01" title="Diagnóstico Validado" desc="Feito por meio de testes, avaliações e entrevistas com líderes e equipe para analisar rotina e comportamento." />
+                <FlowCol num="02" title="Direção Quinzenal" desc="Plano apresentado e analisado, com acompanhamento, ajuste de rota, treinamento e orientação sobre processos e metas." />
+                <FlowCol num="03" title="Cobrança de Metas" desc="Olhar analítico sobre indicadores e metas da empresa, acompanhando a evolução dos resultados com qualidade." />
+                <FlowCol num="04" title="Autonomia do Time" desc="Dúvidas e contratempos da execução resolvidos, e novas rotas para o futuro consolidadas com a liderança." />
+              </div>
+            </div>
+          )}
 
-                <div style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center", marginTop: "1vh" }}>
-                  <Link
-                    href={contractUrl}
-                    style={{
-                      fontFamily: "Montserrat, Arial, sans-serif",
-                      fontSize: "clamp(13px, 1.1vw, 15px)",
-                      fontWeight: 800,
-                      color: "#121D28",
-                      background: "linear-gradient(135deg, #D7C089 0%, #C1A160 100%)",
-                      padding: "13px 30px",
-                      borderRadius: 6,
-                      textDecoration: "none",
-                      boxShadow: "0 0 25px rgba(193,161,96,0.5)",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
-                  >
-                    <span>📝</span> Gerar Contrato no HUB com Dados do Lead ↗
-                  </Link>
+          {/* SLIDE 11 · MENTORIA: PLANOS 3/6/12 MESES (3 PACOTES) */}
+          {currentSlide === 11 && (
+            <div>
+              <SlideHeader
+                eyebrow="Formatos de acompanhamento"
+                title="Mentoria Executiva: 3, 6 ou 12 meses"
+                subtitle="O horizonte ideal depende da complexidade da transformação. Os três formatos seguem a mesma metodologia."
+                flag="3 Pacotes"
+              />
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "clamp(11.5px, 0.95vw, 13.5px)" }}>
+                <thead>
+                  <tr>
+                    <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Critério</th>
+                    <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Trimestral (3M)</th>
+                    <th style={{ background: "#C1A160", color: "#121D28", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem", fontWeight: 800 }}>Semestral (6M) · Mais Escolhido</th>
+                    <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Anual (12M)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style={{ background: "#FFFFFF" }}>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Cadência</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Quinzenal · 6 sessões de 90 min</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)", fontWeight: 600 }}>Quinzenal · 12 sessões de 90 min</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Quinzenal · 24 sessões de 90 min</td>
+                  </tr>
+                  <tr style={{ background: "#F6F5F1" }}>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Profundidade</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Atuação concentrada nas prioridades mais urgentes</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)" }}>Atuação em mais áreas e processos-chave com consistência</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Atuação ampla em todas as frentes da empresa</td>
+                  </tr>
+                  <tr style={{ background: "#FFFFFF" }}>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Entrega-chave</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Diagnóstico, plano e implantação das ações imediatas</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)", fontWeight: 600 }}>Rotinas de gestão implantadas e consolidadas no time</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Ciclo contínuo de transformação e governança instalada</td>
+                  </tr>
+                  <tr style={{ background: "#F6F5F1" }}>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Indicado para</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Desafios prioritários e avanços em curto prazo</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)" }}>Desenvolver novas rotinas e consolidar equipe</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Transformações complexas com governança contínua</td>
+                  </tr>
+                  <tr style={{ background: "#FFFFFF" }}>
+                    <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, color: "#1D2B3C" }}>Investimento</td>
+                    <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1rem", color: "#1D2B3C" }}>R$ 7.900/mês</td>
+                    <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1.05rem", color: "#C1A160", background: "rgba(193,161,96,0.15)" }}>R$ 6.900/mês</td>
+                    <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1rem", color: "#2E7D5B" }}>R$ 6.500/mês</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          )}
 
-                  {clienteWhatsapp ? (
-                    <a
-                      href={`https://wa.me/55${clienteWhatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(
-                        `Olá ${clienteNome || ""}! Foi excelente nossa reunião de apresentação do Diagnóstico Gestão 360. Segue a proposta e os próximos passos para iniciarmos o plano!`
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        fontFamily: "Montserrat, Arial, sans-serif",
-                        fontSize: "clamp(13px, 1.1vw, 15px)",
-                        fontWeight: 700,
-                        color: "#FFFFFF",
-                        background: "rgba(255,255,255,0.12)",
-                        border: "1px solid rgba(255,255,255,0.35)",
-                        padding: "13px 26px",
-                        borderRadius: 6,
-                        textDecoration: "none",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                      }}
-                    >
-                      <span>💬</span> WhatsApp do Cliente
-                    </a>
-                  ) : null}
+          {/* SLIDE 12 · OPÇÃO B: CONSULTORIA HANDS-ON (COMO FUNCIONA) */}
+          {currentSlide === 12 && (
+            <div>
+              <SlideHeader
+                eyebrow="Como funciona"
+                title="Consultoria de Negócios Hands-On"
+                subtitle="Para quem está sobrecarregado e precisa de implementação, não só orientação"
+                flag="Sobrecarga / Quer Implementação"
+              />
+              <p style={{ fontSize: "clamp(12.5px, 1.05vw, 14.5px)", lineHeight: 1.55, color: "#15191F", marginBottom: "1.5vh" }}>
+                A EA entra na operação: mapeia e desenha os processos-chave, redige playbooks e scripts, e treina a equipe para operar sem depender do dono em cada decisão.
+              </p>
+              <div style={{ height: "20vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <FlowSvg
+                  steps={[
+                    { title: "Diagnóstico Profundo", lines: ["Mapeamento dos", "processos críticos"] },
+                    { title: "Desenho de Processos", lines: ["Playbooks e", "scripts prontos"] },
+                    { title: "Treinamento da Equipe", lines: ["Time aplica junto", "com a EA"] },
+                    { title: "Transição da Gestão", lines: ["Operação roda sem", "depender do dono"] },
+                  ]}
+                />
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginTop: "1.5vh" }}>
+                <FlowCol num="01" title="Diagnóstico Profundo" desc="Mapeamento dos processos críticos direto na operação, com entrevistas à equipe e observação da rotina diária." />
+                <FlowCol num="02" title="Desenho de Processos" desc="Construção dos playbooks e scripts junto com quem executa, definindo responsável e indicador para cada etapa." />
+                <FlowCol num="03" title="Treinamento da Equipe" desc="Aplicação prática com o time em campo, ajustando o que não funcionar antes de validar o playbook oficial." />
+                <FlowCol num="04" title="Transição da Gestão" desc="Passagem da operação para o time, com acompanhamento próximo até o processo rodar de forma independente." />
+              </div>
+            </div>
+          )}
+
+          {/* SLIDE 13 · CONSULTORIA: PLANOS 3/6/12 MESES (3 PACOTES) */}
+          {currentSlide === 13 && (
+            <div>
+              <SlideHeader
+                eyebrow="Formatos de acompanhamento"
+                title="Consultoria Hands-On: 3, 6 ou 12 meses"
+                subtitle="O horizonte ideal depende de quantos processos a empresa precisa reconstruir."
+                flag="3 Pacotes"
+              />
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "clamp(11.5px, 0.95vw, 13.5px)" }}>
+                <thead>
+                  <tr>
+                    <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Critério</th>
+                    <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Trimestral (3M)</th>
+                    <th style={{ background: "#C1A160", color: "#121D28", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem", fontWeight: 800 }}>Semestral (6M) · Mais Escolhido</th>
+                    <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Anual (12M)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style={{ background: "#FFFFFF" }}>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Cadência</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>2 encontros online + 2 visitas presenciais/mês</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)", fontWeight: 600 }}>2 encontros online + 2 a 3 visitas presenciais/mês</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Intensiva nos 4 primeiros meses, depois mensal</td>
+                  </tr>
+                  <tr style={{ background: "#F6F5F1" }}>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Profundidade</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Foco em 1 processo crítico até a equipe treinada</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)" }}>Foco em 2 a 3 processos, cobrindo mais de uma área</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Atuação nos 6 pilares, reconstruindo a gestão inteira</td>
+                  </tr>
+                  <tr style={{ background: "#FFFFFF" }}>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Entrega-chave</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Playbook implantado e equipe operando sem travar</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)", fontWeight: 600 }}>Múltiplas áreas com processos novos e indicadores</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Gestão reconstruída e sustentada em todas as áreas</td>
+                  </tr>
+                  <tr style={{ background: "#F6F5F1" }}>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 700 }}>Indicado para</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Resolver o gargalo mais urgente da operação</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1", background: "rgba(193,161,96,0.08)" }}>Reorganizar duas frentes da operação simultaneamente</td>
+                    <td style={{ padding: "8px 12px", borderBottom: "1px solid #D9DCE1" }}>Reconstruir a gestão completa da empresa</td>
+                  </tr>
+                  <tr style={{ background: "#FFFFFF" }}>
+                    <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, color: "#1D2B3C" }}>Investimento</td>
+                    <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1rem", color: "#1D2B3C" }}>R$ 8.900/mês</td>
+                    <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1.05rem", color: "#C1A160", background: "rgba(193,161,96,0.15)" }}>R$ 8.400/mês</td>
+                    <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1rem", color: "#2E7D5B" }}>R$ 7.970/mês médio</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* SLIDE 14 · PLANO DE AÇÃO MÚTUO (MAP) & ONBOARDING */}
+          {currentSlide === 14 && (
+            <div>
+              <SlideHeader
+                eyebrow="O que acontece depois do sim"
+                title="Plano de Ação Mútuo (MAP) & Onboarding"
+                subtitle="O que cada lado se compromete a entregar, e até quando"
+                flag="MAP"
+              />
+              <p style={{ fontSize: "clamp(12.5px, 1.05vw, 14.5px)", lineHeight: 1.55, color: "#15191F", marginBottom: "1.5vh" }}>
+                Da assinatura ao primeiro checkpoint de resultados, este é o compromisso mútuo entre a Empresarial Academy e a sua empresa, com responsável e prazo em cada etapa.
+              </p>
+              <div style={{ height: "19vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <FlowSvg
+                  steps={[
+                    { title: "Assinatura & Kickoff", lines: ["EA + Cliente"] },
+                    { title: "Diagnóstico Aprofundado", lines: ["Validação de metas", "por pilar · EA"] },
+                    { title: "Desenho do Plano", lines: ["Indicador e prazo", "por meta"] },
+                    { title: "Execução", lines: ["Programa escolhido", "rodando"] },
+                    { title: "Revisão de Indicadores", lines: ["Primeiro checkpoint", "Dia 30"] },
+                  ]}
+                />
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12, marginTop: "1.5vh" }}>
+                <FlowCol num="01" title="Assinatura & Kickoff" desc="Formalização do contrato e reunião de abertura com liderança alinhando prioridades." />
+                <FlowCol num="02" title="Diagnóstico Aprofundado" desc="Validação das metas por pilar a partir do DME, com entrevistas complementares." />
+                <FlowCol num="03" title="Desenho do Plano" desc="Cada meta ganha indicador, responsável e prazo, orientando os encontros." />
+                <FlowCol num="04" title="Execução" desc="O programa escolhido roda na cadência combinada, com ajuste de rota ágil." />
+                <FlowCol num="05" title="Revisão Dia 30" desc="Primeiro checkpoint formal comparando combinado com avanço real." />
+              </div>
+            </div>
+          )}
+
+          {/* SLIDE 15 · QUAL É O HORIZONTE CERTO PRA VOCÊ? */}
+          {currentSlide === 15 && (
+            <div>
+              <SlideHeader
+                eyebrow="Antes de fechar, essa pergunta é sua"
+                title="Qual é o horizonte certo pra você?"
+                subtitle="Trimestral, semestral ou anual: qual dessas situações mais combina com a empresa agora"
+                flag="Decisão"
+              />
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.8vh" }}>
+                <div style={{ display: "flex", gap: 18, alignItems: "flex-start", padding: "1.4vh 0", borderBottom: "1px solid #D9DCE1" }}>
+                  <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#C1A160", minWidth: 55 }}>
+                    3M
+                  </div>
+                  <div>
+                    <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(15px, 1.2vw, 17.5px)", fontWeight: 700, color: "#1D2B3C", margin: "0 0 3px" }}>
+                      Trimestral (90 dias)
+                    </h4>
+                    <p style={{ fontSize: "clamp(13px, 1.05vw, 15px)", color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+                      Você tem 1 prioridade clara e urgente, e quer ver resultado concreto nela antes de pensar no resto?
+                    </p>
+                  </div>
                 </div>
+
+                <div style={{ display: "flex", gap: 18, alignItems: "flex-start", padding: "1.4vh 0", borderBottom: "1px solid #D9DCE1" }}>
+                  <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#C1A160", minWidth: 55 }}>
+                    6M
+                  </div>
+                  <div>
+                    <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(15px, 1.2vw, 17.5px)", fontWeight: 700, color: "#1D2B3C", margin: "0 0 3px" }}>
+                      Semestral (180 dias) · Recomendado
+                    </h4>
+                    <p style={{ fontSize: "clamp(13px, 1.05vw, 15px)", color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+                      Você enxerga 2 ou 3 frentes que precisam mudar, e topa um ritmo mais longo para consolidar de verdade?
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", gap: 18, alignItems: "flex-start", padding: "1.4vh 0", borderBottom: "1px solid #D9DCE1" }}>
+                  <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#C1A160", minWidth: 55 }}>
+                    12M
+                  </div>
+                  <div>
+                    <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(15px, 1.2vw, 17.5px)", fontWeight: 700, color: "#1D2B3C", margin: "0 0 3px" }}>
+                      Anual (365 dias)
+                    </h4>
+                    <p style={{ fontSize: "clamp(13px, 1.05vw, 15px)", color: "#6B7280", lineHeight: 1.5, margin: 0 }}>
+                      A gestão da empresa inteira precisa de reconstrução, com acompanhamento contínuo e governança o ano todo?
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    textAlign: "center",
+                    borderTop: "1px solid #C1A160",
+                    borderBottom: "1px solid #C1A160",
+                    padding: "1.5vh 0",
+                    fontSize: "clamp(14px, 1.15vw, 16.5px)",
+                    fontWeight: 600,
+                    color: "#1D2B3C",
+                    fontStyle: "italic",
+                    marginTop: "0.5vh",
+                  }}
+                >
+                  Qual dessas três opções te representa melhor agora{clienteNome ? `, ${clienteNome}` : ""}? Essa resposta já aponta o formato ideal para o seu plano.
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* SLIDE 16 · FECHAMENTO & PRÓXIMOS PASSOS (SEM BOTÃO WHATSAPP) */}
+          {currentSlide === 16 && (
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+                gap: "2.2vh",
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "Montserrat, Arial, sans-serif",
+                  fontSize: "clamp(11px, 0.9vw, 13px)",
+                  fontWeight: 700,
+                  letterSpacing: "2px",
+                  textTransform: "uppercase",
+                  color: "#D7C089",
+                  border: "1px solid rgba(193,161,96,0.5)",
+                  padding: "6px 18px",
+                  borderRadius: 4,
+                }}
+              >
+                Fechamento &amp; Próximos Passos
+              </div>
+
+              <h1
+                style={{
+                  fontFamily: "Montserrat, Arial, sans-serif",
+                  fontSize: "clamp(26px, 3vw, 44px)",
+                  fontWeight: 800,
+                  color: "#FFFFFF",
+                  maxWidth: "68vw",
+                  lineHeight: 1.25,
+                  margin: 0,
+                }}
+              >
+                {clienteNome ? `${clienteNome}, vamos` : "Vamos"} seguir com o{" "}
+                <span style={{ color: "#D7C089", fontStyle: "normal" }}>Plano de Ação</span>?
+              </h1>
+
+              <p
+                style={{
+                  fontSize: "clamp(13.5px, 1.15vw, 17px)",
+                  color: "rgba(255,255,255,0.78)",
+                  maxWidth: "52vw",
+                  lineHeight: 1.55,
+                  margin: 0,
+                }}
+              >
+                Formalização do contrato, sessão de Kick-off e início do Plano de Ação Mútuo. O primeiro passo é confirmar a data de início.
+              </p>
+
+              {/* BOTÃO PRINCIPAL DE GERAR CONTRATO */}
+              <div style={{ display: "flex", gap: 16, justifyContent: "center", marginTop: "1vh" }}>
+                <Link
+                  href={contractUrl}
+                  style={{
+                    fontFamily: "Montserrat, Arial, sans-serif",
+                    fontSize: "clamp(13px, 1.1vw, 15px)",
+                    fontWeight: 800,
+                    color: "#121D28",
+                    background: "linear-gradient(135deg, #D7C089 0%, #C1A160 100%)",
+                    padding: "13px 32px",
+                    borderRadius: 4,
+                    textDecoration: "none",
+                    boxShadow: "0 0 25px rgba(193,161,96,0.5)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}
+                >
+                  Gerar Contrato no HUB com Dados do Lead ↗
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* RODAPÉ DO SLIDE (CONTROLES DE NAVEGAÇÃO SEM EMOJIS) */}
+        <div
+          className="no-print"
+          style={{
+            padding: "10px 24px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderTop:
+              currentSlide === 1 || currentSlide === 16
+                ? "1px solid rgba(255,255,255,0.15)"
+                : "1px solid #D9DCE1",
+            background: currentSlide === 1 || currentSlide === 16 ? "rgba(0,0,0,0.3)" : "#FAFAFA",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <button
+              onClick={prevSlide}
+              disabled={currentVisibleIndex <= 0}
+              style={{
+                background: "transparent",
+                color: currentSlide === 1 || currentSlide === 16 ? "#D7C089" : "#1D2B3C",
+                border:
+                  currentSlide === 1 || currentSlide === 16
+                    ? "1px solid rgba(193,161,96,0.5)"
+                    : "1px solid #D9DCE1",
+                borderRadius: 4,
+                padding: "5px 12px",
+                fontSize: "0.8rem",
+                fontWeight: 700,
+                cursor: currentVisibleIndex <= 0 ? "not-allowed" : "pointer",
+                opacity: currentVisibleIndex <= 0 ? 0.4 : 1,
+              }}
+            >
+              ◀ Anterior
+            </button>
+
+            <button
+              onClick={nextSlide}
+              disabled={currentVisibleIndex >= visibleSlides.length - 1}
+              style={{
+                background: currentSlide === 1 || currentSlide === 16 ? "#C1A160" : "#1D2B3C",
+                color: currentSlide === 1 || currentSlide === 16 ? "#121D28" : "#FFFFFF",
+                border: "none",
+                borderRadius: 4,
+                padding: "5px 14px",
+                fontSize: "0.8rem",
+                fontWeight: 700,
+                cursor: currentVisibleIndex >= visibleSlides.length - 1 ? "not-allowed" : "pointer",
+                opacity: currentVisibleIndex >= visibleSlides.length - 1 ? 0.4 : 1,
+              }}
+            >
+              Próximo ▶
+            </button>
+
+            {/* Alternador de Trilha / Track quando relevante */}
+            {currentSlide >= 9 && (
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginLeft: 10 }}>
+                <button
+                  onClick={() => {
+                    setBranch("mentoria");
+                    if (currentSlide === 12 || currentSlide === 13) goToSlideNumber(10);
+                  }}
+                  style={{
+                    background: branch === "mentoria" ? "#C1A160" : "transparent",
+                    color: branch === "mentoria" ? "#121D28" : currentSlide === 16 ? "#D7C089" : "#1D2B3C",
+                    border: "1px solid #C1A160",
+                    borderRadius: 3,
+                    padding: "3px 8px",
+                    fontSize: "0.72rem",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                  }}
+                >
+                  Trilha Mentoria
+                </button>
+                <button
+                  onClick={() => {
+                    setBranch("consultoria");
+                    if (currentSlide === 10 || currentSlide === 11) goToSlideNumber(12);
+                  }}
+                  style={{
+                    background: branch === "consultoria" ? "#C1A160" : "transparent",
+                    color: branch === "consultoria" ? "#121D28" : currentSlide === 16 ? "#D7C089" : "#1D2B3C",
+                    border: "1px solid #C1A160",
+                    borderRadius: 3,
+                    padding: "3px 8px",
+                    fontSize: "0.72rem",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                  }}
+                >
+                  Trilha Consultoria
+                </button>
               </div>
             )}
           </div>
 
+          {/* Marcadores de Slides Visíveis */}
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            {visibleSlides.map((sNum, idx) => (
+              <button
+                key={sNum}
+                onClick={() => goToSlideNumber(sNum)}
+                title={`Slide ${idx + 1}`}
+                style={{
+                  width: currentSlide === sNum ? 20 : 7,
+                  height: 7,
+                  borderRadius: 4,
+                  background:
+                    currentSlide === sNum
+                      ? "#C1A160"
+                      : currentSlide === 1 || currentSlide === 16
+                      ? "rgba(255,255,255,0.25)"
+                      : "#D9DCE1",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Contador Dinâmico da Trilha */}
           <div
-            className="no-print"
             style={{
-              padding: "10px 24px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              borderTop:
-                currentSlide === 1 || currentSlide === 16
-                  ? "1px solid rgba(255,255,255,0.15)"
-                  : "1px solid #D9DCE1",
-              background: currentSlide === 1 || currentSlide === 16 ? "rgba(0,0,0,0.3)" : "#FAFAFA",
+              fontFamily: "Montserrat, Arial, sans-serif",
+              fontSize: "0.78rem",
+              fontWeight: 700,
+              color: currentSlide === 1 || currentSlide === 16 ? "rgba(255,255,255,0.6)" : "#6B7280",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <button
-                onClick={() => goToSlide(currentSlide - 1)}
-                disabled={currentSlide <= 1}
-                style={{
-                  background: "transparent",
-                  color: currentSlide === 1 || currentSlide === 16 ? "#D7C089" : "#1D2B3C",
-                  border:
-                    currentSlide === 1 || currentSlide === 16
-                      ? "1px solid rgba(193,161,96,0.5)"
-                      : "1px solid #D9DCE1",
-                  borderRadius: 4,
-                  padding: "5px 12px",
-                  fontSize: "0.8rem",
-                  fontWeight: 700,
-                  cursor: currentSlide <= 1 ? "not-allowed" : "pointer",
-                  opacity: currentSlide <= 1 ? 0.4 : 1,
-                }}
-              >
-                ◀ Anterior
-              </button>
-
-              <button
-                onClick={() => goToSlide(currentSlide + 1)}
-                disabled={currentSlide >= TOTAL_SLIDES}
-                style={{
-                  background: currentSlide === 1 || currentSlide === 16 ? "#C1A160" : "#1D2B3C",
-                  color: currentSlide === 1 || currentSlide === 16 ? "#121D28" : "#FFFFFF",
-                  border: "none",
-                  borderRadius: 4,
-                  padding: "5px 14px",
-                  fontSize: "0.8rem",
-                  fontWeight: 700,
-                  cursor: currentSlide >= TOTAL_SLIDES ? "not-allowed" : "pointer",
-                  opacity: currentSlide >= TOTAL_SLIDES ? 0.4 : 1,
-                }}
-              >
-                Próximo ▶
-              </button>
-            </div>
-
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => goToSlide(i + 1)}
-                  title={`Slide ${i + 1}`}
-                  style={{
-                    width: currentSlide === i + 1 ? 22 : 8,
-                    height: 8,
-                    borderRadius: 4,
-                    background:
-                      currentSlide === i + 1
-                        ? "#C1A160"
-                        : currentSlide === 1 || currentSlide === 16
-                        ? "rgba(255,255,255,0.25)"
-                        : "#D9DCE1",
-                    border: "none",
-                    padding: 0,
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                  }}
-                />
-              ))}
-            </div>
-
-            <div
-              style={{
-                fontFamily: "Montserrat, Arial, sans-serif",
-                fontSize: "0.78rem",
-                fontWeight: 700,
-                color: currentSlide === 1 || currentSlide === 16 ? "rgba(255,255,255,0.6)" : "#6B7280",
-              }}
-            >
-              Slide {currentSlide} / {TOTAL_SLIDES}
-            </div>
+            Slide {currentVisibleIndex + 1} / {visibleSlides.length}
           </div>
         </div>
       </div>
 
+      {/* MODAL DE AJUSTE / PREPARAÇÃO DA REUNIÃO */}
       {showPrepOverlay && (
         <div
           style={{
@@ -1929,21 +2002,22 @@ function PillarDetailCard({ num, name, desc }: { num: string; name: string; desc
         border: "1px solid #D9DCE1",
         borderTop: "3px solid #C1A160",
         borderRadius: 6,
-        padding: "1.4vh 1.2vw",
+        padding: "2vh 1.6vw",
         display: "flex",
         flexDirection: "column",
-        gap: 4,
+        justifyContent: "space-between",
+        gap: 8,
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "1.05rem", color: "#C1A160" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <span style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "1.25rem", color: "#C1A160" }}>
           {num}
         </span>
-        <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(12.5px, 1vw, 14px)", fontWeight: 700, color: "#1D2B3C", margin: 0 }}>
+        <h4 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(13.5px, 1.1vw, 15.5px)", fontWeight: 700, color: "#1D2B3C", margin: 0 }}>
           {name}
         </h4>
       </div>
-      <p style={{ fontSize: "clamp(11px, 0.88vw, 12.5px)", color: "#6B7280", lineHeight: 1.45, margin: "4px 0 0" }}>
+      <p style={{ fontSize: "clamp(12px, 0.95vw, 13.5px)", color: "#4B5563", lineHeight: 1.55, margin: "6px 0 0" }}>
         {desc}
       </p>
     </div>

@@ -41,10 +41,29 @@ const PILLARS_CONFIG = [
 ];
 
 function parseScore(val: unknown): { pct: number; label: string } | null {
+  if (typeof val === "number") {
+    let name = "Estruturado";
+    if (val <= 20) name = "Inicial";
+    else if (val <= 40) name = "Em Desenvolvimento";
+    else if (val <= 60) name = "Estruturado";
+    else if (val <= 80) name = "Avançado";
+    else name = "Referência";
+    return { pct: val, label: name };
+  }
+  if (typeof val === "object" && val !== null && "pct" in val) {
+    const obj = val as { pct: number; label?: string };
+    return { pct: Number(obj.pct) || 0, label: obj.label || "" };
+  }
   if (typeof val !== "string") return null;
   const match = /(\d+)\s*%/.exec(val);
   const labelMatch = /\(([^)]+)\)/.exec(val);
-  if (!match) return null;
+  if (!match) {
+    const rawNum = Number(val.trim());
+    if (!Number.isNaN(rawNum) && val.trim() !== "") {
+      return { pct: rawNum, label: "" };
+    }
+    return null;
+  }
   return {
     pct: Number(match[1]),
     label: labelMatch ? labelMatch[1].trim() : "",
@@ -174,7 +193,25 @@ export async function GET(request: Request) {
     const faturamento = (details["Faturamento anual"] as string) || "Não informado";
 
     const pillars = PILLARS_CONFIG.map((cfg) => {
-      const score = parseScore(details[cfg.key]);
+      let rawVal = details[cfg.key];
+      if (rawVal === undefined) rawVal = details[cfg.name];
+      if (rawVal === undefined) {
+        // Busca flexível por substring
+        const lowerKey = cfg.key.toLowerCase();
+        const foundEntry = Object.entries(details).find(([k]) => {
+          const lk = k.toLowerCase();
+          if (lowerKey.includes("fluxo") && lk.includes("fluxo")) return true;
+          if (lowerKey.includes("arquitetura") && lk.includes("arquitetura")) return true;
+          if (lowerKey.includes("objetivos") && (lk.includes("objetivo") || lk.includes("estrategia") || lk.includes("estratégia"))) return true;
+          if (lowerKey.includes("métricas") && (lk.includes("métrica") || lk.includes("metrica"))) return true;
+          if (lowerKey.includes("desafios") && lk.includes("desafio")) return true;
+          if (lowerKey.includes("evolução") && (lk.includes("evoluç") || lk.includes("evoluc"))) return true;
+          return false;
+        });
+        if (foundEntry) rawVal = foundEntry[1];
+      }
+
+      const score = parseScore(rawVal);
       return {
         ...cfg,
         pct: score ? score.pct : 0,
