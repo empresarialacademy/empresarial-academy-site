@@ -64,6 +64,7 @@ export async function GET(request: Request) {
         collection: "leads",
         sort: "-createdAt",
         limit: 100,
+        overrideAccess: true,
       });
 
       const diagDocs = docs.filter((rawDoc) => {
@@ -110,6 +111,7 @@ export async function GET(request: Request) {
       collection: "leads",
       sort: "-createdAt",
       limit: 100,
+      overrideAccess: true,
     });
 
     const targetIdLower = id.toLowerCase();
@@ -127,6 +129,7 @@ export async function GET(request: Request) {
         rawLead = await payload.findByID({
           collection: "leads",
           id: Number(id),
+          overrideAccess: true,
         });
       } catch {
         // no-op
