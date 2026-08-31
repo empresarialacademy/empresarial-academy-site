@@ -13,7 +13,7 @@ export const EmailSegments: CollectionConfig = {
   admin: {
     useAsTitle: "name",
     defaultColumns: ["name", "source", "pillar", "memberCount"],
-    group: "Marketing",
+    group: "E-mail Marketing",
     description:
       "Critérios para selecionar leads por origem, pilar mais fraco e score do diagnóstico. Usado pelas Campanhas de e-mail.",
   },

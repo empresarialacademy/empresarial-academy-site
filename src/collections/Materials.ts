@@ -12,7 +12,7 @@ export const Materials: CollectionConfig = {
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "category", "downloads", "status"],
-    group: "Materiais",
+    group: "Conteúdo do Site",
     preview: (doc) =>
       doc?.slug ? buildPreviewUrl("materials", String(doc.slug)) : null,
     components: {

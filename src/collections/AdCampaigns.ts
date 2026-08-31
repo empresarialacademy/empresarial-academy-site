@@ -14,7 +14,7 @@ export const AdCampaigns: CollectionConfig = {
   admin: {
     useAsTitle: "name",
     defaultColumns: ["name", "status", "dailyBudgetTarget", "cpcCeiling"],
-    group: "Marketing",
+    group: "Tráfego & Ads",
     description:
       "Campanhas do Google Ads (config + metas de orçamento/CPC). Preencher 'ID da campanha no Google Ads' quando a conta existir.",
   },

@@ -16,7 +16,7 @@ export const Posts: CollectionConfig = {
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "category", "status", "publishedAt"],
-    group: "Blog",
+    group: "Conteúdo do Site",
     // Botão "Visualizar": abre o artigo no layout REAL do blog (mesmo em
     // rascunho), via rota /preview autenticada por segredo.
     preview: (doc) =>

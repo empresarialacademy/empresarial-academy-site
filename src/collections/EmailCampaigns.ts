@@ -17,7 +17,7 @@ export const EmailCampaigns: CollectionConfig = {
   admin: {
     useAsTitle: "subject",
     defaultColumns: ["subject", "segment", "status", "statsSent", "statsTotal"],
-    group: "Marketing",
+    group: "E-mail Marketing",
     description:
       "Campanhas manuais e todas as regras automáticas de disparo de e-mails da EA.",
     components: {

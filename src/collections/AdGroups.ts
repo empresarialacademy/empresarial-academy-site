@@ -23,7 +23,7 @@ export const AdGroups: CollectionConfig = {
   admin: {
     useAsTitle: "name",
     defaultColumns: ["name", "campaign", "status", "rollupCost", "rollupConversions"],
-    group: "Marketing",
+    group: "Tráfego & Ads",
   },
   access: {
     read: ({ req }) => Boolean(req.user),

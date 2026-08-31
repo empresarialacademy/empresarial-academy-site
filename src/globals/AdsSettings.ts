@@ -4,7 +4,7 @@ export const AdsSettings: GlobalConfig = {
   slug: 'ads-settings',
   label: 'Configurações do EA ADS',
   admin: {
-    group: 'Marketing',
+    group: 'Tráfego & Ads',
   },
   access: {
     read: ({ req }) => Boolean(req.user),

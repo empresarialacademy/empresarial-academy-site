@@ -6,7 +6,7 @@ import { isContentEngineRequest } from "@/lib/content-engine-auth";
 export const MaterialFiles: CollectionConfig = {
   slug: "material-files",
   labels: { singular: "Arquivo", plural: "Arquivos" },
-  admin: { group: "Materiais", useAsTitle: "filename" },
+  admin: { group: "Conteúdo do Site", useAsTitle: "filename" },
   access: {
     read: () => true,
     // EA Post sobe o arquivo gerado (PDF do material) — Fase D do plano.

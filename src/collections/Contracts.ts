@@ -36,7 +36,7 @@ export const Contracts: CollectionConfig = {
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "contractType", "status", "clienteEmail", "createdAt"],
-    group: "Contratos",
+    group: "Vendas & Contratos",
     description:
       "Contratos gerados a partir do Gerador de Contratos (EA HUB) e enviados para assinatura eletrônica pelo link /assinar/[token].",
     components: {

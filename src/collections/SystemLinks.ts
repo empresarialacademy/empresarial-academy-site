@@ -14,7 +14,7 @@ export const SystemLinks: CollectionConfig = {
   admin: {
     useAsTitle: "name",
     defaultColumns: ["name", "url", "order"],
-    group: "Marketing",
+    group: "Ecossistema & Sistemas",
     description:
       'Portfólio de sistemas da EA (cartão de visita). Deixe "URL" em branco para um card "em breve".',
     components: {

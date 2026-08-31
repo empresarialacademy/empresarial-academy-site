@@ -4,7 +4,7 @@ import { formatSlug } from "@/lib/slug";
 export const Categories: CollectionConfig = {
   slug: "categories",
   labels: { singular: "Categoria", plural: "Categorias" },
-  admin: { useAsTitle: "name", group: "Blog" },
+  admin: { useAsTitle: "name", group: "Conteúdo do Site" },
   access: { read: () => true },
   fields: [
     { name: "name", type: "text", required: true, label: "Nome" },

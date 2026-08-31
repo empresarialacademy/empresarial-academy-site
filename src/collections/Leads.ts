@@ -14,7 +14,7 @@ export const Leads: CollectionConfig = {
   admin: {
     useAsTitle: "email",
     defaultColumns: ["name", "whatsapp", "instagram", "email", "diagnosticId", "company", "source", "createdAt"],
-    group: "Captação",
+    group: "Vendas & Contratos",
     description: "Base unificada de todos os leads e diagnósticos de maturidade empresarial captados por DME, WhatsApp, formulários, e-mail e demais canais.",
   },
   access: {

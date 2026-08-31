@@ -14,7 +14,7 @@ export const AdCompetitors: CollectionConfig = {
   admin: {
     useAsTitle: "name",
     defaultColumns: ["name", "keywordText", "type", "appearances", "seenAt"],
-    group: "Marketing",
+    group: "Tráfego & Ads",
     description:
       "Quem o Google mostra (anúncios e orgânico) nas buscas pelas palavras-chave da campanha.",
   },
