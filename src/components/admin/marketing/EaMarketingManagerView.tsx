@@ -44,12 +44,16 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     ?? (user as { email?: string }).email
     ?? "";
 
-  const [adCampaigns, emailCampaigns, emailSegments, leads, contracts, systemLinksRes] =
+  const [adCampaigns, emailCampaigns, emailSegments, leads, diagnosticLeads, contracts, systemLinksRes] =
     await Promise.all([
       payload.count({ collection: "ad-campaigns" }),
       payload.count({ collection: "email-campaigns" }),
       payload.count({ collection: "email-segments" }),
       payload.count({ collection: "leads" }),
+      payload.count({
+        collection: "leads",
+        where: { source: { equals: "Diagnóstico de Maturidade Empresarial" } },
+      }),
       payload.count({ collection: "contracts" }),
       payload.find({ collection: "system-links", limit: 100, depth: 0, sort: "order" }),
     ]);
@@ -93,6 +97,24 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     { title: "LP · Consultoria PME (canônica)", description: "Página principal, usada como canonical das outras 2.", href: "/consultoria-pme", external: true },
     { title: "LP · Consultoria de Gestão Empresarial", description: "Dedicada à keyword \"consultoria de gestão empresarial\".", href: "/consultoria-de-gestao-empresarial", external: true },
     { title: "LP · Consultoria para Pequenas Empresas", description: "Dedicada à keyword \"consultoria empresarial para pequenas empresas\".", href: "/consultoria-empresarial-para-pequenas-empresas", external: true },
+  ];
+
+  const diagnosticCards: Card[] = [
+    {
+      title: "Diagnóstico de Maturidade (Online)",
+      description:
+        "Ferramenta interativa de autoavaliação empresarial nos 6 pilares da metodologia Gestão 360 (36 perguntas com resultado, radar e plano de ação na hora).",
+      href: "/diagnostico-maturidade-empresarial.html",
+      external: true,
+      stat: "Abrir ferramenta pública ↗",
+    },
+    {
+      title: "Diagnósticos Realizados",
+      description:
+        "Histórico completo de diagnósticos preenchidos pelos clientes — pontuação geral, notas por pilar, faturamento, cargo e dados de contato para consultoria.",
+      href: "/eahub/collections/leads",
+      stat: `${diagnosticLeads.totalDocs} diagnóstico(s) realizado(s)`,
+    },
   ];
 
   const socialCards: Card[] = [
@@ -259,6 +281,13 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
 
         <Section title="Landing Pages (Ads)">
           <CardGrid cards={landingPageCards} />
+        </Section>
+
+        <Section
+          title="Diagnóstico de Maturidade Empresarial"
+          action={{ label: "Ver todos os diagnósticos", href: "/eahub/collections/leads" }}
+        >
+          <CardGrid cards={diagnosticCards} />
         </Section>
 
         <Section title="Redes sociais">
