@@ -60,25 +60,25 @@ function getLevelColor(pct: number): string {
   return "#1D2B3C";
 }
 
-export function DiagnosticAnalysisField() {
+function DiagnosticAnalysisInner() {
   const [copied, setCopied] = useState(false);
 
-  const rawDetails = useFormFields(([fields]) => fields?.details?.value) as Record<string, unknown> | undefined;
-  const diagnosticId = useFormFields(([fields]) => fields?.diagnosticId?.value) as string | undefined;
-  const hasDiagnostic = useFormFields(([fields]) => fields?.hasDiagnostic?.value) as boolean | undefined;
-  const name = useFormFields(([fields]) => fields?.name?.value) as string | undefined;
-  const company = useFormFields(([fields]) => fields?.company?.value) as string | undefined;
-  const whatsapp = useFormFields(([fields]) => fields?.whatsapp?.value) as string | undefined;
-  const source = useFormFields(([fields]) => fields?.source?.value) as string | undefined;
+  const rawDetails = useFormFields(([fields]) => (fields?.details?.value as Record<string, unknown> | undefined));
+  const diagnosticId = useFormFields(([fields]) => (fields?.diagnosticId?.value as string | undefined));
+  const hasDiagnostic = useFormFields(([fields]) => (fields?.hasDiagnostic?.value as boolean | undefined));
+  const name = useFormFields(([fields]) => (fields?.name?.value as string | undefined));
+  const company = useFormFields(([fields]) => (fields?.company?.value as string | undefined));
+  const whatsapp = useFormFields(([fields]) => (fields?.whatsapp?.value as string | undefined));
+  const source = useFormFields(([fields]) => (fields?.source?.value as string | undefined));
 
   const isDiag = Boolean(
     hasDiagnostic ||
     diagnosticId ||
-    source === "Diagnóstico de Maturidade Empresarial" ||
-    (rawDetails && Boolean(rawDetails["Maturidade Geral"]))
+    (typeof source === "string" && source.includes("Diagnóstico")) ||
+    (rawDetails && typeof rawDetails === "object" && Boolean(rawDetails["Maturidade Geral"]))
   );
 
-  if (!isDiag || !rawDetails) {
+  if (!isDiag || !rawDetails || typeof rawDetails !== "object") {
     return (
       <div
         style={{
@@ -394,5 +394,13 @@ export function DiagnosticAnalysisField() {
         </div>
       )}
     </div>
+  );
+}
+
+export function DiagnosticAnalysisField() {
+  return (
+    <React.Suspense fallback={null}>
+      <DiagnosticAnalysisInner />
+    </React.Suspense>
   );
 }

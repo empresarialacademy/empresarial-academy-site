@@ -7,33 +7,32 @@ import React from "react";
  * Empresarial, exibindo o ID do Diagnóstico e a pontuação geral.
  */
 export function DiagnosticBadgeCell({
-  rowData,
   cellData,
+  rowData,
 }: {
-  rowData?: Record<string, unknown>;
   cellData?: unknown;
+  rowData?: Record<string, unknown>;
 }) {
-  const details = rowData?.details as Record<string, unknown> | undefined;
-  const diagId = (rowData?.diagnosticId || cellData) as string | undefined;
-  const isDiag = Boolean(
-    rowData?.hasDiagnostic ||
-    diagId ||
-    rowData?.source === "Diagnóstico de Maturidade Empresarial" ||
-    (details && Boolean(details["Maturidade Geral"]))
-  );
+  const rawVal = typeof cellData === "string" ? cellData : "";
+  const rowDiagId = typeof rowData?.diagnosticId === "string" ? rowData.diagnosticId : "";
+  const diagId = rawVal || rowDiagId;
 
-  const generalScore = details?.["Maturidade Geral"] as string | undefined;
+  const source = typeof rowData?.source === "string" ? rowData.source : "";
+  const hasDiag = Boolean(rowData?.hasDiagnostic || diagId || source.includes("Diagnóstico"));
 
-  if (isDiag) {
+  const details = (rowData?.details && typeof rowData.details === "object" ? rowData.details : null) as Record<string, unknown> | null;
+  const generalScore = typeof details?.["Maturidade Geral"] === "string" ? details["Maturidade Geral"] : undefined;
+
+  if (hasDiag || diagId) {
     return (
-      <div style={{ display: "inline-flex", flexDirection: "column", gap: 3, padding: "2px 0" }}>
+      <div style={{ display: "inline-flex", flexDirection: "column", gap: 2, padding: "2px 0" }}>
         <span
           style={{
             display: "inline-flex",
             alignItems: "center",
-            gap: 6,
-            padding: "3px 8px",
-            borderRadius: 6,
+            gap: 5,
+            padding: "2px 7px",
+            borderRadius: 5,
             background: "rgba(193, 161, 96, 0.14)",
             border: "1px solid rgba(193, 161, 96, 0.35)",
             color: "#C1A160",
@@ -45,11 +44,11 @@ export function DiagnosticBadgeCell({
           }}
           title={generalScore ? `Maturidade Geral: ${generalScore}` : "Diagnóstico concluído"}
         >
-          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#C1A160" }} />
+          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#C1A160" }} />
           {diagId || "DIAGNÓSTICO 360"}
         </span>
         {generalScore && (
-          <span style={{ fontSize: "0.7rem", color: "var(--theme-elevation-600)", fontWeight: 600, paddingLeft: 4 }}>
+          <span style={{ fontSize: "0.68rem", color: "var(--theme-elevation-600)", fontWeight: 600, paddingLeft: 2 }}>
             {generalScore}
           </span>
         )}
@@ -63,7 +62,7 @@ export function DiagnosticBadgeCell({
         display: "inline-flex",
         alignItems: "center",
         gap: 4,
-        padding: "3px 8px",
+        padding: "2px 6px",
         borderRadius: 4,
         background: "var(--theme-elevation-100)",
         color: "var(--theme-elevation-500)",
@@ -71,9 +70,8 @@ export function DiagnosticBadgeCell({
         whiteSpace: "nowrap",
       }}
     >
-      <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--theme-elevation-400)" }} />
+      <span style={{ width: 4, height: 4, borderRadius: "50%", background: "var(--theme-elevation-400)" }} />
       Lead Geral
     </span>
   );
 }
-
