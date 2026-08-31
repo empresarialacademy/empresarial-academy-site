@@ -91,36 +91,6 @@ export function ContractGeneratorForm() {
   const set = <K extends keyof ContractInput>(key: K, value: ContractInput[K]) =>
     setForm((f) => ({ ...f, [key]: value }));
 
-  // Preenche dados vindos da apresentação ou de parâmetros de URL (?nome=...&empresa=...)
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const qp = new URLSearchParams(window.location.search);
-    const nome = qp.get("nome");
-    const empresa = qp.get("empresa");
-    const email = qp.get("email");
-    const whatsapp = qp.get("whatsapp");
-    const tipo = qp.get("tipo") as ContractType | null;
-    const horizonte = qp.get("horizonte") as "trimestral" | "semestral" | "anual" | null;
-
-    setForm((prev) => {
-      const updated = { ...prev };
-      if (empresa) {
-        updated.tipoPessoa = "PJ";
-        updated.pjRazao = empresa;
-        if (nome) updated.pjRepNome = nome;
-      } else if (nome) {
-        updated.pfNome = nome;
-      }
-      if (email) {
-        updated.clienteEmail = email;
-      }
-      if (whatsapp) updated.clienteTelefone = formatarTelefone(whatsapp);
-      if (tipo && tipo in PLANOS) updated.contractType = tipo;
-      if (horizonte && ["trimestral", "semestral", "anual"].includes(horizonte)) updated.horizonte = horizonte;
-      return updated;
-    });
-  }, []);
-
   // Preenche o valor de tabela ao trocar tipo de contrato/horizonte (igual
   // a preencherValorPadrao() no arquivo de referência).
   useEffect(() => {

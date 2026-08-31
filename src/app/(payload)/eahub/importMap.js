@@ -47,6 +47,7 @@ import { CommercialPresentationView as CommercialPresentationView_f7112026 } fro
 import { DiagnosticBadgeCell as DiagnosticBadgeCell_f7112026 } from '@/components/admin/leads/DiagnosticBadgeCell'
 import { InstagramCell as InstagramCell_f7112026 } from '@/components/admin/leads/InstagramCell'
 import { DiagnosticAnalysisField as DiagnosticAnalysisField_f7112026 } from '@/components/admin/leads/DiagnosticAnalysisField'
+import { EmailCampaignsListView as EmailCampaignsListView_f7112026 } from '@/components/admin/email/EmailCampaignsListView'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
@@ -76,6 +77,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#UploadFeatureClient": UploadFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#HorizontalRuleFeatureClient": HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#InlineToolbarFeatureClient": InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@/components/admin/publish/PublishButton#PublishButton": PublishButton_8557896026453f2a5ab4cb43fbd7feb6,
   "@/components/admin/leads/WhatsAppCell#WhatsAppCell": WhatsAppCell_63fb46a0689b188d11067be38662e17c,
   "@/components/admin/contracts/ContractSaveButton#ContractSaveButton": ContractSaveButton_c92810823b2b1112461fdaa4f8a89231,
@@ -98,5 +100,5 @@ export const importMap = {
   "@/components/admin/leads/DiagnosticBadgeCell#DiagnosticBadgeCell": DiagnosticBadgeCell_f7112026,
   "@/components/admin/leads/InstagramCell#InstagramCell": InstagramCell_f7112026,
   "@/components/admin/leads/DiagnosticAnalysisField#DiagnosticAnalysisField": DiagnosticAnalysisField_f7112026,
-  "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
+  "@/components/admin/email/EmailCampaignsListView#EmailCampaignsListView": EmailCampaignsListView_f7112026,
 }

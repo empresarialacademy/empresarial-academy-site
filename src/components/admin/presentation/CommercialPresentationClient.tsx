@@ -126,7 +126,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
         setClienteWhatsapp(d.whatsapp || "");
         setClienteInstagram(d.instagram || "");
 
-        const fallbackPct = d.overall?.pct && d.overall.pct > 0 ? d.overall.pct : 50;
+        const fallbackPct = typeof d.overall?.pct === "number" ? Math.round(d.overall.pct) : 0;
         const newScores: Record<string, number> = {
           fluxo: fallbackPct,
           arquitetura: fallbackPct,
@@ -135,28 +135,22 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
           desafios: fallbackPct,
           evolucao: fallbackPct,
         };
+
         if (Array.isArray(d.pillars)) {
           d.pillars.forEach((p) => {
-            const keyLower = p.key.toLowerCase();
-            const val = p.hasScore ? p.pct : fallbackPct;
-            if (keyLower.includes("fluxo")) newScores.fluxo = val;
-            else if (keyLower.includes("arquitetura")) newScores.arquitetura = val;
-            else if (keyLower.includes("objetivos") || keyLower.includes("estrategia")) newScores.objetivos = val;
-            else if (keyLower.includes("métricas") || keyLower.includes("metricas")) newScores.metricas = val;
-            else if (keyLower.includes("desafios")) newScores.desafios = val;
-            else if (keyLower.includes("evolução") || keyLower.includes("evolucao")) newScores.evolucao = val;
+            if (p.key && typeof p.pct === "number") {
+              newScores[p.key] = Math.round(p.pct);
+            }
           });
         }
         setScores(newScores);
       }
     } catch (e) {
-      console.error("Falha ao buscar diagnóstico:", e);
+      console.warn("Erro ao buscar diagnóstico:", e);
     } finally {
       setLoading(false);
     }
   }, []);
-
-  // Carregar lista de recentes
   useEffect(() => {
     fetch("/api/diagnostic/lookup?list=recent")
       .then((r) => r.json())

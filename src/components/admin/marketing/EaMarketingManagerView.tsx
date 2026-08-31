@@ -151,40 +151,9 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
 
   const emailCards: Card[] = [
     { title: "EA Leads", description: "Base unificada de todos os leads captados por DME, WhatsApp, formulários, e-mail e materiais.", href: "/eahub/collections/leads", stat: `${leads.totalDocs} lead(s)` },
-    { title: "Campanhas de e-mail", description: "Disparos manuais para um segmento de leads.", href: "/eahub/collections/email-campaigns", stat: `${emailCampaigns.totalDocs} campanha(s)` },
+    { title: "Campanhas de e-mail", description: "Campanhas manuais e todas as regras automáticas de disparo de e-mails da EA.", href: "/eahub/collections/email-campaigns", stat: `${emailCampaigns.totalDocs} campanha(s)` },
     { title: "Segmentos", description: "Critérios de seleção de leads (origem, pilar, score).", href: "/eahub/collections/email-segments", stat: `${emailSegments.totalDocs} segmento(s)` },
     { title: "Envios", description: "Histórico de e-mails enviados (nutrição, alertas, campanhas).", href: "/eahub/collections/email-logs" },
-  ];
-
-  /** Regras automáticas ativas (12/08/2026) — vivem no código
-   * (nurture-emails.ts, diagnostic-email.ts, content-alerts.ts), não numa
-   * coleção, então não há tela pra editar por aqui. Este bloco é só de
-   * controle/visibilidade: toda vez que uma regra nova entrar em produção,
-   * adicionar uma linha aqui. */
-  const automationRules: {
-    nome: string;
-    gatilho: string;
-    quando: string;
-    publico: string;
-  }[] = [
-    {
-      nome: "Resultado do diagnóstico",
-      gatilho: "Lead conclui o Diagnóstico de Maturidade",
-      quando: "Imediato",
-      publico: "Quem termina o diagnóstico — personalizado pelo pilar mais fraco",
-    },
-    {
-      nome: "Nutrição pós-diagnóstico (E1/E2/E3)",
-      gatilho: "Cron diário (mesmo lead do diagnóstico)",
-      quando: "D+2 (custo + ações) · D+5 (método) · D+7 (convite pra call)",
-      publico: "Leads do diagnóstico com consentimento e sem opt-out, criados a partir de 18/07/2026 — encerra sem enviar após 30 dias parado",
-    },
-    {
-      nome: "Alerta de novo conteúdo",
-      gatilho: "Publicação de Artigo ou Material",
-      quando: "Imediato (publicação direta) ou no cron diário (agendados)",
-      publico: "Assinantes da newsletter/pop-up com consentimento e sem opt-out de marketing",
-    },
   ];
 
   const systemCards: Card[] = systemLinks.map((l) => {
@@ -361,7 +330,6 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
 
         <Section title="E-mail marketing e leads">
           <CardGrid cards={emailCards} />
-          <RuleTable title="Regras automáticas ativas" rules={automationRules} />
         </Section>
 
         <Section
@@ -412,44 +380,6 @@ function Section({
       </div>
       {children}
     </section>
-  );
-}
-
-function RuleTable({
-  title,
-  rules,
-}: {
-  title: string;
-  rules: { nome: string; gatilho: string; quando: string; publico: string }[];
-}) {
-  return (
-    <div style={{ marginTop: "1.1rem" }}>
-      <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#6B7280", marginBottom: "0.5rem" }}>
-        {title}
-      </div>
-      <div className="ea-hub-rule-table">
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
-          <thead>
-            <tr style={{ borderBottom: `2px solid ${GOLD}` }}>
-              <th style={{ textAlign: "left", padding: "0.7rem 1rem", color: "#6B7280", fontWeight: 600 }}>Regra</th>
-              <th style={{ textAlign: "left", padding: "0.7rem 1rem", color: "#6B7280", fontWeight: 600 }}>Gatilho</th>
-              <th style={{ textAlign: "left", padding: "0.7rem 1rem", color: "#6B7280", fontWeight: 600 }}>Quando</th>
-              <th style={{ textAlign: "left", padding: "0.7rem 1rem", color: "#6B7280", fontWeight: 600 }}>Público</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rules.map((r) => (
-              <tr key={r.nome} style={{ borderTop: "1px solid rgba(193,161,96,0.12)" }}>
-                <td style={{ padding: "0.7rem 1rem", fontWeight: 600 }}>{r.nome}</td>
-                <td style={{ padding: "0.7rem 1rem", color: "#6B7280" }}>{r.gatilho}</td>
-                <td style={{ padding: "0.7rem 1rem", color: "#6B7280" }}>{r.quando}</td>
-                <td style={{ padding: "0.7rem 1rem", color: "#6B7280" }}>{r.publico}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
   );
 }
 

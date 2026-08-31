@@ -19,7 +19,14 @@ export const EmailCampaigns: CollectionConfig = {
     defaultColumns: ["subject", "segment", "status", "statsSent", "statsTotal"],
     group: "Marketing",
     description:
-      'Escreva o conteúdo, escolha o segmento, salve como "Rascunho" para revisar e mude o status para "Agendada (enviar agora)" quando quiser disparar.',
+      "Campanhas manuais e todas as regras automáticas de disparo de e-mails da EA.",
+    components: {
+      views: {
+        list: {
+          Component: "@/components/admin/email/EmailCampaignsListView#EmailCampaignsListView",
+        },
+      },
+    },
   },
   access: {
     read: ({ req }) => Boolean(req.user),
