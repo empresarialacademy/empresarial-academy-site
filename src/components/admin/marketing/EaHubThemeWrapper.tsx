@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 
 export function EaHubThemeWrapper({
   children,
@@ -140,14 +141,16 @@ export function EaHubThemeWrapper({
         <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "0.75rem", marginBottom: "0.85rem" }}>
           {headerActions}
           {mounted ? (
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05, y: -1 }}
+              whileTap={{ scale: 0.95 }}
               type="button"
               onClick={toggleTheme}
               className="ea-theme-toggle"
               title="Alternar entre modo claro e escuro"
             >
               <span>{isDark ? "🌙 Modo Escuro" : "☀️ Modo Claro"}</span>
-            </button>
+            </motion.button>
           ) : null}
         </div>
         {children}

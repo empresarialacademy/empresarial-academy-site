@@ -17,6 +17,8 @@ import { useRouter, useSearchParams } from "next/navigation";
  * primeiro em Figma antes de traduzir pra CSS. `<style>` local com classe
  * `.ea-login-input` porque `:focus` não dá pra expressar em inline style.
  */
+import { motion, AnimatePresence } from "motion/react";
+
 export function PayloadLoginForm({
   userSlug,
   apiRoute,
@@ -98,12 +100,7 @@ export function PayloadLoginForm({
           transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
           margin-top: 0.3rem;
         }
-        .ea-login-submit:hover:not(:disabled) {
-          transform: translateY(-1.5px);
-          background: linear-gradient(180deg, #EED79E 0%, #D8A94D 100%);
-          box-shadow: 0 8px 20px rgba(201,154,62,0.45);
-        }
-        .ea-login-submit:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+        .ea-login-submit:disabled { opacity: 0.65; cursor: not-allowed; }
         .ea-login-forgot {
           transition: all 0.2s ease;
           text-decoration: none;
@@ -151,24 +148,37 @@ export function PayloadLoginForm({
         />
       </div>
 
-      {error ? (
-        <div style={{
-          background: "rgba(181,72,43,0.1)",
-          border: "1px solid #B5482B",
-          borderRadius: 8,
-          padding: "0.55rem 0.75rem",
-          color: "#B5482B",
-          fontSize: "0.82rem",
-          fontWeight: 600,
-          textAlign: "center"
-        }}>
-          ⚠️ {error}
-        </div>
-      ) : null}
+      <AnimatePresence mode="wait">
+        {error ? (
+          <motion.div
+            initial={{ opacity: 0, y: -6, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            style={{
+              background: "rgba(181,72,43,0.1)",
+              border: "1px solid #B5482B",
+              borderRadius: 8,
+              padding: "0.55rem 0.75rem",
+              color: "#B5482B",
+              fontSize: "0.82rem",
+              fontWeight: 600,
+              textAlign: "center",
+            }}
+          >
+            ⚠️ {error}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
 
-      <button type="submit" disabled={loading} className="ea-login-submit">
+      <motion.button
+        whileHover={!loading ? { scale: 1.02, y: -1.5, filter: "brightness(1.05)" } : {}}
+        whileTap={!loading ? { scale: 0.98 } : {}}
+        type="submit"
+        disabled={loading}
+        className="ea-login-submit"
+      >
         {loading ? "Autenticando..." : "Acessar EA HUB →"}
-      </button>
+      </motion.button>
 
       {forgotRoute ? (
         <a href={forgotRoute} className="ea-login-forgot">
