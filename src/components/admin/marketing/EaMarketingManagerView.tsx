@@ -63,7 +63,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
   const secretariaCard: Card = {
     title: "EA Assessor",
     description:
-      "Assessoria executiva e torre de controle via WhatsApp — Google Calendar, Gmail, Outlook, EA Post, EA Flow e Antigravity integrados com Gemini AI.",
+      "Assessoria executiva e torre de controle via WhatsApp: Google Calendar, Gmail, Outlook, EA Post, EA Flow e Antigravity integrados com Gemini AI.",
     href: "/eahub/secretaria",
     stat: "● Sessão WhatsApp Ativa (Nuvem 24/7)",
   };
@@ -76,30 +76,22 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     stat: `${adCampaigns.totalDocs} campanha(s)`,
   };
 
-  // Artigos e Materiais saíram daqui: planejamento/geração dos dois agora é
-  // comandado pelo EA Post (posting-rules + content-plan), que grava direto
-  // nestas mesmas collections do site via API — ver socialCards abaixo.
-  // Mídia/Depoimentos continuam aqui por não fazerem parte dessa esteira.
   const contentCards: Card[] = [
     { title: "Mídia", description: "Imagens e arquivos usados no site.", href: "/eahub/collections/media" },
     { title: "Depoimentos", description: "Prova social exibida no site e na LP.", href: "/eahub/collections/testimonials" },
   ];
 
-  /** LPs dedicadas por palavra-chave do Google Ads (Frente 2, 12/08/2026) —
-   * as 3 páginas compartilham o mesmo template (ConsultoriaLPTemplate), só o
-   * topo muda por keyword. Cards abrem em nova aba (são páginas publicadas,
-   * não telas do admin). */
   const landingPageCards: Card[] = [
-    { title: "LP · Consultoria PME (canônica)", description: "Página principal, usada como canonical das outras 2.", href: "/consultoria-pme", external: true },
-    { title: "LP · Consultoria de Gestão Empresarial", description: "Dedicada à keyword \"consultoria de gestão empresarial\".", href: "/consultoria-de-gestao-empresarial", external: true },
-    { title: "LP · Consultoria para Pequenas Empresas", description: "Dedicada à keyword \"consultoria empresarial para pequenas empresas\".", href: "/consultoria-empresarial-para-pequenas-empresas", external: true },
+    { title: "LP · Consultoria PME (canônica)", description: "Página principal, usada como canonical das outras duas páginas.", href: "/consultoria-pme", external: true },
+    { title: "LP · Consultoria de Gestão Empresarial", description: "Dedicada à palavra-chave de consultoria de gestão empresarial.", href: "/consultoria-de-gestao-empresarial", external: true },
+    { title: "LP · Consultoria para Pequenas Empresas", description: "Dedicada à palavra-chave de consultoria empresarial para pequenas empresas.", href: "/consultoria-empresarial-para-pequenas-empresas", external: true },
   ];
 
   const diagnosticCards: Card[] = [
     {
       title: "Diagnóstico de Maturidade (Online)",
       description:
-        "Ferramenta interativa de autoavaliação empresarial nos 6 pilares da metodologia Gestão 360 (36 perguntas com resultado, radar e plano de ação na hora).",
+        "Ferramenta interativa de autoavaliação empresarial nos 6 pilares da metodologia Gestão 360: 36 perguntas com resultado, radar e plano de ação na hora.",
       href: "/diagnostico-maturidade-empresarial.html",
       external: true,
       stat: "Abrir ferramenta pública ↗",
@@ -107,7 +99,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     {
       title: "Apresentação Comercial Gestão 360",
       description:
-        "Deck interativo 16:9 personalizado para reuniões de fechamento — basta digitar o ID do DME para carregar os dados e o plano de ação do cliente.",
+        "Deck interativo 16:9 personalizado para reuniões de fechamento: basta digitar o ID do DME para carregar os dados e o plano de ação do cliente.",
       href: "/eahub/apresentacao",
       stat: "Abrir Apresentador ↗",
     },
@@ -116,7 +108,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
   const socialCards: Card[] = [
     {
       title: "EA Post",
-      description: "Comando único de conteúdo: Blog, Materiais Gratuitos e redes sociais (Instagram, Facebook, LinkedIn, YouTube, TikTok) — planejamento, geração, aprovação e publicação, tudo num sistema só.",
+      description: "Comando único de conteúdo: Blog, Materiais Gratuitos e redes sociais (Instagram, Facebook, LinkedIn, YouTube, TikTok), unificando planejamento, geração, aprovação e publicação.",
       href: "https://ea-social-engine.vercel.app/admin",
       external: true,
     },
@@ -125,7 +117,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
   const infraCards: Card[] = [
     {
       title: "Painel de APIs",
-      description: "Todas as APIs/credenciais dos sistemas da EA — provedor, sistema(s), vencimento e faturamento.",
+      description: "Todas as APIs e credenciais dos sistemas da EA: provedor, sistema, vencimento e faturamento.",
       href: "/eahub/apis",
     },
     {
@@ -143,7 +135,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
     },
     {
       title: "Contratos",
-      description: "Todos os contratos gerados — rascunho, enviado para assinatura ou assinado, com o certificado eletrônico de cada um.",
+      description: "Todos os contratos gerados: rascunho, enviado para assinatura ou assinado, com o certificado eletrônico de cada um.",
       href: "/eahub/collections/contracts",
       stat: `${contracts.totalDocs} contrato(s)`,
     },
@@ -152,8 +144,8 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
   const emailCards: Card[] = [
     { title: "EA Leads", description: "Base unificada de todos os leads captados por DME, WhatsApp, formulários, e-mail e materiais.", href: "/eahub/collections/leads", stat: `${leads.totalDocs} lead(s)` },
     { title: "Campanhas de e-mail", description: "Campanhas manuais e todas as regras automáticas de disparo de e-mails da EA.", href: "/eahub/collections/email-campaigns", stat: `${emailCampaigns.totalDocs} campanha(s)` },
-    { title: "Segmentos", description: "Critérios de seleção de leads (origem, pilar, score).", href: "/eahub/collections/email-segments", stat: `${emailSegments.totalDocs} segmento(s)` },
-    { title: "Envios", description: "Histórico de e-mails enviados (nutrição, alertas, campanhas).", href: "/eahub/collections/email-logs" },
+    { title: "Segmentos", description: "Critérios de seleção de leads: origem, pilar e pontuação.", href: "/eahub/collections/email-segments", stat: `${emailSegments.totalDocs} segmento(s)` },
+    { title: "Envios", description: "Histórico de e-mails enviados: nutrição, alertas e campanhas.", href: "/eahub/collections/email-logs" },
   ];
 
   const systemCards: Card[] = systemLinks.map((l) => {
@@ -171,46 +163,35 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
   if (!hasSecretaria) {
     systemCards.unshift({
       title: "EA Assessor",
-      description: "Assessoria executiva e torre de controle — WhatsApp, agenda (Google/Outlook), e-mails, EA Post, EA Flow e Antigravity via Gemini AI.",
+      description: "Assessoria executiva e torre de controle: WhatsApp, agenda (Google/Outlook), e-mails, EA Post, EA Flow e Antigravity via Gemini AI.",
       href: "/eahub/secretaria",
     });
   }
 
   return (
-    <div style={{ minHeight: "100vh", position: "relative", color: "#F4F1E9", fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}>
-      {/* Fundo imersivo executivo com iluminação atmosférica dupla */}
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: -1,
-          background: `
-            radial-gradient(1100px 650px at 10% 0%, rgba(201,154,62,0.12) 0%, rgba(201,154,62,0) 60%),
-            radial-gradient(900px 600px at 90% 15%, rgba(38,56,78,0.35) 0%, rgba(38,56,78,0) 60%),
-            radial-gradient(1000px 800px at 50% 90%, rgba(201,154,62,0.06) 0%, rgba(201,154,62,0) 60%),
-            linear-gradient(180deg, #131E2B 0%, #0F1722 45%, #080D14 100%)
-          `,
-        }}
-      />
+    <div style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif", color: "#1D2B3C", padding: "0 0 3rem" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap');
 
         .ea-hub-shell {
           max-width: 1400px;
           margin: 0 auto;
-          padding: 0.5rem 0.5rem 4rem;
         }
         .ea-hub-header {
+          background: #1D2B3C;
+          color: #FFFFFF;
+          border-radius: 14px;
+          border-bottom: 3px solid #C99A3E;
+          padding: 1.5rem 1.75rem;
+          margin-bottom: 2.25rem;
           display: flex;
           align-items: center;
-          gap: 1.5rem;
-          padding: 1.5rem 0 2rem;
-          border-bottom: 1px solid rgba(201,154,62,0.18);
-          margin-bottom: 2.25rem;
+          gap: 1.4rem;
+          box-shadow: 0 4px 16px rgba(29, 43, 60, 0.08);
         }
         .ea-hub-header__copy {
           display: grid;
-          gap: 0.35rem;
+          gap: 0.25rem;
         }
         .ea-hub-header__eyebrow {
           margin: 0;
@@ -225,54 +206,37 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
           margin: 0;
           color: #FFFFFF;
           font-family: 'Sora', sans-serif;
-          font-size: clamp(1.6rem, 2.2vw, 2.3rem);
+          font-size: clamp(1.4rem, 2vw, 1.9rem);
           font-weight: 700;
           line-height: 1.2;
           letter-spacing: -0.02em;
         }
         .ea-hub-header__subtitle {
           margin: 0;
-          color: #A0ABC0;
-          font-size: 0.94rem;
-          line-height: 1.55;
-          max-width: 800px;
+          color: #D7C089;
+          font-size: 0.9rem;
+          line-height: 1.5;
         }
         .ea-hub-card {
           display: flex;
           flex-direction: column;
           text-decoration: none;
           color: inherit;
-          background: linear-gradient(180deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.025) 100%);
-          border: 1px solid rgba(201,154,62,0.16);
-          border-radius: 16px;
-          padding: 1.35rem 1.4rem 1.2rem;
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          box-shadow: 0 10px 28px -10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
-          transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+          background: #FFFFFF;
+          border: 1px solid #E2DCD0;
+          border-radius: 14px;
+          padding: 1.3rem 1.4rem 1.15rem;
+          box-shadow: 0 2px 6px rgba(29, 43, 60, 0.04);
+          transition: all 0.2s ease-in-out;
           min-height: 100%;
-          position: relative;
-          overflow: hidden;
-        }
-        .ea-hub-card::before {
-          content: '';
-          position: absolute;
-          top: 0; left: 0; right: 0; height: 2px;
-          background: linear-gradient(90deg, transparent, rgba(201,154,62,0.3), transparent);
-          opacity: 0;
-          transition: opacity 0.22s ease;
         }
         .ea-hub-card:hover {
-          transform: translateY(-3px);
-          border-color: rgba(201,154,62,0.45);
-          background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.035) 100%);
-          box-shadow: 0 18px 40px -12px rgba(0,0,0,0.7), 0 0 24px rgba(201,154,62,0.12), inset 0 1px 0 rgba(255,255,255,0.14);
-        }
-        .ea-hub-card:hover::before {
-          opacity: 1;
+          transform: translateY(-2px);
+          border-color: #C99A3E;
+          box-shadow: 0 8px 24px rgba(29, 43, 60, 0.08);
         }
         .ea-hub-card--disabled { opacity: 0.55; cursor: default; }
-        .ea-hub-card--disabled:hover { transform: none; box-shadow: 0 10px 28px -10px rgba(0,0,0,0.5); border-color: rgba(201,154,62,0.16); }
+        .ea-hub-card--disabled:hover { transform: none; box-shadow: 0 2px 6px rgba(29, 43, 60, 0.04); border-color: #E2DCD0; }
         .ea-hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.15rem; }
         .ea-hub-section-title {
           display: flex;
@@ -283,7 +247,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
         }
         .ea-hub-section-link {
           font-size: 0.8rem;
-          font-weight: 600;
+          font-weight: 700;
           color: #C99A3E;
           text-decoration: none;
           transition: all 0.18s ease;
@@ -292,7 +256,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
           gap: 0.3rem;
         }
         .ea-hub-section-link:hover {
-          color: #E5CA8C;
+          color: #A97F2E;
           text-decoration: underline;
         }
         .ea-pulse-dot {
@@ -313,19 +277,19 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
 
       <div className="ea-hub-shell">
         <header className="ea-hub-header">
-          <SystemLogo systemName="Hub" size={86} glow />
+          <SystemLogo systemName="Hub" size={76} glow />
           <div className="ea-hub-header__copy">
             <p className="ea-hub-header__eyebrow">Empresarial Academy · Hub Central</p>
             <h1 className="ea-hub-header__title">
               {firstName ? `Olá, ${firstName}.` : "Painel Central EA HUB"}
             </h1>
             <p className="ea-hub-header__subtitle">
-              Centro de comando integrado da Empresarial Academy — inteligência artificial, tráfego, campanhas de e-mail, diagnósticos e ecossistema de gestão.
+              Centro de comando integrado da Empresarial Academy: inteligência artificial, tráfego, campanhas de e-mail, diagnósticos e ecossistema de gestão.
             </p>
           </div>
         </header>
 
-        <div style={{ display: "grid", gap: "2.4rem", paddingBottom: "2rem" }}>
+        <div style={{ display: "grid", gap: "2.25rem" }}>
           <Section title="⚡ Inteligência Artificial & Automação">
             <CardGrid cards={[secretariaCard, ...socialCards]} />
           </Section>
@@ -388,15 +352,15 @@ function Section({
         <h2
           style={{
             margin: 0,
-            fontSize: "0.82rem",
-            fontWeight: 700,
-            letterSpacing: "0.08em",
+            fontSize: "0.85rem",
+            fontWeight: 800,
+            letterSpacing: "0.06em",
             textTransform: "uppercase",
-            color: "#C99A3E",
+            color: "#1D2B3C",
             fontFamily: "'Sora', sans-serif",
             display: "flex",
             alignItems: "center",
-            gap: "0.4rem",
+            gap: "0.45rem",
           }}
         >
           {title}
@@ -420,11 +384,11 @@ function CardGrid({ cards }: { cards: Card[] }) {
         const hasLiveStat = card.stat?.includes("●");
         const content = (
           <>
-            <strong style={{ fontSize: "1.02rem", color: "#FFFFFF", fontFamily: "'Sora', sans-serif", fontWeight: 600 }}>
+            <strong style={{ fontSize: "1.05rem", color: "#1D2B3C", fontFamily: "'Sora', sans-serif", fontWeight: 700, letterSpacing: "-0.01em" }}>
               {card.title}
             </strong>
             {card.description ? (
-              <p style={{ margin: "0.45rem 0 0.85rem", fontSize: "0.85rem", color: "#9EABC0", lineHeight: 1.55, flexGrow: 1 }}>
+              <p style={{ margin: "0.45rem 0 0.85rem", fontSize: "0.88rem", color: "#4A5568", lineHeight: 1.55, flexGrow: 1 }}>
                 {card.description}
               </p>
             ) : null}
@@ -435,13 +399,13 @@ function CardGrid({ cards }: { cards: Card[] }) {
                     display: "inline-flex",
                     alignItems: "center",
                     gap: "0.35rem",
-                    fontSize: "0.74rem",
-                    fontWeight: 600,
-                    padding: "0.22rem 0.65rem",
+                    fontSize: "0.76rem",
+                    fontWeight: 700,
+                    padding: "0.25rem 0.65rem",
                     borderRadius: 20,
-                    background: hasLiveStat ? "rgba(63,125,88,0.18)" : "rgba(201,154,62,0.12)",
-                    border: `1px solid ${hasLiveStat ? "rgba(63,125,88,0.4)" : "rgba(201,154,62,0.28)"}`,
-                    color: hasLiveStat ? "#55BA7F" : "#E5CA8C",
+                    background: hasLiveStat ? "rgba(63,125,88,0.12)" : "rgba(201,154,62,0.12)",
+                    border: `1px solid ${hasLiveStat ? "rgba(63,125,88,0.35)" : "rgba(201,154,62,0.35)"}`,
+                    color: hasLiveStat ? "#2B6E44" : "#8C6518",
                   }}
                 >
                   {hasLiveStat ? <span className="ea-pulse-dot" /> : null}
@@ -450,7 +414,7 @@ function CardGrid({ cards }: { cards: Card[] }) {
               </div>
             ) : null}
             {card.disabled ? (
-              <span style={{ display: "inline-block", fontSize: "0.75rem", color: "#64748B", marginTop: "auto" }}>
+              <span style={{ display: "inline-block", fontSize: "0.75rem", color: "#8A93A0", marginTop: "auto", fontWeight: 600 }}>
                 Em breve
               </span>
             ) : null}

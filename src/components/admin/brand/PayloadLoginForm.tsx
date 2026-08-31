@@ -68,19 +68,20 @@ export function PayloadLoginForm({
         .ea-login-input {
           width: 100%;
           padding: 0.8rem 1rem;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.14);
-          color: #ffffff;
+          background: #F9FAFB;
+          border: 1px solid #D1D5DB;
+          color: #1D2B3C;
           font-size: 0.92rem;
           font-family: inherit;
+          font-weight: 500;
           border-radius: 12px;
           transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .ea-login-input::placeholder { color: rgba(255,255,255,0.3); font-size: 0.85rem; }
+        .ea-login-input::placeholder { color: #9CA3AF; font-size: 0.85rem; }
         .ea-login-input:focus {
           outline: none;
           border-color: #C99A3E;
-          background: rgba(255,255,255,0.09);
+          background: #FFFFFF;
           box-shadow: 0 0 0 3px rgba(201,154,62,0.22);
         }
         .ea-login-submit {
@@ -95,19 +96,23 @@ export function PayloadLoginForm({
           border: none;
           border-radius: 12px;
           cursor: pointer;
-          box-shadow: 0 8px 24px -4px rgba(201,154,62,0.45), inset 0 1px 0 rgba(255,255,255,0.3);
+          box-shadow: 0 4px 14px rgba(201,154,62,0.35);
           transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
           margin-top: 0.3rem;
         }
         .ea-login-submit:hover:not(:disabled) {
           transform: translateY(-1.5px);
           background: linear-gradient(180deg, #EED79E 0%, #D8A94D 100%);
-          box-shadow: 0 12px 28px -4px rgba(201,154,62,0.6);
+          box-shadow: 0 8px 20px rgba(201,154,62,0.45);
         }
         .ea-login-submit:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
         .ea-login-forgot {
           transition: all 0.2s ease;
           text-decoration: none;
+          color: #5B6472;
+          font-size: 0.8rem;
+          text-align: center;
+          font-weight: 500;
         }
         .ea-login-forgot:hover {
           color: #C99A3E !important;
@@ -116,7 +121,7 @@ export function PayloadLoginForm({
       `}</style>
 
       <div>
-        <label htmlFor="email" style={{ display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.78rem", fontWeight: 600, color: "rgba(255,255,255,0.85)", marginBottom: "0.45rem" }}>
+        <label htmlFor="email" style={{ display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.8rem", fontWeight: 700, color: "#1D2B3C", marginBottom: "0.45rem" }}>
           <span>✉️</span>
           <span>E-mail Corporativo</span>
         </label>
@@ -133,7 +138,7 @@ export function PayloadLoginForm({
       </div>
 
       <div>
-        <label htmlFor="password" style={{ display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.78rem", fontWeight: 600, color: "rgba(255,255,255,0.85)", marginBottom: "0.45rem" }}>
+        <label htmlFor="password" style={{ display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.8rem", fontWeight: 700, color: "#1D2B3C", marginBottom: "0.45rem" }}>
           <span>🔑</span>
           <span>Senha de Acesso</span>
         </label>
@@ -150,13 +155,13 @@ export function PayloadLoginForm({
 
       {error ? (
         <div style={{
-          background: "rgba(181,72,43,0.18)",
-          border: "1px solid rgba(181,72,43,0.45)",
+          background: "rgba(181,72,43,0.1)",
+          border: "1px solid #B5482B",
           borderRadius: 8,
           padding: "0.55rem 0.75rem",
-          color: "#FFA894",
+          color: "#B5482B",
           fontSize: "0.82rem",
-          fontWeight: 500,
+          fontWeight: 600,
           textAlign: "center"
         }}>
           ⚠️ {error}
@@ -168,7 +173,7 @@ export function PayloadLoginForm({
       </button>
 
       {forgotRoute ? (
-        <a href={forgotRoute} className="ea-login-forgot" style={{ fontSize: "0.78rem", color: "#8A93A0", textAlign: "center", marginTop: "0.2rem" }}>
+        <a href={forgotRoute} className="ea-login-forgot">
           Esqueci minha senha
         </a>
       ) : null}
