@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 
 export function EaHubThemeWrapper({
-  userName,
   children,
   headerActions,
 }: {
@@ -35,16 +34,23 @@ export function EaHubThemeWrapper({
   return (
     <div
       data-theme={theme}
-      style={{
-        minHeight: "100vh",
-        background: isDark
-          ? "radial-gradient(1200px 700px at 15% 0%, rgba(201,154,62,0.12) 0%, transparent 60%), linear-gradient(180deg, #101924 0%, #0B1119 100%)"
-          : "radial-gradient(1200px 700px at 15% 0%, rgba(201,154,62,0.06) 0%, transparent 60%), #F7F5F1",
-        color: isDark ? "#F4F1E9" : "#1D2B3C",
-        fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-        padding: "0 0 4rem",
-        transition: "background 0.25s ease, color 0.25s ease",
-      }}
+      style={
+        {
+          minHeight: "100vh",
+          "--ea-surface-bg": isDark ? "#16202E" : "#FFFFFF",
+          "--ea-surface-subtle": isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)",
+          "--ea-card-border": isDark ? "rgba(201,154,62,0.22)" : "#E2DCD0",
+          "--ea-text-primary": isDark ? "#F4F1E9" : "#1D2B3C",
+          "--ea-text-secondary": isDark ? "#A0ABC0" : "#5B6472",
+          background: isDark
+            ? "radial-gradient(1200px 700px at 15% 0%, rgba(201,154,62,0.12) 0%, transparent 60%), linear-gradient(180deg, #101924 0%, #0B1119 100%)"
+            : "radial-gradient(1200px 700px at 15% 0%, rgba(201,154,62,0.06) 0%, transparent 60%), #F7F5F1",
+          color: isDark ? "#F4F1E9" : "#1D2B3C",
+          fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+          padding: "0 0 4rem",
+          transition: "background 0.25s ease, color 0.25s ease",
+        } as React.CSSProperties
+      }
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap');

@@ -1,17 +1,14 @@
 import Link from "next/link";
 import {
   IconContracts,
-  IconLeads,
   IconPresentation,
   IconAds,
   IconWhatsApp,
   IconDiagnostic,
-  IconEmail,
   IconContent,
   IconSystems,
   IconArrowRight,
   IconExternal,
-  IconGovernance,
 } from "./EaHubIcons";
 
 type SystemLinkItem = {
@@ -227,7 +224,7 @@ export function EaHubCommercialCockpit({
           stageBadge="Qualificação & Dados"
           title="Diagnóstico de Maturidade & Base de Leads"
           description="Autoavaliação nos 6 pilares da metodologia Gestão 360 e nutrição automática de oportunidades."
-          metricLabel={`${leadsCount} leads na base · ${dmeLeadsCount} diagnósticos concluídos`}
+          metricLabel={`${leadsCount} leads · ${dmeLeadsCount} diagnósticos DME · ${emailsCount} campanhas`}
           icon={<IconDiagnostic size={20} color="#C99A3E" />}
           items={[
             { label: "Diagnóstico DME Online (Ferramenta Pública)", href: "/diagnostico-maturidade-empresarial.html", external: true, type: "primary" },

@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const GOLD = "#C1A160";
-
 /**
  * Form de login próprio, reaproveitado nos 3 sistemas Payload (site/EA HUB,
  * EA Post, EA Flow) dentro do layout de PayloadLoginView — substitui o

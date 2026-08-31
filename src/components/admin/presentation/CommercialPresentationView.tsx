@@ -1,6 +1,5 @@
 import type { AdminViewServerProps } from "payload";
 import { redirect } from "next/navigation";
-import { EaHubBackLink } from "@/components/admin/brand/EaHubBackLink";
 import { CommercialPresentationClient } from "./CommercialPresentationClient";
 import React, { Suspense } from "react";
 
