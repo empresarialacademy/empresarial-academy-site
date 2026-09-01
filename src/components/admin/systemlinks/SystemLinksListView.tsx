@@ -5,7 +5,7 @@ import { DeleteLinkButton } from "./DeleteLinkButton";
 import { isBasicAuthProtectedPath } from "@/lib/basic-auth-protected-paths";
 
 const NAVY = "#1D2B3C";
-const GOLD = "#C1A160";
+const GOLD = "#C99A3E";
 
 type SystemLinkDoc = {
   id: string | number;
@@ -45,7 +45,7 @@ export async function SystemLinksListView(props: ListViewServerProps) {
         style={{
           background: NAVY,
           color: "#fff",
-          borderRadius: 8,
+          borderRadius: 12,
           borderBottom: `3px solid ${GOLD}`,
           justifyContent: "space-between",
           marginBottom: "1.5rem",
@@ -54,7 +54,7 @@ export async function SystemLinksListView(props: ListViewServerProps) {
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <Image src="/logo-empresarial-academy.png" alt="" width={192} height={183} style={{ width: 44, height: "auto" }} />
           <div>
-            <h1 style={{ margin: 0, color: "#fff", fontSize: "1.3rem" }}>Sistemas EA</h1>
+            <h1 style={{ margin: 0, color: "#fff", fontSize: "1.3rem", fontFamily: "'Sora', sans-serif" }}>Sistemas EA</h1>
             <p style={{ margin: "0.2rem 0 0", color: GOLD, fontSize: "0.85rem" }}>
               O portfólio de sistemas e plataformas da Empresarial Academy.
             </p>
@@ -63,13 +63,15 @@ export async function SystemLinksListView(props: ListViewServerProps) {
         <Link
           href={createUrl}
           style={{
-            background: GOLD,
-            color: NAVY,
-            fontWeight: 600,
+            background: "linear-gradient(180deg, #E5CA8C 0%, #C99A3E 100%)",
+            color: "#0F1722",
+            fontFamily: "'Sora', sans-serif",
+            fontWeight: 700,
             textDecoration: "none",
-            padding: "0.6rem 1rem",
-            borderRadius: 6,
+            padding: "0.6rem 1.1rem",
+            borderRadius: 8,
             whiteSpace: "nowrap",
+            boxShadow: "0 2px 10px rgba(201, 154, 62, 0.25)",
           }}
         >
           + Adicionar sistema
@@ -88,14 +90,15 @@ export async function SystemLinksListView(props: ListViewServerProps) {
               <div
                 key={link.id}
                 style={{
-                  background: "var(--theme-elevation-50)",
-                  border: "1px solid var(--theme-elevation-150)",
-                  borderTop: `3px solid ${url ? GOLD : "var(--theme-elevation-200)"}`,
-                  borderRadius: 8,
-                  padding: "1.1rem 1.25rem",
+                  background: "var(--ea-surface-bg, #FFFFFF)",
+                  border: "1px solid var(--ea-card-border, #E7E2D8)",
+                  borderTop: `3px solid ${url ? GOLD : "var(--ea-card-border, #E7E2D8)"}`,
+                  borderRadius: 14,
+                  padding: "1.2rem 1.4rem",
                   display: "flex",
                   flexDirection: "column",
                   gap: "0.5rem",
+                  boxShadow: "0 4px 20px -2px rgba(29, 43, 60, 0.04)",
                   opacity: url ? 1 : 0.7,
                 }}
               >

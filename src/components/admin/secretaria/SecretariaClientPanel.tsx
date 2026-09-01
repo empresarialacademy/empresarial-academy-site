@@ -4,12 +4,12 @@ import React, { useEffect, useState } from "react";
 
 const NAVY = "#1D2B3C";
 const NAVY_LIGHT = "#26364A";
-const GOLD = "#C1A160";
+const GOLD = "#C99A3E";
 const OFFWHITE = "#F6F5F1";
 const GRAPHITE = "#15191F";
 const GRAY = "#6B7280";
 const LINE = "#33445A";
-const GREEN = "#2E7D5B";
+const GREEN = "#3F7D58";
 const AMBER = "#C7892B";
 
 interface Props {

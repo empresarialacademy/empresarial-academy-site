@@ -22,7 +22,7 @@ export async function CommercialPresentationView({
 
   return (
     <div style={{ maxWidth: 1400, margin: "0 auto", padding: "12px 16px" }}>
-      <Suspense fallback={<div style={{ padding: 40, textAlign: "center", color: "#C1A160", fontWeight: 700 }}>Carregando Apresentador Comercial...</div>}>
+      <Suspense fallback={<div style={{ padding: 40, textAlign: "center", color: "#C99A3E", fontWeight: 700, fontFamily: "'Sora', sans-serif" }}>Carregando Apresentador Comercial...</div>}>
         <CommercialPresentationClient initialId={initialId} />
       </Suspense>
     </div>

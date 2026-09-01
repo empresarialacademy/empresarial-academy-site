@@ -2,8 +2,8 @@ import Image from "next/image";
 import { getPendingStatus } from "@/lib/pending-status";
 
 const NAVY = "#1D2B3C";
-const GOLD = "#C1A160";
-const GREEN = "#2E7D5B";
+const GOLD = "#C99A3E";
+const GREEN = "#3F7D58";
 const AMBER = "#C7892B";
 const RED = "#B23B3B";
 const GRAY = "#9AA3AF";
@@ -33,7 +33,7 @@ export async function TvDashboardView() {
         minHeight: "100vh",
         background: "#F6F5F1",
         color: "#15191F",
-        fontFamily: "'Open Sans', Arial, sans-serif",
+        fontFamily: "'Inter', sans-serif",
       }}
     >
       <meta httpEquiv="refresh" content="120" />
@@ -52,7 +52,7 @@ export async function TvDashboardView() {
         <div style={{ display: "flex", alignItems: "center", gap: "1.25rem" }}>
           <Image src="/logo-empresarial-academy.png" alt="" width={192} height={183} style={{ width: 56, height: "auto" }} />
           <div>
-            <h1 style={{ margin: 0, fontFamily: "'Montserrat', Arial, sans-serif", fontSize: "1.6rem" }}>
+            <h1 style={{ margin: 0, fontFamily: "'Sora', sans-serif", fontWeight: 800, fontSize: "1.6rem" }}>
               Torre de Controle
             </h1>
             <p style={{ margin: "0.2rem 0 0", color: GOLD, fontSize: "0.95rem" }}>
@@ -61,7 +61,7 @@ export async function TvDashboardView() {
           </div>
         </div>
         <div style={{ textAlign: "right" }}>
-          <div style={{ fontSize: "2.2rem", fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 700, color: totalAlerts === 0 ? GREEN : GOLD }}>
+          <div style={{ fontSize: "2.2rem", fontFamily: "'Sora', sans-serif", fontWeight: 800, color: totalAlerts === 0 ? GREEN : GOLD }}>
             {totalAlerts}
           </div>
           <div style={{ fontSize: "0.8rem", color: "#D9DCE1" }}>pendência(s) no total</div>

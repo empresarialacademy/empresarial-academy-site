@@ -115,14 +115,10 @@ export const ImportMarkdownButton = () => {
       style={{
         marginBottom: 20,
         padding: 16,
-        background: 'var(--theme-elevation-50)',
-        borderRadius: 8,
-        border: '1px solid var(--theme-elevation-150)',
-        borderTop: '3px solid #C1A160',
-      }}
-    >
-      <strong style={{ display: 'block', marginBottom: 4 }}>Importar de arquivo .md</strong>
-      <p style={{ margin: '0 0 12px', fontSize: 13, color: 'var(--theme-elevation-600)' }}>
+        background: 'var(--ea-surface-bg, #FFFFFF)',
+        borderRadius: 12,
+        border: '1px solid var(--ea-card-border, #E7E2D8)',
+        borderTop: '3px solid #C99A3E',
         Selecione um arquivo <code>.md</code> (com frontmatter YAML). Título, resumo, SEO, tags e o
         conteúdo são preenchidos automaticamente. A capa e o arquivo para download você adiciona nos
         campos abaixo.

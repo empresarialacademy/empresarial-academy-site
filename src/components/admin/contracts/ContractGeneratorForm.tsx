@@ -41,22 +41,41 @@ function whatsAppShareUrl(form: ContractInput, signUrl: string): string {
 }
 
 const card: React.CSSProperties = {
-  background: "var(--theme-elevation-50)",
-  border: "1px solid var(--theme-elevation-150)",
-  borderRadius: 6,
-  padding: "1rem 1.2rem",
-  marginBottom: "1rem",
+  background: "var(--ea-surface-bg, #FFFFFF)",
+  border: "1px solid var(--ea-card-border, #E7E2D8)",
+  borderRadius: 14,
+  padding: "1.2rem 1.4rem",
+  marginBottom: "1.2rem",
+  boxShadow: "0 4px 20px -2px rgba(29, 43, 60, 0.04)",
 };
-const label: React.CSSProperties = { display: "block", fontSize: 12, fontWeight: 600, margin: "10px 0 4px" };
+const label: React.CSSProperties = {
+  display: "block",
+  fontSize: 12.5,
+  fontWeight: 700,
+  margin: "10px 0 4px",
+  color: "var(--ea-text-primary, #1D2B3C)",
+  fontFamily: "'Inter', sans-serif",
+};
 const input: React.CSSProperties = {
   width: "100%",
-  padding: "7px 8px",
-  border: "1px solid var(--theme-elevation-200)",
-  background: "var(--theme-input-bg, transparent)",
+  padding: "8px 10px",
+  borderRadius: 8,
+  border: "1px solid #D1D5DB",
+  background: "#F9FAFB",
+  color: "#1D2B3C",
   fontSize: 13,
+  outline: "none",
 };
-const errStyle: React.CSSProperties = { fontSize: 11, color: "#A32626", margin: "3px 0 0" };
-const legend: React.CSSProperties = { fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em", margin: "0 0 8px" };
+const errStyle: React.CSSProperties = { fontSize: 11, color: "#B23B3B", margin: "3px 0 0" };
+const legend: React.CSSProperties = {
+  fontSize: 11.5,
+  fontWeight: 800,
+  textTransform: "uppercase",
+  letterSpacing: ".06em",
+  color: "#C99A3E",
+  fontFamily: "'Sora', sans-serif",
+  margin: "0 0 10px",
+};
 const inlineLabel: React.CSSProperties = { display: "flex", alignItems: "center", gap: 8, fontWeight: 600, fontSize: 13, margin: "8px 0" };
 
 const EMPTY_ETAPA: Etapa = { nome: "", prazo: "", descricao: "" };
@@ -503,11 +522,41 @@ export function ContractGeneratorForm() {
           </div>
         </fieldset>
 
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 4 }}>
-          <button type="button" disabled={saving !== "idle"} onClick={() => submit("draft")}>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 8 }}>
+          <button
+            type="button"
+            disabled={saving !== "idle"}
+            onClick={() => submit("draft")}
+            style={{
+              padding: "9px 16px",
+              borderRadius: 8,
+              border: "1px solid var(--ea-card-border, #E7E2D8)",
+              background: "var(--ea-surface-subtle, #F3EFE8)",
+              color: "var(--ea-text-primary, #1D2B3C)",
+              fontWeight: 700,
+              fontSize: 13,
+              cursor: "pointer",
+            }}
+          >
             {saving === "draft" ? "Salvando..." : "Salvar rascunho"}
           </button>
-          <button type="button" disabled={saving !== "idle"} onClick={() => submit("send")} style={{ background: "#C1A160", borderColor: "#C1A160", color: "#1D2B3C" }}>
+          <button
+            type="button"
+            disabled={saving !== "idle"}
+            onClick={() => submit("send")}
+            style={{
+              padding: "9px 18px",
+              borderRadius: 8,
+              border: "none",
+              background: "linear-gradient(180deg, #E5CA8C 0%, #C99A3E 100%)",
+              color: "#0F1722",
+              fontFamily: "'Sora', sans-serif",
+              fontWeight: 800,
+              fontSize: 13,
+              cursor: "pointer",
+              boxShadow: "0 2px 10px rgba(201, 154, 62, 0.25)",
+            }}
+          >
             {saving === "send" ? "Enviando..." : "Gerar e enviar para assinatura"}
           </button>
         </div>

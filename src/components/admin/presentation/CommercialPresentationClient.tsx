@@ -59,7 +59,7 @@ const PILAR_ACOES: Record<string, string> = {
 function levelInfo(pct: number) {
   if (pct <= 20) return { name: "Inicial", color: "#B23B3B" };
   if (pct <= 40) return { name: "Em Desenvolvimento", color: "#C7892B" };
-  if (pct <= 60) return { name: "Estruturado", color: "#C1A160" };
+  if (pct <= 60) return { name: "Estruturado", color: "#C99A3E" };
   if (pct <= 80) return { name: "Avançado", color: "#2E7D5B" };
   return { name: "Referência", color: "#2E7D5B" };
 }
@@ -312,7 +312,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
         >
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ color: "#C1A160", fontWeight: 900, fontSize: "0.95rem" }}>◆</span>
+              <span style={{ color: "#C99A3E", fontWeight: 900, fontSize: "0.95rem" }}>◆</span>
               <span
                 style={{
                   fontFamily: "Montserrat, Arial, sans-serif",
@@ -490,7 +490,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                       onClick={() => fetchDiagnostic(diagId)}
                       disabled={loading || !diagId}
                       style={{
-                        background: "#C1A160",
+                        background: "#C99A3E",
                         color: "#121D28",
                         border: "none",
                         borderRadius: 4,
@@ -607,7 +607,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                     fontSize: "clamp(12.5px, 1vw, 14.5px)",
                     fontWeight: 800,
                     color: "#121D28",
-                    background: "#C1A160",
+                    background: "#C99A3E",
                     border: "none",
                     padding: "10px 28px",
                     borderRadius: 4,
@@ -637,8 +637,8 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                   </p>
                   <div
                     style={{
-                      borderTop: "1px solid #C1A160",
-                      borderBottom: "1px solid #C1A160",
+                      borderTop: "1px solid #C99A3E",
+                      borderBottom: "1px solid #C99A3E",
                       padding: "1.2vh 0",
                       fontSize: "clamp(13.5px, 1.15vw, 16.5px)",
                       fontWeight: 600,
@@ -651,15 +651,15 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                   </div>
                   <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 8, padding: 0 }}>
                     <li style={{ fontSize: "clamp(12px, 1vw, 14.5px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
-                      <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
+                      <span style={{ position: "absolute", left: 0, color: "#C99A3E", fontWeight: 700 }}>▸</span>
                       Sitallcom: receita adicional de R$ 1,2 milhão e conversão comercial de 20% para 55%
                     </li>
                     <li style={{ fontSize: "clamp(12px, 1vw, 14.5px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
-                      <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
+                      <span style={{ position: "absolute", left: 0, color: "#C99A3E", fontWeight: 700 }}>▸</span>
                       Alujá: saiu de MEI para ME sob sua sociedade, com valuation de R$ 300 mil
                     </li>
                     <li style={{ fontSize: "clamp(12px, 1vw, 14.5px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
-                      <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
+                      <span style={{ position: "absolute", left: 0, color: "#C99A3E", fontWeight: 700 }}>▸</span>
                       Telefônica VIVO: carteira de 120 clientes com +18% em receita recorrente
                     </li>
                   </ul>
@@ -674,15 +674,15 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                   </p>
                   <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 8, padding: 0 }}>
                     <li style={{ fontSize: "clamp(12px, 1vw, 14px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
-                      <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
+                      <span style={{ position: "absolute", left: 0, color: "#C99A3E", fontWeight: 700 }}>▸</span>
                       Foco em processo, indicador e execução, não em teoria solta
                     </li>
                     <li style={{ fontSize: "clamp(12px, 1vw, 14px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
-                      <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
+                      <span style={{ position: "absolute", left: 0, color: "#C99A3E", fontWeight: 700 }}>▸</span>
                       Acompanhamento direto com o sócio fundador
                     </li>
                     <li style={{ fontSize: "clamp(12px, 1vw, 14px)", color: "#15191F", paddingLeft: 16, position: "relative" }}>
-                      <span style={{ position: "absolute", left: 0, color: "#C1A160", fontWeight: 700 }}>▸</span>
+                      <span style={{ position: "absolute", left: 0, color: "#C99A3E", fontWeight: 700 }}>▸</span>
                       Entrega pensada para o porte e o caixa da PME brasileira
                     </li>
                   </ul>
@@ -718,7 +718,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                           fontFamily: "Montserrat, Arial, sans-serif",
                           fontWeight: 800,
                           fontSize: "clamp(18px, 1.6vw, 24px)",
-                          color: "#C1A160",
+                          color: "#C99A3E",
                           minWidth: 34,
                         }}
                       >
@@ -742,22 +742,22 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                   </p>
                   <svg viewBox="0 0 620 230" style={{ width: "100%", maxHeight: "35vh" }}>
                     <rect x="200" y="8" width="220" height="52" fill="#1D2B3C" rx="4" />
-                    <rect x="200" y="8" width="220" height="4" fill="#C1A160" />
+                    <rect x="200" y="8" width="220" height="4" fill="#C99A3E" />
                     <text x="310" y="32" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="13">Método Gestão 360</text>
                     <text x="310" y="48" textAnchor="middle" fill="#B9C2CC" fontFamily="Open Sans, Arial, sans-serif" fontSize="10">6 pilares validados em campo</text>
 
-                    <line x1="310" y1="60" x2="310" y2="82" stroke="#C1A160" strokeWidth="2" />
+                    <line x1="310" y1="60" x2="310" y2="82" stroke="#C99A3E" strokeWidth="2" />
 
                     <rect x="200" y="82" width="220" height="48" fill="#1D2B3C" rx="4" />
-                    <rect x="200" y="82" width="220" height="4" fill="#C1A160" />
+                    <rect x="200" y="82" width="220" height="4" fill="#C99A3E" />
                     <text x="310" y="104" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="13">Livro Gestão 360</text>
                     <text x="310" y="120" textAnchor="middle" fill="#B9C2CC" fontFamily="Open Sans, Arial, sans-serif" fontSize="10">guia de aplicação prática</text>
 
-                    <line x1="310" y1="130" x2="310" y2="150" stroke="#C1A160" strokeWidth="2" />
-                    <line x1="70" y1="150" x2="550" y2="150" stroke="#C1A160" strokeWidth="2" />
-                    <line x1="70" y1="150" x2="70" y2="168" stroke="#C1A160" strokeWidth="2" />
-                    <line x1="310" y1="150" x2="310" y2="168" stroke="#C1A160" strokeWidth="2" />
-                    <line x1="550" y1="150" x2="550" y2="168" stroke="#C1A160" strokeWidth="2" />
+                    <line x1="310" y1="130" x2="310" y2="150" stroke="#C99A3E" strokeWidth="2" />
+                    <line x1="70" y1="150" x2="550" y2="150" stroke="#C99A3E" strokeWidth="2" />
+                    <line x1="70" y1="150" x2="70" y2="168" stroke="#C99A3E" strokeWidth="2" />
+                    <line x1="310" y1="150" x2="310" y2="168" stroke="#C99A3E" strokeWidth="2" />
+                    <line x1="550" y1="150" x2="550" y2="168" stroke="#C99A3E" strokeWidth="2" />
 
                     <rect x="10" y="168" width="120" height="54" fill="#F6F5F1" stroke="#D9DCE1" rx="4" />
                     <text x="70" y="190" textAnchor="middle" fill="#1D2B3C" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="11">Mentoria</text>
@@ -834,27 +834,27 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                 >
                   <svg viewBox="0 0 240 320" style={{ width: "100%", height: "100%" }}>
                     {/* Linhas conectoras da esquerda para o centro */}
-                    <line x1="0" y1="52" x2="65" y2="135" stroke="#C1A160" strokeWidth="2" strokeDasharray="4 3" />
-                    <circle cx="0" cy="52" r="4.5" fill="#C1A160" />
+                    <line x1="0" y1="52" x2="65" y2="135" stroke="#C99A3E" strokeWidth="2" strokeDasharray="4 3" />
+                    <circle cx="0" cy="52" r="4.5" fill="#C99A3E" />
 
-                    <line x1="0" y1="160" x2="60" y2="160" stroke="#C1A160" strokeWidth="2" strokeDasharray="4 3" />
-                    <circle cx="0" cy="160" r="4.5" fill="#C1A160" />
+                    <line x1="0" y1="160" x2="60" y2="160" stroke="#C99A3E" strokeWidth="2" strokeDasharray="4 3" />
+                    <circle cx="0" cy="160" r="4.5" fill="#C99A3E" />
 
-                    <line x1="0" y1="268" x2="65" y2="185" stroke="#C1A160" strokeWidth="2" strokeDasharray="4 3" />
-                    <circle cx="0" cy="268" r="4.5" fill="#C1A160" />
+                    <line x1="0" y1="268" x2="65" y2="185" stroke="#C99A3E" strokeWidth="2" strokeDasharray="4 3" />
+                    <circle cx="0" cy="268" r="4.5" fill="#C99A3E" />
 
                     {/* Linhas conectoras da direita para o centro */}
-                    <line x1="240" y1="52" x2="175" y2="135" stroke="#C1A160" strokeWidth="2" strokeDasharray="4 3" />
-                    <circle cx="240" cy="52" r="4.5" fill="#C1A160" />
+                    <line x1="240" y1="52" x2="175" y2="135" stroke="#C99A3E" strokeWidth="2" strokeDasharray="4 3" />
+                    <circle cx="240" cy="52" r="4.5" fill="#C99A3E" />
 
-                    <line x1="240" y1="160" x2="180" y2="160" stroke="#C1A160" strokeWidth="2" strokeDasharray="4 3" />
-                    <circle cx="240" cy="160" r="4.5" fill="#C1A160" />
+                    <line x1="240" y1="160" x2="180" y2="160" stroke="#C99A3E" strokeWidth="2" strokeDasharray="4 3" />
+                    <circle cx="240" cy="160" r="4.5" fill="#C99A3E" />
 
-                    <line x1="240" y1="268" x2="175" y2="185" stroke="#C1A160" strokeWidth="2" strokeDasharray="4 3" />
-                    <circle cx="240" cy="268" r="4.5" fill="#C1A160" />
+                    <line x1="240" y1="268" x2="175" y2="185" stroke="#C99A3E" strokeWidth="2" strokeDasharray="4 3" />
+                    <circle cx="240" cy="268" r="4.5" fill="#C99A3E" />
 
                     {/* Anel Externo Dourado com Glow */}
-                    <circle cx="120" cy="160" r="68" fill="#121D28" stroke="#C1A160" strokeWidth="3" />
+                    <circle cx="120" cy="160" r="68" fill="#121D28" stroke="#C99A3E" strokeWidth="3" />
                     <circle cx="120" cy="160" r="61" fill="none" stroke="rgba(193,161,96,0.3)" strokeWidth="1" strokeDasharray="3 3" />
 
                     {/* Conteúdo do Hub Central */}
@@ -864,7 +864,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                     <text x="120" y="153" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontWeight="800" fontSize="13" letterSpacing="0.8">
                       MÉTODO
                     </text>
-                    <text x="120" y="172" textAnchor="middle" fill="#C1A160" fontFamily="Montserrat, Arial, sans-serif" fontWeight="900" fontSize="15" letterSpacing="1">
+                    <text x="120" y="172" textAnchor="middle" fill="#C99A3E" fontFamily="Montserrat, Arial, sans-serif" fontWeight="900" fontSize="15" letterSpacing="1">
                       GESTÃO 360
                     </text>
                     <text x="120" y="193" textAnchor="middle" fill="#B9C2CC" fontFamily="Open Sans, Arial, sans-serif" fontWeight="600" fontSize="9.5">
@@ -915,7 +915,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                   <RadarSvg scores={scores} overallPct={overallPct} overallLvl={overallLvl} />
                   <div style={{ display: "flex", gap: 20, fontSize: "0.78rem", color: "#6B7280", fontWeight: 600, marginTop: 8 }}>
                     <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <span style={{ width: 10, height: 10, background: "#C1A160", borderRadius: 2 }} />
+                      <span style={{ width: 10, height: 10, background: "#C99A3E", borderRadius: 2 }} />
                       Sua empresa hoje
                     </span>
                     <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -1027,8 +1027,8 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                   </p>
                   <div
                     style={{
-                      borderTop: "1px solid #C1A160",
-                      borderBottom: "1px solid #C1A160",
+                      borderTop: "1px solid #C99A3E",
+                      borderBottom: "1px solid #C99A3E",
                       padding: "1.2vh 0",
                       fontSize: "clamp(13.5px, 1.15vw, 16px)",
                       fontWeight: 600,
@@ -1108,8 +1108,8 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                 <div
                   style={{
                     textAlign: "center",
-                    borderTop: "1px solid #C1A160",
-                    borderBottom: "1px solid #C1A160",
+                    borderTop: "1px solid #C99A3E",
+                    borderBottom: "1px solid #C99A3E",
                     padding: "1.2vh 0",
                     fontSize: "clamp(13.5px, 1.15vw, 16px)",
                     fontWeight: 700,
@@ -1139,7 +1139,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
               <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <svg viewBox="0 0 900 290" style={{ width: "100%", maxHeight: "40vh" }}>
                   <rect x="220" y="8" width="460" height="70" fill="#1D2B3C" rx="6" />
-                  <rect x="220" y="8" width="460" height="4" fill="#C1A160" />
+                  <rect x="220" y="8" width="460" height="4" fill="#C99A3E" />
                   <text x="450" y="38" textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="15">
                     Hoje, quem executa o operacional
                   </text>
@@ -1147,10 +1147,10 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                     da empresa no dia a dia?
                   </text>
 
-                  <line x1="450" y1="78" x2="450" y2="100" stroke="#C1A160" strokeWidth="2" />
-                  <line x1="150" y1="100" x2="750" y2="100" stroke="#C1A160" strokeWidth="2" />
-                  <line x1="150" y1="100" x2="150" y2="118" stroke="#C1A160" strokeWidth="2" />
-                  <line x1="750" y1="100" x2="750" y2="118" stroke="#C1A160" strokeWidth="2" />
+                  <line x1="450" y1="78" x2="450" y2="100" stroke="#C99A3E" strokeWidth="2" />
+                  <line x1="150" y1="100" x2="750" y2="100" stroke="#C99A3E" strokeWidth="2" />
+                  <line x1="150" y1="100" x2="150" y2="118" stroke="#C99A3E" strokeWidth="2" />
+                  <line x1="750" y1="100" x2="750" y2="118" stroke="#C99A3E" strokeWidth="2" />
 
                   <rect x="50" y="118" width="200" height="4" fill="#F6F5F1" />
                   <text x="150" y="140" textAnchor="middle" fill="#1D2B3C" fontFamily="Open Sans, Arial, sans-serif" fontSize="13.5" fontWeight="700">
@@ -1166,11 +1166,11 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                     sobrecarregado
                   </text>
 
-                  <line x1="150" y1="168" x2="150" y2="192" stroke="#C1A160" strokeWidth="2" />
-                  <line x1="750" y1="168" x2="750" y2="192" stroke="#C1A160" strokeWidth="2" />
+                  <line x1="150" y1="168" x2="150" y2="192" stroke="#C99A3E" strokeWidth="2" />
+                  <line x1="750" y1="168" x2="750" y2="192" stroke="#C99A3E" strokeWidth="2" />
 
                   <rect x="20" y="192" width="260" height="98" fill="#1D2B3C" rx="6" />
-                  <rect x="20" y="192" width="260" height="4" fill="#C1A160" />
+                  <rect x="20" y="192" width="260" height="4" fill="#C99A3E" />
                   <text x="150" y="221" textAnchor="middle" fill="#D7C089" fontFamily="Montserrat, Arial, sans-serif" fontSize="10.5" fontWeight="700" letterSpacing="0.5">
                     PERFIL ESTRATÉGICO / TEM BRAÇO
                   </text>
@@ -1182,7 +1182,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                   </text>
 
                   <rect x="620" y="192" width="260" height="98" fill="#1D2B3C" rx="6" />
-                  <rect x="620" y="192" width="260" height="4" fill="#C1A160" />
+                  <rect x="620" y="192" width="260" height="4" fill="#C99A3E" />
                   <text x="750" y="221" textAnchor="middle" fill="#D7C089" fontFamily="Montserrat, Arial, sans-serif" fontSize="10.5" fontWeight="700" letterSpacing="0.5">
                     SOBRECARGA / QUER IMPLEMENTAÇÃO
                   </text>
@@ -1211,7 +1211,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                   <tr>
                     <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "10px 14px", textAlign: "left", fontFamily: "Montserrat, Arial, sans-serif", fontSize: "0.78rem", textTransform: "uppercase" }}>Critério</th>
                     <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "10px 14px", textAlign: "left", fontFamily: "Montserrat, Arial, sans-serif", fontSize: "0.78rem", textTransform: "uppercase" }}>Executivo Sênior CLT</th>
-                    <th style={{ background: "#C1A160", color: "#121D28", padding: "10px 14px", textAlign: "left", fontFamily: "Montserrat, Arial, sans-serif", fontSize: "0.78rem", textTransform: "uppercase" }}>Consultoria / Mentoria Gestão 360</th>
+                    <th style={{ background: "#C99A3E", color: "#121D28", padding: "10px 14px", textAlign: "left", fontFamily: "Montserrat, Arial, sans-serif", fontSize: "0.78rem", textTransform: "uppercase" }}>Consultoria / Mentoria Gestão 360</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1240,8 +1240,8 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
 
               <div
                 style={{
-                  borderTop: "1px solid #C1A160",
-                  borderBottom: "1px solid #C1A160",
+                  borderTop: "1px solid #C99A3E",
+                  borderBottom: "1px solid #C99A3E",
                   padding: "1.2vh 0",
                   fontSize: "clamp(12.5px, 1.05vw, 14.5px)",
                   fontWeight: 600,
@@ -1273,8 +1273,8 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                     fontSize: "clamp(13px, 1.1vw, 15px)",
                     fontWeight: 800,
                     color: "#121D28",
-                    background: "linear-gradient(135deg, #D7C089 0%, #C1A160 100%)",
-                    border: "2px solid #C1A160",
+                    background: "linear-gradient(135deg, #D7C089 0%, #C99A3E 100%)",
+                    border: "2px solid #C99A3E",
                     borderRadius: 6,
                     padding: "12px 28px",
                     cursor: "pointer",
@@ -1298,7 +1298,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                     fontWeight: 800,
                     color: "#FFFFFF",
                     background: "linear-gradient(135deg, #26384D 0%, #1D2B3C 100%)",
-                    border: "2px solid #C1A160",
+                    border: "2px solid #C99A3E",
                     borderRadius: 6,
                     padding: "12px 28px",
                     cursor: "pointer",
@@ -1359,7 +1359,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                   <tr>
                     <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Critério</th>
                     <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Trimestral (3M)</th>
-                    <th style={{ background: "#C1A160", color: "#121D28", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem", fontWeight: 800 }}>Semestral (6M) · Mais Escolhido</th>
+                    <th style={{ background: "#C99A3E", color: "#121D28", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem", fontWeight: 800 }}>Semestral (6M) · Mais Escolhido</th>
                     <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Anual (12M)</th>
                   </tr>
                 </thead>
@@ -1391,7 +1391,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                   <tr style={{ background: "#FFFFFF" }}>
                     <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, color: "#1D2B3C" }}>Investimento</td>
                     <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1rem", color: "#1D2B3C" }}>R$ 7.900/mês</td>
-                    <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1.05rem", color: "#C1A160", background: "rgba(193,161,96,0.15)" }}>R$ 6.900/mês</td>
+                    <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1.05rem", color: "#C99A3E", background: "rgba(193,161,96,0.15)" }}>R$ 6.900/mês</td>
                     <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1rem", color: "#2E7D5B" }}>R$ 6.500/mês</td>
                   </tr>
                 </tbody>
@@ -1444,7 +1444,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                   <tr>
                     <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Critério</th>
                     <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Trimestral (3M)</th>
-                    <th style={{ background: "#C1A160", color: "#121D28", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem", fontWeight: 800 }}>Semestral (6M) · Mais Escolhido</th>
+                    <th style={{ background: "#C99A3E", color: "#121D28", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem", fontWeight: 800 }}>Semestral (6M) · Mais Escolhido</th>
                     <th style={{ background: "#1D2B3C", color: "#FFFFFF", padding: "8px 12px", textAlign: "left", fontSize: "0.76rem" }}>Anual (12M)</th>
                   </tr>
                 </thead>
@@ -1476,7 +1476,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                   <tr style={{ background: "#FFFFFF" }}>
                     <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, color: "#1D2B3C" }}>Investimento</td>
                     <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1rem", color: "#1D2B3C" }}>R$ 8.900/mês</td>
-                    <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1.05rem", color: "#C1A160", background: "rgba(193,161,96,0.15)" }}>R$ 8.400/mês</td>
+                    <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1.05rem", color: "#C99A3E", background: "rgba(193,161,96,0.15)" }}>R$ 8.400/mês</td>
                     <td style={{ padding: "10px 12px", borderBottom: "1px solid #D9DCE1", fontWeight: 800, fontSize: "1rem", color: "#2E7D5B" }}>R$ 7.970/mês médio</td>
                   </tr>
                 </tbody>
@@ -1528,7 +1528,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
               />
               <div style={{ display: "flex", flexDirection: "column", gap: "1.8vh" }}>
                 <div style={{ display: "flex", gap: 18, alignItems: "flex-start", padding: "1.4vh 0", borderBottom: "1px solid #D9DCE1" }}>
-                  <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#C1A160", minWidth: 55 }}>
+                  <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#C99A3E", minWidth: 55 }}>
                     3M
                   </div>
                   <div>
@@ -1542,7 +1542,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                 </div>
 
                 <div style={{ display: "flex", gap: 18, alignItems: "flex-start", padding: "1.4vh 0", borderBottom: "1px solid #D9DCE1" }}>
-                  <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#C1A160", minWidth: 55 }}>
+                  <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#C99A3E", minWidth: 55 }}>
                     6M
                   </div>
                   <div>
@@ -1556,7 +1556,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                 </div>
 
                 <div style={{ display: "flex", gap: 18, alignItems: "flex-start", padding: "1.4vh 0", borderBottom: "1px solid #D9DCE1" }}>
-                  <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#C1A160", minWidth: 55 }}>
+                  <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2vw, 28px)", color: "#C99A3E", minWidth: 55 }}>
                     12M
                   </div>
                   <div>
@@ -1572,8 +1572,8 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                 <div
                   style={{
                     textAlign: "center",
-                    borderTop: "1px solid #C1A160",
-                    borderBottom: "1px solid #C1A160",
+                    borderTop: "1px solid #C99A3E",
+                    borderBottom: "1px solid #C99A3E",
                     padding: "1.5vh 0",
                     fontSize: "clamp(14px, 1.15vw, 16.5px)",
                     fontWeight: 600,
@@ -1653,7 +1653,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                     fontSize: "clamp(13px, 1.1vw, 15px)",
                     fontWeight: 800,
                     color: "#121D28",
-                    background: "linear-gradient(135deg, #D7C089 0%, #C1A160 100%)",
+                    background: "linear-gradient(135deg, #D7C089 0%, #C99A3E 100%)",
                     padding: "13px 32px",
                     borderRadius: 4,
                     textDecoration: "none",
@@ -1711,7 +1711,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
               onClick={nextSlide}
               disabled={currentVisibleIndex >= visibleSlides.length - 1}
               style={{
-                background: currentSlide === 1 || currentSlide === 16 ? "#C1A160" : "#1D2B3C",
+                background: currentSlide === 1 || currentSlide === 16 ? "#C99A3E" : "#1D2B3C",
                 color: currentSlide === 1 || currentSlide === 16 ? "#121D28" : "#FFFFFF",
                 border: "none",
                 borderRadius: 4,
@@ -1734,9 +1734,9 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                     if (currentSlide === 12 || currentSlide === 13) goToSlideNumber(10);
                   }}
                   style={{
-                    background: branch === "mentoria" ? "#C1A160" : "transparent",
+                    background: branch === "mentoria" ? "#C99A3E" : "transparent",
                     color: branch === "mentoria" ? "#121D28" : currentSlide === 16 ? "#D7C089" : "#1D2B3C",
-                    border: "1px solid #C1A160",
+                    border: "1px solid #C99A3E",
                     borderRadius: 3,
                     padding: "3px 8px",
                     fontSize: "0.72rem",
@@ -1752,9 +1752,9 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                     if (currentSlide === 10 || currentSlide === 11) goToSlideNumber(12);
                   }}
                   style={{
-                    background: branch === "consultoria" ? "#C1A160" : "transparent",
+                    background: branch === "consultoria" ? "#C99A3E" : "transparent",
                     color: branch === "consultoria" ? "#121D28" : currentSlide === 16 ? "#D7C089" : "#1D2B3C",
-                    border: "1px solid #C1A160",
+                    border: "1px solid #C99A3E",
                     borderRadius: 3,
                     padding: "3px 8px",
                     fontSize: "0.72rem",
@@ -1781,7 +1781,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                   borderRadius: 4,
                   background:
                     currentSlide === sNum
-                      ? "#C1A160"
+                      ? "#C99A3E"
                       : currentSlide === 1 || currentSlide === 16
                       ? "rgba(255,255,255,0.25)"
                       : "#D9DCE1",
@@ -1830,7 +1830,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
               maxHeight: "90vh",
               overflowY: "auto",
               borderRadius: 8,
-              borderTop: "4px solid #C1A160",
+              borderTop: "4px solid #C99A3E",
               boxShadow: "0 25px 60px rgba(0,0,0,0.5)",
             }}
           >
@@ -1941,7 +1941,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                       onChange={(e) => setScores({ ...scores, [p.key]: parseInt(e.target.value, 10) })}
                       style={{ flex: 1 }}
                     />
-                    <span style={{ width: 45, textAlign: "right", fontWeight: 700, fontSize: 12, color: "#C1A160" }}>
+                    <span style={{ width: 45, textAlign: "right", fontWeight: 700, fontSize: 12, color: "#C99A3E" }}>
                       {scores[p.key] ?? 50}%
                     </span>
                   </div>
@@ -1952,7 +1952,7 @@ export function CommercialPresentationClient({ initialId }: { initialId?: string
                 <button
                   onClick={() => setShowPrepOverlay(false)}
                   style={{
-                    background: "#C1A160",
+                    background: "#C99A3E",
                     color: "#121D28",
                     fontWeight: 800,
                     fontSize: 13,
@@ -1987,7 +1987,7 @@ function SlideHeader({
   return (
     <div
       style={{
-        borderBottom: "2px solid #C1A160",
+        borderBottom: "2px solid #C99A3E",
         paddingBottom: "1.2vh",
         marginBottom: "2vh",
         display: "flex",
@@ -2005,7 +2005,7 @@ function SlideHeader({
             fontSize: "clamp(10.5px, 0.9vw, 12.5px)",
             letterSpacing: "1.2px",
             textTransform: "uppercase",
-            color: "#C1A160",
+            color: "#C99A3E",
             marginBottom: "0.4vh",
           }}
         >
@@ -2034,8 +2034,8 @@ function SlideHeader({
           letterSpacing: "0.5px",
           textTransform: "uppercase",
           padding: "4px 10px",
-          border: "1px solid #C1A160",
-          color: "#C1A160",
+          border: "1px solid #C99A3E",
+          color: "#C99A3E",
           whiteSpace: "nowrap",
           flexShrink: 0,
           borderRadius: 2,
@@ -2065,8 +2065,8 @@ function PillarNodeCard({
       style={{
         background: "#F6F5F1",
         border: "1px solid #D9DCE1",
-        borderLeft: align === "left" ? "4px solid #C1A160" : "1px solid #D9DCE1",
-        borderRight: align === "right" ? "4px solid #C1A160" : "1px solid #D9DCE1",
+        borderLeft: align === "left" ? "4px solid #C99A3E" : "1px solid #D9DCE1",
+        borderRight: align === "right" ? "4px solid #C99A3E" : "1px solid #D9DCE1",
         borderRadius: 6,
         padding: "1.3vh 1.2vw",
         display: "flex",
@@ -2084,7 +2084,7 @@ function PillarNodeCard({
               fontWeight: 800,
               fontSize: "0.85rem",
               color: "#121D28",
-              background: "#C1A160",
+              background: "#C99A3E",
               padding: "2px 7px",
               borderRadius: 3,
             }}
@@ -2127,7 +2127,7 @@ function PillarNodeCard({
 function FlowCol({ num, title, desc }: { num: string; title: string; desc: string }) {
   return (
     <div style={{ borderLeft: "1px solid #D9DCE1", paddingLeft: 12 }}>
-      <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, color: "#C1A160", fontSize: "1.1rem", marginBottom: 2 }}>
+      <div style={{ fontFamily: "Montserrat, Arial, sans-serif", fontWeight: 800, color: "#C99A3E", fontSize: "1.1rem", marginBottom: 2 }}>
         {num}
       </div>
       <h5 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: "clamp(12px, 0.95vw, 13.5px)", color: "#1D2B3C", fontWeight: 700, margin: "0 0 4px" }}>
@@ -2158,8 +2158,8 @@ function FlowSvg({ steps }: { steps: { title: string; lines: string[] }[] }) {
         return (
           <g key={i}>
             <rect x={x} y={y} width={boxW} height={boxH} fill="#1D2B3C" rx={4} />
-            <rect x={x} y={y} width={boxW} height={4} fill="#C1A160" />
-            <text x={x + boxW / 2} y={y + 30} textAnchor="middle" fill="#C1A160" fontFamily="Montserrat, Arial, sans-serif" fontWeight="800" fontSize="19">
+            <rect x={x} y={y} width={boxW} height={4} fill="#C99A3E" />
+            <text x={x + boxW / 2} y={y + 30} textAnchor="middle" fill="#C99A3E" fontFamily="Montserrat, Arial, sans-serif" fontWeight="800" fontSize="19">
               {i + 1}
             </text>
             <text x={x + boxW / 2} y={y + 53} textAnchor="middle" fill="#FFFFFF" fontFamily="Montserrat, Arial, sans-serif" fontWeight="700" fontSize="14">
@@ -2179,8 +2179,8 @@ function FlowSvg({ steps }: { steps: { title: string; lines: string[] }[] }) {
         const yc = y + boxH / 2;
         return (
           <g key={`arrow-${i}`}>
-            <line x1={x1} y1={yc} x2={x2 - 9} y2={yc} stroke="#C1A160" strokeWidth="2" />
-            <polygon points={`${x2 - 9},${yc - 6} ${x2},${yc} ${x2 - 9},${yc + 6}`} fill="#C1A160" />
+            <line x1={x1} y1={yc} x2={x2 - 9} y2={yc} stroke="#C99A3E" strokeWidth="2" />
+            <polygon points={`${x2 - 9},${yc - 6} ${x2},${yc} ${x2 - 9},${yc + 6}`} fill="#C99A3E" />
           </g>
         );
       })}
@@ -2249,7 +2249,7 @@ function RadarSvg({
         );
       })}
 
-      <polygon points={dataPoints} fill="rgba(255,255,255,0.7)" stroke="#C1A160" strokeWidth="3" />
+      <polygon points={dataPoints} fill="rgba(255,255,255,0.7)" stroke="#C99A3E" strokeWidth="3" />
 
       {PILARES_DEF.map((p, i) => {
         const ang = -Math.PI / 2 + i * ((2 * Math.PI) / n);
@@ -2267,7 +2267,7 @@ function RadarSvg({
         fontFamily="Montserrat, Arial, sans-serif"
         fontWeight="800"
         fontSize="30"
-        fill="#C1A160"
+        fill="#C99A3E"
       >
         {overallPct}%
       </text>

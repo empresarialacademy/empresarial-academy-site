@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 const NAVY = "#1D2B3C";
-const GOLD = "#C1A160";
+const GOLD = "#C99A3E";
 
 type CampaignDoc = {
   id: string | number;

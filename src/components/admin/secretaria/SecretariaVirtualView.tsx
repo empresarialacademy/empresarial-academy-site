@@ -32,7 +32,8 @@ export async function SecretariaVirtualView({ payload, initPageResult }: AdminVi
       <div
         style={{
           background: "#1D2B3C",
-          borderTop: "3px solid #C1A160",
+          borderTop: "3px solid #C99A3E",
+          borderRadius: 12,
           padding: "1.5rem 1.75rem",
           margin: "0 0 1.5rem",
           display: "flex",
@@ -43,15 +44,15 @@ export async function SecretariaVirtualView({ payload, initPageResult }: AdminVi
         }}
       >
         <div>
-          <div style={{ fontSize: 11, fontWeight: 700, color: "#C1A160", letterSpacing: 1.5, textTransform: "uppercase" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#C99A3E", letterSpacing: 1.5, textTransform: "uppercase" }}>
             Empresarial Academy
           </div>
           <h1
             style={{
               margin: "4px 0 0",
               fontSize: "1.75rem",
-              fontWeight: 700,
-              fontFamily: "'Montserrat', Arial, sans-serif",
+              fontWeight: 800,
+              fontFamily: "'Sora', sans-serif",
               color: "#fff",
             }}
           >
