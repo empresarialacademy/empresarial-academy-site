@@ -97,8 +97,7 @@ export function PayloadLoginView({ systemName, tagline }: { systemName: string; 
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.35rem" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#5B6472", fontSize: "0.74rem", fontWeight: 600 }}>
-            <span>🔒</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", color: "#5B6472", fontSize: "0.76rem", fontWeight: 600 }}>
             <span>Ambiente Seguro & Criptografado</span>
             <span style={{ opacity: 0.4 }}>•</span>
             <span style={{ color: "#1D2B3C", fontWeight: 700 }}>Empresarial Academy</span>

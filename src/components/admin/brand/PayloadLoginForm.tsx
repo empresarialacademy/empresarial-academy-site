@@ -116,9 +116,8 @@ export function PayloadLoginForm({
       `}</style>
 
       <div>
-        <label htmlFor="email" style={{ display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.8rem", fontWeight: 700, color: "#1D2B3C", marginBottom: "0.45rem" }}>
-          <span>✉️</span>
-          <span>E-mail Corporativo</span>
+        <label htmlFor="email" style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#1D2B3C", marginBottom: "0.45rem" }}>
+          E-mail Corporativo
         </label>
         <input
           id="email"
@@ -133,9 +132,8 @@ export function PayloadLoginForm({
       </div>
 
       <div>
-        <label htmlFor="password" style={{ display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.8rem", fontWeight: 700, color: "#1D2B3C", marginBottom: "0.45rem" }}>
-          <span>🔑</span>
-          <span>Senha de Acesso</span>
+        <label htmlFor="password" style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#1D2B3C", marginBottom: "0.45rem" }}>
+          Senha de Acesso
         </label>
         <input
           id="password"
@@ -158,14 +156,14 @@ export function PayloadLoginForm({
               background: "rgba(181,72,43,0.1)",
               border: "1px solid #B5482B",
               borderRadius: 8,
-              padding: "0.55rem 0.75rem",
+              padding: "0.6rem 0.85rem",
               color: "#B5482B",
               fontSize: "0.82rem",
               fontWeight: 600,
               textAlign: "center",
             }}
           >
-            ⚠️ {error}
+            {error}
           </motion.div>
         ) : null}
       </AnimatePresence>

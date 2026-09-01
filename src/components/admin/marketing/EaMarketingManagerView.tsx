@@ -67,7 +67,7 @@ export async function EaMarketingManagerView({ payload, initPageResult }: AdminV
           boxShadow: "0 4px 20px rgba(29, 43, 60, 0.12)",
         }}
       >
-        <SystemLogo systemName="Hub" size={78} glow />
+        <SystemLogo systemName="Hub" size={78} glow={false} />
         <div style={{ display: "grid", gap: "0.25rem" }}>
           <p style={{ margin: 0, color: "#C99A3E", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "'Sora', sans-serif" }}>
             Empresarial Academy · Cockpit Comercial

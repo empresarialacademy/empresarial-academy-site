@@ -610,7 +610,7 @@ function StrategicGroup({
       >
         <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
           <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#C99A3E", textTransform: "uppercase", letterSpacing: "0.05em", flexShrink: 0 }}>
-            📌 Função:
+            Função:
           </span>
           <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--ea-text-secondary, #5B6472)", lineHeight: 1.45 }}>
             {description}
@@ -619,7 +619,7 @@ function StrategicGroup({
 
         <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
           <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#2E7D5B", textTransform: "uppercase", letterSpacing: "0.05em", flexShrink: 0 }}>
-            🔗 Interligação:
+            Interligação:
           </span>
           <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--ea-text-primary, #1D2B3C)", fontWeight: 500, lineHeight: 1.45 }}>
             {interconnection}

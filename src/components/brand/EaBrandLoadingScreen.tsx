@@ -24,7 +24,7 @@ export function EaBrandLoadingScreen({
   statusText,
   progress,
   fullScreen = true,
-  theme = "dark",
+  theme = "light",
 }: EaBrandLoadingScreenProps) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
@@ -59,13 +59,14 @@ export function EaBrandLoadingScreen({
           ? "rgba(16, 25, 36, 0.75)"
           : isDark
             ? "radial-gradient(1000px 600px at 50% 30%, rgba(201,154,62,0.12) 0%, rgba(16,25,36,0.98) 60%, #0B1119 100%)"
-            : "radial-gradient(1000px 600px at 50% 30%, rgba(201,154,62,0.08) 0%, #FAFAF7 70%, #FFFFFF 100%)",
-        backdropFilter: isGlass || isDark ? "blur(20px)" : undefined,
+            : "radial-gradient(1000px 600px at 50% 30%, rgba(201,154,62,0.06) 0%, #FFFFFF 70%)",
+        backdropFilter: isGlass ? "blur(20px)" : undefined,
         fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
       }}
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap');
+        body { background: #FFFFFF !important; }
       `}</style>
 
       {/* SÍMBOLO ANIMADO OFICIAL EA COM ANÉIS DOURADOS */}
@@ -181,9 +182,10 @@ export function EaBrandLoadingScreen({
       </div>
 
       {/* SELO DE SEGURANÇA & ASSINATURA */}
-      <div style={{ marginTop: "0.5rem", display: "flex", alignItems: "center", gap: "0.4rem", opacity: 0.65, fontSize: "0.72rem", color: isDark || isGlass ? "#A0ABC0" : "#5B6472" }}>
-        <span>🔒</span>
+      <div style={{ marginTop: "0.5rem", display: "flex", alignItems: "center", gap: "0.4rem", opacity: 0.75, fontSize: "0.72rem", color: isDark || isGlass ? "#A0ABC0" : "#5B6472" }}>
         <span>Conhecimento que Impulsiona</span>
+        <span>•</span>
+        <span>Empresarial Academy</span>
       </div>
     </div>
   );
