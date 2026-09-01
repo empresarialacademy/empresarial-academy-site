@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
+import { SystemLogo } from "@/components/admin/brand/SystemLogo";
 
 export function EaHubThemeWrapper({
+  userName,
   children,
   headerActions,
 }: {
@@ -67,20 +69,23 @@ export function EaHubThemeWrapper({
           display: inline-flex;
           align-items: center;
           gap: 0.45rem;
-          background: ${isDark ? "rgba(255,255,255,0.08)" : "rgba(29,43,60,0.06)"};
-          border: 1px solid ${isDark ? "rgba(201,154,62,0.3)" : "rgba(201,154,62,0.4)"};
-          color: ${isDark ? "#E5CA8C" : "#1D2B3C"};
-          font-size: 0.78rem;
+          background: ${isDark ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.06)"};
+          border: 1px solid ${isDark ? "rgba(201,154,62,0.35)" : "rgba(201,154,62,0.3)"};
+          color: ${isDark ? "#E5CA8C" : "#E2DCD0"};
+          font-size: 0.72rem;
           font-weight: 700;
-          padding: 0.45rem 0.85rem;
-          border-radius: 20px;
+          padding: 0.35rem 0.75rem;
+          border-radius: 8px;
           cursor: pointer;
           transition: all 0.2s ease;
+          font-family: 'Sora', sans-serif;
+          backdrop-filter: blur(6px);
         }
         .ea-theme-toggle:hover {
           transform: translateY(-1px);
           border-color: #C99A3E;
-          background: ${isDark ? "rgba(201,154,62,0.18)" : "rgba(201,154,62,0.12)"};
+          background: ${isDark ? "rgba(201,154,62,0.22)" : "rgba(201,154,62,0.18)"};
+          color: #FFFFFF;
         }
         .ea-hub-card {
           display: flex;
@@ -140,21 +145,86 @@ export function EaHubThemeWrapper({
       `}</style>
 
       <div className="ea-hub-shell">
-        <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "0.75rem", marginBottom: "0.85rem" }}>
-          {headerActions}
-          {mounted ? (
-            <motion.button
-              whileHover={{ scale: 1.05, y: -1 }}
-              whileTap={{ scale: 0.95 }}
-              type="button"
-              onClick={toggleTheme}
-              className="ea-theme-toggle"
-              title="Alternar entre modo claro e escuro"
-            >
-              <span>{isDark ? "🌙 Modo Escuro" : "☀️ Modo Claro"}</span>
-            </motion.button>
-          ) : null}
-        </div>
+        {/* FAIXA AZUL INSTITUCIONAL COM BOTÃO MODO CLARO/ESCURO NO CANTO INTERIOR DIREITO */}
+        <header
+          style={{
+            background: "#1D2B3C",
+            color: "#FFFFFF",
+            borderRadius: 16,
+            borderBottom: "3px solid #C99A3E",
+            padding: "1.6rem 1.85rem",
+            marginBottom: "1.75rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "1.5rem",
+            boxShadow: "0 4px 20px rgba(29, 43, 60, 0.12)",
+            position: "relative",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+            <SystemLogo systemName="Hub" size={78} glow={false} />
+            <div style={{ display: "grid", gap: "0.25rem" }}>
+              <p
+                style={{
+                  margin: 0,
+                  color: "#C99A3E",
+                  fontSize: "0.72rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  fontFamily: "'Sora', sans-serif",
+                }}
+              >
+                Empresarial Academy · Cockpit Comercial
+              </p>
+              <h1
+                style={{
+                  margin: 0,
+                  color: "#FFFFFF",
+                  fontFamily: "'Sora', sans-serif",
+                  fontSize: "clamp(1.4rem, 2vw, 1.9rem)",
+                  fontWeight: 700,
+                  lineHeight: 1.2,
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                {userName ? `Olá, ${userName}.` : "Painel Central EA HUB"}
+              </h1>
+              <p style={{ margin: 0, color: "#D7C089", fontSize: "0.9rem", lineHeight: 1.5 }}>
+                Central de comando comercial: tração de tráfego, diagnósticos de maturidade, reuniões de fechamento e gestão de contratos.
+              </p>
+            </div>
+          </div>
+
+          {/* Canto interior direito da faixa azul */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.75rem",
+              alignSelf: "flex-end",
+              flexShrink: 0,
+              marginBottom: "0.15rem",
+            }}
+          >
+            {headerActions}
+            {mounted ? (
+              <motion.button
+                whileHover={{ scale: 1.04, y: -1 }}
+                whileTap={{ scale: 0.96 }}
+                type="button"
+                onClick={toggleTheme}
+                className="ea-theme-toggle"
+                title="Alternar entre modo claro e escuro"
+              >
+                <span style={{ fontSize: "0.75rem" }}>{isDark ? "🌙" : "☀️"}</span>
+                <span>{isDark ? "Modo Escuro" : "Modo Claro"}</span>
+              </motion.button>
+            ) : null}
+          </div>
+        </header>
+
         {children}
       </div>
     </div>
