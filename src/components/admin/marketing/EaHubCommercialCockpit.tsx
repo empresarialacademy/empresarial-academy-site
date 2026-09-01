@@ -11,6 +11,7 @@ import {
   IconDiagnostic,
   IconContent,
   IconSystems,
+  IconArrowRight,
   IconExternal,
 } from "./EaHubIcons";
 
@@ -97,30 +98,30 @@ export function EaHubCommercialCockpit({
         </div>
 
         <motion.div whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }}>
-          <Link href="/eahub/contratos/novo" target="_blank" rel="noopener noreferrer" className="ea-btn-gold">
+          <Link href="/eahub/contratos/novo" className="ea-btn-gold">
             <IconContracts size={17} color="#0F1722" />
-            <span>+ Novo Contrato ↗</span>
+            <span>+ Novo Contrato</span>
           </Link>
         </motion.div>
 
         <motion.div whileHover={{ scale: 1.02, y: -1 }} whileTap={{ scale: 0.98 }}>
-          <Link href="/eahub/apresentacao" target="_blank" rel="noopener noreferrer" className="ea-btn-glass">
+          <Link href="/eahub/apresentacao" className="ea-btn-glass">
             <IconPresentation size={16} color="#C99A3E" />
-            <span>Apresentador Comercial 16:9 ↗</span>
+            <span>Apresentador Comercial 16:9</span>
           </Link>
         </motion.div>
 
         <motion.div whileHover={{ scale: 1.02, y: -1 }} whileTap={{ scale: 0.98 }}>
-          <Link href="/eahub/ads-performance" target="_blank" rel="noopener noreferrer" className="ea-btn-glass">
+          <Link href="/eahub/ads-performance" className="ea-btn-glass">
             <IconAds size={16} color="#C99A3E" />
-            <span>EA ADS Performance ↗</span>
+            <span>EA ADS Performance</span>
           </Link>
         </motion.div>
 
         <motion.div whileHover={{ scale: 1.02, y: -1 }} whileTap={{ scale: 0.98 }}>
-          <Link href="/eahub/secretaria" target="_blank" rel="noopener noreferrer" className="ea-btn-glass">
+          <Link href="/eahub/secretaria" className="ea-btn-glass">
             <IconWhatsApp size={16} color="#2E7D5B" />
-            <span>WhatsApp Comercial (24/7) ↗</span>
+            <span>WhatsApp Comercial (24/7)</span>
           </Link>
         </motion.div>
 
@@ -646,13 +647,14 @@ function StrategicGroup({
           gap: "1rem",
         }}
       >
-        {modules.map((mod) => (
-          <motion.div key={mod.title} whileHover={{ y: -3, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            {mod.external ? (
-              <a
+        {modules.map((mod) => {
+          const Component = mod.external ? "a" : Link;
+          return (
+            <motion.div key={mod.title} whileHover={{ y: -3, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Component
                 href={mod.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                target={mod.external ? "_blank" : undefined}
+                rel={mod.external ? "noopener noreferrer" : undefined}
                 className="ea-glass-card"
                 style={{
                   height: "100%",
@@ -669,36 +671,12 @@ function StrategicGroup({
                 </p>
                 <div style={{ marginTop: "0.4rem", display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.78rem", fontWeight: 700, color: "#C99A3E" }}>
                   <span>{mod.actionLabel}</span>
-                  <IconExternal size={12} color="#C99A3E" />
+                  {mod.external ? <IconExternal size={12} color="#C99A3E" /> : <IconArrowRight size={12} color="#C99A3E" />}
                 </div>
-              </a>
-            ) : (
-              <Link
-                href={mod.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ea-glass-card"
-                style={{
-                  height: "100%",
-                  border: mod.primary ? "1px solid #C99A3E" : "1px solid var(--ea-card-border, #E7E2D8)",
-                  background: mod.primary ? "var(--ea-card-primary-bg, #FFFFFF)" : "var(--ea-surface-bg, #FFFFFF)",
-                  boxShadow: mod.primary ? "0 8px 24px -4px rgba(29, 43, 60, 0.08), 0 0 12px rgba(201, 154, 62, 0.12)" : undefined,
-                }}
-              >
-                <strong style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--ea-text-primary, #1D2B3C)", fontFamily: "'Sora', sans-serif" }}>
-                  {mod.title}
-                </strong>
-                <p style={{ margin: 0, fontSize: "0.82rem", color: "var(--ea-text-secondary, #5B6472)", lineHeight: 1.45, flexGrow: 1 }}>
-                  {mod.description}
-                </p>
-                <div style={{ marginTop: "0.4rem", display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.78rem", fontWeight: 700, color: "#C99A3E" }}>
-                  <span>{mod.actionLabel}</span>
-                  <IconExternal size={12} color="#C99A3E" />
-                </div>
-              </Link>
-            )}
-          </motion.div>
-        ))}
+              </Component>
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Links Extras de Sistemas (quando houver) */}
@@ -706,31 +684,19 @@ function StrategicGroup({
         <div style={{ paddingTop: "0.5rem", display: "flex", flexWrap: "wrap", gap: "0.65rem" }}>
           {extraLinks.map((item) => {
             const isExt = /^https?:\/\//.test(item.url ?? "");
+            const Component = isExt ? "a" : Link;
             return (
               <motion.div key={String(item.id)} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                {isExt ? (
-                  <a
-                    href={item.url || "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="ea-btn-glass"
-                    style={{ fontSize: "0.78rem", padding: "0.45rem 0.8rem" }}
-                  >
-                    <span>{item.name}</span>
-                    <IconExternal size={12} color="#C99A3E" />
-                  </a>
-                ) : (
-                  <Link
-                    href={item.url || "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="ea-btn-glass"
-                    style={{ fontSize: "0.78rem", padding: "0.45rem 0.8rem" }}
-                  >
-                    <span>{item.name}</span>
-                    <IconExternal size={12} color="#C99A3E" />
-                  </Link>
-                )}
+                <Component
+                  href={item.url || "#"}
+                  target={isExt ? "_blank" : undefined}
+                  rel={isExt ? "noopener noreferrer" : undefined}
+                  className="ea-btn-glass"
+                  style={{ fontSize: "0.78rem", padding: "0.45rem 0.8rem" }}
+                >
+                  <span>{item.name}</span>
+                  {isExt ? <IconExternal size={12} color="#C99A3E" /> : <IconArrowRight size={12} color="#C99A3E" />}
+                </Component>
               </motion.div>
             );
           })}
