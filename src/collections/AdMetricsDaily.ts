@@ -13,7 +13,7 @@ export const AdMetricsDaily: CollectionConfig = {
   admin: {
     useAsTitle: "date",
     defaultColumns: ["campaign", "date", "cost", "clicks", "conversions", "source"],
-    group: "Tráfego & Ads",
+        group: "Tráfego & Ads",
     description:
       "Uma linha por campanha por dia. Pode ser lançada manualmente (copiando do Google Ads) até a sincronização automática existir.",
   },

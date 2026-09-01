@@ -25,7 +25,7 @@ export const AdKeywords: CollectionConfig = {
   admin: {
     useAsTitle: "text",
     defaultColumns: ["text", "matchType", "adGroup", "status", "rollupCost"],
-    group: "Tráfego & Ads",
+        group: "Tráfego & Ads",
   },
   access: {
     read: ({ req }) => Boolean(req.user),

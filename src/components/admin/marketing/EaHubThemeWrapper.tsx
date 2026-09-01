@@ -39,13 +39,15 @@ export function EaHubThemeWrapper({
         {
           minHeight: "100vh",
           "--ea-surface-bg": isDark ? "#16202E" : "#FFFFFF",
-          "--ea-surface-subtle": isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)",
-          "--ea-card-border": isDark ? "rgba(201,154,62,0.22)" : "#E2DCD0",
+          "--ea-surface-subtle": isDark ? "rgba(255,255,255,0.04)" : "#F3EFE8",
+          "--ea-card-primary-bg": isDark ? "rgba(201,154,62,0.12)" : "#FFFFFF",
+          "--ea-box-bg": isDark ? "rgba(255,255,255,0.035)" : "#F8F6F2",
+          "--ea-card-border": isDark ? "rgba(201,154,62,0.22)" : "#E7E2D8",
           "--ea-text-primary": isDark ? "#F4F1E9" : "#1D2B3C",
           "--ea-text-secondary": isDark ? "#A0ABC0" : "#5B6472",
           background: isDark
             ? "radial-gradient(1200px 700px at 15% 0%, rgba(201,154,62,0.12) 0%, transparent 60%), linear-gradient(180deg, #101924 0%, #0B1119 100%)"
-            : "radial-gradient(1200px 700px at 15% 0%, rgba(201,154,62,0.06) 0%, transparent 60%), #F7F5F1",
+            : "radial-gradient(1200px 700px at 15% 0%, rgba(201,154,62,0.05) 0%, transparent 60%), #F7F5F1",
           color: isDark ? "#F4F1E9" : "#1D2B3C",
           fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
           padding: "0 0 4rem",

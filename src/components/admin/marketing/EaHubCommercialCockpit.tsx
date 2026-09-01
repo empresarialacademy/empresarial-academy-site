@@ -187,8 +187,8 @@ export function EaHubCommercialCockpit({
                   whileTap={{ scale: 0.96 }}
                   onClick={() => setActiveStage(btn.id)}
                   style={{
-                    border: `1px solid ${isSelected ? "#C99A3E" : "var(--ea-card-border, #E2DCD0)"}`,
-                    background: isSelected ? "linear-gradient(180deg, #E5CA8C 0%, #C99A3E 100%)" : "var(--ea-surface-subtle, rgba(0,0,0,0.03))",
+                    border: `1px solid ${isSelected ? "#C99A3E" : "var(--ea-card-border, #E7E2D8)"}`,
+                    background: isSelected ? "linear-gradient(180deg, #E5CA8C 0%, #C99A3E 100%)" : "var(--ea-surface-subtle, #F3EFE8)",
                     color: isSelected ? "#0F1722" : "var(--ea-text-secondary, #5B6472)",
                     fontWeight: isSelected ? 800 : 600,
                     fontSize: "0.74rem",
@@ -477,19 +477,19 @@ function MetricTile({
       onClick={onClick}
       style={{
         background: highlight
-          ? "linear-gradient(180deg, rgba(201,154,62,0.18) 0%, rgba(201,154,62,0.06) 100%)"
-          : "var(--ea-surface-subtle, rgba(0,0,0,0.025))",
-        border: `1px solid ${highlight ? "#C99A3E" : isActive ? "var(--ea-card-border, #E2DCD0)" : "transparent"}`,
+          ? "var(--ea-card-primary-bg, #FFFFFF)"
+          : "var(--ea-surface-bg, #FFFFFF)",
+        border: `1px solid ${highlight ? "#C99A3E" : isActive ? "var(--ea-card-border, #E7E2D8)" : "transparent"}`,
         borderRadius: 14,
         padding: "1.15rem 1.25rem",
         display: "flex",
         flexDirection: "column",
         gap: "0.5rem",
         position: "relative",
-        boxShadow: highlight ? "0 6px 20px rgba(201,154,62,0.18)" : undefined,
+        boxShadow: highlight ? "0 8px 24px -4px rgba(29, 43, 60, 0.08), 0 0 12px rgba(201, 154, 62, 0.12)" : "0 2px 8px rgba(29,43,60,0.03)",
         cursor: "pointer",
         opacity: isActive ? 1 : 0.45,
-        transition: "opacity 0.2s ease, border-color 0.2s ease",
+        transition: "opacity 0.2s ease, border-color 0.2s ease, background 0.2s ease",
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -540,68 +540,80 @@ function StrategicGroup({
     description: string;
     href: string;
     actionLabel: string;
-    primary?: boolean;
     external?: boolean;
+    primary?: boolean;
   }[];
   extraLinks?: SystemLinkItem[];
 }) {
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.98 }}
+      exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
       className="ea-glass-panel"
       style={{
         padding: "1.6rem 1.85rem",
         display: "flex",
         flexDirection: "column",
-        gap: "1.35rem",
+        gap: "1.25rem",
       }}
     >
-      {/* Cabeçalho do Grupo */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "0.75rem" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
-          <div
-            style={{
-              width: 42,
-              height: 42,
-              borderRadius: 12,
-              background: "rgba(201,154,62,0.12)",
-              border: "1px solid rgba(201,154,62,0.3)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {icon}
-          </div>
-          <div>
-            <span style={{ fontSize: "0.68rem", fontWeight: 800, color: "#C99A3E", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-              Grupo {groupId} · {badge}
-            </span>
-            <h3
+      {/* Header do Grupo */}
+      <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
+        <div
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: 12,
+            background: "#1D2B3C",
+            border: "1px solid #C99A3E",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 4px 12px rgba(29, 43, 60, 0.25)",
+            flexShrink: 0,
+          }}
+        >
+          {icon}
+        </div>
+
+        <div style={{ display: "grid", gap: "0.15rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <span
               style={{
-                margin: "0.15rem 0 0",
-                fontSize: "1.18rem",
+                fontSize: "0.68rem",
                 fontWeight: 800,
-                color: "var(--ea-text-primary, #1D2B3C)",
+                color: "#C99A3E",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
                 fontFamily: "'Sora', sans-serif",
-                letterSpacing: "-0.01em",
               }}
             >
-              {title}
-            </h3>
+              Fase {groupId} · {badge}
+            </span>
           </div>
+          <h3
+            style={{
+              margin: 0,
+              fontSize: "1.18rem",
+              fontWeight: 800,
+              color: "var(--ea-text-primary, #1D2B3C)",
+              fontFamily: "'Sora', sans-serif",
+              letterSpacing: "-0.01em",
+            }}
+          >
+            {title}
+          </h3>
         </div>
       </div>
 
       {/* Caixa Explicativa: Função & Interligação */}
       <div
         style={{
-          background: "var(--ea-surface-subtle, rgba(0,0,0,0.025))",
-          border: "1px solid var(--ea-card-border, #E2DCD0)",
+          background: "var(--ea-box-bg, #F8F6F2)",
+          border: "1px solid var(--ea-card-border, #E7E2D8)",
           borderRadius: 12,
           padding: "1rem 1.25rem",
           display: "grid",
@@ -618,7 +630,7 @@ function StrategicGroup({
         </div>
 
         <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
-          <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#2E7D5B", textTransform: "uppercase", letterSpacing: "0.05em", flexShrink: 0 }}>
+          <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#3F7D58", textTransform: "uppercase", letterSpacing: "0.05em", flexShrink: 0 }}>
             Interligação:
           </span>
           <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--ea-text-primary, #1D2B3C)", fontWeight: 500, lineHeight: 1.45 }}>
@@ -646,8 +658,9 @@ function StrategicGroup({
                 className="ea-glass-card"
                 style={{
                   height: "100%",
-                  border: mod.primary ? "1px solid rgba(201,154,62,0.4)" : undefined,
-                  background: mod.primary ? "rgba(201,154,62,0.06)" : undefined,
+                  border: mod.primary ? "1px solid #C99A3E" : "1px solid var(--ea-card-border, #E7E2D8)",
+                  background: mod.primary ? "var(--ea-card-primary-bg, #FFFFFF)" : "var(--ea-surface-bg, #FFFFFF)",
+                  boxShadow: mod.primary ? "0 8px 24px -4px rgba(29, 43, 60, 0.08), 0 0 12px rgba(201, 154, 62, 0.12)" : undefined,
                 }}
               >
                 <strong style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--ea-text-primary, #1D2B3C)", fontFamily: "'Sora', sans-serif" }}>

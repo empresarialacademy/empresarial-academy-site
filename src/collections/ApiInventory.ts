@@ -14,7 +14,7 @@ export const ApiInventory: CollectionConfig = {
   admin: {
     useAsTitle: "name",
     defaultColumns: ["name", "provider", "status", "expiresAt", "hasBilling"],
-    group: "Ecossistema & Sistemas",
+        group: "Ecossistema & Sistemas",
     description:
       "Toda API/credencial externa usada por algum sistema da EA — provedor, sistema(s) consumidor(es), vencimento e faturamento.",
   },
