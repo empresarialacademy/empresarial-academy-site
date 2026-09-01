@@ -48,6 +48,7 @@ import { DiagnosticBadgeCell as DiagnosticBadgeCell_f7112026 } from '@/component
 import { InstagramCell as InstagramCell_f7112026 } from '@/components/admin/leads/InstagramCell'
 import { DiagnosticAnalysisField as DiagnosticAnalysisField_f7112026 } from '@/components/admin/leads/DiagnosticAnalysisField'
 import { EmailCampaignsListView as EmailCampaignsListView_f7112026 } from '@/components/admin/email/EmailCampaignsListView'
+import { AiEmailSegmentButton as AiEmailSegmentButton_ai_seg } from '@/components/admin/email/AiEmailSegmentButton'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
@@ -101,4 +102,5 @@ export const importMap = {
   "@/components/admin/leads/InstagramCell#InstagramCell": InstagramCell_f7112026,
   "@/components/admin/leads/DiagnosticAnalysisField#DiagnosticAnalysisField": DiagnosticAnalysisField_f7112026,
   "@/components/admin/email/EmailCampaignsListView#EmailCampaignsListView": EmailCampaignsListView_f7112026,
+  "@/components/admin/email/AiEmailSegmentButton#AiEmailSegmentButton": AiEmailSegmentButton_ai_seg,
 }

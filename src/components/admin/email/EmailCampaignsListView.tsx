@@ -1,6 +1,7 @@
 import type { ListViewServerProps } from "payload";
 import Link from "next/link";
 import Image from "next/image";
+import { AiEmailSegmentButton } from "./AiEmailSegmentButton";
 
 const NAVY = "#1D2B3C";
 const GOLD = "#C99A3E";
@@ -143,6 +144,9 @@ export async function EmailCampaignsListView(props: ListViewServerProps) {
           + Criar Campanha
         </Link>
       </header>
+
+      {/* Assistente IA de Segmentação */}
+      <AiEmailSegmentButton />
 
       {/* Barra de Acesso Rápido à Esteira */}
       <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1.75rem", flexWrap: "wrap" }}>

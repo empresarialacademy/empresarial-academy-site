@@ -13,9 +13,12 @@ export const EmailSegments: CollectionConfig = {
   admin: {
     useAsTitle: "name",
     defaultColumns: ["name", "source", "pillar", "memberCount"],
-        group: "E-mail Marketing",
+    group: "E-mail Marketing",
     description:
       "Critérios para selecionar leads por origem, pilar mais fraco e score do diagnóstico. Usado pelas Campanhas de e-mail.",
+    components: {
+      beforeListTable: ["@/components/admin/email/AiEmailSegmentButton#AiEmailSegmentButton"],
+    },
   },
   access: {
     read: ({ req }) => Boolean(req.user),

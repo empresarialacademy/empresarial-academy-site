@@ -128,10 +128,12 @@ export async function SystemLinksListView(props: ListViewServerProps) {
                     ) : (
                       <Link
                         href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         style={{ fontSize: "0.8rem", fontWeight: 600 }}
                         prefetch={isBasicAuthProtectedPath(url) ? false : undefined}
                       >
-                        Abrir
+                        Abrir ↗
                       </Link>
                     )
                   ) : null}
