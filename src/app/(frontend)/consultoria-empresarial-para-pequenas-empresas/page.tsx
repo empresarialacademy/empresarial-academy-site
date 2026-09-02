@@ -23,6 +23,7 @@ export default function Page() {
       h1="Consultoria Empresarial para Pequenas Empresas que querem sair do improviso"
       subtitle="Consultoria empresarial pensada para o tamanho e o orçamento de uma pequena empresa: organize processos, monte indicadores simples e tenha um plano prático para crescer com controle — sem depender só do seu esforço."
       newsletterOrigem="Newsletter — LP pequenas-empresas"
+      origemTag="[LP2]"
     />
   );
 }

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { ConversionCTA } from "@/components/ConversionCTA";
 import { VideoTestimonial } from "@/components/VideoTestimonial";
 import { Icon } from "@/components/ui/Icon";
@@ -24,17 +23,14 @@ import { siteConfig } from "@/lib/site-config";
 /** Destino do anúncio do Google Ads. Ver `Projeto IA/Frente C - Landing Page`. */
 const DIAGNOSTICO_URL = "/diagnostico-maturidade-empresarial.html";
 
-/** Saída secundária: WhatsApp pré-preenchido (Kit de Atendimento — Camada 0). */
-const WHATSAPP_LEAD = `https://wa.me/${siteConfig.contact.phoneRaw}?text=${encodeURIComponent(
-  "Olá! Vim pelo site e quero falar sobre a consultoria para a minha empresa.",
-)}`;
-
-/** Saída para o Diagnóstico Executivo (imersão paga) — sem preço publicado
- * na LP por decisão do Thiago (04/08/2026); a conversa de WhatsApp qualifica
- * e apresenta o valor. Ver `Projeto IA/.../Plano de Posicionamento e Esteira`. */
-const WHATSAPP_EXECUTIVO = `https://wa.me/${siteConfig.contact.phoneRaw}?text=${encodeURIComponent(
-  "Olá! Vim pelo site e quero saber mais sobre o Diagnóstico Executivo 360.",
-)}`;
+/** Monta o link do WhatsApp com a mensagem pré-preenchida já marcada com o
+ * código curto da LP de origem (ex: "[LP1]") — permite identificar, na
+ * própria conversa, de qual página/anúncio o lead veio, sem depender de
+ * UTM (que se perde ao abrir o WhatsApp). */
+function whatsappHref(mensagem: string, origemTag: string) {
+  const texto = `${mensagem} ${origemTag}`;
+  return `https://wa.me/${siteConfig.contact.phoneRaw}?text=${encodeURIComponent(texto)}`;
+}
 
 const paraQuem = [
   "Sua empresa fatura entre R$ 500 mil e R$ 5 milhões por ano e cresceu mais rápido que a organização interna.",
@@ -157,16 +153,16 @@ const passos = [
 
 const faqItems = [
   {
-    q: "Quanto custa a consultoria?",
-    a: "Consultoria de gestão que funciona costuma ficar entre 0,5% e 2,5% do faturamento anual da empresa — abaixo disso, o acompanhamento não sustenta o resultado; acima, o investimento pesa demais para o tamanho do negócio. O valor exato depende do formato certo para o seu momento, e a gente define isso na conversa de diagnóstico, olhando a realidade da sua empresa. O diagnóstico inicial é gratuito.",
+    q: "Como funciona o contrato — tem fidelidade?",
+    a: "O acompanhamento é mensal, com escopo e prazo definidos já na proposta, alinhados ao seu momento e objetivo — nada de contrato genérico de longo prazo empurrado goela abaixo. Se o caminho combinado não estiver funcionando, isso é conversado e ajustado, não engessado. Os detalhes exatos de prazo e formato são fechados na conversa de diagnóstico, depois de entender a sua empresa.",
   },
   {
-    q: "Por que não é mais barato que uma consultoria grande?",
-    a: "Não estamos competindo em preço por hora — estamos competindo em quem atende você. Nas grandes consultorias, quem assina a proposta raramente é quem senta nas suas reuniões; entra um consultor júnior recém-formado. Aqui, quem atende é o próprio fundador, do diagnóstico ao acompanhamento mensal, com 7 anos de experiência como sócio-proprietário de PME e quase duas décadas estruturando operação comercial em empresa grande. Isso custa a atenção de uma pessoa só — por isso o número de empresas atendidas por vez é limitado.",
+    q: "O que está incluso no acompanhamento mensal?",
+    a: "Reuniões periódicas com o próprio fundador, indicadores (KPIs) para acompanhar o negócio com clareza, plano de ação priorizado com responsáveis e prazos, e suporte para as decisões que aparecem entre um encontro e outro — não é um relatório único e um adeus. O escopo exato é ajustado ao tamanho e à necessidade da sua empresa na proposta.",
   },
   {
-    q: "Quantos clientes vocês atendem hoje?",
-    a: "Poucos, de propósito. O modelo é atendimento direto do fundador, não uma equipe de consultores júniores rodando vários contratos ao mesmo tempo — então a capacidade é limitada por escolha, não por falta de demanda. Isso significa que quem entra tem prioridade real na agenda, não uma fatia dividida entre dezenas de contas.",
+    q: "Como é o primeiro mês de consultoria, na prática?",
+    a: "Começa pelo diagnóstico aprofundado das seis áreas do negócio, para identificar com precisão onde estão os maiores travamentos. A partir disso, é montado o plano de ação priorizado — com responsáveis, prazos e os primeiros indicadores — para que as primeiras mudanças já comecem a rodar dentro do próprio mês, em vez de ficar só no diagnóstico.",
   },
   {
     q: "Preciso ter a empresa organizada para começar?",
@@ -221,12 +217,25 @@ export function ConsultoriaLPTemplate({
   h1,
   subtitle,
   newsletterOrigem,
+  origemTag,
 }: {
   eyebrow: string;
   h1: string;
   subtitle: string;
   newsletterOrigem: string;
+  /** Código curto da LP para identificar a origem do lead na mensagem do
+   * WhatsApp (ex: "[LP1]", "[LP2]", "[PME]"). */
+  origemTag: string;
 }) {
+  const WHATSAPP_LEAD = whatsappHref(
+    "Olá! Vim pelo site e quero falar sobre a consultoria para a minha empresa.",
+    origemTag,
+  );
+  const WHATSAPP_EXECUTIVO = whatsappHref(
+    "Olá! Vim pelo site e quero saber mais sobre o Diagnóstico Executivo 360.",
+    origemTag,
+  );
+
   return (
     <main>
       <script
@@ -676,13 +685,6 @@ export function ConsultoriaLPTemplate({
                   liderança no blog, ou assine a newsletter e receba novidades
                   direto no seu e-mail.
                 </p>
-                <Link
-                  href="/blog"
-                  className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-gold-ink underline underline-offset-2 hover:text-navy"
-                >
-                  <Icon name="book" className="h-4 w-4" />
-                  Conhecer o blog
-                </Link>
               </div>
               <NewsletterForm origem={newsletterOrigem} compact />
             </div>

@@ -15,6 +15,7 @@ export default function Page() {
       h1="A sua empresa depende de você para tudo? Está na hora de organizar a gestão."
       subtitle="As empresas não quebram por falta de vendas — quebram por falta de gestão. Consultoria prática para donos de pequenas e médias empresas que querem sair da correria do dia a dia, colocar indicadores no lugar e crescer com método, não no improviso."
       newsletterOrigem="Newsletter — LP consultoria-pme"
+      origemTag="[PME]"
     />
   );
 }

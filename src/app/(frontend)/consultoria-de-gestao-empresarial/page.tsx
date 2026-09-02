@@ -23,6 +23,7 @@ export default function Page() {
       h1="Consultoria de Gestão Empresarial para quem cresceu mais rápido que a própria organização"
       subtitle="Consultoria de gestão empresarial prática, para donos de pequenas e médias empresas que precisam sair da correria do dia a dia, colocar indicadores no lugar e voltar a crescer com método — não no improviso."
       newsletterOrigem="Newsletter — LP consultoria-gestao-empresarial"
+      origemTag="[LP1]"
     />
   );
 }
