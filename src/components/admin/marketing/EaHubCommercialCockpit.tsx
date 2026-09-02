@@ -303,6 +303,13 @@ export function EaHubCommercialCockpit({
                   actionLabel: "Acessar EA Post ↗",
                   external: true,
                 },
+                {
+                  title: "EA Flow (Automação de Mensagens)",
+                  description: "Fluxos de DM e comentário no Instagram, Messenger e WhatsApp: responde, qualifica e captura o lead na conversa.",
+                  href: "https://ea-flow.vercel.app/admin",
+                  actionLabel: "Acessar EA Flow ↗",
+                  external: true,
+                },
               ]}
             />
           )}

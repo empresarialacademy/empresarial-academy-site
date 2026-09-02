@@ -56,12 +56,14 @@ interface Agent {
 const AGENTS: Agent[] = [
   {
     label: "01",
+    // Outlook (Mail.Read) e Teams (OnlineMeetings.ReadWrite) entraram no
+    // token de 30/08: o painel seguia mostrando os dois como pendência três
+    // dias depois de resolvidos, o que fazia o cartão mentir sobre o estado.
     title: "Calendário & E-mail",
     desc: "Google Calendar, Gmail, Outlook 365 e Teams.",
-    status: "amber",
-    statusLabel: "Parcial",
-    footer: "Google conectado",
-    faltando: ["Outlook 365 (e-mail)", "Microsoft Teams (reuniões)"],
+    status: "verde",
+    statusLabel: "Conectado",
+    footer: "Google e Microsoft conectados",
   },
   {
     label: "02",
@@ -809,7 +811,7 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
                 <div style={{ fontSize: 10, color: GRAY, marginTop: 2 }}>
                   {forwardThirdParty === false
                     ? "Desativado: mensagens de quem não é você são ignoradas."
-                    : "Ativado: mensagens de terceiros são encaminhadas pra você."}
+                    : "Ativado: lê mensagens de terceiros e atua como atendente para validação de lead da Empresarial Academy."}
                 </div>
               </div>
               <button
