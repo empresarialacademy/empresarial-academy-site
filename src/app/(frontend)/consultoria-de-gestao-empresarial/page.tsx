@@ -24,6 +24,12 @@ export default function Page() {
       subtitle="Consultoria de gestão empresarial prática, para donos de pequenas e médias empresas que precisam sair da correria do dia a dia, colocar indicadores no lugar e voltar a crescer com método — não no improviso."
       newsletterOrigem="Newsletter — LP consultoria-gestao-empresarial"
       origemTag="[LP1]"
+      hero={{
+        src: "/videos/lp-consultoria-gestao-empresarial.mp4",
+        poster: "/images/lp-consultoria-gestao-empresarial-capa.jpg",
+        legenda: "Thiago Marchi explica o diagnóstico de maturidade em menos de 2 minutos.",
+        comSom: true,
+      }}
     />
   );
 }

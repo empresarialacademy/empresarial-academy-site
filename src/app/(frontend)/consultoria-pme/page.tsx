@@ -16,6 +16,12 @@ export default function Page() {
       subtitle="As empresas não quebram por falta de vendas — quebram por falta de gestão. Consultoria prática para donos de pequenas e médias empresas que querem sair da correria do dia a dia, colocar indicadores no lugar e crescer com método, não no improviso."
       newsletterOrigem="Newsletter — LP consultoria-pme"
       origemTag="[PME]"
+      hero={{
+        src: "/videos/lp-consultoria-pme.mp4",
+        poster: "/images/lp-consultoria-pme-capa.jpg",
+        legenda: "Thiago Marchi explica o diagnóstico de maturidade em 1 minuto e meio.",
+        comSom: true,
+      }}
     />
   );
 }

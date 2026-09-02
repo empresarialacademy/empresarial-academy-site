@@ -212,12 +212,22 @@ const faqJsonLd = {
   })),
 };
 
+/** Vídeo institucional mudo que era o hero de todas as LPs até 02/09/2026 —
+ * segue como padrão nas páginas que ainda não têm apresentação gravada. */
+const HERO_PADRAO = {
+  src: "/videos/consultoria-pme-hero.mp4",
+  poster: "/images/thiago-consultoria-hero.jpg",
+  legenda: "Trecho de um vídeo aula do método Gestão 360.",
+  comSom: false,
+};
+
 export function ConsultoriaLPTemplate({
   eyebrow,
   h1,
   subtitle,
   newsletterOrigem,
   origemTag,
+  hero = HERO_PADRAO,
 }: {
   eyebrow: string;
   h1: string;
@@ -226,6 +236,15 @@ export function ConsultoriaLPTemplate({
   /** Código curto da LP para identificar a origem do lead na mensagem do
    * WhatsApp (ex: "[LP1]", "[LP2]", "[PME]"). */
   origemTag: string;
+  /** Vídeo do herói. As páginas com apresentação própria gravada passam
+   * `comSom: true` — aí o vídeo não dá autoplay nem loop, porque tem
+   * narração: quem chega decide assistir, com os controles à mão. */
+  hero?: {
+    src: string;
+    poster: string;
+    legenda: string;
+    comSom?: boolean;
+  };
 }) {
   const WHATSAPP_LEAD = whatsappHref(
     "Olá! Vim pelo site e quero falar sobre a consultoria para a minha empresa.",
@@ -287,19 +306,21 @@ export function ConsultoriaLPTemplate({
           <div>
             <div className="relative aspect-[3/2] w-full overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/15">
               <video
-                src="/videos/consultoria-pme-hero.mp4"
-                poster="/images/thiago-consultoria-hero.jpg"
-                autoPlay
-                muted
-                loop
+                key={hero.src}
+                src={hero.src}
+                poster={hero.poster}
+                autoPlay={!hero.comSom}
+                muted={!hero.comSom}
+                loop={!hero.comSom}
+                controls={hero.comSom}
                 playsInline
-                preload="auto"
+                preload={hero.comSom ? "none" : "auto"}
                 aria-label={`${fundador.nome}, ${fundador.cargo}`}
                 className="absolute inset-0 h-full w-full bg-navy object-contain"
               />
             </div>
             <p className="mt-2 text-center text-xs text-white/50 md:text-left">
-              Trecho de um vídeo aula do método Gestão 360.
+              {hero.legenda}
             </p>
           </div>
         </div>
