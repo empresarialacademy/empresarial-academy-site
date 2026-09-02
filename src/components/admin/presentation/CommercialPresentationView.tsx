@@ -1,6 +1,7 @@
 import type { AdminViewServerProps } from "payload";
 import { redirect } from "next/navigation";
 import { CommercialPresentationClient } from "./CommercialPresentationClient";
+import { EaHubBackLink } from "@/components/admin/brand/EaHubBackLink";
 import React, { Suspense } from "react";
 
 /**
@@ -22,6 +23,7 @@ export async function CommercialPresentationView({
 
   return (
     <div style={{ maxWidth: 1400, margin: "0 auto", padding: "12px 16px" }}>
+      <EaHubBackLink />
       <Suspense fallback={<div style={{ padding: 40, textAlign: "center", color: "#C99A3E", fontWeight: 700, fontFamily: "'Sora', sans-serif" }}>Carregando Apresentador Comercial...</div>}>
         <CommercialPresentationClient initialId={initialId} />
       </Suspense>
