@@ -59,11 +59,24 @@ export async function SecretariaVirtualView({ payload, initPageResult }: AdminVi
             EA Assessor
           </h1>
           <p style={{ color: "#B9C2CE", margin: "0.35rem 0 0", fontSize: 13 }}>
-            Assessoria executiva de Thiago Marchi — agenda, e-mail e ecossistema Empresarial Academy.
+            Assessoria executiva de Thiago Marchi: agenda, e-mail e ecossistema Empresarial Academy.
           </p>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, color: "#7DD3A8" }}>
-          <span style={{ width: 8, height: 8, background: "#7DD3A8", display: "inline-block" }} />
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            fontSize: 12,
+            fontWeight: 700,
+            color: "#8FD9B6",
+            background: "rgba(143,217,182,0.12)",
+            border: "1px solid rgba(143,217,182,0.28)",
+            borderRadius: 999,
+            padding: "6px 12px",
+          }}
+        >
+          <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#8FD9B6", display: "inline-block" }} />
           WhatsApp conectado 24/7
         </div>
       </div>

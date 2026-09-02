@@ -2,15 +2,26 @@
 
 import React, { useEffect, useState } from "react";
 
+/* Paleta oficial da marca (Agentes/design-ea.md). Antes desta revisão a tela
+ * usava um grafite quase preto (#15191F) e o cinza genérico do Tailwind
+ * (#6B7280), que não são da EA: o painel ficava com cara de template escuro
+ * em vez de institucional. As linhas da grade também eram desenhadas com um
+ * azul escuro (#33445A) sobre fundo claro, o que criava molduras duras. */
 const NAVY = "#1D2B3C";
-const NAVY_LIGHT = "#26364A";
+const NAVY_LIGHT = "#2E4059";
 const GOLD = "#C99A3E";
-const OFFWHITE = "#F6F5F1";
-const GRAPHITE = "#15191F";
-const GRAY = "#6B7280";
-const LINE = "#33445A";
+const OFFWHITE = "#F7F5F1";
+/** Navy um tom acima: cabeçalhos e barras internas do chat. */
+const GRAPHITE = "#16222F";
+const GRAY = "#5B6472";
+/** Linha clara da marca: separa cartões sem virar moldura. */
+const LINE = "#E7E2D8";
+/** Linha para superfícies escuras (dentro do chat navy). */
+const LINE_DARK = "rgba(255,255,255,0.10)";
 const GREEN = "#3F7D58";
-const AMBER = "#C7892B";
+const AMBER = "#B5842B";
+const RADIUS = 12;
+const SHADOW = "0 1px 2px rgba(29,43,60,0.06), 0 1px 3px rgba(29,43,60,0.08)";
 
 interface Props {
   postsCount: number;
@@ -71,7 +82,7 @@ const AGENTS: Agent[] = [
   {
     label: "04",
     title: "Antigravity Dev",
-    desc: "Fila de ordens para colar manualmente no Antigravity — sem execução automática.",
+    desc: "Fila de ordens para colar manualmente no Antigravity, sem execução automática.",
     status: "amber",
     statusLabel: "Manual",
     footer: "Registrado via WhatsApp, executado por você",
@@ -361,14 +372,14 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 28, fontFamily: "'Open Sans', Calibri, Arial, sans-serif" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 28, fontFamily: "'Inter', 'Segoe UI', sans-serif" }}>
       {/* Divisão de Agentes */}
       <div>
         <div style={sectionHeader}>
           <span style={sectionKicker}>Governança operacional</span>
           <h2 style={sectionTitle}>Divisão de Agentes Especializados</h2>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 1, background: LINE, border: `1px solid ${LINE}` }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 14 }}>
           {AGENTS.map((agent) => (
             <div key={agent.label} style={cardStyle}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
@@ -423,9 +434,20 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
       </div>
 
       {/* Console + Ações */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 1, background: LINE, border: `1px solid ${LINE}` }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 14, alignItems: "stretch" }}>
         {/* Console */}
-        <div style={{ background: NAVY, display: "flex", flexDirection: "column", height: 500 }}>
+        <div
+          style={{
+            background: NAVY,
+            display: "flex",
+            flexDirection: "column",
+            height: 500,
+            borderRadius: RADIUS,
+            overflow: "hidden",
+            border: `1px solid ${LINE}`,
+            boxShadow: SHADOW,
+          }}
+        >
           <div
             style={{
               padding: "16px 20px",
@@ -437,10 +459,11 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
             }}
           >
             <div>
-              <div style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 700, fontSize: 13, color: "#fff", letterSpacing: 0.3 }}>
+              <div style={{ fontFamily: "'Sora', 'Segoe UI', sans-serif", fontWeight: 700, fontSize: 13, color: "#fff", letterSpacing: 0.3 }}>
                 TERMINAL EXECUTIVO
               </div>
-              <div style={{ fontSize: 11, color: GRAY, marginTop: 2 }}>EA Assessor · Gemini</div>
+              {/* Sobre navy, o cinza da marca não tem contraste suficiente. */}
+              <div style={{ fontSize: 11, color: "#AEB8C4", marginTop: 2 }}>EA Assessor · Gemini</div>
             </div>
             <span style={{ fontSize: 10, color: GOLD, fontWeight: 600, letterSpacing: 0.5 }}>PT-BR · GMT-3</span>
           </div>
@@ -454,20 +477,21 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
                     padding: "10px 14px",
                     fontSize: 13,
                     lineHeight: 1.55,
+                    borderRadius: 10,
                     background: msg.sender === "user" ? GOLD : NAVY_LIGHT,
                     color: msg.sender === "user" ? NAVY : "#F1F0EC",
-                    border: msg.sender === "user" ? "none" : `1px solid ${LINE}`,
+                    border: msg.sender === "user" ? "none" : `1px solid ${LINE_DARK}`,
                   }}
                 >
                   {msg.text}
                 </div>
-                <span style={{ fontSize: 10, color: GRAY, marginTop: 4, padding: "0 4px" }}>{msg.time}</span>
+                <span style={{ fontSize: 10, color: "#9AA5B1", marginTop: 4, padding: "0 4px" }}>{msg.time}</span>
               </div>
             ))}
             {loading && <div style={{ color: GOLD, fontSize: 12, fontStyle: "italic" }}>processando…</div>}
           </div>
 
-          <form onSubmit={handleSend} style={{ padding: 14, background: GRAPHITE, borderTop: `1px solid ${LINE}`, display: "flex", gap: 8 }}>
+          <form onSubmit={handleSend} style={{ padding: 14, background: GRAPHITE, borderTop: `1px solid ${LINE_DARK}`, display: "flex", gap: 8 }}>
             <input
               type="text"
               value={testInput}
@@ -476,7 +500,8 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
               style={{
                 flex: 1,
                 background: NAVY,
-                border: `1px solid ${LINE}`,
+                border: `1px solid ${LINE_DARK}`,
+                borderRadius: 8,
                 padding: "9px 12px",
                 color: "#fff",
                 fontSize: 13,
@@ -490,8 +515,9 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
                 background: GOLD,
                 color: NAVY,
                 border: "none",
+                borderRadius: 8,
                 padding: "9px 18px",
-                fontFamily: "'Montserrat', Arial, sans-serif",
+                fontFamily: "'Sora', 'Segoe UI', sans-serif",
                 fontWeight: 700,
                 fontSize: 12,
                 letterSpacing: 0.3,
@@ -504,8 +530,18 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
         </div>
 
         {/* Coluna direita */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 1, background: LINE }}>
-          <div style={{ background: OFFWHITE, padding: 20, maxHeight: 420, overflowY: "auto" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div
+            style={{
+              background: "#FFFFFF",
+              padding: 20,
+              maxHeight: 420,
+              overflowY: "auto",
+              border: `1px solid ${LINE}`,
+              borderRadius: RADIUS,
+              boxShadow: SHADOW,
+            }}
+          >
             <h3 style={panelTitle}>Instruções sugeridas</h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               <div>
@@ -561,7 +597,16 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
             </div>
           </div>
 
-          <div style={{ background: OFFWHITE, padding: 20, flex: 1 }}>
+          <div
+            style={{
+              background: "#FFFFFF",
+              padding: 20,
+              flex: 1,
+              border: `1px solid ${LINE}`,
+              borderRadius: RADIUS,
+              boxShadow: SHADOW,
+            }}
+          >
             <h3 style={panelTitle}>Canal WhatsApp</h3>
             <p style={{ fontSize: 12, color: GRAY, margin: "0 0 14px", lineHeight: 1.5 }}>
               Instâncias <strong style={{ color: GRAPHITE }}>EA Assessor</strong> na infraestrutura em nuvem
@@ -580,7 +625,7 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
               <div key={inst.instanceName} style={{ marginBottom: 14, paddingBottom: 14, borderBottom: "1px solid #D9DCE1" }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, color: inst.connected ? GREEN : "#B23B3B" }}>
-                    <span style={{ width: 7, height: 7, background: inst.connected ? GREEN : "#B23B3B", display: "inline-block" }} />
+                    <span style={{ width: 7, height: 7, borderRadius: "50%", background: inst.connected ? GREEN : "#B23B3B", display: "inline-block" }} />
                     {inst.ownerNumber ? formatPhone(inst.ownerNumber) : inst.instanceName} · {inst.connected ? "online" : inst.connectionStatus}
                   </div>
                   {!inst.connected && (
@@ -604,7 +649,7 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
                         <button
                           onClick={() => handleConnect(inst.instanceName, true)}
                           disabled={connectingInstance === inst.instanceName}
-                          title="A instância ficou travada em 'connecting' — apaga e recria do zero antes de gerar o QR."
+                          title="A instância ficou travada em 'connecting': apaga e recria do zero antes de gerar o QR."
                           style={{
                             background: "transparent",
                             color: GRAY,
@@ -631,7 +676,7 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
                       style={{ width: 200, height: 200, border: `1px solid ${LINE}` }}
                     />
                     <div style={{ fontSize: 10, color: GRAY, marginTop: 6 }}>
-                      Escaneie rápido no WhatsApp (Aparelhos conectados) — expira em segundos.
+                      Escaneie rápido no WhatsApp (Aparelhos conectados). Expira em segundos.
                     </div>
                   </div>
                 )}
@@ -801,11 +846,11 @@ export function SecretariaClientPanel({ postsCount, leadsCount }: Props) {
             <div style={{ marginTop: 4, paddingTop: 14, borderTop: `1px solid #D9DCE1` }}>
               <div style={{ fontSize: 11, color: GRAY, marginBottom: 6 }}>Conexões pendentes de autorização</div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, color: AMBER }}>
-                <span style={{ width: 7, height: 7, background: AMBER, display: "inline-block" }} />
+                <span style={{ width: 7, height: 7, borderRadius: "50%", background: AMBER, display: "inline-block" }} />
                 Google Calendar / Gmail
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 700, color: AMBER, marginTop: 6 }}>
-                <span style={{ width: 7, height: 7, background: AMBER, display: "inline-block" }} />
+                <span style={{ width: 7, height: 7, borderRadius: "50%", background: AMBER, display: "inline-block" }} />
                 Outlook 365 / Teams
               </div>
             </div>
@@ -825,7 +870,7 @@ const sectionKicker: React.CSSProperties = {
   textTransform: "uppercase",
 };
 const sectionTitle: React.CSSProperties = {
-  fontFamily: "'Montserrat', Arial, sans-serif",
+  fontFamily: "'Sora', 'Segoe UI', sans-serif",
   fontSize: 18,
   fontWeight: 700,
   color: GRAPHITE,
@@ -833,14 +878,17 @@ const sectionTitle: React.CSSProperties = {
 };
 
 const cardStyle: React.CSSProperties = {
-  background: OFFWHITE,
+  background: "#FFFFFF",
   padding: 18,
   display: "flex",
   flexDirection: "column",
+  border: `1px solid ${LINE}`,
+  borderRadius: RADIUS,
+  boxShadow: SHADOW,
 };
 
 const cardLabel: React.CSSProperties = {
-  fontFamily: "'Montserrat', Arial, sans-serif",
+  fontFamily: "'Sora', 'Segoe UI', sans-serif",
   fontSize: 11,
   fontWeight: 700,
   color: GOLD,
@@ -848,7 +896,7 @@ const cardLabel: React.CSSProperties = {
 };
 
 const cardTitle: React.CSSProperties = {
-  fontFamily: "'Montserrat', Arial, sans-serif",
+  fontFamily: "'Sora', 'Segoe UI', sans-serif",
   fontSize: 14,
   fontWeight: 700,
   color: GRAPHITE,
@@ -872,7 +920,7 @@ const cardFooter: React.CSSProperties = {
 };
 
 const panelTitle: React.CSSProperties = {
-  fontFamily: "'Montserrat', Arial, sans-serif",
+  fontFamily: "'Sora', 'Segoe UI', sans-serif",
   fontSize: 13,
   fontWeight: 700,
   color: GRAPHITE,
