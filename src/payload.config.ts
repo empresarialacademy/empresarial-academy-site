@@ -102,6 +102,10 @@ export default buildConfig({
           Component: "@/components/admin/brand/SiteLoginView#SiteLoginView",
           path: "/login",
         },
+        logout: {
+          Component: "@/components/admin/brand/SiteLogoutView#SiteLogoutView",
+          path: "/logout",
+        },
         // Home do /eahub = EA Marketing Manager (a "entrada única" — definição do
         // Thiago). Como view `dashboard`, renderiza COM a nav lateral do Payload.
         // Unificado em 2026-07-23(b): antes havia um EaHubDashboard separado que
