@@ -19,9 +19,11 @@ const input =
 export function NewsletterForm({
   origem = "Newsletter",
   compact = false,
+  variant = "dark",
 }: {
   origem?: string;
   compact?: boolean;
+  variant?: "dark" | "light";
 }) {
   const [whatsapp, setWhatsapp] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -67,11 +69,16 @@ export function NewsletterForm({
 
   if (status === "success") {
     return (
-      <div role="status" className="rounded-xl bg-white/10 p-5 text-center">
+      <div
+        role="status"
+        className={`rounded-xl p-5 text-center ${
+          variant === "light" ? "bg-navy/5 text-navy border border-line" : "bg-white/10 text-white"
+        }`}
+      >
         <p className="text-2xl" aria-hidden>
           ✅
         </p>
-        <p className="mt-2 text-sm">
+        <p className="mt-2 text-sm font-medium">
           Inscrição recebida! Em breve você receberá nossos conteúdos.
         </p>
       </div>
@@ -118,11 +125,18 @@ export function NewsletterForm({
         />
       </div>
 
-      <label className="flex items-start gap-2 text-xs text-white/80">
+      <label
+        className={`flex items-start gap-2 text-xs leading-snug ${
+          variant === "light" ? "text-gray" : "text-white/80"
+        }`}
+      >
         <input name="consentimento" type="checkbox" className="mt-0.5 h-4 w-4 accent-[var(--color-gold)]" required />
         <span>
           Aceito receber conteúdos, novidades e promoções por e-mail, conforme a{" "}
-          <Link href="/privacidade" className="underline">
+          <Link
+            href="/privacidade"
+            className={`underline ${variant === "light" ? "text-navy hover:text-gold-ink" : "hover:text-gold"}`}
+          >
             Política de Privacidade
           </Link>
           .

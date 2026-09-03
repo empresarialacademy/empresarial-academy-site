@@ -707,7 +707,7 @@ export function ConsultoriaLPTemplate({
                   direto no seu e-mail.
                 </p>
               </div>
-              <NewsletterForm origem={newsletterOrigem} compact />
+              <NewsletterForm origem={newsletterOrigem} compact variant="light" />
             </div>
           </div>
         </div>
