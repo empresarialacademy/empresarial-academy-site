@@ -2786,3 +2786,4 @@ dois repositórios envolvidos, mesmo padrão já em uso em sessões anteriores.
 **Próximo passo exato:**
 1. Perguntar ao Thiago se o redesign da home do `/eahub` ficou como esperado (Ctrl+Shift+R pra evitar cache) — se não, ajustar `EaMarketingManagerView.tsx` com base no feedback específico.
 2. Testar `/eahub/tv` ao vivo, logado — a `CONTENT_ENGINE_API_KEY` foi sincronizada por outra sessão depois que este dashboard foi criado, então deve funcionar, mas ninguém confirmou ainda.
+
